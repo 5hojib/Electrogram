@@ -78,6 +78,8 @@ class Message(Object, Update):
         text: Str = None,
         entities: List["types.MessageEntity"] = None,
         caption_entities: List["types.MessageEntity"] = None,
+        quote_text: str = None,
+        quote_entities: List["types.MessageEntity"] = None,
         audio: "types.Audio" = None,
         document: "types.Document" = None,
         photo: "types.Photo" = None,
@@ -85,7 +87,6 @@ class Message(Object, Update):
         animation: "types.Animation" = None,
         game: "types.Game" = None,
         giveaway: "types.Giveaway" = None,
-        giveaway_launched: "types.GiveawayLaunched" = None,
         giveaway_result: "types.GiveawayResult" = None,
         story: Union["types.MessageStory", "types.Story"] = None,
         video: "types.Video" = None,
@@ -117,14 +118,15 @@ class Message(Object, Update):
         outgoing: bool = None,
         matches: List[Match] = None,
         command: List[str] = None,
-        channel_shared: int = None,
-        user_shared: int = None,
+        chat_shared: List[int] = None,
+        user_shared: List[int] = None,
         forum_topic_created: "types.ForumTopicCreated" = None,
         forum_topic_closed: "types.ForumTopicClosed" = None,
         forum_topic_reopened: "types.ForumTopicReopened" = None,
         forum_topic_edited: "types.ForumTopicEdited" = None,
         general_topic_hidden: "types.GeneralTopicHidden" = None,
         general_topic_unhidden: "types.GeneralTopicUnhidden" = None,
+        giveaway_launched: "types.GiveawayLaunched" = None,
         video_chat_scheduled: "types.VideoChatScheduled" = None,
         video_chat_started: "types.VideoChatStarted" = None,
         video_chat_ended: "types.VideoChatEnded" = None,
@@ -175,6 +177,8 @@ class Message(Object, Update):
         self.text = text
         self.entities = entities
         self.caption_entities = caption_entities
+        self.quote_text = quote_text
+        self.quote_entities = quote_entities
         self.audio = audio
         self.document = document
         self.photo = photo
@@ -182,7 +186,6 @@ class Message(Object, Update):
         self.animation = animation
         self.game = game
         self.giveaway = giveaway
-        self.giveaway_launched = giveaway_launched
         self.giveaway_result = giveaway_result
         self.story = story
         self.video = video
@@ -215,7 +218,7 @@ class Message(Object, Update):
         self.matches = matches
         self.command = command
         self.reply_markup = reply_markup
-        self.channel_shared = channel_shared
+        self.chat_shared = chat_shared
         self.user_shared = user_shared
         self.forum_topic_created = forum_topic_created
         self.forum_topic_closed = forum_topic_closed
@@ -223,6 +226,7 @@ class Message(Object, Update):
         self.forum_topic_edited = forum_topic_edited
         self.general_topic_hidden = general_topic_hidden
         self.general_topic_unhidden = general_topic_unhidden
+        self.giveaway_launched = giveaway_launched
         self.video_chat_scheduled = video_chat_scheduled
         self.video_chat_started = video_chat_started
         self.video_chat_ended = video_chat_ended
@@ -294,10 +298,9 @@ class Message(Object, Update):
             migrate_to_chat_id = None
             migrate_from_chat_id = None
             group_chat_created = None
-            giveaway_result = None
             channel_chat_created = None
             new_chat_photo = None
-            channel_shared = None
+            chat_shared = None
             user_shared = None
             is_topic_message = None
             forum_topic_created = None
@@ -311,6 +314,8 @@ class Message(Object, Update):
             video_chat_ended = None
             video_chat_members_invited = None
             web_app_data = None
+            giveaway_launched = None
+            giveaway_result = None
 
             service_type = None
 
@@ -348,15 +353,18 @@ class Message(Object, Update):
                 new_chat_photo = types.Photo._parse(client, action.photo)
                 service_type = enums.MessageServiceType.NEW_CHAT_PHOTO
             elif isinstance(action, raw.types.MessageActionRequestedPeer):
-                if isinstance(action.peer, raw.types.PeerChannel):
-                    channel_shared = utils.get_channel_id(utils.get_raw_peer_id(action.peer))
-                    service_type = enums.MessageServiceType.ChannelShared
-                elif isinstance(action.peer, raw.types.PeerChat):
-                    channel_shared = utils.get_channel_id(utils.get_raw_peer_id(action.peer))
-                    service_type = enums.MessageServiceType.ChannelShared
-                elif isinstance(action.peer, raw.types.PeerUser):
-                    user_shared = action.peer.user_id
-                    service_type = enums.MessageServiceType.UserShared
+                chat_shared = []
+                user_shared = []
+                for peer in action.peers:
+                    if isinstance(peer, raw.types.PeerChannel):
+                        chat_shared.append(utils.get_channel_id(utils.get_raw_peer_id(peer)))
+                        service_type = enums.MessageServiceType.ChannelShared
+                    elif isinstance(peer, raw.types.PeerChat):
+                        chat_shared.append(utils.get_channel_id(utils.get_raw_peer_id(peer)))
+                        service_type = enums.MessageServiceType.ChannelShared
+                    elif isinstance(peer, raw.types.PeerUser):
+                        user_shared.append(peer.user_id)
+                        service_type = enums.MessageServiceType.UserShared
             elif isinstance(action, raw.types.MessageActionTopicCreate):
                 forum_topic_created = types.ForumTopicCreated._parse(message)
                 service_type = enums.MessageServiceType.FORUM_TOPIC_CREATED
@@ -399,7 +407,6 @@ class Message(Object, Update):
             elif isinstance(action, raw.types.MessageActionGiveawayResults):
                 giveaway_result = await types.GiveawayResult._parse(client, action, True)
                 service_type = enums.MessageServiceType.GIVEAWAY_RESULT
-
             from_user = types.User._parse(client, users.get(user_id, None))
             sender_chat = types.Chat._parse(client, message, users, chats, is_chat=False) if not from_user else None
 
@@ -422,8 +429,8 @@ class Message(Object, Update):
                 migrate_from_chat_id=-migrate_from_chat_id if migrate_from_chat_id else None,
                 group_chat_created=group_chat_created,
                 channel_chat_created=channel_chat_created,
-                channel_shared=channel_shared,
-                user_shared=user_shared,
+                chat_shared=chat_shared if chat_shared is not None and len(chat_shared) > 0 else None,
+                user_shared=user_shared if user_shared is not None and len(user_shared) > 0 else None,
                 is_topic_message=is_topic_message,
                 forum_topic_created=forum_topic_created,
                 forum_topic_closed=forum_topic_closed,
@@ -436,8 +443,8 @@ class Message(Object, Update):
                 video_chat_ended=video_chat_ended,
                 video_chat_members_invited=video_chat_members_invited,
                 web_app_data=web_app_data,
-                giveaway_result=giveaway_result,
                 giveaway_launched=giveaway_launched,
+                giveaway_result=giveaway_result,
                 client=client
             )
 
@@ -710,6 +717,10 @@ class Message(Object, Update):
 
             if message.reply_to:
                 if isinstance(message.reply_to, raw.types.MessageReplyHeader):
+                    parsed_message.quote_text = message.reply_to.quote_text
+                    if len(message.reply_to.quote_entities) > 0:
+                        quote_entities = [types.MessageEntity._parse(client, entity, users) for entity in message.reply_to.quote_entities]
+                        parsed_message.quote_entities = types.List(filter(lambda x: x is not None, quote_entities))
                     if message.reply_to.forum_topic:
                         if message.reply_to.reply_to_top_id:
                             thread_id = message.reply_to.reply_to_top_id
@@ -800,8 +811,10 @@ class Message(Object, Update):
         reply_to_message_id: int = None,
         reply_in_chat_id: int = None,
         quote_text: str = None,
+        quote_entities: List["types.MessageEntity"] = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
+        invert_media: bool = None,
         reply_markup=None
     ) -> "Message":
         if quote is None:
@@ -831,8 +844,10 @@ class Message(Object, Update):
             reply_to_message_id=reply_to_message_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
+            quote_entities=quote_entities,
             schedule_date=schedule_date,
             protect_content=protect_content,
+            invert_media=invert_media,
             reply_markup=reply_markup
         )
 
@@ -861,6 +876,7 @@ class Message(Object, Update):
         reply_to_message_id: int = None,
         reply_in_chat_id: int = None,
         quote_text: str = None,
+        quote_entities: List["types.MessageEntity"] = None,
         progress: Callable = None,
         progress_args: tuple = ()
     ) -> "Message":
@@ -897,6 +913,7 @@ class Message(Object, Update):
             reply_to_message_id=reply_to_message_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
+            quote_entities=quote_entities,
             reply_markup=reply_markup,
             progress=progress,
             progress_args=progress_args
@@ -918,6 +935,7 @@ class Message(Object, Update):
         reply_to_message_id: int = None,
         reply_in_chat_id: int = None,
         quote_text: str = None,
+        quote_entities: List["types.MessageEntity"] = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -959,6 +977,7 @@ class Message(Object, Update):
             reply_to_message_id=reply_to_message_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
+            quote_entities=quote_entities,
             reply_markup=reply_markup,
             progress=progress,
             progress_args=progress_args
@@ -975,6 +994,7 @@ class Message(Object, Update):
         reply_to_message_id: int = None,
         reply_in_chat_id: int = None,
         quote_text: str = None,
+        quote_entities: List["types.MessageEntity"] = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -1009,6 +1029,7 @@ class Message(Object, Update):
             reply_to_message_id=reply_to_message_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
+            quote_entities=quote_entities,
             reply_markup=reply_markup
         )
 
@@ -1029,6 +1050,8 @@ class Message(Object, Update):
         reply_to_message_id: int = None,
         reply_in_chat_id: int = None,
         quote_text: str = None,
+        quote_entities: List["types.MessageEntity"] = None,
+        parse_mode: Optional["enums.ParseMode"] = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -1063,6 +1086,8 @@ class Message(Object, Update):
             reply_to_message_id=reply_to_message_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
+            quote_entities=quote_entities,
+            parse_mode=parse_mode,
             reply_markup=reply_markup
         )
 
@@ -1080,6 +1105,7 @@ class Message(Object, Update):
         reply_to_message_id: int = None,
         reply_in_chat_id: int = None,
         quote_text: str = None,
+        quote_entities: List["types.MessageEntity"] = None,
         schedule_date: datetime = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
@@ -1120,6 +1146,7 @@ class Message(Object, Update):
             reply_to_message_id=reply_to_message_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
+            quote_entities=quote_entities,
             schedule_date=schedule_date,
             reply_markup=reply_markup,
             progress=progress,
@@ -1165,7 +1192,9 @@ class Message(Object, Update):
         quote: bool = None,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
-        quote_text: str = None
+        quote_text: str = None,
+        quote_entities: List["types.MessageEntity"] = None,
+        parse_mode: Optional["enums.ParseMode"] = None
     ) -> "Message":
         if quote is None:
             quote = self.chat.type != enums.ChatType.PRIVATE
@@ -1196,6 +1225,8 @@ class Message(Object, Update):
         reply_to_message_id: int = None,
         reply_in_chat_id: int = None,
         quote_text: str = None,
+        quote_entities: List["types.MessageEntity"] = None,
+        parse_mode: Optional["enums.ParseMode"] = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -1228,6 +1259,8 @@ class Message(Object, Update):
             reply_to_message_id=reply_to_message_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
+            quote_entities=quote_entities,
+            parse_mode=parse_mode,
             reply_markup=reply_markup
         )
 
@@ -1243,7 +1276,9 @@ class Message(Object, Update):
         disable_notification: bool = None,
         reply_to_message_id: int = None,
         reply_in_chat_id: int = None,
-        quote_text: str = None
+        quote_text: str = None,
+        quote_entities: List["types.MessageEntity"] = None,
+        parse_mode: Optional["enums.ParseMode"] = None
     ) -> List["types.Message"]:
         if quote is None:
             quote = self.chat.type != enums.ChatType.PRIVATE
@@ -1284,6 +1319,7 @@ class Message(Object, Update):
         reply_to_message_id: int = None,
         reply_in_chat_id: int = None,
         quote_text: str = None,
+        quote_entities: List["types.MessageEntity"] = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -1322,6 +1358,7 @@ class Message(Object, Update):
             reply_to_message_id=reply_to_message_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
+            quote_entities=quote_entities,
             reply_markup=reply_markup,
             progress=progress,
             progress_args=progress_args
@@ -1347,6 +1384,8 @@ class Message(Object, Update):
         reply_to_message_id: int = None,
         reply_in_chat_id: int = None,
         quote_text: str = None,
+        quote_entities: List["types.MessageEntity"] = None,
+        parse_mode: Optional["enums.ParseMode"] = None,
         schedule_date: datetime = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
@@ -1391,6 +1430,8 @@ class Message(Object, Update):
             reply_to_message_id=reply_to_message_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
+            quote_entities=quote_entities,
+            parse_mode=parse_mode,
             schedule_date=schedule_date,
             reply_markup=reply_markup
         )
@@ -1403,6 +1444,8 @@ class Message(Object, Update):
         reply_to_message_id: int = None,
         reply_in_chat_id: int = None,
         quote_text: str = None,
+        quote_entities: List["types.MessageEntity"] = None,
+        parse_mode: Optional["enums.ParseMode"] = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -1436,6 +1479,8 @@ class Message(Object, Update):
             reply_to_message_id=reply_to_message_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
+            quote_entities=quote_entities,
+            parse_mode=parse_mode,
             reply_markup=reply_markup,
             progress=progress,
             progress_args=progress_args
@@ -1454,6 +1499,8 @@ class Message(Object, Update):
         reply_to_message_id: int = None,
         reply_in_chat_id: int = None,
         quote_text: str = None,
+        quote_entities: List["types.MessageEntity"] = None,
+        parse_mode: Optional["enums.ParseMode"] = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -1490,6 +1537,8 @@ class Message(Object, Update):
             reply_to_message_id=reply_to_message_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
+            quote_entities=quote_entities,
+            parse_mode=parse_mode,
             reply_markup=reply_markup
         )
 
@@ -1512,6 +1561,7 @@ class Message(Object, Update):
         reply_to_message_id: int = None,
         reply_in_chat_id: int = None,
         quote_text: str = None,
+        quote_entities: List["types.MessageEntity"] = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -1556,6 +1606,7 @@ class Message(Object, Update):
             reply_to_message_id=reply_to_message_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
+            quote_entities=quote_entities,
             reply_markup=reply_markup,
             progress=progress,
             progress_args=progress_args
@@ -1572,6 +1623,8 @@ class Message(Object, Update):
         reply_to_message_id: int = None,
         reply_in_chat_id: int = None,
         quote_text: str = None,
+        quote_entities: List["types.MessageEntity"] = None,
+        parse_mode: Optional["enums.ParseMode"] = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -1608,6 +1661,8 @@ class Message(Object, Update):
             reply_to_message_id=reply_to_message_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
+            quote_entities=quote_entities,
+            parse_mode=parse_mode,
             reply_markup=reply_markup,
             progress=progress,
             progress_args=progress_args
@@ -1625,6 +1680,7 @@ class Message(Object, Update):
         reply_to_message_id: int = None,
         reply_in_chat_id: int = None,
         quote_text: str = None,
+        quote_entities: List["types.MessageEntity"] = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -1662,6 +1718,7 @@ class Message(Object, Update):
             reply_to_message_id=reply_to_message_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
+            quote_entities=quote_entities,
             reply_markup=reply_markup,
             progress=progress,
             progress_args=progress_args
@@ -1679,6 +1736,7 @@ class Message(Object, Update):
         reply_to_message_id: int = None,
         reply_in_chat_id: int = None,
         quote_text: str = None,
+        quote_entities: List["types.MessageEntity"] = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
         reply_markup=None
@@ -1712,6 +1770,7 @@ class Message(Object, Update):
             reply_to_message_id=reply_to_message_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
+            quote_entities=quote_entities,
             schedule_date=schedule_date,
             protect_content=protect_content,
             reply_markup=reply_markup
@@ -1802,6 +1861,7 @@ class Message(Object, Update):
         disable_notification: bool = None,
         message_thread_id: int = None,
         quote_text: str = None,
+        quote_entities: List["types.MessageEntity"] = None,
         reply_to_message_id: int = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
@@ -1831,6 +1891,7 @@ class Message(Object, Update):
                 message_thread_id=message_thread_id,
                 reply_to_message_id=reply_to_message_id,
                 quote_text=quote_text,
+            quote_entities=quote_entities,
                 schedule_date=schedule_date,
                 protect_content=protect_content,
                 reply_markup=self.reply_markup if reply_markup is object else reply_markup
@@ -1926,6 +1987,7 @@ class Message(Object, Update):
                     message_thread_id=message_thread_id,
                     reply_to_message_id=reply_to_message_id,
                     quote_text=quote_text,
+            quote_entities=quote_entities,
                     schedule_date=schedule_date,
                     protect_content=protect_content,
                     reply_markup=self.reply_markup if reply_markup is object else reply_markup

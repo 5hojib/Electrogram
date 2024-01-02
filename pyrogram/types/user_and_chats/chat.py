@@ -23,6 +23,9 @@ class Chat(Object):
         is_support: bool = None,
         is_forum: bool = None,
         is_participants_hidden: bool = None,
+        is_join_request: bool = None,
+        is_join_to_send: bool = None,
+        is_antispam: bool = None,
         title: str = None,
         username: str = None,
         first_name: str = None,
@@ -59,6 +62,9 @@ class Chat(Object):
         self.is_support = is_support
         self.is_forum = is_forum
         self.is_participants_hidden = is_participants_hidden
+        self.is_join_request = is_join_request
+        self.is_join_to_send = is_join_to_send
+        self.is_antispam = is_antispam
         self.title = title
         self.username = username
         self.first_name = first_name
@@ -158,6 +164,8 @@ class Chat(Object):
             is_scam=getattr(channel, "scam", None),
             is_fake=getattr(channel, "fake", None),
             is_forum=getattr(channel, "forum", None),
+            is_join_request=getattr(channel, "join_request", None),
+            is_join_to_send=getattr(channel, "join_to_send", None),
             title=channel.title,
             username=user_name,
             usernames=usernames,
@@ -234,6 +242,7 @@ class Chat(Object):
                 parsed_chat.can_set_sticker_set = full_chat.can_set_stickers
                 parsed_chat.sticker_set_name = getattr(full_chat.stickerset, "short_name", None)
                 parsed_chat.is_participants_hidden = full_chat.participants_hidden
+                parsed_chat.is_antispam = full_chat.antispam
 
                 linked_chat_raw = chats.get(full_chat.linked_chat_id, None)
 

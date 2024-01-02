@@ -645,3 +645,19 @@ class Story(Object, Update):
             forward_from_chat_id=self.from_user.id if self.from_user is not None else self.sender_chat.id,
             forward_from_story_id=self.id
         )
+    async def download(
+        self,
+        file_name: str = "",
+        in_memory: bool = False,
+        block: bool = True,
+        progress: Callable = None,
+        progress_args: tuple = ()
+    ) -> str:
+        return await self._client.download_media(
+            message=self,
+            file_name=file_name,
+            in_memory=in_memory,
+            block=block,
+            progress=progress,
+            progress_args=progress_args,
+        )

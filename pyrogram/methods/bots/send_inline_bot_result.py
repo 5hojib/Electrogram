@@ -1,7 +1,7 @@
-from typing import Union
+from typing import List, Union, Optional
 
 import pyrogram
-from pyrogram import raw, types
+from pyrogram import enums, raw, types, utils
 
 
 class SendInlineBotResult:
@@ -13,11 +13,19 @@ class SendInlineBotResult:
         disable_notification: bool = None,
         message_thread_id: int = None,
         reply_to_message_id: int = None,
-        quote_text: str = None
+        quote_text: str = None,
+        quote_entities: List["types.MessageEntity"] = None,
+        parse_mode: Optional["enums.ParseMode"] = None
     ) -> "raw.base.Updates":
-        reply_to = None
-        if reply_to_message_id or message_thread_id:
-            reply_to = types.InputReplyToMessage(reply_to_message_id=reply_to_message_id, message_thread_id=message_thread_id, quote_text=quote_text)
+        reply_to = await utils.get_reply_to(
+            client=self,
+            chat_id=chat_id,
+            reply_to_message_id=reply_to_message_id,
+            message_thread_id=message_thread_id,
+            quote_text=quote_text,
+            quote_entities=quote_entities,
+            parse_mode=parse_mode
+        )
 
         return await self.invoke(
             raw.functions.messages.SendInlineBotResult(

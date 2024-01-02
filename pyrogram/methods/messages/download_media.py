@@ -13,7 +13,7 @@ DEFAULT_DOWNLOAD_DIR = "downloads/"
 class DownloadMedia:
     async def download_media(
         self: "pyrogram.Client",
-        message: Union["types.Message", str],
+        message: Union["types.Message", "types.Story", str],
         file_name: str = DEFAULT_DOWNLOAD_DIR,
         in_memory: bool = False,
         block: bool = True,
@@ -23,7 +23,7 @@ class DownloadMedia:
         available_media = ("audio", "document", "photo", "sticker", "animation", "video", "voice", "video_note",
                            "new_chat_photo")
 
-        if isinstance(message, types.Message):
+        if isinstance(message, types.Message) or isinstance(message, types.Story):
             for kind in available_media:
                 media = getattr(message, kind, None)
 

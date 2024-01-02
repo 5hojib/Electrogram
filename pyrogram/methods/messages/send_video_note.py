@@ -1,12 +1,12 @@
 import os
 from datetime import datetime
-from typing import Union, BinaryIO, Optional, Callable
+from typing import Union, BinaryIO, Optional, Callable, List
 
 import pyrogram
 from pyrogram import StopTransmission
 from pyrogram import raw
 from pyrogram import types
-from pyrogram import utils
+from pyrogram import utils, enums
 from pyrogram.errors import FilePartMissing
 from pyrogram.file_id import FileType
 
@@ -25,6 +25,8 @@ class SendVideoNote:
         reply_to_story_id: int = None,
         reply_to_chat_id: int = None,
         quote_text: str = None,
+        quote_entities: List["types.MessageEntity"] = None,
+        parse_mode: Optional["enums.ParseMode"] = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
         reply_markup: Union[
@@ -38,20 +40,17 @@ class SendVideoNote:
     ) -> Optional["types.Message"]:
         file = None
 
-        reply_to = None
-        reply_to_chat = None
-        if reply_to_message_id or message_thread_id:
-            if reply_to_chat_id is not None:
-                reply_to_chat = await self.resolve_peer(reply_to_chat_id)
-            reply_to = types.InputReplyToMessage(
-                reply_to_message_id=reply_to_message_id,
-                message_thread_id=message_thread_id,
-                reply_to_chat=reply_to_chat,
-                quote_text=quote_text
-            )
-        if reply_to_story_id:
-            user_id = await self.resolve_peer(chat_id)
-            reply_to = types.InputReplyToStory(user_id=user_id, story_id=reply_to_story_id)
+        reply_to = await utils.get_reply_to(
+            client=self,
+            chat_id=chat_id,
+            reply_to_message_id=reply_to_message_id,
+            reply_to_story_id=reply_to_story_id,
+            message_thread_id=message_thread_id,
+            reply_to_chat_id=reply_to_chat_id,
+            quote_text=quote_text,
+            quote_entities=quote_entities,
+            parse_mode=parse_mode
+        )
 
         try:
             if isinstance(video_note, str):

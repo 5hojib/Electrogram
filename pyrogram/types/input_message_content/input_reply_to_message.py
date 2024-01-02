@@ -1,6 +1,6 @@
 from pyrogram import raw
 from ..object import Object
-from typing import Union
+from typing import List, Union
 
 
 class InputReplyToMessage(Object):
@@ -12,14 +12,16 @@ class InputReplyToMessage(Object):
             "raw.types.InputPeerChannel",
             "raw.types.InputPeerUser"
         ] = None,
-        quote_text: str = None
-    ):
+        quote_text: str = None,
+        quote_entities: List["raw.base.MessageEntity"] = None
+          ):
         super().__init__()
 
         self.reply_to_message_id = reply_to_message_id
         self.message_thread_id = message_thread_id
         self.reply_to_chat = reply_to_chat
         self.quote_text = quote_text
+        self.quote_entities = quote_entities
 
     def write(self):
         reply_to_msg_id = None
@@ -37,6 +39,7 @@ class InputReplyToMessage(Object):
                 reply_to_msg_id=reply_to_msg_id,
                 top_msg_id=top_msg_id,
                 reply_to_peer_id=self.reply_to_chat,
-                quote_text=self.quote_text
+                quote_text=self.quote_text,
+                quote_entities=self.quote_entities
             ).write()
         return None

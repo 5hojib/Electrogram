@@ -20,8 +20,10 @@ class SendMessage:
         reply_to_story_id: int = None,
         reply_to_chat_id: int = None,
         quote_text: str = None,
+        quote_entities: List["types.MessageEntity"] = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
+        invert_media: bool = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -31,20 +33,17 @@ class SendMessage:
     ) -> "types.Message":
         message, entities = (await utils.parse_text_entities(self, text, parse_mode, entities)).values()
 
-        reply_to = None
-        reply_to_chat = None
-        if reply_to_message_id or message_thread_id:
-            if reply_to_chat_id is not None:
-                reply_to_chat = await self.resolve_peer(reply_to_chat_id)
-            reply_to = types.InputReplyToMessage(
-                reply_to_message_id=reply_to_message_id,
-                message_thread_id=message_thread_id,
-                reply_to_chat=reply_to_chat,
-                quote_text=quote_text
-            )
-        if reply_to_story_id:
-            user_id = await self.resolve_peer(chat_id)
-            reply_to = types.InputReplyToStory(user_id=user_id, story_id=reply_to_story_id)
+        reply_to = await utils.get_reply_to(
+            client=self,
+            chat_id=chat_id,
+            reply_to_message_id=reply_to_message_id,
+            reply_to_story_id=reply_to_story_id,
+            message_thread_id=message_thread_id,
+            reply_to_chat_id=reply_to_chat_id,
+            quote_text=quote_text,
+            quote_entities=quote_entities,
+            parse_mode=parse_mode
+        )
 
         r = await self.invoke(
             raw.functions.messages.SendMessage(
@@ -57,7 +56,8 @@ class SendMessage:
                 reply_markup=await reply_markup.write(self) if reply_markup else None,
                 message=message,
                 entities=entities,
-                noforwards=protect_content
+                noforwards=protect_content,
+                invert_media=invert_media
             )
         )
 

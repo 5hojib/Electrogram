@@ -2,7 +2,7 @@ from typing import Union
 
 import pyrogram
 from pyrogram import raw
-from pyrogram import types
+from pyrogram import types, utils
 
 
 class SendGame:
@@ -21,9 +21,12 @@ class SendGame:
             "types.ForceReply"
         ] = None
     ) -> "types.Message":
-        reply_to = None
-        if reply_to_message_id or message_thread_id:
-            reply_to = types.InputReplyToMessage(reply_to_message_id=reply_to_message_id, message_thread_id=message_thread_id)
+        reply_to = await utils.get_reply_to(
+            client=self,
+            chat_id=chat_id,
+            reply_to_message_id=reply_to_message_id,
+            message_thread_id=message_thread_id
+        )
 
         r = await self.invoke(
             raw.functions.messages.SendMedia(
