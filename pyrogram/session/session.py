@@ -119,9 +119,6 @@ class Session:
 
                 self.ping_task = self.loop.create_task(self.ping_worker())
 
-                log.info("Session initialized: Layer %s", layer)
-                log.info("Device: %s - %s", self.client.device_model, self.client.app_version)
-                log.info("System: %s (%s)", self.client.system_version, self.client.lang_code)
             except AuthKeyDuplicated as e:
                 await self.stop()
                 raise e
@@ -134,8 +131,6 @@ class Session:
                 break
 
         self.is_started.set()
-
-        log.info("Session started")
 
     async def stop(self):
         self.is_started.clear()
@@ -252,8 +247,6 @@ class Session:
                 self.pending_acks.clear()
 
     async def ping_worker(self):
-        log.info("PingTask started")
-
         while True:
             try:
                 await asyncio.wait_for(self.ping_task_event.wait(), self.PING_INTERVAL)
@@ -271,11 +264,7 @@ class Session:
             except (OSError, RPCError):
                 pass
 
-        log.info("PingTask stopped")
-
     async def recv_worker(self):
-        log.info("NetworkTask started")
-
         while True:
             packet = await self.connection.recv()
 
@@ -294,8 +283,6 @@ class Session:
                 break
 
             self.loop.create_task(self.handle_packet(packet))
-
-        log.info("NetworkTask stopped")
 
     async def send(self, data: TLObject, wait_response: bool = True, timeout: float = WAIT_TIMEOUT, retry: int = 0):
         message = self.msg_factory(data)

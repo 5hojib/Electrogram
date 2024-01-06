@@ -3,9 +3,7 @@ from datetime import datetime
 from typing import List, Optional
 
 import pyrogram
-from pyrogram import enums, utils
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import enums, utils, raw, types
 from ..object import Object
 from ..update import Update
 
@@ -130,6 +128,10 @@ class User(Object, Update):
                 else:
                     usernames.append(types.Username._parse(username))
 
+        if user_name is None and usernames is not None and len(usernames) > 0:
+            user_name = usernames[0].username
+            usernames.pop(0)
+        
         return User(
             id=user.id,
             is_self=user.is_self,

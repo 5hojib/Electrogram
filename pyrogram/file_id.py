@@ -1,6 +1,7 @@
 import base64
 import logging
 import struct
+
 from enum import IntEnum
 from io import BytesIO
 from typing import List

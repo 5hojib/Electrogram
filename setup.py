@@ -18,7 +18,7 @@ if len(argv) > 1 and argv[1] in ["bdist_wheel", "install", "develop"]:
 
 setup(
     name="pyrogram",
-    version="v169.0",
+    version="v170.0",
     author="5hojib",
     author_email="yesiamshojib@gmail.com",
     description="Nothing",

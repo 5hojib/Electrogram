@@ -11,8 +11,7 @@ from typing import Union, List, Dict, Optional, Any, Callable, TypeVar
 from types import SimpleNamespace
 
 import pyrogram
-from pyrogram import raw, enums
-from pyrogram import types
+from pyrogram import raw, enums, types
 from pyrogram.file_id import FileId, FileType, PHOTO_TYPES, DOCUMENT_TYPES
 
 

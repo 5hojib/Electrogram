@@ -2,8 +2,7 @@ from datetime import datetime
 from typing import Dict, Union
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types
+from pyrogram import raw, utils, types
 from ..object import Object
 from ..update import Update
 

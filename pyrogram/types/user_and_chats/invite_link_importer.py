@@ -1,7 +1,6 @@
 from datetime import datetime
 
-from pyrogram import raw, utils
-from pyrogram import types
+from pyrogram import raw, utils, types
 from ..object import Object
 
 
