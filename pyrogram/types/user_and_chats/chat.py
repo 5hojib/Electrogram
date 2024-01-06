@@ -126,10 +126,7 @@ class Chat(Object):
         active_usernames = getattr(chat, "usernames", [])
         usernames = None
         if len(active_usernames) >= 1:
-            usernames = []
-            for username in active_usernames:
-                usernames.append(types.Username._parse(username))
-
+            usernames = [types.Username._parse(username) for username in active_usernames]
         return Chat(
             id=peer_id,
             type=enums.ChatType.GROUP,
@@ -253,28 +250,21 @@ class Chat(Object):
 
             if isinstance(full_chat, raw.types.ChatFull):
                 parsed_chat = Chat._parse_chat_chat(client, chat_raw)
-                parsed_chat.description = full_chat.about or None
-
                 if isinstance(full_chat.participants, raw.types.ChatParticipants):
                     parsed_chat.members_count = len(full_chat.participants.participants)
             else:
                 parsed_chat = Chat._parse_channel_chat(client, chat_raw)
                 parsed_chat.members_count = full_chat.participants_count
-                parsed_chat.description = full_chat.about or None
                 parsed_chat.can_set_sticker_set = full_chat.can_set_stickers
                 parsed_chat.sticker_set_name = getattr(full_chat.stickerset, "short_name", None)
                 parsed_chat.is_participants_hidden = full_chat.participants_hidden
                 parsed_chat.is_antispam = full_chat.antispam
                 parsed_chat.folder_id = getattr(full_chat, "folder_id", None)
 
-                linked_chat_raw = chats.get(full_chat.linked_chat_id, None)
-
-                if linked_chat_raw:
+                if linked_chat_raw := chats.get(full_chat.linked_chat_id, None):
                     parsed_chat.linked_chat = Chat._parse_channel_chat(client, linked_chat_raw)
 
-                default_send_as = full_chat.default_send_as
-
-                if default_send_as:
+                if default_send_as := full_chat.default_send_as:
                     if isinstance(default_send_as, raw.types.PeerUser):
                         send_as_raw = users[default_send_as.user_id]
                     else:
@@ -295,6 +285,8 @@ class Chat(Object):
 
                 if getattr(full_chat, "wallpaper") and isinstance(full_chat.wallpaper, raw.types.WallPaper):
                     parsed_chat.wallpaper = types.Document._parse(client, full_chat.wallpaper.document, "wallpaper.jpg")
+
+            parsed_chat.description = full_chat.about or None
 
             if full_chat.pinned_msg_id:
                 parsed_chat.pinned_message = await client.get_messages(
