@@ -185,21 +185,20 @@ def parse_deleted_messages(client, update) -> List["types.Message"]:
     messages = update.messages
     channel_id = getattr(update, "channel_id", None)
 
-    parsed_messages = []
-
-    for message in messages:
-        parsed_messages.append(
-            types.Message(
-                id=message,
-                chat=types.Chat(
-                    id=get_channel_id(channel_id),
-                    type=enums.ChatType.CHANNEL,
-                    client=client
-                ) if channel_id is not None else None,
-                client=client
+    parsed_messages = [
+        types.Message(
+            id=message,
+            chat=types.Chat(
+                id=get_channel_id(channel_id),
+                type=enums.ChatType.CHANNEL,
+                client=client,
             )
+            if channel_id is not None
+            else None,
+            client=client,
         )
-
+        for message in messages
+    ]
     return types.List(parsed_messages)
 
 
@@ -260,10 +259,7 @@ def get_raw_peer_id(peer: raw.base.Peer) -> Optional[int]:
     if isinstance(peer, raw.types.PeerChat):
         return peer.chat_id
 
-    if isinstance(peer, raw.types.PeerChannel):
-        return peer.channel_id
-
-    return None
+    return peer.channel_id if isinstance(peer, raw.types.PeerChannel) else None
 
 
 def get_peer_id(peer: raw.base.Peer) -> int:

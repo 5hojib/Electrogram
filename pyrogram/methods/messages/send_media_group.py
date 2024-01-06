@@ -112,16 +112,15 @@ class SendMediaGroup:
                         ),
                         spoiler=i.has_spoiler
                     )
-            elif (
-                isinstance(i, types.InputMediaVideo)
-                or
-                isinstance(i, types.InputMediaAnimation)
-            ):
+            elif isinstance(i, (types.InputMediaVideo, types.InputMediaAnimation)):
                 if isinstance(i.media, str):
                     is_animation = False
                     if os.path.isfile(i.media):
                         videoInfo = MediaInfo.parse(i.media)
-                        if not any([track.track_type == 'Audio' for track in videoInfo.tracks]):
+                        if all(
+                            track.track_type != 'Audio'
+                            for track in videoInfo.tracks
+                        ):
                             is_animation = True
                         media = await self.invoke(
                             raw.functions.messages.UploadMedia(
