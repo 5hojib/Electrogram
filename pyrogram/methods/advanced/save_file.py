@@ -42,7 +42,7 @@ class SaveFile:
                     except Exception as e:
                         log.exception(e)
 
-            part_size = 1024 * 1024
+            part_size = 512 * 1024
 
             if isinstance(path, (str, PurePath)):
                 fp = open(path, "rb")
@@ -67,7 +67,7 @@ class SaveFile:
 
             file_total_parts = int(math.ceil(file_size / part_size))
             is_big = file_size > 10 * 1024 * 1024
-            workers_count = 8
+            workers_count = 4 if is_big else 1
             is_missing_part = file_id is not None
             file_id = file_id or self.rnd_id()
             md5_sum = md5() if not is_big and not is_missing_part else None
