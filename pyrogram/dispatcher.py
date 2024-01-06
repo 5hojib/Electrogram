@@ -71,10 +71,15 @@ class Dispatcher:
 
         async def message_parser(update, users, chats):
             return (
-                await pyrogram.types.Message._parse(self.client, update.message, users, chats,
-                                                    is_scheduled=isinstance(update, UpdateNewScheduledMessage)),
-                MessageHandler
-            )
+                await pyrogram.types.Message._parse(
+                    self.client,
+                    update.message,
+                    users,
+                    chats,
+                    is_scheduled=isinstance(update,
+                    UpdateNewScheduledMessage)),
+                    MessageHandler
+                )
 
         async def edited_message_parser(update, users, chats):
             parsed, _ = await message_parser(update, users, chats)
