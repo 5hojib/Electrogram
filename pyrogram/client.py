@@ -48,18 +48,13 @@ class Client(Methods):
     APP_VERSION = "pyrogram"
     DEVICE_MODEL = f"{platform.python_implementation()} {platform.python_version()}"
     SYSTEM_VERSION = f"{platform.system()} {platform.release()}"
-
     LANG_CODE = "en"
-
     PARENT_DIR = Path(sys.argv[0]).parent
-
     INVITE_LINK_RE = re.compile(r"^(?:https?://)?(?:www\.)?(?:t(?:elegram)?\.(?:org|me|dog)/(?:joinchat/|\+))([\w-]+)$")
-    WORKERS = min(32, (os.cpu_count() or 0) + 4)
+    WORKERS = 32
     WORKDIR = PARENT_DIR
-
     UPDATES_WATCHDOG_INTERVAL = 5 * 60
-
-    MAX_CONCURRENT_TRANSMISSIONS = 10
+    MAX_CONCURRENT_TRANSMISSIONS = 32
 
     mimetypes = MimeTypes()
     mimetypes.readfp(StringIO(mime_types))
