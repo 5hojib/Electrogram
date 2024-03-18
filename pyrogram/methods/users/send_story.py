@@ -10,6 +10,25 @@ class SendStory:
     def _split(self, message, entities, *args, **kwargs):
         return message, entities
 
+    async def _upload_video(
+        self: "pyrogram.Client",
+        file_name: str,
+        video: Union[str, BinaryIO]
+    ):
+        file = await self.save_file(video)
+        return raw.types.InputMediaUploadedDocument(
+            mime_type=self.guess_mime_type(file_name or video.name) or "video/mp4",
+            file=file,
+            attributes=[
+                raw.types.DocumentAttributeVideo(
+                    supports_streaming=True,
+                    duration=0,
+                    w=0,
+                    h=0
+                )
+            ]
+        )
+
     async def send_story(
         self: "pyrogram.Client",
         chat_id: Union[int,str] = None,
@@ -42,25 +61,23 @@ class SendStory:
             privacy_rules = [types.StoriesPrivacyRules(type=enums.StoriesPrivacyRules.PUBLIC)]
 
         if photo:
-            if (
-                isinstance(photo, str)
-                and os.path.isfile(photo)
-                or not isinstance(photo, str)
-            ):
+            if isinstance(photo, str):
+                if os.path.isfile(photo):
+                    file = await self.save_file(photo)
+                    media = raw.types.InputMediaUploadedPhoto(
+                        file=file
+                    )
+                elif re.match("^https?://", photo):
+                    media = raw.types.InputMediaPhotoExternal(
+                        url=photo
+                    )
+                else:
+                    media = utils.get_input_media_from_file_id(photo, FileType.PHOTO)
+            else:
                 file = await self.save_file(photo)
                 media = raw.types.InputMediaUploadedPhoto(
                     file=file
                 )
-            elif (
-                isinstance(photo, str)
-                and not os.path.isfile(photo)
-                and re.match("^https?://", photo)
-            ):
-                media = raw.types.InputMediaPhotoExternal(
-                    url=photo
-                )
-            else:
-                media = utils.get_input_media_from_file_id(photo, FileType.PHOTO)
         elif video:
             if isinstance(video, str):
                 if os.path.isfile(video):
@@ -83,42 +100,19 @@ class SendStory:
                     )
                 else:
                     video = await self.download_media(video, in_memory=True)
-                    file = await self.save_file(video)
-                    media = raw.types.InputMediaUploadedDocument(
-                        mime_type=self.guess_mime_type(file_name or video.name) or "video/mp4",
-                        file=file,
-                        attributes=[
-                            raw.types.DocumentAttributeVideo(
-                                supports_streaming=True,
-                                duration=0,
-                                w=0,
-                                h=0
-                            )
-                        ]
-                    )
+                    media = await self._upload_video(file_name,video)
             else:
-                file = await self.save_file(video)
-                media = raw.types.InputMediaUploadedDocument(
-                    mime_type=self.guess_mime_type(file_name or video.name) or "video/mp4",
-                    file=file,
-                    attributes=[
-                        raw.types.DocumentAttributeVideo(
-                            supports_streaming=True,
-                            duration=0,
-                            w=0,
-                            h=0
-                        )
-                    ]
-                )
-        elif forward_from_chat_id is None:
-            raise ValueError("You need to pass one of the following parameter animation/photo/video/forward_from_chat_id!")
-
+                media = await self._upload_video(file_name,video)
+        else:
+            if forward_from_chat_id is None:
+                raise ValueError("You need to pass one of the following parameter photo/video/forward_from_chat_id!")
+        
         text, entities = self._split(**await utils.parse_text_entities(self, caption, parse_mode, caption_entities))
 
-        if allowed_users:
+        if allowed_users and len(allowed_users) > 0:
             users = [await self.resolve_peer(user_id) for user_id in allowed_users]
             privacy_rules.append(raw.types.InputPrivacyValueAllowUsers(users=users))
-        if denied_users:
+        if denied_users and len(denied_users) > 0:
             users = [await self.resolve_peer(user_id) for user_id in denied_users]
             privacy_rules.append(raw.types.InputPrivacyValueDisallowUsers(users=users))
 
@@ -141,16 +135,12 @@ class SendStory:
                 entities=entities,
                 period=period,
                 fwd_from_id=forward_from_chat,
-                fwd_from_story=forward_from_story_id
-                if forward_from_chat_id is not None
-                else None,
-                fwd_modified=forward_from_chat_id is not None
-                and caption is not None,
+                fwd_from_story=forward_from_story_id if forward_from_chat_id is not None else None,
+                fwd_modified=True if forward_from_chat_id is not None and caption is not None else False,
                 media_areas=[
-                    await media_area.write(self) for media_area in media_areas
-                ]
-                if media_areas is not None
-                else None,
+                    await media_area.write(self)
+                    for media_area in media_areas
+                ] if media_areas is not None else None
             )
         )
         return await types.Story._parse(self, r.updates[0].story, r.updates[0].peer)

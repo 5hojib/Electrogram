@@ -1,12 +1,13 @@
 import os
 from datetime import datetime
-from typing import Union, BinaryIO, Optional, Callable, List
+from typing import List, Union, BinaryIO, Optional, Callable
 
 import pyrogram
 from pyrogram import StopTransmission
+from pyrogram import enums
 from pyrogram import raw
 from pyrogram import types
-from pyrogram import utils, enums
+from pyrogram import utils
 from pyrogram.errors import FilePartMissing
 from pyrogram.file_id import FileType
 
@@ -29,6 +30,7 @@ class SendVideoNote:
         parse_mode: Optional["enums.ParseMode"] = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
+        ttl_seconds: int = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -68,7 +70,8 @@ class SendVideoNote:
                                 w=length,
                                 h=length
                             )
-                        ]
+                        ],
+                        ttl_seconds=ttl_seconds
                     )
                 else:
                     media = utils.get_input_media_from_file_id(video_note, FileType.VIDEO_NOTE)

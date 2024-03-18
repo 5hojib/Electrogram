@@ -1,6 +1,7 @@
 from typing import AsyncGenerator, Optional
 
 import pyrogram
+from pyrogram.errors import ChannelPrivate
 from pyrogram import types, raw, utils
 
 
@@ -39,7 +40,10 @@ class GetDialogs:
                     continue
 
                 chat_id = utils.get_peer_id(message.peer_id)
-                messages[chat_id] = await types.Message._parse(self, message, users, chats)
+                try: 
+                    messages[chat_id] = await types.Message._parse(self, message, users, chats)
+                except ChannelPrivate:
+                    continue
 
             dialogs = []
 

@@ -185,20 +185,21 @@ def parse_deleted_messages(client, update) -> List["types.Message"]:
     messages = update.messages
     channel_id = getattr(update, "channel_id", None)
 
-    parsed_messages = [
-        types.Message(
-            id=message,
-            chat=types.Chat(
-                id=get_channel_id(channel_id),
-                type=enums.ChatType.CHANNEL,
-                client=client,
+    parsed_messages = []
+
+    for message in messages:
+        parsed_messages.append(
+            types.Message(
+                id=message,
+                chat=types.Chat(
+                    id=get_channel_id(channel_id),
+                    type=enums.ChatType.CHANNEL,
+                    client=client
+                ) if channel_id is not None else None,
+                client=client
             )
-            if channel_id is not None
-            else None,
-            client=client,
         )
-        for message in messages
-    ]
+
     return types.List(parsed_messages)
 
 
@@ -259,7 +260,10 @@ def get_raw_peer_id(peer: raw.base.Peer) -> Optional[int]:
     if isinstance(peer, raw.types.PeerChat):
         return peer.chat_id
 
-    return peer.channel_id if isinstance(peer, raw.types.PeerChannel) else None
+    if isinstance(peer, raw.types.PeerChannel):
+        return peer.channel_id
+
+    return None
 
 
 def get_peer_id(peer: raw.base.Peer) -> int:
@@ -439,9 +443,9 @@ async def get_reply_to(
             quote_entities=entities
         )
     if reply_to_story_id:
-        user_id = await client.resolve_peer(chat_id)
+        peer = await client.resolve_peer(chat_id)
         reply_to = types.InputReplyToStory(
-            user_id=user_id,
+            peer=peer,
             story_id=reply_to_story_id
         )
     return reply_to

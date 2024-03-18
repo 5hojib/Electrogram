@@ -29,3 +29,4 @@ class MessageServiceType(AutoName):
     VIDEO_CHAT_SCHEDULED = auto()
     VIDEO_CHAT_MEMBERS_INVITED = auto()
     WEB_APP_DATA = auto()
+    BOOST_APPLY = auto()
