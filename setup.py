@@ -6,6 +6,7 @@ from compiler.errors import compiler as errors_compiler
 
 
 requires = [
+    "aiosqlite",
     "pymediainfo",
     "pymongo",
     "pysocks",
