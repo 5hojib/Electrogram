@@ -59,7 +59,7 @@ __all__ = [
     "Message",
     "MessageEntity",
     "MessageReactionUpdated",
-    "MessageReactionCountUpdated"
+    "MessageReactionCountUpdated",
     "Photo",
     "Thumbnail",
     "ReactionCount",
