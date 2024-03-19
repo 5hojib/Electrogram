@@ -7,8 +7,8 @@ from compiler.errors import compiler as errors_compiler
 
 requires = [
     "aiosqlite",
-    "pymediainfo",
-    "pymongo",
+    "pymediainfo==6.0.1",
+    "pymongo==4.4.1",
     "pysocks",
     "tgcrypto"
 ]
