@@ -11,7 +11,7 @@ from pyrogram.types import (
     Message,
     ReplyKeyboardMarkup,
     Story,
-    Update,
+    Update
 )
 
 

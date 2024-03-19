@@ -1,6 +1,7 @@
 import inspect
-from typing import Callable
 import pyrogram
+
+from typing import Callable
 from pyrogram.filters import Filter
 from pyrogram.types import Update
 
@@ -13,8 +14,7 @@ class Handler:
         if callable(self.filters):
             if inspect.iscoroutinefunction(self.filters.__call__):
                 return await self.filters(client, update)
-            else:
-                return await client.loop.run_in_executor(
+            return await client.loop.run_in_executor(
                     client.executor,
                     self.filters,
                     client, update

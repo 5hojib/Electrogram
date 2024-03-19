@@ -7,7 +7,7 @@ import pyrogram
 from pyrogram import raw, enums
 from pyrogram import types
 from pyrogram import utils
-from pyrogram.errors import MessageIdsEmpty, PeerIdInvalid
+from pyrogram.errors import ChannelPrivate, MessageIdsEmpty, PeerIdInvalid
 from pyrogram.parser import utils as parser_utils, Parser
 from ..object import Object
 from ..update import Update
@@ -60,6 +60,7 @@ class Message(Object, Update):
         reply_to_message_id: int = None,
         reply_to_story_id: int = None,
         reply_to_story_user_id: int = None,
+        reply_to_story_chat_id: int = None,
         reply_to_top_message_id: int = None,
         reply_to_message: "Message" = None,
         reply_to_story: "types.Story" = None,
@@ -88,6 +89,7 @@ class Message(Object, Update):
         game: "types.Game" = None,
         giveaway: "types.Giveaway" = None,
         giveaway_result: "types.GiveawayResult" = None,
+        boosts_applied: int = None,
         story: Union["types.MessageStory", "types.Story"] = None,
         video: "types.Video" = None,
         voice: "types.Voice" = None,
@@ -138,7 +140,8 @@ class Message(Object, Update):
             "types.ReplyKeyboardRemove",
             "types.ForceReply"
         ] = None,
-        reactions: List["types.Reaction"] = None
+        reactions: List["types.Reaction"] = None,
+        raw: "raw.types.Message" = None
     ):
         super().__init__(client)
 
@@ -159,6 +162,7 @@ class Message(Object, Update):
         self.reply_to_message_id = reply_to_message_id
         self.reply_to_story_id = reply_to_story_id
         self.reply_to_story_user_id = reply_to_story_user_id
+        self.reply_to_story_chat_id = reply_to_story_chat_id
         self.reply_to_top_message_id = reply_to_top_message_id
         self.reply_to_message = reply_to_message
         self.reply_to_story = reply_to_story
@@ -187,6 +191,7 @@ class Message(Object, Update):
         self.game = game
         self.giveaway = giveaway
         self.giveaway_result = giveaway_result
+        self.boosts_applied = boosts_applied
         self.story = story
         self.video = video
         self.voice = voice
@@ -233,6 +238,7 @@ class Message(Object, Update):
         self.video_chat_members_invited = video_chat_members_invited
         self.web_app_data = web_app_data
         self.reactions = reactions
+        self.raw = raw
 
     async def wait_for_click(
             self,
@@ -264,7 +270,7 @@ class Message(Object, Update):
         replies: int = 1
     ):
         if isinstance(message, raw.types.MessageEmpty):
-            return Message(id=message.id, empty=True, client=client)
+            return Message(id=message.id, empty=True, client=client, raw=message)
 
         from_id = utils.get_raw_peer_id(message.from_id)
         peer_id = utils.get_raw_peer_id(message.peer_id)
@@ -316,6 +322,7 @@ class Message(Object, Update):
             web_app_data = None
             giveaway_launched = None
             giveaway_result = None
+            boosts_applied = None
 
             service_type = None
 
@@ -407,6 +414,9 @@ class Message(Object, Update):
             elif isinstance(action, raw.types.MessageActionGiveawayResults):
                 giveaway_result = await types.GiveawayResult._parse(client, action, True)
                 service_type = enums.MessageServiceType.GIVEAWAY_RESULT
+            elif isinstance(action, raw.types.MessageActionBoostApply):
+                boosts_applied = action.boosts
+                service_type = enums.MessageServiceType.BOOST_APPLY
             from_user = types.User._parse(client, users.get(user_id, None))
             sender_chat = types.Chat._parse(client, message, users, chats, is_chat=False) if not from_user else None
 
@@ -445,6 +455,8 @@ class Message(Object, Update):
                 web_app_data=web_app_data,
                 giveaway_launched=giveaway_launched,
                 giveaway_result=giveaway_result,
+                boosts_applied=boosts_applied,
+                raw=message,
                 client=client
             )
 
@@ -712,6 +724,7 @@ class Message(Object, Update):
                 outgoing=message.out,
                 reply_markup=reply_markup,
                 reactions=reactions,
+                raw=message,
                 client=client
             )
 
@@ -743,7 +756,12 @@ class Message(Object, Update):
                         parsed_message.reply_to_top_message_id = message.reply_to.reply_to_top_id
                 else:
                     parsed_message.reply_to_story_id = message.reply_to.story_id
-                    parsed_message.reply_to_story_user_id = message.reply_to.user_id
+                    if isinstance(message.reply_to.peer, raw.types.PeerUser):
+                        parsed_message.reply_to_story_user_id = message.reply_to.peer.user_id
+                    elif isinstance(message.reply_to.peer, raw.types.PeerChat):
+                        parsed_message.reply_to_story_chat_id = utils.get_channel_id(message.reply_to.peer.chat_id)
+                    else:
+                        parsed_message.reply_to_story_chat_id = utils.get_channel_id(message.reply_to.peer.channel_id)
 
                 if replies:
                     if parsed_message.reply_to_message_id:
@@ -768,10 +786,12 @@ class Message(Object, Update):
                                 parsed_message.reply_to_message = reply_to_message
                         except MessageIdsEmpty:
                             pass
+                        except ChannelPrivate:
+                            pass
                     elif parsed_message.reply_to_story_id:
                         try:
                             reply_to_story = await client.get_stories(
-                                parsed_message.reply_to_story_user_id,
+                                parsed_message.reply_to_story_user_id or parsed_message.reply_to_story_chat_id,
                                 parsed_message.reply_to_story_id
                             )
                         except Exception:
@@ -809,7 +829,7 @@ class Message(Object, Update):
         disable_web_page_preview: bool = None,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
-        reply_in_chat_id: int = None,
+        reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
         schedule_date: datetime = None,
@@ -874,7 +894,7 @@ class Message(Object, Update):
             "types.ForceReply"
         ] = None,
         reply_to_message_id: int = None,
-        reply_in_chat_id: int = None,
+        reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
         progress: Callable = None,
@@ -933,7 +953,7 @@ class Message(Object, Update):
         file_name: str = None,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
-        reply_in_chat_id: int = None,
+        reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
         reply_markup: Union[
@@ -992,7 +1012,7 @@ class Message(Object, Update):
         caption_entities: List["types.MessageEntity"] = None,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
-        reply_in_chat_id: int = None,
+        reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
         reply_markup: Union[
@@ -1048,7 +1068,7 @@ class Message(Object, Update):
         vcard: str = "",
         disable_notification: bool = None,
         reply_to_message_id: int = None,
-        reply_in_chat_id: int = None,
+        reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
@@ -1103,7 +1123,7 @@ class Message(Object, Update):
         force_document: bool = None,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
-        reply_in_chat_id: int = None,
+        reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
         schedule_date: datetime = None,
@@ -1223,7 +1243,7 @@ class Message(Object, Update):
         quote: bool = None,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
-        reply_in_chat_id: int = None,
+        reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
@@ -1275,7 +1295,7 @@ class Message(Object, Update):
         quote: bool = None,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
-        reply_in_chat_id: int = None,
+        reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
         parse_mode: Optional["enums.ParseMode"] = None
@@ -1317,7 +1337,7 @@ class Message(Object, Update):
         ttl_seconds: int = None,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
-        reply_in_chat_id: int = None,
+        reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
         reply_markup: Union[
@@ -1382,7 +1402,7 @@ class Message(Object, Update):
         disable_notification: bool = None,
         protect_content: bool = None,
         reply_to_message_id: int = None,
-        reply_in_chat_id: int = None,
+        reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
@@ -1442,7 +1462,7 @@ class Message(Object, Update):
         quote: bool = None,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
-        reply_in_chat_id: int = None,
+        reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
@@ -1497,7 +1517,7 @@ class Message(Object, Update):
         foursquare_type: str = "",
         disable_notification: bool = None,
         reply_to_message_id: int = None,
-        reply_in_chat_id: int = None,
+        reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
@@ -1559,7 +1579,7 @@ class Message(Object, Update):
         supports_streaming: bool = True,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
-        reply_in_chat_id: int = None,
+        reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
         reply_markup: Union[
@@ -1621,10 +1641,12 @@ class Message(Object, Update):
         thumb: Union[str, BinaryIO] = None,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
-        reply_in_chat_id: int = None,
+        reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
+        protect_content: bool = None,
+        ttl_seconds: int = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -1662,6 +1684,8 @@ class Message(Object, Update):
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
+            protect_content=protect_content,
+            ttl_seconds=ttl_seconds,
             parse_mode=parse_mode,
             reply_markup=reply_markup,
             progress=progress,
@@ -1678,7 +1702,7 @@ class Message(Object, Update):
         duration: int = 0,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
-        reply_in_chat_id: int = None,
+        reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
         reply_markup: Union[
@@ -1734,7 +1758,7 @@ class Message(Object, Update):
         invert_media: bool = None,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
-        reply_in_chat_id: int = None,
+        reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
         schedule_date: datetime = None,
@@ -1978,7 +2002,7 @@ class Message(Object, Update):
                 return await self._client.send_web_page(
                     chat_id,
                     url=self.web_page_preview.webpage.url,
-                    text=self.caption,
+                    text=self.text,
                     entities=self.entities,
                     parse_mode=enums.ParseMode.DISABLED,
                     large_media=self.web_page_preview.force_large_media,
@@ -1987,7 +2011,7 @@ class Message(Object, Update):
                     message_thread_id=message_thread_id,
                     reply_to_message_id=reply_to_message_id,
                     quote_text=quote_text,
-            quote_entities=quote_entities,
+                    quote_entities=quote_entities,
                     schedule_date=schedule_date,
                     protect_content=protect_content,
                     reply_markup=self.reply_markup if reply_markup is object else reply_markup
@@ -2081,7 +2105,7 @@ class Message(Object, Update):
         else:
             await self.reply(button, quote=quote)
 
-    async def react(self, emoji: str = "", big: bool = False) -> bool:
+    async def react(self, emoji: str = "", big: bool = False, add_to_recent: bool = True) -> "types.MessageReactions":
         return await self._client.send_reaction(
             chat_id=self.chat.id,
             message_id=self.id,

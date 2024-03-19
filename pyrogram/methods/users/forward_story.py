@@ -11,7 +11,7 @@ class ForwardStory:
         self: "pyrogram.Client",
         from_chat_id: Union[int, str],
         from_story_id: int,
-        chat_id: int = None,
+        chat_id: Union[int, str] = None,
         privacy: "enums.StoriesPrivacyRules" = None,
         allowed_users: List[int] = None,
         denied_users: List[int] = None,

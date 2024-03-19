@@ -3,9 +3,7 @@ from datetime import datetime
 from typing import List, Optional
 
 import pyrogram
-from pyrogram import enums, utils
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import enums, utils, raw, types
 from ..object import Object
 from ..update import Update
 
@@ -30,6 +28,7 @@ class Link(str):
 
         return fmt.format(url=url, text=html.escape(text))
 
+    # noinspection PyArgumentList
     def __new__(cls, url, text, style):
         return str.__new__(cls, Link.format(url, text, style))
 
@@ -57,6 +56,7 @@ class User(Object, Update):
         is_fake: bool = None,
         is_support: bool = None,
         is_premium: bool = None,
+        is_contacts_only: bool = None,
         first_name: str = None,
         last_name: str = None,
         status: "enums.UserStatus" = None,
@@ -87,6 +87,7 @@ class User(Object, Update):
         self.is_fake = is_fake
         self.is_support = is_support
         self.is_premium = is_premium
+        self.is_contacts_only = is_contacts_only
         self.first_name = first_name
         self.last_name = last_name
         self.status = status
@@ -129,6 +130,9 @@ class User(Object, Update):
                     user_name = username.username
                 else:
                     usernames.append(types.Username._parse(username))
+        if user_name is None and usernames is not None and len(usernames) > 0:
+            user_name = usernames[0].username
+            usernames.pop(0)
 
         return User(
             id=user.id,
@@ -143,6 +147,7 @@ class User(Object, Update):
             is_fake=user.fake,
             is_support=user.support,
             is_premium=user.premium,
+            is_contacts_only=user.contact_require_premium,
             first_name=user.first_name,
             last_name=user.last_name,
             **User._parse_status(user.status, user.bot),

@@ -8,7 +8,28 @@ from .disconnect_handler import DisconnectHandler
 from .edited_message_handler import EditedMessageHandler
 from .inline_query_handler import InlineQueryHandler
 from .message_handler import MessageHandler
+from .message_reaction_updated_handler import MessageReactionUpdatedHandler
+from .message_reaction_count_updated_handler import MessageReactionCountUpdatedHandler
 from .poll_handler import PollHandler
 from .raw_update_handler import RawUpdateHandler
 from .user_status_handler import UserStatusHandler
 from .story_handler import StoryHandler
+
+__all__ = [
+    'CallbackQueryHandler',
+    'ChatJoinRequestHandler',
+    'ChatMemberUpdatedHandler',
+    'ConversationHandler',
+    'ChosenInlineResultHandler',
+    'DeletedMessagesHandler',
+    'DisconnectHandler',
+    'EditedMessageHandler',
+    'InlineQueryHandler',
+    'MessageHandler',
+    'MessageReactionUpdatedHandler',
+    'MessageReactionCountUpdatedHandler',
+    'PollHandler',
+    'RawUpdateHandler',
+    'UserStatusHandler',
+    'StoryHandler'
+]

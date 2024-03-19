@@ -18,14 +18,13 @@ from pathlib import Path
 from typing import Union, List, Optional, Callable, AsyncGenerator
 
 import pyrogram
-from pyrogram import enums
-from pyrogram import raw
-from pyrogram import utils
+from pyrogram import enums, raw, utils
 from pyrogram.crypto import aes
 from pyrogram.errors import CDNFileHashMismatch
 from pyrogram.errors import (
     SessionPasswordNeeded,
-    VolumeLocNotFound, ChannelPrivate,
+    VolumeLocNotFound,
+    ChannelPrivate,
     BadRequest
 )
 from pyrogram.handlers.handler import Handler
@@ -49,18 +48,13 @@ class Client(Methods):
     APP_VERSION = "pyrogram"
     DEVICE_MODEL = f"{platform.python_implementation()} {platform.python_version()}"
     SYSTEM_VERSION = f"{platform.system()} {platform.release()}"
-
     LANG_CODE = "en"
-
     PARENT_DIR = Path(sys.argv[0]).parent
-
     INVITE_LINK_RE = re.compile(r"^(?:https?://)?(?:www\.)?(?:t(?:elegram)?\.(?:org|me|dog)/(?:joinchat/|\+))([\w-]+)$")
-    WORKERS = min(32, (os.cpu_count() or 0) + 4)
+    WORKERS = 32
     WORKDIR = PARENT_DIR
-
     UPDATES_WATCHDOG_INTERVAL = 5 * 60
-
-    MAX_CONCURRENT_TRANSMISSIONS = 10
+    MAX_CONCURRENT_TRANSMISSIONS = 32
 
     mimetypes = MimeTypes()
     mimetypes.readfp(StringIO(mime_types))
@@ -255,33 +249,32 @@ class Client(Methods):
                 print(e.MESSAGE)
 
                 while True:
-                    print("Password hint: {}".format(await self.get_password_hint()))
+                    print(f"Password hint: {await self.get_password_hint()}")
 
                     if not self.password:
                         self.password = await ainput("Enter password (empty to recover): ", hide=self.hide_password)
 
                     try:
-                        if not self.password:
-                            confirm = await ainput("Confirm password recovery (y/n): ")
-
-                            if confirm == "y":
-                                email_pattern = await self.send_recovery_code()
-                                print(f"The recovery code has been sent to {email_pattern}")
-
-                                while True:
-                                    recovery_code = await ainput("Enter recovery code: ")
-
-                                    try:
-                                        return await self.recover_password(recovery_code)
-                                    except BadRequest as e:
-                                        print(e.MESSAGE)
-                                    except Exception as e:
-                                        log.exception(e)
-                                        raise
-                            else:
-                                self.password = None
-                        else:
+                        if self.password:
                             return await self.check_password(self.password)
+                        confirm = await ainput("Confirm password recovery (y/n): ")
+
+                        if confirm == "y":
+                            email_pattern = await self.send_recovery_code()
+                            print(f"The recovery code has been sent to {email_pattern}")
+
+                            while True:
+                                recovery_code = await ainput("Enter recovery code: ")
+
+                                try:
+                                    return await self.recover_password(recovery_code)
+                                except BadRequest as e:
+                                    print(e.MESSAGE)
+                                except Exception as e:
+                                    log.exception(e)
+                                    raise
+                        else:
+                            self.password = None
                     except BadRequest as e:
                         print(e.MESSAGE)
                         self.password = None
@@ -338,8 +331,7 @@ class Client(Methods):
                     else None
                 )
                 if peer.usernames is not None and len(peer.usernames) > 1:
-                    for uname in peer.usernames:
-                        usernames.append((peer.id, uname.username.lower()))
+                    usernames.extend((peer.id, uname.username.lower()) for uname in peer.usernames)
                 phone_number = peer.phone
                 peer_type = "bot" if peer.bot else "user"
             elif isinstance(peer, (raw.types.Chat, raw.types.ChatForbidden)):
@@ -355,8 +347,7 @@ class Client(Methods):
                     else None
                 )
                 if peer.usernames is not None and len(peer.usernames) > 1:
-                    for uname in peer.usernames:
-                        usernames.append((peer.id, uname.username.lower()))
+                    usernames.extend((peer.id, uname.username.lower()) for uname in peer.usernames)
                 peer_type = "channel" if peer.broadcast else "supergroup"
             elif isinstance(peer, raw.types.ChannelForbidden):
                 peer_id = utils.get_channel_id(peer.id)
@@ -444,9 +435,8 @@ class Client(Methods):
                     {u.id: u for u in diff.users},
                     {c.id: c for c in diff.chats}
                 ))
-            else:
-                if diff.other_updates:
-                    self.dispatcher.updates_queue.put_nowait((diff.other_updates[0], {}, {}))
+            elif diff.other_updates:
+                self.dispatcher.updates_queue.put_nowait((diff.other_updates[0], {}, {}))
         elif isinstance(updates, raw.types.UpdateShort):
             self.dispatcher.updates_queue.put_nowait((updates.update, {}, {}))
         elif isinstance(updates, raw.types.UpdatesTooLong):
@@ -480,40 +470,38 @@ class Client(Methods):
             )
             await self.storage.user_id(None)
             await self.storage.is_bot(None)
-        else:
-            if not await self.storage.api_id():
-                if self.api_id:
-                    await self.storage.api_id(self.api_id)
-                else:
-                    while True:
-                        try:
-                            value = int(await ainput("Enter the api_id part of the API key: "))
+        elif not await self.storage.api_id():
+            if self.api_id:
+                await self.storage.api_id(self.api_id)
+            else:
+                while True:
+                    try:
+                        value = int(await ainput("Enter the api_id part of the API key: "))
 
-                            if value <= 0:
-                                print("Invalid value")
-                                continue
+                        if value <= 0:
+                            print("Invalid value")
+                            continue
 
-                            confirm = (await ainput(f'Is "{value}" correct? (y/N): ')).lower()
+                        confirm = (await ainput(f'Is "{value}" correct? (y/N): ')).lower()
 
-                            if confirm == "y":
-                                await self.storage.api_id(value)
-                                break
-                        except Exception as e:
-                            print(e)
+                        if confirm == "y":
+                            await self.storage.api_id(value)
+                            break
+                    except Exception as e:
+                        print(e)
 
     def load_plugins(self):
-        if self.plugins:
-            plugins = self.plugins.copy()
-
-            for option in ["include", "exclude"]:
-                if plugins.get(option, []):
-                    plugins[option] = [
-                        (i.split()[0], i.split()[1:] or None)
-                        for i in self.plugins[option]
-                    ]
-        else:
+        if not self.plugins:
             return
 
+        plugins = self.plugins.copy()
+
+        for option in ["include", "exclude"]:
+            if plugins.get(option, []):
+                plugins[option] = [
+                    (i.split()[0], i.split()[1:] or None)
+                    for i in self.plugins[option]
+                ]
         if plugins.get("enabled", True):
             root = plugins["root"]
             include = plugins.get("include", [])
@@ -526,21 +514,22 @@ class Client(Methods):
                     module_path = '.'.join(path.parent.parts + (path.stem,))
                     module = import_module(module_path)
 
-                    for name in vars(module).keys():
+                    for name in vars(module):
                         try:
                             for handler, group in getattr(module, name).handlers:
                                 if isinstance(handler, Handler) and isinstance(group, int):
                                     self.add_handler(handler, group)
 
-                                    log.info('[{}] [LOAD] {}("{}") in group {} from "{}"'.format(
-                                        self.name, type(handler).__name__, name, group, module_path))
+                                    log.info(
+                                        f'[{self.name}] [LOAD] {type(handler).__name__}("{name}") in group {group} from "{module_path}"'
+                                    )
 
                                     count += 1
                         except Exception:
                             pass
             else:
                 for path, handlers in include:
-                    module_path = root + "." + path
+                    module_path = f"{root}.{path}"
                     warn_non_existent_functions = True
 
                     try:
@@ -563,18 +552,20 @@ class Client(Methods):
                                 if isinstance(handler, Handler) and isinstance(group, int):
                                     self.add_handler(handler, group)
 
-                                    log.info('[{}] [LOAD] {}("{}") in group {} from "{}"'.format(
-                                        self.name, type(handler).__name__, name, group, module_path))
+                                    log.info(
+                                        f'[{self.name}] [LOAD] {type(handler).__name__}("{name}") in group {group} from "{module_path}"'
+                                    )
 
                                     count += 1
                         except Exception:
                             if warn_non_existent_functions:
-                                log.warning('[{}] [LOAD] Ignoring non-existent function "{}" from "{}"'.format(
-                                    self.name, name, module_path))
+                                log.warning(
+                                    f'[{self.name}] [LOAD] Ignoring non-existent function "{name}" from "{module_path}"'
+                                )
 
             if exclude:
                 for path, handlers in exclude:
-                    module_path = root + "." + path
+                    module_path = f"{root}.{path}"
                     warn_non_existent_functions = True
 
                     try:
@@ -597,18 +588,21 @@ class Client(Methods):
                                 if isinstance(handler, Handler) and isinstance(group, int):
                                     self.remove_handler(handler, group)
 
-                                    log.info('[{}] [UNLOAD] {}("{}") from group {} in "{}"'.format(
-                                        self.name, type(handler).__name__, name, group, module_path))
+                                    log.info(
+                                        f'[{self.name}] [UNLOAD] {type(handler).__name__}("{name}") from group {group} in "{module_path}"'
+                                    )
 
                                     count -= 1
                         except Exception:
                             if warn_non_existent_functions:
-                                log.warning('[{}] [UNLOAD] Ignoring non-existent function "{}" from "{}"'.format(
-                                    self.name, name, module_path))
+                                log.warning(
+                                    f'[{self.name}] [UNLOAD] Ignoring non-existent function "{name}" from "{module_path}"'
+                                )
 
             if count > 0:
-                log.info('[{}] Successfully loaded {} plugin{} from "{}"'.format(
-                    self.name, count, "s" if count > 1 else "", root))
+                log.info(
+                    f'[{self.name}] Successfully loaded {count} plugin{"s" if count > 1 else ""} from "{root}"'
+                )
             else:
                 log.warning('[%s] No plugin loaded from "%s"', self.name, root)
 
@@ -628,6 +622,9 @@ class Client(Methods):
                 os.remove(temp_file_path)
 
             if isinstance(e, asyncio.CancelledError):
+                raise e
+
+            if isinstance(e, pyrogram.errors.FloodWait):
                 raise e
 
             return None
@@ -849,6 +846,8 @@ class Client(Methods):
                     finally:
                         await cdn_session.stop()
             except pyrogram.StopTransmission:
+                raise
+            except pyrogram.errors.FloodWait:
                 raise
             except Exception as e:
                 log.exception(e)

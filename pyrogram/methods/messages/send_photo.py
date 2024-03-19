@@ -25,7 +25,7 @@ class SendPhoto:
         message_thread_id: int = None,
         reply_to_message_id: int = None,
         reply_to_story_id: int = None,
-        reply_to_chat_id: int = None,
+        reply_to_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
         schedule_date: datetime = None,
@@ -54,31 +54,30 @@ class SendPhoto:
         )
 
         try:
-            if isinstance(photo, str):
-                if os.path.isfile(photo):
-                    file = await self.save_file(photo, progress=progress, progress_args=progress_args)
-                    media = raw.types.InputMediaUploadedPhoto(
-                        file=file,
-                        ttl_seconds=ttl_seconds,
-                        spoiler=has_spoiler,
-                    )
-                elif re.match("^https?://", photo):
-                    media = raw.types.InputMediaPhotoExternal(
-                        url=photo,
-                        ttl_seconds=ttl_seconds,
-                        spoiler=has_spoiler
-                    )
-                else:
-                    media = utils.get_input_media_from_file_id(photo, FileType.PHOTO, ttl_seconds=ttl_seconds)
-                    media.spoiler = has_spoiler
-            else:
+            if (
+                isinstance(photo, str)
+                and os.path.isfile(photo)
+                or not isinstance(photo, str)
+            ):
                 file = await self.save_file(photo, progress=progress, progress_args=progress_args)
                 media = raw.types.InputMediaUploadedPhoto(
                     file=file,
                     ttl_seconds=ttl_seconds,
+                    spoiler=has_spoiler,
+                )
+            elif (
+                isinstance(photo, str)
+                and not os.path.isfile(photo)
+                and re.match("^https?://", photo)
+            ):
+                media = raw.types.InputMediaPhotoExternal(
+                    url=photo,
+                    ttl_seconds=ttl_seconds,
                     spoiler=has_spoiler
                 )
-
+            else:
+                media = utils.get_input_media_from_file_id(photo, FileType.PHOTO, ttl_seconds=ttl_seconds)
+                media.spoiler = has_spoiler
             while True:
                 try:
                     r = await self.invoke(

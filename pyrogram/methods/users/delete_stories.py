@@ -11,7 +11,7 @@ class DeleteStories:
     async def delete_stories(
         self: "pyrogram.Client",
         story_ids: Union[int, Iterable[int]],
-        chat_id: int = None
+        chat_id: Union[int, str] = None
     ) -> bool:
         is_iterable = not isinstance(story_ids, int)
         ids = list(story_ids) if is_iterable else [story_ids]

@@ -12,6 +12,7 @@ class Story(Object, Update):
         *,
         client: "pyrogram.Client" = None,
         id: int,
+        chat: "types.Chat" = None,
         from_user: "types.User" = None,
         sender_chat: "types.Chat" = None,
         date: datetime,
@@ -34,11 +35,13 @@ class Story(Object, Update):
         forward_from: "types.StoryForwardHeader" = None,
         allowed_users: List[int] = None,
         denied_users: List[int] = None,
-        media_areas: List["types.MediaArea"] = None
+        media_areas: List["types.MediaArea"] = None,
+        raw: "raw.types.StoryItem" = None
     ):
         super().__init__(client)
 
         self.id = id
+        self.chat = chat
         self.from_user = from_user
         self.sender_chat = sender_chat
         self.date = date
@@ -62,6 +65,7 @@ class Story(Object, Update):
         self.allowed_users = allowed_users
         self.denied_users = denied_users
         self.media_areas = media_areas
+        self.raw = raw
 
     @staticmethod
     async def _parse(
@@ -78,6 +82,7 @@ class Story(Object, Update):
         animation = None
         photo = None
         video = None
+        chat = None
         from_user = None
         sender_chat = None
         privacy = None
@@ -113,7 +118,11 @@ class Story(Object, Update):
                     id=[await client.resolve_peer(chat_id)]
                 )
             )
-            sender_chat = types.Chat._parse_chat(client, chat.chats[0])
+            if stories.from_id is not None:
+                from_user = await client.get_users(stories.from_id.user_id)
+                chat = types.Chat._parse_chat(client, chat.chats[0])
+            else:
+                sender_chat = types.Chat._parse_chat(client, chat.chats[0])
         elif isinstance(peer, raw.types.InputPeerSelf):
             from_user = client.me
         else:
@@ -148,6 +157,7 @@ class Story(Object, Update):
 
         return Story(
             id=stories.id,
+            chat=chat,
             from_user=from_user,
             sender_chat=sender_chat,
             date=utils.timestamp_to_datetime(stories.date),
@@ -171,6 +181,7 @@ class Story(Object, Update):
             allowed_users=allowed_users,
             denied_users=denied_users,
             media_areas=media_areas,
+            raw=stories,
             client=client
         )
 
@@ -645,6 +656,7 @@ class Story(Object, Update):
             forward_from_chat_id=self.from_user.id if self.from_user is not None else self.sender_chat.id,
             forward_from_story_id=self.id
         )
+
     async def download(
         self,
         file_name: str = "",

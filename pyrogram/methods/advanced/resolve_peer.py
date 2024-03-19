@@ -26,6 +26,7 @@ class ResolvePeer:
                     return raw.types.InputPeerSelf()
 
                 peer_id = re.sub(r"[@+\s]", "", peer_id.lower())
+                peer_id = re.sub(r"https://t.me/", "", peer_id.lower())
 
                 try:
                     int(peer_id)

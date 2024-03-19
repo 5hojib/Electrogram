@@ -13,10 +13,14 @@ from .media_area_channel_post import MediaAreaChannelPost
 from .media_area_coordinates import MediaAreaCoordinates
 from .message import Message
 from .message_entity import MessageEntity
+from .message_reaction_updated import MessageReactionUpdated
+from .message_reaction_count_updated import MessageReactionCountUpdated
 from .photo import Photo
 from .poll import Poll
 from .poll_option import PollOption
 from .reaction import Reaction
+from .reaction_type import ReactionType
+from .reaction_count import ReactionCount
 from .sticker import Sticker
 from .stickerset import StickerSet
 from .stories_privacy_rules import StoriesPrivacyRules
@@ -40,7 +44,49 @@ from .story_views import StoryViews
 from .exported_story_link import ExportedStoryLink
 
 __all__ = [
-    "Animation", "Audio", "Contact", "Document", "Game", "Giveaway", "GiveawayLaunched", "GiveawayResult", "Location", "MediaArea", "MediaAreaChannelPost", "MediaAreaCoordinates", "Message", "MessageEntity", "Photo", "Thumbnail",
-    "StrippedThumbnail", "Poll", "PollOption", "Sticker", "StickerSet", "Venue", "Video", "VideoNote", "Voice", "WebPage", "WebPageEmpty", "WebPagePreview", "Dice",
-    "Reaction", "WebAppData", "MessageReactions", "MessageStory", "Story", "StoryDeleted", "StorySkipped", "StoryViews", "StoryForwardHeader", "StoriesPrivacyRules", "ExportedStoryLink"
+    "Animation",
+    "Audio",
+    "Contact",
+    "Document",
+    "Game",
+    "Giveaway",
+    "GiveawayLaunched",
+    "GiveawayResult",
+    "Location",
+    "MediaArea",
+    "MediaAreaChannelPost",
+    "MediaAreaCoordinates",
+    "Message",
+    "MessageEntity",
+    "MessageReactionUpdated",
+    "MessageReactionCountUpdated",
+    "Photo",
+    "Thumbnail",
+    "ReactionCount",
+    "ReactionType",
+    "StrippedThumbnail",
+    "Poll",
+    "PollOption",
+    "Sticker",
+    "StickerSet",
+    "Venue",
+    "Video",
+    "VideoNote",
+    "Voice",
+    "WebPage",
+    "WebPageEmpty",
+    "WebPagePreview",
+    "Dice",
+    "Reaction",
+    "WebAppData",
+    "MessageReactions",
+    "MessageStory",
+    "Story",
+    "StoryDeleted",
+    "StorySkipped",
+    "StoryViews",
+    "StoryForwardHeader",
+    "StoriesPrivacyRules",
+    "ExportedStoryLink"
 ]
+

@@ -1,7 +1,6 @@
 from typing import Optional, Union
 
-from pyrogram import raw
-from pyrogram import enums
+from pyrogram import raw, enums
 from ..object import Object
 
 

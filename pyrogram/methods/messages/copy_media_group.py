@@ -66,10 +66,14 @@ class CopyMediaGroup:
             self,
             raw.types.messages.Messages(
                 messages=[m.message for m in filter(
-                    lambda u: isinstance(u, (raw.types.UpdateNewMessage,
-                                             raw.types.UpdateNewChannelMessage,
-                                             raw.types.UpdateNewScheduledMessage)),
-                    r.updates
+                  lambda u: isinstance(
+                    u, (
+                      raw.types.UpdateNewMessage,
+                      raw.types.UpdateNewChannelMessage,
+                      raw.types.UpdateNewScheduledMessage
+                      )
+                    ),
+                  r.updates
                 )],
                 users=r.users,
                 chats=r.chats

@@ -11,8 +11,7 @@ from typing import Union, List, Dict, Optional, Any, Callable, TypeVar
 from types import SimpleNamespace
 
 import pyrogram
-from pyrogram import raw, enums
-from pyrogram import types
+from pyrogram import raw, enums, types
 from pyrogram.file_id import FileId, FileType, PHOTO_TYPES, DOCUMENT_TYPES
 
 
@@ -444,9 +443,9 @@ async def get_reply_to(
             quote_entities=entities
         )
     if reply_to_story_id:
-        user_id = await client.resolve_peer(chat_id)
+        peer = await client.resolve_peer(chat_id)
         reply_to = types.InputReplyToStory(
-            user_id=user_id,
+            peer=peer,
             story_id=reply_to_story_id
         )
     return reply_to

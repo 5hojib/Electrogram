@@ -3,8 +3,7 @@ from typing import Dict
 from typing import Optional
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types
+from pyrogram import raw, utils, types
 from ..object import Object
 
 

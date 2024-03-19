@@ -6,9 +6,10 @@ from pymediainfo import MediaInfo
 from typing import Union, List, Optional
 
 import pyrogram
+from pyrogram import enums
 from pyrogram import raw
 from pyrogram import types
-from pyrogram import utils, enums
+from pyrogram import utils
 from pyrogram.file_id import FileType
 
 log = logging.getLogger(__name__)
@@ -29,7 +30,7 @@ class SendMediaGroup:
         message_thread_id: int = None,
         reply_to_message_id: int = None,
         reply_to_story_id: int = None,
-        reply_to_chat_id: int = None,
+        reply_to_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
@@ -120,9 +121,24 @@ class SendMediaGroup:
                 if isinstance(i.media, str):
                     is_animation = False
                     if os.path.isfile(i.media):
-                        videoInfo = MediaInfo.parse(i.media)
-                        if not any([track.track_type == 'Audio' for track in videoInfo.tracks]):
-                            is_animation = True
+                        try:
+                            videoInfo = MediaInfo.parse(i.media)
+                        except OSError:
+                            is_animation = True if isinstance(i, types.InputMediaAnimation) else False
+                        else:
+                            if not any([track.track_type == 'Audio' for track in videoInfo.tracks]):
+                                is_animation = True
+                        attributes = [
+                            raw.types.DocumentAttributeVideo(
+                                supports_streaming=True if is_animation else (i.supports_streaming or None),
+                                duration=i.duration,
+                                w=i.width,
+                                h=i.height
+                            ),
+                            raw.types.DocumentAttributeFilename(file_name=os.path.basename(i.media))
+                        ]
+                        if is_animation:
+                            attributes.append(raw.types.DocumentAttributeAnimated())
                         media = await self.invoke(
                             raw.functions.messages.UploadMedia(
                                 peer=await self.resolve_peer(chat_id),
@@ -132,16 +148,7 @@ class SendMediaGroup:
                                     spoiler=i.has_spoiler,
                                     mime_type=self.guess_mime_type(i.media) or "video/mp4",
                                     nosound_video=is_animation,
-                                    attributes=[
-                                        raw.types.DocumentAttributeVideo(
-                                            supports_streaming=True if is_animation else (i.supports_streaming or None),
-                                            duration=i.duration,
-                                            w=i.width,
-                                            h=i.height
-                                        ),
-                                        raw.types.DocumentAttributeFilename(file_name=os.path.basename(i.media)),
-                                        raw.types.DocumentAttributeAnimated() if is_animation else None
-                                    ]
+                                    attributes=attributes
                                 )
                             )
                         )
