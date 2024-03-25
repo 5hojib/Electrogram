@@ -9,7 +9,6 @@ from typing import NamedTuple, List, Tuple
 
 HOME_PATH = Path("compiler/api")
 DESTINATION_PATH = Path("pyrogram/raw")
-NOTICE_PATH = "NOTICE"
 
 SECTION_RE = re.compile(r"---(\w+)---")
 LAYER_RE = re.compile(r"//\sLAYER\s(\d+)")
@@ -189,14 +188,6 @@ def start(format: bool = False):
         type_tmpl = f1.read()
         combinator_tmpl = f2.read()
 
-    with open(NOTICE_PATH, encoding="utf-8") as f:
-        notice = []
-
-        for line in f.readlines():
-            notice.append(f"#  {line}".strip())
-
-        notice = "\n".join(notice)
-
     section = None
     layer = None
     combinators = []
@@ -323,7 +314,6 @@ def start(format: bool = False):
         with open(dir_path / f"{snake(module)}.py", "w") as f:
             f.write(
                 type_tmpl.format(
-                    notice=notice,
                     warning=WARNING,
                     docstring=docstring,
                     name=type,
@@ -509,7 +499,6 @@ def start(format: bool = False):
         return_arguments = ", ".join([f"{i[0]}={i[0]}" for i in sorted_args])
 
         compiled_combinator = combinator_tmpl.format(
-            notice=notice,
             warning=WARNING,
             name=c.name,
             docstring=docstring,
@@ -546,7 +535,6 @@ def start(format: bool = False):
 
     for namespace, types in namespaces_to_types.items():
         with open(DESTINATION_PATH / "base" / namespace / "__init__.py", "w") as f:
-            f.write(f"{notice}\n\n")
             f.write(f"{WARNING}\n\n")
 
             for t in types:
@@ -562,7 +550,6 @@ def start(format: bool = False):
 
     for namespace, types in namespaces_to_constructors.items():
         with open(DESTINATION_PATH / "types" / namespace / "__init__.py", "w") as f:
-            f.write(f"{notice}\n\n")
             f.write(f"{WARNING}\n\n")
 
             for t in types:
@@ -578,7 +565,6 @@ def start(format: bool = False):
 
     for namespace, types in namespaces_to_functions.items():
         with open(DESTINATION_PATH / "functions" / namespace / "__init__.py", "w") as f:
-            f.write(f"{notice}\n\n")
             f.write(f"{WARNING}\n\n")
 
             for t in types:
@@ -593,7 +579,6 @@ def start(format: bool = False):
                 f.write(f"from . import {', '.join(filter(bool, namespaces_to_functions))}")
 
     with open(DESTINATION_PATH / "all.py", "w", encoding="utf-8") as f:
-        f.write(notice + "\n\n")
         f.write(WARNING + "\n\n")
         f.write(f"layer = {layer}\n\n")
         f.write("objects = {")
@@ -616,6 +601,5 @@ def start(format: bool = False):
 if "__main__" == __name__:
     HOME_PATH = Path(".")
     DESTINATION_PATH = Path("../../pyrogram/raw")
-    NOTICE_PATH = Path("../../NOTICE")
 
     start(format=False)

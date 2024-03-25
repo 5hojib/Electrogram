@@ -5,7 +5,6 @@ import shutil
 
 HOME = "compiler/errors"
 DEST = "pyrogram/errors/exceptions"
-NOTICE_PATH = "NOTICE"
 
 
 def snek(s):
@@ -24,16 +23,8 @@ def start():
 
     files = [i for i in os.listdir("{}/source".format(HOME))]
 
-    with open(NOTICE_PATH, encoding="utf-8") as f:
-        notice = []
-
-        for line in f.readlines():
-            notice.append("# {}".format(line).strip())
-
-        notice = "\n".join(notice)
-
     with open("{}/all.py".format(DEST), "w", encoding="utf-8") as f_all:
-        f_all.write(notice + "\n\n")
+        f_all.write("\n\n")
         f_all.write("count = {count}\n\n")
         f_all.write("exceptions = {\n")
 
@@ -48,7 +39,7 @@ def start():
 
             if not os.path.exists(init):
                 with open(init, "w", encoding="utf-8") as f_init:
-                    f_init.write(notice + "\n\n")
+                    f_init.write("\n\n")
 
             with open(init, "a", encoding="utf-8") as f_init:
                 f_init.write("from .{}_{} import *\n".format(name.lower(), code))
@@ -90,7 +81,6 @@ def start():
                         sub_class_template = f_sub_class_template.read()
 
                     class_template = class_template.format(
-                        notice=notice,
                         super_class=super_class,
                         code=code,
                         docstring='"""{}"""'.format(name),
@@ -118,6 +108,5 @@ def start():
 if "__main__" == __name__:
     HOME = "."
     DEST = "../../pyrogram/errors/exceptions"
-    NOTICE_PATH = "../../NOTICE"
 
     start()
