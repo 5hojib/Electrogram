@@ -38,5 +38,5 @@ class WebPagePreview(Object):
             force_large_media=web_page_preview.force_large_media,
             force_small_media=web_page_preview.force_small_media,
             invert_media=invert_media,
-            is_safe=is_safe
+            is_safe=web_page_preview.safe
         )
