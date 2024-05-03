@@ -14,7 +14,7 @@ class MessageMediaType(AutoName):
     LOCATION = auto()
     VENUE = auto()
     POLL = auto()
-    #WEB_PAGE_PREVIEW = auto()
+    WEB_PAGE_PREVIEW = auto()
     DICE = auto()
     GAME = auto()
     GIVEAWAY = auto()
