@@ -1378,78 +1378,6 @@ class Message(Object, Update):
             progress_args=progress_args
         )
 
-    async def reply_poll(
-        self,
-        question: str,
-        options: List[str],
-        is_anonymous: bool = True,
-        type: "enums.PollType" = enums.PollType.REGULAR,
-        allows_multiple_answers: bool = None,
-        correct_option_id: int = None,
-        explanation: str = None,
-        explanation_parse_mode: "enums.ParseMode" = None,
-        explanation_entities: List["types.MessageEntity"] = None,
-        open_period: int = None,
-        close_date: datetime = None,
-        is_closed: bool = None,
-        quote: bool = None,
-        disable_notification: bool = None,
-        protect_content: bool = None,
-        reply_to_message_id: int = None,
-        reply_in_chat_id: Union[int, str] = None,
-        quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
-        parse_mode: Optional["enums.ParseMode"] = None,
-        schedule_date: datetime = None,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply"
-        ] = None
-    ) -> "Message":
-        if quote is None:
-            quote = self.chat.type != enums.ChatType.PRIVATE
-
-        if reply_to_message_id is None and quote:
-            reply_to_message_id = self.id
-
-        message_thread_id = None
-        if self.message_thread_id:
-            message_thread_id = self.message_thread_id
-
-        chat_id = self.chat.id
-        reply_to_chat_id = None
-        if reply_in_chat_id is not None:
-            chat_id = reply_in_chat_id
-            reply_to_chat_id = self.chat.id
-
-        return await self._client.send_poll(
-            chat_id=chat_id,
-            question=question,
-            options=options,
-            is_anonymous=is_anonymous,
-            type=type,
-            allows_multiple_answers=allows_multiple_answers,
-            correct_option_id=correct_option_id,
-            explanation=explanation,
-            explanation_parse_mode=explanation_parse_mode,
-            explanation_entities=explanation_entities,
-            open_period=open_period,
-            close_date=close_date,
-            is_closed=is_closed,
-            disable_notification=disable_notification,
-            protect_content=protect_content,
-            message_thread_id=message_thread_id,
-            reply_to_message_id=reply_to_message_id,
-            reply_to_chat_id=reply_to_chat_id,
-            quote_text=quote_text,
-            quote_entities=quote_entities,
-            parse_mode=parse_mode,
-            schedule_date=schedule_date,
-            reply_markup=reply_markup
-        )
-
     async def reply_sticker(
         self,
         sticker: Union[str, BinaryIO],
@@ -1498,62 +1426,6 @@ class Message(Object, Update):
             reply_markup=reply_markup,
             progress=progress,
             progress_args=progress_args
-        )
-
-    async def reply_venue(
-        self,
-        latitude: float,
-        longitude: float,
-        title: str,
-        address: str,
-        quote: bool = None,
-        foursquare_id: str = "",
-        foursquare_type: str = "",
-        disable_notification: bool = None,
-        reply_to_message_id: int = None,
-        reply_in_chat_id: Union[int, str] = None,
-        quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
-        parse_mode: Optional["enums.ParseMode"] = None,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply"
-        ] = None
-    ) -> "Message":
-        if quote is None:
-            quote = self.chat.type != enums.ChatType.PRIVATE
-
-        if reply_to_message_id is None and quote:
-            reply_to_message_id = self.id
-
-        message_thread_id = None
-        if self.message_thread_id:
-            message_thread_id = self.message_thread_id
-
-        chat_id = self.chat.id
-        reply_to_chat_id = None
-        if reply_in_chat_id is not None:
-            chat_id = reply_in_chat_id
-            reply_to_chat_id = self.chat.id
-
-        return await self._client.send_venue(
-            chat_id=chat_id,
-            latitude=latitude,
-            longitude=longitude,
-            title=title,
-            address=address,
-            foursquare_id=foursquare_id,
-            foursquare_type=foursquare_type,
-            disable_notification=disable_notification,
-            message_thread_id=message_thread_id,
-            reply_to_message_id=reply_to_message_id,
-            reply_to_chat_id=reply_to_chat_id,
-            quote_text=quote_text,
-            quote_entities=quote_entities,
-            parse_mode=parse_mode,
-            reply_markup=reply_markup
         )
 
     async def reply_video(
@@ -1963,35 +1835,6 @@ class Message(Object, Update):
                     message_thread_id=message_thread_id,
                     schedule_date=schedule_date
                 )
-            elif self.venue:
-                return await self._client.send_venue(
-                    chat_id,
-                    latitude=self.venue.location.latitude,
-                    longitude=self.venue.location.longitude,
-                    title=self.venue.title,
-                    address=self.venue.address,
-                    foursquare_id=self.venue.foursquare_id,
-                    foursquare_type=self.venue.foursquare_type,
-                    disable_notification=disable_notification,
-                    message_thread_id=message_thread_id,
-                    schedule_date=schedule_date
-                )
-            elif self.poll:
-                return await self._client.send_poll(
-                    chat_id,
-                    question=self.poll.question,
-                    options=[opt.text for opt in self.poll.options],
-                    disable_notification=disable_notification,
-                    message_thread_id=message_thread_id,
-                    schedule_date=schedule_date
-                )
-            elif self.game:
-                return await self._client.send_game(
-                    chat_id,
-                    game_short_name=self.game.short_name,
-                    disable_notification=disable_notification,
-                    message_thread_id=message_thread_id
-                )
             elif self.web_page_preview:
                 return await self._client.send_web_page(
                     chat_id,
@@ -2107,14 +1950,6 @@ class Message(Object, Update):
             big=big
         )
 
-    async def retract_vote(
-        self,
-    ) -> "types.Poll":
-        return await self._client.retract_vote(
-            chat_id=self.chat.id,
-            message_id=self.id
-        )
-
     async def download(
         self,
         file_name: str = "",
@@ -2130,16 +1965,6 @@ class Message(Object, Update):
             block=block,
             progress=progress,
             progress_args=progress_args,
-        )
-
-    async def vote(
-        self,
-        option: int,
-    ) -> "types.Poll":
-        return await self._client.vote_poll(
-            chat_id=self.chat.id,
-            message_id=self.id,
-            options=option
         )
 
     async def pin(self, disable_notification: bool = False, both_sides: bool = False) -> "types.Message":

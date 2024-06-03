@@ -7,7 +7,6 @@ from .on_disconnect import OnDisconnect
 from .on_edited_message import OnEditedMessage
 from .on_inline_query import OnInlineQuery
 from .on_message import OnMessage
-from .on_poll import OnPoll
 from .on_raw_update import OnRawUpdate
 from .on_user_status import OnUserStatus
 from .on_story import OnStory
@@ -23,7 +22,6 @@ class Decorators(
     OnDisconnect,
     OnUserStatus,
     OnInlineQuery,
-    OnPoll,
     OnChosenInlineResult,
     OnChatMemberUpdated,
     OnChatJoinRequest,
