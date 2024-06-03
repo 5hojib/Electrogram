@@ -1,0 +1,5 @@
+include README.md
+include LICENSE
+include pyproject.toml
+include pyrogram/py.typed
+recursive-include pyrogram *.py
