@@ -13,6 +13,11 @@ authors = [
     {name = "5hojib", email = "yesiamshojib@gmail.com"}
 ]
 urls = { "Homepage" = "https://github.com/5hojib/pyrogram" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
 
 dependencies = [
     "aiosqlite",
@@ -22,15 +27,18 @@ dependencies = [
     "tgcrypto"
 ]
 
-[tool.setuptools]
-packages = ["pyrogram"]
-exclude-packages = ["compiler*"]
+[tool.setuptools.packages.find]
+where = ["."]
+exclude = ["compiler*"]
 
 [tool.setuptools.package-data]
 pyrogram = ["py.typed"]
 
-[tool.setuptools.zip-safe]
-zip_safe = false
+[tool.setuptools]
+zip-safe = false
+
+[tool.setuptools.dynamic]
+packages = { attr = "find_packages" }
 
 [tool.setuptools.commands]
 develop = ["python -c 'from compiler.api import compiler as api_compiler; from compiler.errors import compiler as errors_compiler; api_compiler.start(); errors_compiler.start()'"]
