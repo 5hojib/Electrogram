@@ -34,12 +34,11 @@ exclude = ["compiler*"]
 [tool.setuptools.package-data]
 pyrogram = ["py.typed"]
 
-[tool.setuptools]
+[tool.setuptools.zip-safe]
 zip-safe = false
 
 [tool.setuptools.dynamic]
 packages = { attr = "find_packages" }
-
 [tool.setuptools.commands]
 develop = ["python -c 'from compiler.api import compiler as api_compiler; from compiler.errors import compiler as errors_compiler; api_compiler.start(); errors_compiler.start()'"]
 install = ["python -c 'from compiler.api import compiler as api_compiler; from compiler.errors import compiler as errors_compiler; api_compiler.start(); errors_compiler.start()'"]
