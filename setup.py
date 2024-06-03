@@ -3,16 +3,12 @@ from compiler.api import compiler as api_compiler
 from compiler.errors import compiler as errors_compiler
 
 
-requires = [
-    "aiosqlite",
-]
-
 api_compiler.start()
 errors_compiler.start()
 
 setup(
     name="pyrogram",
-    version="v1.181.4",
+    version="v1.181.5",
     author="5hojib",
     author_email="yesiamshojib@gmail.com",
     description="Nothing",
@@ -27,5 +23,4 @@ setup(
         exclude=["compiler*"]
     ),
     zip_safe=False,
-    install_requires=requires
 )
