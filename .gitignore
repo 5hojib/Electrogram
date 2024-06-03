@@ -1,45 +1,9 @@
-# Pyrogram files
 pyrogram/errors/exceptions/
 pyrogram/raw/functions/
 pyrogram/raw/types/
 pyrogram/raw/base/
 pyrogram/raw/all.py
-
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
-
-# Distribution / packaging
-build/
-dist/
-*.egg-info/
-.eggs/
-
-# Virtual environment
-.env/
-.venv/
-env/
-venv/
-ENV/
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-.coverage
-.coverage.*
-.cache
-.pytest_cache/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# Environment variables
-.env
-
-# MyPy
-.mypy_cache/
-.dmypy.json
-dmypy.json
+docs/source/telegram
+docs/source/api/methods/
+docs/source/api/bound-methods/
+docs/source/api/types/
