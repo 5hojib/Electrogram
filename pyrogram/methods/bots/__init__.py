@@ -17,7 +17,7 @@ from .get_inline_bot_results import GetInlineBotResults
 class Bots(
     AnswerCallbackQuery,
     AnswerInlineQuery,
-    AnswerWebAppQuery
+    AnswerWebAppQuery,
     DeleteBotCommands,
     GetInlineBotResults,
     RequestCallbackAnswer,
