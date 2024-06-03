@@ -12,24 +12,23 @@ from .set_bot_commands import SetBotCommands
 from .set_bot_default_privileges import SetBotDefaultPrivileges
 from .set_bot_info import SetBotInfo
 from .set_chat_menu_button import SetChatMenuButton
-from .set_game_score import SetGameScore
-
+from .get_inline_bot_results import GetInlineBotResults
 
 class Bots(
     AnswerCallbackQuery,
     AnswerInlineQuery,
+    AnswerWebAppQuery
+    DeleteBotCommands,
     GetInlineBotResults,
     RequestCallbackAnswer,
     SendInlineBotResult,
     SetBotCommands,
     GetBotCommands,
-    DeleteBotCommands,
     SetBotDefaultPrivileges,
     GetBotDefaultPrivileges,
     SetBotInfo,
     GetBotInfo,
     SetChatMenuButton,
     GetChatMenuButton,
-    AnswerWebAppQuery
 ):
     pass
