@@ -3,15 +3,18 @@ from compiler.api import compiler as api_compiler
 from compiler.errors import compiler as errors_compiler
 
 
+with open("requirements.txt", encoding="utf-8") as r:
+    requires = [i.strip() for i in r]
+
 api_compiler.start()
 errors_compiler.start()
 
 setup(
     name="pyrogram",
-    version="v1.181.5",
+    version="v1.181.6",
     author="5hojib",
     author_email="yesiamshojib@gmail.com",
-    description="Nothing",
+    description="A simple fork of pyrogram",
     long_description="Nothing",
     long_description_content_type="text/markdown",
     url="https://github.com/5hojib/pyrogram",
@@ -23,4 +26,6 @@ setup(
         exclude=["compiler*"]
     ),
     zip_safe=False,
+    install_requires=requires
+    
 )
