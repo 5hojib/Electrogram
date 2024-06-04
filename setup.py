@@ -1,28 +1,20 @@
-import re
-from sys import argv
 from setuptools import setup, find_packages
 from compiler.api import compiler as api_compiler
 from compiler.errors import compiler as errors_compiler
 
 
-requires = [
-    "aiosqlite",
-    "pymediainfo==6.0.1",
-    "pymongo==4.4.1",
-    "pysocks",
-    "tgcrypto"
-]
+with open("requirements.txt", encoding="utf-8") as r:
+    requires = [i.strip() for i in r]
 
-if len(argv) > 1 and argv[1] in ["bdist_wheel", "install", "develop"]:
-    api_compiler.start()
-    errors_compiler.start()
+api_compiler.start()
+errors_compiler.start()
 
 setup(
     name="pyrogram",
-    version="v1.176.3",
+    version="v1.181.0",
     author="5hojib",
     author_email="yesiamshojib@gmail.com",
-    description="Nothing",
+    description="A simple fork of pyrogram",
     long_description="Nothing",
     long_description_content_type="text/markdown",
     url="https://github.com/5hojib/pyrogram",
@@ -30,7 +22,10 @@ setup(
     package_data={
         "pyrogram": ["py.typed"],
     },
-    packages=find_packages(exclude=["compiler*"]),
+    packages=find_packages(
+        exclude=["compiler*"]
+    ),
     zip_safe=False,
     install_requires=requires
+    
 )

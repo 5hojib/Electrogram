@@ -15,14 +15,6 @@ from pyrogram import raw, enums, types
 from pyrogram.file_id import FileId, FileType, PHOTO_TYPES, DOCUMENT_TYPES
 
 
-PyromodConfig = SimpleNamespace(
-    timeout_handler=None,
-    stopped_handler=None,
-    throw_exceptions=True,
-    unallowed_click_alert=True,
-    unallowed_click_alert_text=("[pyromod] You're not expected to click this button."),
-)
-    
 
 async def ainput(prompt: str = "", *, hide: bool = False):
     with ThreadPoolExecutor(1) as executor:
@@ -246,7 +238,7 @@ def unpack_inline_message_id(inline_message_id: str) -> "raw.base.InputBotInline
         )
 
 
-MIN_CHANNEL_ID = -1002147483647
+MIN_CHANNEL_ID = -1009999999999
 MAX_CHANNEL_ID = -1000000000000
 MIN_CHAT_ID = -2147483647
 MAX_USER_ID_OLD = 2147483647

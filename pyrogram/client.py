@@ -54,7 +54,7 @@ class Client(Methods):
     WORKERS = 32
     WORKDIR = PARENT_DIR
     UPDATES_WATCHDOG_INTERVAL = 15 * 60
-    MAX_CONCURRENT_TRANSMISSIONS = 32
+    MAX_CONCURRENT_TRANSMISSIONS = 1000
 
     mimetypes = MimeTypes()
     mimetypes.readfp(StringIO(mime_types))

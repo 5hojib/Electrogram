@@ -1,5 +1,4 @@
 from .exceptions import *
-from .pyromod import *
 from .rpc_error import UnknownError
 
 

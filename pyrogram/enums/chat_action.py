@@ -18,3 +18,5 @@ class ChatAction(AutoName):
     IMPORT_HISTORY = raw.types.SendMessageHistoryImportAction
     CHOOSE_STICKER = raw.types.SendMessageChooseStickerAction
     CANCEL = raw.types.SendMessageCancelAction
+    TRIGGER_EMOJI_ANIMATION = raw.types.SendMessageEmojiInteraction
+    WATCH_EMOJI_ANIMATION = raw.types.SendMessageEmojiInteractionSeen
