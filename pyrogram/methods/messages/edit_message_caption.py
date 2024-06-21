@@ -12,6 +12,7 @@ class EditMessageCaption:
         caption: str,
         parse_mode: Optional["enums.ParseMode"] = None,
         caption_entities: List["types.MessageEntity"] = None,
+        invert_media: bool = False,
         reply_markup: "types.InlineKeyboardMarkup" = None
     ) -> "types.Message":
         return await self.edit_message_text(
@@ -20,5 +21,6 @@ class EditMessageCaption:
             text=caption,
             parse_mode=parse_mode,
             entities=caption_entities,
+            invert_media=invert_media,
             reply_markup=reply_markup
         )

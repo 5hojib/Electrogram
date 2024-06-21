@@ -51,7 +51,10 @@ class Chat(Object):
         available_reactions: Optional["types.ChatReactions"] = None,
         usernames: List["types.Username"] = None,
         reply_color: "types.ChatColor" = None,
-        profile_color: "types.ChatColor" = None
+        profile_color: "types.ChatColor" = None,
+        birthday: "types.Birthday" = None,
+        personal_chat: "types.Chat" = None,
+        max_reaction_count: int = None
     ):
         super().__init__(client)
 
@@ -96,6 +99,8 @@ class Chat(Object):
         self.usernames = usernames
         self.reply_color = reply_color
         self.profile_color = profile_color
+        self.birthday = birthday
+        self.personal_chat = personal_chat
 
     @property
     def full_name(self) -> str:
@@ -232,6 +237,16 @@ class Chat(Object):
             parsed_chat = Chat._parse_user_chat(client, users[full_user.id])
             parsed_chat.bio = full_user.about
             parsed_chat.folder_id = getattr(full_user, "folder_id", None)
+            birthday = getattr(full_user, "birthday", None)
+            parsed_chat.birthday = types.Birthday._parse(birthday) if birthday is not None else None
+            personal_chat_id = getattr(full_user, "personal_channel_id", None)
+            if personal_chat_id is not None:
+                personal_chat = await client.invoke(
+                    raw.functions.channels.GetChannels(
+                        id=[await client.resolve_peer(utils.get_channel_id(personal_chat_id))]
+                    )
+                )
+                parsed_chat.personal_chat = Chat._parse_chat(client, personal_chat.chats[0])
 
             if full_user.pinned_msg_id:
                 parsed_chat.pinned_message = await client.get_messages(
@@ -315,6 +330,7 @@ class Chat(Object):
                 client,
                 full_chat.available_reactions
             )
+            parsed_chat.max_reaction_count = getattr(full_chat, "reactions_limit", 11)
 
         return parsed_chat
 
@@ -371,12 +387,14 @@ class Chat(Object):
     async def ban_member(
         self,
         user_id: Union[int, str],
-        until_date: datetime = utils.zero_datetime()
+        until_date: datetime = utils.zero_datetime(),
+        revoke_messages: bool = None
     ) -> Union["types.Message", bool]:
         return await self._client.ban_chat_member(
             chat_id=self.id,
             user_id=user_id,
-            until_date=until_date
+            until_date=until_date,
+            revoke_messages=revoke_messages
         )
 
     async def unban_member(

@@ -17,7 +17,8 @@ class EditMessageMedia:
         message_id: int,
         media: "types.InputMedia",
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        file_name: str = None
+        file_name: str = None,
+        invert_media: bool = False
     ) -> "types.Message":
         caption = media.caption
         parse_mode = media.parse_mode
@@ -210,7 +211,8 @@ class EditMessageMedia:
                 media=media,
                 reply_markup=await reply_markup.write(self) if reply_markup else None,
                 message=message,
-                entities=entities
+                entities=entities,
+                invert_media=invert_media
             )
         )
 

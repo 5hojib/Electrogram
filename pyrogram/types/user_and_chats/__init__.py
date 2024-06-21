@@ -1,3 +1,4 @@
+from .birthday import Birthday
 from .chat import Chat
 from .chat_admin_with_invite_links import ChatAdminWithInviteLinks
 from .chat_color import ChatColor
@@ -35,6 +36,7 @@ from .video_chat_scheduled import VideoChatScheduled
 from .video_chat_started import VideoChatStarted
 
 __all__ = [
+    "Birthday",
     "Chat",
     "ChatMember",
     "ChatPermissions",

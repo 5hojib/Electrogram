@@ -1,9 +1,8 @@
-from enum import auto
 from pyrogram import raw
 from .auto_name import AutoName
 
+
 class MessageEntityType(AutoName):
-    EXPANDABLE_BLOCKQUOTE = auto()
     MENTION = raw.types.MessageEntityMention
     HASHTAG = raw.types.MessageEntityHashtag
     CASHTAG = raw.types.MessageEntityCashtag
@@ -18,7 +17,8 @@ class MessageEntityType(AutoName):
     SPOILER = raw.types.MessageEntitySpoiler
     CODE = raw.types.MessageEntityCode
     PRE = raw.types.MessageEntityPre
-    BLOCKQUOTE = auto()
+    BLOCKQUOTE = raw.types.MessageEntityBlockquote
+    EXPANDABLE_BLOCKQUOTE = raw.types.MessageEntityBlockquote
     TEXT_LINK = raw.types.MessageEntityTextUrl
     TEXT_MENTION = raw.types.MessageEntityMentionName
     BANK_CARD = raw.types.MessageEntityBankCard

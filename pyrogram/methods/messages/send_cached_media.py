@@ -25,6 +25,7 @@ class SendCachedMedia:
         quote_entities: List["types.MessageEntity"] = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
+        invert_media: bool = False,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -42,7 +43,7 @@ class SendCachedMedia:
             quote_text=quote_text,
             quote_entities=quote_entities,
             parse_mode=parse_mode
-            )
+        )
 
         media = utils.get_input_media_from_file_id(file_id)
         media.spoiler = has_spoiler
@@ -59,6 +60,7 @@ class SendCachedMedia:
                 random_id=self.rnd_id(),
                 schedule_date=utils.datetime_to_timestamp(schedule_date),
                 noforwards=protect_content,
+                invert_media=invert_media,
                 reply_markup=await reply_markup.write(self) if reply_markup else None,
                 **await utils.parse_text_entities(self, caption, parse_mode, caption_entities)
             )

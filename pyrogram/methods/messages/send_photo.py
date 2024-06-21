@@ -30,6 +30,9 @@ class SendPhoto:
         quote_entities: List["types.MessageEntity"] = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
+        message_effect_id: int = None,
+        view_once: bool = None,
+        invert_media: bool = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -54,45 +57,47 @@ class SendPhoto:
         )
 
         try:
-            if (
-                isinstance(photo, str)
-                and os.path.isfile(photo)
-                or not isinstance(photo, str)
-            ):
+            if isinstance(photo, str):
+                if os.path.isfile(photo):
+                    file = await self.save_file(photo, progress=progress, progress_args=progress_args)
+                    media = raw.types.InputMediaUploadedPhoto(
+                        file=file,
+                        ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds,
+                        spoiler=has_spoiler,
+                    )
+                elif re.match("^https?://", photo):
+                    media = raw.types.InputMediaPhotoExternal(
+                        url=photo,
+                        ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds,
+                        spoiler=has_spoiler
+                    )
+                else:
+                    media = utils.get_input_media_from_file_id(photo, FileType.PHOTO, ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds)
+                    media.spoiler = has_spoiler
+            else:
                 file = await self.save_file(photo, progress=progress, progress_args=progress_args)
                 media = raw.types.InputMediaUploadedPhoto(
                     file=file,
-                    ttl_seconds=ttl_seconds,
-                    spoiler=has_spoiler,
-                )
-            elif (
-                isinstance(photo, str)
-                and not os.path.isfile(photo)
-                and re.match("^https?://", photo)
-            ):
-                media = raw.types.InputMediaPhotoExternal(
-                    url=photo,
-                    ttl_seconds=ttl_seconds,
+                    ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds,
                     spoiler=has_spoiler
                 )
-            else:
-                media = utils.get_input_media_from_file_id(photo, FileType.PHOTO, ttl_seconds=ttl_seconds)
-                media.spoiler = has_spoiler
+
             while True:
                 try:
-                    r = await self.invoke(
-                        raw.functions.messages.SendMedia(
-                            peer=await self.resolve_peer(chat_id),
-                            media=media,
-                            silent=disable_notification or None,
-                            reply_to=reply_to,
-                            random_id=self.rnd_id(),
-                            schedule_date=utils.datetime_to_timestamp(schedule_date),
-                            noforwards=protect_content,
-                            reply_markup=await reply_markup.write(self) if reply_markup else None,
-                            **await utils.parse_text_entities(self, caption, parse_mode, caption_entities)
-                        )
+                    rpc = raw.functions.messages.SendMedia(
+                        peer=await self.resolve_peer(chat_id),
+                        media=media,
+                        silent=disable_notification or None,
+                        reply_to=reply_to,
+                        random_id=self.rnd_id(),
+                        schedule_date=utils.datetime_to_timestamp(schedule_date),
+                        noforwards=protect_content,
+                        effect=message_effect_id,
+                        invert_media=invert_media,
+                        reply_markup=await reply_markup.write(self) if reply_markup else None,
+                        **await utils.parse_text_entities(self, caption, parse_mode, caption_entities)
                     )
+                    r = await self.invoke(rpc)
                 except FilePartMissing as e:
                     await self.save_file(photo, file_id=file.id, file_part=e.value)
                 else:

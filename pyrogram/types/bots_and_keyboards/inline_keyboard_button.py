@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Optional
 
 import pyrogram
 from pyrogram import raw
@@ -10,14 +10,14 @@ class InlineKeyboardButton(Object):
     def __init__(
         self,
         text: str,
-        callback_data: Union[str, bytes] = None,
-        url: str = None,
-        web_app: "types.WebAppInfo" = None,
-        login_url: "types.LoginUrl" = None,
-        user_id: int = None,
-        switch_inline_query: str = None,
-        switch_inline_query_current_chat: str = None,
-        callback_game: "types.CallbackGame" = None
+        callback_data: Optional[Union[str, bytes]] = None,
+        url: Optional[str] = None,
+        web_app: Optional["types.WebAppInfo"] = None,
+        login_url: Optional["types.LoginUrl"] = None,
+        user_id: Optional[int] = None,
+        switch_inline_query: Optional[str] = None,
+        switch_inline_query_current_chat: Optional[str] = None,
+        requires_password: Optional[bool] = None
     ):
         super().__init__()
 
@@ -29,7 +29,7 @@ class InlineKeyboardButton(Object):
         self.user_id = user_id
         self.switch_inline_query = switch_inline_query
         self.switch_inline_query_current_chat = switch_inline_query_current_chat
-        self.callback_game = callback_game
+        self.requires_password = requires_password
 
     @staticmethod
     def read(b: "raw.base.KeyboardButton"):
@@ -41,7 +41,8 @@ class InlineKeyboardButton(Object):
 
             return InlineKeyboardButton(
                 text=b.text,
-                callback_data=data
+                callback_data=data,
+                requires_password=getattr(b, "requires_password", None)
             )
 
         if isinstance(b, raw.types.KeyboardButtonUrl):
@@ -94,7 +95,8 @@ class InlineKeyboardButton(Object):
 
             return raw.types.KeyboardButtonCallback(
                 text=self.text,
-                data=data
+                data=data,
+                requires_password=self.requires_password
             )
 
         if self.url is not None:

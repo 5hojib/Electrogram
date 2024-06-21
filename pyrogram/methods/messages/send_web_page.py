@@ -51,21 +51,20 @@ class SendWebPage:
             force_large_media=large_media,
             force_small_media=not large_media
         )
-        r = await self.invoke(
-            raw.functions.messages.SendMedia(
-                peer=await self.resolve_peer(chat_id),
-                silent=disable_notification or None,
-                reply_to=reply_to,
-                random_id=self.rnd_id(),
-                schedule_date=utils.datetime_to_timestamp(schedule_date),
-                reply_markup=await reply_markup.write(self) if reply_markup else None,
-                message=message,
-                media=media,
-                invert_media=invert_media,
-                entities=entities,
-                noforwards=protect_content
-            )
+        rpc = raw.functions.messages.SendMedia(
+            peer=await self.resolve_peer(chat_id),
+            silent=disable_notification or None,
+            reply_to=reply_to,
+            random_id=self.rnd_id(),
+            schedule_date=utils.datetime_to_timestamp(schedule_date),
+            reply_markup=await reply_markup.write(self) if reply_markup else None,
+            message=message,
+            media=media,
+            invert_media=invert_media,
+            entities=entities,
+            noforwards=protect_content
         )
+        r = await self.invoke(rpc)
 
         if isinstance(r, raw.types.UpdateShortSentMessage):
             peer = await self.resolve_peer(chat_id)

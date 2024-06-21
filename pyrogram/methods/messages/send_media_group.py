@@ -36,6 +36,8 @@ class SendMediaGroup:
         parse_mode: Optional["enums.ParseMode"] = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
+        message_effect_id: int = None,
+        invert_media: bool = None
     ) -> List["types.Message"]:
         multi_media = []
 
@@ -365,18 +367,19 @@ class SendMediaGroup:
                 )
             )
 
-        r = await self.invoke(
-            raw.functions.messages.SendMultiMedia(
-                peer=await self.resolve_peer(chat_id),
-                multi_media=multi_media,
-                silent=disable_notification or None,
-                reply_to=reply_to,
-                schedule_date=utils.datetime_to_timestamp(schedule_date),
-                noforwards=protect_content
-            ),
-            sleep_threshold=60
+        rpc = raw.functions.messages.SendMultiMedia(
+            peer=await self.resolve_peer(chat_id),
+            multi_media=multi_media,
+            silent=disable_notification or None,
+            reply_to=reply_to,
+            schedule_date=utils.datetime_to_timestamp(schedule_date),
+            noforwards=protect_content,
+            effect=message_effect_id,
+            invert_media=invert_media
         )
 
+        r = await self.invoke(rpc, sleep_threshold=60)
+        
         return await utils.parse_messages(
             self,
             raw.types.messages.Messages(

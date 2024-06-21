@@ -22,6 +22,7 @@ class SendContact:
         parse_mode: Optional["enums.ParseMode"] = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
+        message_effect_id: int = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -38,26 +39,26 @@ class SendContact:
             quote_text=quote_text,
             quote_entities=quote_entities,
             parse_mode=parse_mode
-            )
-
-        r = await self.invoke(
-            raw.functions.messages.SendMedia(
-                peer=await self.resolve_peer(chat_id),
-                media=raw.types.InputMediaContact(
-                    phone_number=phone_number,
-                    first_name=first_name,
-                    last_name=last_name or "",
-                    vcard=vcard or ""
-                ),
-                message="",
-                silent=disable_notification or None,
-                reply_to=reply_to,
-                random_id=self.rnd_id(),
-                schedule_date=utils.datetime_to_timestamp(schedule_date),
-                noforwards=protect_content,
-                reply_markup=await reply_markup.write(self) if reply_markup else None
-            )
         )
+
+        rpc = raw.functions.messages.SendMedia(
+            peer=await self.resolve_peer(chat_id),
+            media=raw.types.InputMediaContact(
+                phone_number=phone_number,
+                first_name=first_name,
+                last_name=last_name or "",
+                vcard=vcard or ""
+            ),
+            message="",
+            silent=disable_notification or None,
+            reply_to=reply_to,
+            random_id=self.rnd_id(),
+            schedule_date=utils.datetime_to_timestamp(schedule_date),
+            noforwards=protect_content,
+            reply_markup=await reply_markup.write(self) if reply_markup else None,
+            effect=message_effect_id
+        )
+        r = await self.invoke(rpc)
 
         for i in r.updates:
             if isinstance(i, (raw.types.UpdateNewMessage,
