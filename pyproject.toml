@@ -17,6 +17,8 @@ requires-python = "~=3.8"
 [tool.hatch.version]
 path = "pyrogram/__init__.py"
 
+[tool.hatch.build.hooks.custom]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
