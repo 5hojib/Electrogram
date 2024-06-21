@@ -14,7 +14,6 @@ from .reaction_type import ReactionType
 from .reaction_count import ReactionCount
 from .sticker import Sticker
 from .stickerset import StickerSet
-from .stories_privacy_rules import StoriesPrivacyRules
 from .stripped_thumbnail import StrippedThumbnail
 from .thumbnail import Thumbnail
 from .video import Video
