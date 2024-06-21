@@ -19,6 +19,7 @@ from .thumbnail import Thumbnail
 from .video import Video
 from .video_note import VideoNote
 from .voice import Voice
+from .story import Story
 from .web_app_data import WebAppData
 from .web_page import WebPage
 from .web_page_empty import WebPageEmpty
@@ -54,6 +55,7 @@ __all__ = [
     "MessageReactions",
     "ReactionCount",
     "ReactionType",
+    "Story",
     "MessageReactionUpdated",
     "MessageReactionCountUpdated",
 ]
