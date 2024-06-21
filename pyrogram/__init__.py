@@ -1,5 +1,5 @@
 __fork_name__ = "Pyrogram"
-__version__ = "v1.181.4"
+__version__ = "v1.181.5"
 __license__ = "GNU Lesser General Public License v3.0 (LGPL-3.0)"
 __copyright__ = "Copyright (C) 2022-present 5hojib <https://github.com/5hojib>"
 
