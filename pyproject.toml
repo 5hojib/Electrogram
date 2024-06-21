@@ -1,5 +1,6 @@
 [project]
 name = "pyrogram"
+dynamic = ["version"]
 description = "Fork of pyrogram. Elegant, modern and asynchronous Telegram MTProto API framework in Python for users and bots"
 authors = [
 { name = "5hojib", email = "yesiamshojib@gmail.com" }
