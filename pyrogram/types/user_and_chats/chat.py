@@ -422,14 +422,12 @@ class Chat(Object):
     async def promote_member(
         self,
         user_id: Union[int, str],
-        privileges: "types.ChatPrivileges" = None,
-        title: Optional[str] = None,
+        privileges: "types.ChatPrivileges" = None
     ) -> bool:
         return await self._client.promote_chat_member(
             chat_id=self.id,
             user_id=user_id,
-            privileges=privileges,
-            title=title
+            privileges=privileges
         )
 
     async def join(self):
