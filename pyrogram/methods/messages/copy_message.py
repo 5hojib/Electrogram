@@ -23,6 +23,7 @@ class CopyMessage:
         reply_to_message_id: int = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
+        invert_media: bool = False,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -43,5 +44,6 @@ class CopyMessage:
             reply_to_message_id=reply_to_message_id,
             schedule_date=schedule_date,
             protect_content=protect_content,
+            invert_media=invert_media,
             reply_markup=reply_markup
         )

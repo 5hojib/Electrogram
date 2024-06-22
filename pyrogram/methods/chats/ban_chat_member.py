@@ -11,7 +11,8 @@ class BanChatMember:
         self: "pyrogram.Client",
         chat_id: Union[int, str],
         user_id: Union[int, str],
-        until_date: datetime = utils.zero_datetime()
+        until_date: datetime = utils.zero_datetime(),
+        revoke_messages: bool = None
     ) -> Union["types.Message", bool]:
         chat_peer = await self.resolve_peer(chat_id)
         user_peer = await self.resolve_peer(user_id)
@@ -39,7 +40,8 @@ class BanChatMember:
             r = await self.invoke(
                 raw.functions.messages.DeleteChatUser(
                     chat_id=abs(chat_id),
-                    user_id=user_peer
+                    user_id=user_peer,
+                    revoke_history=revoke_messages
                 )
             )
 

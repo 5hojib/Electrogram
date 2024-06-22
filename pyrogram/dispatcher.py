@@ -4,7 +4,9 @@ import logging
 from collections import OrderedDict
 
 import pyrogram
+from pyrogram import errors
 from pyrogram import utils
+from pyrogram import raw
 from pyrogram.handlers import (
     CallbackQueryHandler,
     MessageHandler,
@@ -35,6 +37,7 @@ from pyrogram.raw.types import (
     UpdateBotInlineSend,
     UpdateChatParticipant,
     UpdateChannelParticipant,
+    UpdateBotStopped,
     UpdateBotChatInviteRequester,
     UpdateBotMessageReaction,
     UpdateBotMessageReactions
@@ -48,7 +51,7 @@ class Dispatcher:
     EDIT_MESSAGE_UPDATES = (UpdateEditMessage, UpdateEditChannelMessage)
     DELETE_MESSAGES_UPDATES = (UpdateDeleteMessages, UpdateDeleteChannelMessages)
     CALLBACK_QUERY_UPDATES = (UpdateBotCallbackQuery, UpdateInlineBotCallbackQuery)
-    CHAT_MEMBER_UPDATES = (UpdateChatParticipant, UpdateChannelParticipant)
+    CHAT_MEMBER_UPDATES = (UpdateChatParticipant, UpdateChannelParticipant, UpdateBotStopped,)
     USER_STATUS_UPDATES = (UpdateUserStatus,)
     BOT_INLINE_QUERY_UPDATES = (UpdateBotInlineQuery,)
     CHOSEN_INLINE_RESULT_UPDATES = (UpdateBotInlineSend,)

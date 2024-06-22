@@ -660,3 +660,15 @@ class chat(Filter, set):
                              and message.from_user
                              and message.from_user.is_self
                              and not message.outgoing)))
+
+
+class topic(Filter, set):
+    def __init__(self, topics: Union[int, List[int]] = None):
+        topics = [] if topics is None else topics if isinstance(topics, list) else [topics]
+
+        super().__init__(
+            t for t in topics
+        )
+
+    async def __call__(self, _, message: Message):
+        return message.topic and message.topic.id in self

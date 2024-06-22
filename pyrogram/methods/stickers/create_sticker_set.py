@@ -16,10 +16,7 @@ class CreateStickerSet:
         short_name: str,
         sticker: str,
         emoji: str = "🤔",
-        masks: bool = None,
-        animated: bool = None,
-        videos: bool = None,
-        emojis: bool = None
+        masks: bool = None
     ) -> Optional["types.Message"]:
         file = None
 
@@ -47,10 +44,7 @@ class CreateStickerSet:
                         emoji=emoji
                     )
                 ],
-                masks=masks,
-                animated=animated,
-                videos=videos,
-                emojis=emojis
+                masks=masks
             )
         )
 

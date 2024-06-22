@@ -62,33 +62,35 @@ class Client(Methods):
     def __init__(
         self,
         name: str,
-        api_id: Union[int, str] = None,
-        api_hash: str = None,
+        api_id: Optional[Union[int, str]] = None,
+        api_hash: Optional[str] = None,
         app_version: str = APP_VERSION,
         device_model: str = DEVICE_MODEL,
         system_version: str = SYSTEM_VERSION,
         lang_code: str = LANG_CODE,
-        ipv6: bool = False,
-        alt_port: bool = False,
-        proxy: dict = None,
-        test_mode: bool = False,
-        bot_token: str = None,
-        session_string: str = None,
-        in_memory: bool = None,
-        mongodb: dict = None,
-        storage: Storage = None,
-        phone_number: str = None,
-        phone_code: str = None,
-        password: str = None,
+        ipv6: Optional[bool] = False,
+        alt_port: Optional[bool] = False,
+        proxy: Optional[dict] = None,
+        test_mode: Optional[bool] = False,
+        bot_token: Optional[str] = None,
+        session_string: Optional[str] = None,
+        in_memory: Optional[bool] = None,
+        mongodb: Optional[dict] = None,
+        storage: Optional[Storage] = None,
+        phone_number: Optional[str] = None,
+        phone_code: Optional[str] = None,
+        password: Optional[str] = None,
         workers: int = WORKERS,
-        workdir: str = WORKDIR,
-        plugins: dict = None,
+        workdir: Union[str, Path] = WORKDIR,
+        plugins: Optional[dict] = None,
         parse_mode: "enums.ParseMode" = enums.ParseMode.DEFAULT,
-        no_updates: bool = None,
+        no_updates: Optional[bool] = None,
+        skip_updates: bool = True,
         takeout: bool = None,
         sleep_threshold: int = Session.SLEEP_THRESHOLD,
-        hide_password: bool = False,
-        max_concurrent_transmissions: int = MAX_CONCURRENT_TRANSMISSIONS
+        hide_password: Optional[bool] = False,
+        max_concurrent_transmissions: int = MAX_CONCURRENT_TRANSMISSIONS,
+        client_platform: "enums.ClientPlatform" = enums.ClientPlatform.OTHER
     ):
         super().__init__()
 
@@ -115,10 +117,12 @@ class Client(Methods):
         self.plugins = plugins
         self.parse_mode = parse_mode
         self.no_updates = no_updates
+        self.skip_updates = skip_updates
         self.takeout = takeout
         self.sleep_threshold = sleep_threshold
         self.hide_password = hide_password
         self.max_concurrent_transmissions = max_concurrent_transmissions
+        self.client_platform = client_platform
 
         self.executor = ThreadPoolExecutor(self.workers, thread_name_prefix="Handler")
 
@@ -255,26 +259,27 @@ class Client(Methods):
                         self.password = await ainput("Enter password (empty to recover): ", hide=self.hide_password)
 
                     try:
-                        if self.password:
-                            return await self.check_password(self.password)
-                        confirm = await ainput("Confirm password recovery (y/n): ")
+                        if not self.password:
+                            confirm = await ainput("Confirm password recovery (y/n): ")
 
-                        if confirm == "y":
-                            email_pattern = await self.send_recovery_code()
-                            print(f"The recovery code has been sent to {email_pattern}")
+                            if confirm == "y":
+                                email_pattern = await self.send_recovery_code()
+                                print(f"The recovery code has been sent to {email_pattern}")
 
-                            while True:
-                                recovery_code = await ainput("Enter recovery code: ")
+                                while True:
+                                    recovery_code = await ainput("Enter recovery code: ")
 
-                                try:
-                                    return await self.recover_password(recovery_code)
-                                except BadRequest as e:
-                                    print(e.MESSAGE)
-                                except Exception as e:
-                                    log.exception(e)
-                                    raise
+                                    try:
+                                        return await self.recover_password(recovery_code)
+                                    except BadRequest as e:
+                                        print(e.MESSAGE)
+                                    except Exception as e:
+                                        log.exception(e)
+                                        raise
+                            else:
+                                self.password = None
                         else:
-                            self.password = None
+                            return await self.check_password(self.password)
                     except BadRequest as e:
                         print(e.MESSAGE)
                         self.password = None
@@ -331,7 +336,8 @@ class Client(Methods):
                     else None
                 )
                 if peer.usernames is not None and len(peer.usernames) > 1:
-                    usernames.extend((peer.id, uname.username.lower()) for uname in peer.usernames)
+                    for uname in peer.usernames:
+                        usernames.append((peer.id, uname.username.lower()))
                 phone_number = peer.phone
                 peer_type = "bot" if peer.bot else "user"
             elif isinstance(peer, (raw.types.Chat, raw.types.ChatForbidden)):
@@ -347,7 +353,8 @@ class Client(Methods):
                     else None
                 )
                 if peer.usernames is not None and len(peer.usernames) > 1:
-                    usernames.extend((peer.id, uname.username.lower()) for uname in peer.usernames)
+                    for uname in peer.usernames:
+                        usernames.append((peer.id, uname.username.lower()))
                 peer_type = "channel" if peer.broadcast else "supergroup"
             elif isinstance(peer, raw.types.ChannelForbidden):
                 peer_id = utils.get_channel_id(peer.id)
@@ -387,6 +394,17 @@ class Client(Methods):
                 pts = getattr(update, "pts", None)
                 pts_count = getattr(update, "pts_count", None)
 
+                if pts:
+                    await self.storage.update_state(
+                        (
+                            utils.get_channel_id(channel_id) if channel_id else 0,
+                            pts,
+                            None,
+                            updates.date,
+                            None
+                        )
+                    )
+
                 if isinstance(update, raw.types.UpdateChannelTooLong):
                     log.info(update)
 
@@ -417,6 +435,16 @@ class Client(Methods):
 
                 self.dispatcher.updates_queue.put_nowait((update, users, chats))
         elif isinstance(updates, (raw.types.UpdateShortMessage, raw.types.UpdateShortChatMessage)):
+            await self.storage.update_state(
+                (
+                    0,
+                    updates.pts,
+                    None,
+                    updates.date,
+                    None
+                )
+            )
+
             diff = await self.invoke(
                 raw.functions.updates.GetDifference(
                     pts=updates.pts - updates.pts_count,
@@ -435,8 +463,9 @@ class Client(Methods):
                     {u.id: u for u in diff.users},
                     {c.id: c for c in diff.chats}
                 ))
-            elif diff.other_updates:
-                self.dispatcher.updates_queue.put_nowait((diff.other_updates[0], {}, {}))
+            else:
+                if diff.other_updates:
+                    self.dispatcher.updates_queue.put_nowait((diff.other_updates[0], {}, {}))
         elif isinstance(updates, raw.types.UpdateShort):
             self.dispatcher.updates_queue.put_nowait((updates.update, {}, {}))
         elif isinstance(updates, raw.types.UpdatesTooLong):
@@ -470,38 +499,40 @@ class Client(Methods):
             )
             await self.storage.user_id(None)
             await self.storage.is_bot(None)
-        elif not await self.storage.api_id():
-            if self.api_id:
-                await self.storage.api_id(self.api_id)
-            else:
-                while True:
-                    try:
-                        value = int(await ainput("Enter the api_id part of the API key: "))
+        else:
+            if not await self.storage.api_id():
+                if self.api_id:
+                    await self.storage.api_id(self.api_id)
+                else:
+                    while True:
+                        try:
+                            value = int(await ainput("Enter the api_id part of the API key: "))
 
-                        if value <= 0:
-                            print("Invalid value")
-                            continue
+                            if value <= 0:
+                                print("Invalid value")
+                                continue
 
-                        confirm = (await ainput(f'Is "{value}" correct? (y/N): ')).lower()
+                            confirm = (await ainput(f'Is "{value}" correct? (y/N): ')).lower()
 
-                        if confirm == "y":
-                            await self.storage.api_id(value)
-                            break
-                    except Exception as e:
-                        print(e)
+                            if confirm == "y":
+                                await self.storage.api_id(value)
+                                break
+                        except Exception as e:
+                            print(e)
 
     def load_plugins(self):
-        if not self.plugins:
+        if self.plugins:
+            plugins = self.plugins.copy()
+
+            for option in ["include", "exclude"]:
+                if plugins.get(option, []):
+                    plugins[option] = [
+                        (i.split()[0], i.split()[1:] or None)
+                        for i in self.plugins[option]
+                    ]
+        else:
             return
 
-        plugins = self.plugins.copy()
-
-        for option in ["include", "exclude"]:
-            if plugins.get(option, []):
-                plugins[option] = [
-                    (i.split()[0], i.split()[1:] or None)
-                    for i in self.plugins[option]
-                ]
         if plugins.get("enabled", True):
             root = plugins["root"]
             include = plugins.get("include", [])
@@ -514,7 +545,7 @@ class Client(Methods):
                     module_path = '.'.join(path.parent.parts + (path.stem,))
                     module = import_module(module_path)
 
-                    for name in vars(module):
+                    for name in vars(module).keys():
                         try:
                             for handler, group in getattr(module, name).handlers:
                                 if isinstance(handler, Handler) and isinstance(group, int):

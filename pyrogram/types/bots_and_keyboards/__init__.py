@@ -8,10 +8,8 @@ from .bot_command_scope_chat_administrators import BotCommandScopeChatAdministra
 from .bot_command_scope_chat_member import BotCommandScopeChatMember
 from .bot_command_scope_default import BotCommandScopeDefault
 from .bot_info import BotInfo
-from .callback_game import CallbackGame
 from .callback_query import CallbackQuery
 from .force_reply import ForceReply
-from .game_high_score import GameHighScore
 from .inline_keyboard_button import InlineKeyboardButton
 from .inline_keyboard_markup import InlineKeyboardMarkup
 from .keyboard_button import KeyboardButton
@@ -29,10 +27,8 @@ from .sent_web_app_message import SentWebAppMessage
 from .web_app_info import WebAppInfo
 
 __all__ = [
-    "CallbackGame",
     "CallbackQuery",
     "ForceReply",
-    "GameHighScore",
     "InlineKeyboardButton",
     "InlineKeyboardMarkup",
     "KeyboardButton",

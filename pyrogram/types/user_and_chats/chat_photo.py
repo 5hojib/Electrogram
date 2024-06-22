@@ -1,7 +1,7 @@
 from typing import Union
 
 import pyrogram
-from pyrogram import raw
+from pyrogram import raw, types
 from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType, ThumbnailSource
 from ..object import Object
 
@@ -14,8 +14,10 @@ class ChatPhoto(Object):
         small_file_id: str,
         small_photo_unique_id: str,
         big_file_id: str,
-        big_photo_unique_id: str
-
+        big_photo_unique_id: str,
+        has_animation: bool,
+        is_personal: bool,
+        minithumbnail: "types.StrippedThumbnail" = None
     ):
         super().__init__(client)
 
@@ -23,6 +25,9 @@ class ChatPhoto(Object):
         self.small_photo_unique_id = small_photo_unique_id
         self.big_file_id = big_file_id
         self.big_photo_unique_id = big_photo_unique_id
+        self.has_animation = has_animation
+        self.is_personal = is_personal
+        self.minithumbnail = minithumbnail
 
     @staticmethod
     def _parse(
@@ -65,5 +70,10 @@ class ChatPhoto(Object):
                 file_unique_type=FileUniqueType.DOCUMENT,
                 media_id=chat_photo.photo_id
             ).encode(),
+            has_animation=chat_photo.has_video,
+            is_personal=getattr(chat_photo, "personal", False),
+            minithumbnail=types.StrippedThumbnail(
+                data=chat_photo.stripped_thumb
+            ) if chat_photo.stripped_thumb else None,
             client=client
         )

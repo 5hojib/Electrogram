@@ -24,6 +24,7 @@ class SendMessage:
         schedule_date: datetime = None,
         protect_content: bool = None,
         invert_media: bool = None,
+        message_effect_id: int = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -45,21 +46,21 @@ class SendMessage:
             parse_mode=parse_mode
         )
 
-        r = await self.invoke(
-            raw.functions.messages.SendMessage(
-                peer=await self.resolve_peer(chat_id),
-                no_webpage=disable_web_page_preview or None,
-                silent=disable_notification or None,
-                reply_to=reply_to,
-                random_id=self.rnd_id(),
-                schedule_date=utils.datetime_to_timestamp(schedule_date),
-                reply_markup=await reply_markup.write(self) if reply_markup else None,
-                message=message,
-                entities=entities,
-                noforwards=protect_content,
-                invert_media=invert_media
-            )
+        rpc = raw.functions.messages.SendMessage(
+            peer=await self.resolve_peer(chat_id),
+            no_webpage=disable_web_page_preview or None,
+            silent=disable_notification or None,
+            reply_to=reply_to,
+            random_id=self.rnd_id(),
+            schedule_date=utils.datetime_to_timestamp(schedule_date),
+            reply_markup=await reply_markup.write(self) if reply_markup else None,
+            message=message,
+            entities=entities,
+            noforwards=protect_content,
+            invert_media=invert_media,
+            effect=message_effect_id,
         )
+        r = await self.invoke(rpc)
 
         if isinstance(r, raw.types.UpdateShortSentMessage):
             peer = await self.resolve_peer(chat_id)

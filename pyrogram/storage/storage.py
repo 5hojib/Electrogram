@@ -1,5 +1,6 @@
 import base64
 import struct
+from abc import abstractmethod
 from typing import List, Tuple
 
 
@@ -30,6 +31,10 @@ class Storage:
         raise NotImplementedError
 
     async def update_usernames(self, usernames: List[Tuple[int, str]]):
+        raise NotImplementedError
+
+    @abstractmethod
+    async def update_state(self, update_state: Tuple[int, int, int, int, int] = object):
         raise NotImplementedError
 
     async def get_peer_by_id(self, peer_id: int):

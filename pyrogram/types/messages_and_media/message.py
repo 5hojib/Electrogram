@@ -81,6 +81,8 @@ class Message(Object, Update):
         caption_entities: List["types.MessageEntity"] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
+        effect_id: str = None,
+        invert_media: bool = None,
         audio: "types.Audio" = None,
         document: "types.Document" = None,
         photo: "types.Photo" = None,
@@ -183,6 +185,8 @@ class Message(Object, Update):
         self.caption_entities = caption_entities
         self.quote_text = quote_text
         self.quote_entities = quote_entities
+        self.effect_id = effect_id
+        self.invert_media = invert_media
         self.audio = audio
         self.document = document
         self.photo = photo
@@ -694,6 +698,7 @@ class Message(Object, Update):
                 edit_hide=message.edit_hide,
                 edit_date=utils.timestamp_to_datetime(message.edit_date),
                 media_group_id=message.grouped_id,
+                invert_media=message.invert_media,
                 photo=photo,
                 location=location,
                 contact=contact,
@@ -718,6 +723,7 @@ class Message(Object, Update):
                 outgoing=message.out,
                 reply_markup=reply_markup,
                 reactions=reactions,
+                effect_id=getattr(message, "effect", None),
                 raw=message,
                 client=client
             )
@@ -828,6 +834,7 @@ class Message(Object, Update):
         quote_entities: List["types.MessageEntity"] = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
+        message_effect_id: int = None,
         invert_media: bool = None,
         reply_markup=None
     ) -> "Message":
@@ -861,6 +868,7 @@ class Message(Object, Update):
             quote_entities=quote_entities,
             schedule_date=schedule_date,
             protect_content=protect_content,
+            message_effect_id=message_effect_id,
             invert_media=invert_media,
             reply_markup=reply_markup
         )
@@ -881,6 +889,7 @@ class Message(Object, Update):
         thumb: Union[str, BinaryIO] = None,
         file_name: str = None,
         disable_notification: bool = None,
+        invert_media: bool = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -928,6 +937,7 @@ class Message(Object, Update):
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
+            invert_media=invert_media,
             reply_markup=reply_markup,
             progress=progress,
             progress_args=progress_args
@@ -1047,10 +1057,19 @@ class Message(Object, Update):
             reply_markup=reply_markup
         )
 
-    async def reply_chat_action(self, action: "enums.ChatAction") -> bool:
+    async def reply_chat_action(
+        self,
+        action: "enums.ChatAction",
+        emoji: str = None,
+        emoji_message_id: int = None,
+        emoji_message_interaction: "raw.types.DataJSON" = None
+    ) -> bool:
         return await self._client.send_chat_action(
             chat_id=self.chat.id,
-            action=action
+            action=action,
+            emoji=emoji,
+            emoji_message_id=emoji_message_id,
+            emoji_message_interaction=emoji_message_interaction
         )
 
     async def reply_contact(
@@ -1292,7 +1311,8 @@ class Message(Object, Update):
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
-        parse_mode: Optional["enums.ParseMode"] = None
+        parse_mode: Optional["enums.ParseMode"] = None,
+        invert_media: bool = None
     ) -> List["types.Message"]:
         if quote is None:
             quote = self.chat.type != enums.ChatType.PRIVATE
@@ -1317,7 +1337,8 @@ class Message(Object, Update):
             message_thread_id=message_thread_id,
             reply_to_message_id=reply_to_message_id,
             reply_to_chat_id=reply_to_chat_id,
-            quote_text=quote_text
+            quote_text=quote_text,
+            invert_media=invert_media
         )
 
     async def reply_photo(
@@ -1334,6 +1355,8 @@ class Message(Object, Update):
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
+        view_once: bool = None,
+        invert_media: bool = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -1373,6 +1396,8 @@ class Message(Object, Update):
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
+            view_once=view_once,
+            invert_media=invert_media,
             reply_markup=reply_markup,
             progress=progress,
             progress_args=progress_args
@@ -1448,6 +1473,7 @@ class Message(Object, Update):
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
+        invert_media: bool = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -1493,6 +1519,7 @@ class Message(Object, Update):
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
+            invert_media=invert_media,
             reply_markup=reply_markup,
             progress=progress,
             progress_args=progress_args
@@ -1672,6 +1699,7 @@ class Message(Object, Update):
         parse_mode: Optional["enums.ParseMode"] = None,
         entities: List["types.MessageEntity"] = None,
         disable_web_page_preview: bool = None,
+        invert_media: bool = None,
         reply_markup: "types.InlineKeyboardMarkup" = None
     ) -> "Message":
         return await self._client.edit_message_text(
@@ -1681,6 +1709,7 @@ class Message(Object, Update):
             parse_mode=parse_mode,
             entities=entities,
             disable_web_page_preview=disable_web_page_preview,
+            invert_media=invert_media,
             reply_markup=reply_markup
         )
 
@@ -1691,6 +1720,7 @@ class Message(Object, Update):
         caption: str,
         parse_mode: Optional["enums.ParseMode"] = None,
         caption_entities: List["types.MessageEntity"] = None,
+        invert_media: bool = None,
         reply_markup: "types.InlineKeyboardMarkup" = None
     ) -> "Message":
         return await self._client.edit_message_caption(
@@ -1699,18 +1729,23 @@ class Message(Object, Update):
             caption=caption,
             parse_mode=parse_mode,
             caption_entities=caption_entities,
+            invert_media=invert_media,
             reply_markup=reply_markup
         )
 
     async def edit_media(
         self,
         media: "types.InputMedia",
+        parse_mode: Optional["enums.ParseMode"] = None,
+        invert_media: bool = None,
         reply_markup: "types.InlineKeyboardMarkup" = None
     ) -> "Message":
         return await self._client.edit_message_media(
             chat_id=self.chat.id,
             message_id=self.id,
             media=media,
+            parse_mode=parse_mode,
+            invert_media=invert_media,
             reply_markup=reply_markup
         )
 
@@ -1755,6 +1790,7 @@ class Message(Object, Update):
         reply_to_message_id: int = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
+        invert_media: bool = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -1796,6 +1832,7 @@ class Message(Object, Update):
                 schedule_date=schedule_date,
                 has_spoiler=has_spoiler,
                 protect_content=protect_content,
+                invert_media=invert_media,
                 reply_markup=self.reply_markup if reply_markup is object else reply_markup
             )
 
@@ -1884,7 +1921,15 @@ class Message(Object, Update):
             revoke=revoke
         )
 
-    async def click(self, x: Union[int, str] = 0, y: int = None, quote: bool = None, timeout: int = 10):
+    async def click(
+        self,
+        x: Union[int, str] = 0,
+        y: int = None,
+        quote: bool = None,
+        timeout: int = 10,
+        request_write_access: bool = True,
+        password: str = None
+    ):
         if isinstance(self.reply_markup, types.ReplyKeyboardMarkup):
             keyboard = self.reply_markup.keyboard
             is_inline = False
@@ -1931,8 +1976,53 @@ class Message(Object, Update):
                     callback_data=button.callback_data,
                     timeout=timeout
                 )
+            elif button.requires_password:
+                if password is None:
+                    raise ValueError(
+                        "This button requires a password"
+                    )
+
+                return await self._client.request_callback_answer(
+                    chat_id=self.chat.id,
+                    message_id=self.id,
+                    callback_data=button.callback_data,
+                    password=password,
+                    timeout=timeout
+                )
             elif button.url:
                 return button.url
+            elif button.web_app:
+                web_app = button.web_app
+
+                bot_peer_id = (
+                    self.via_bot and
+                    self.via_bot.id
+                ) or (
+                    self.from_user and
+                    self.from_user.is_bot and
+                    self.from_user.id
+                ) or None
+
+                if not bot_peer_id:
+                    raise ValueError(
+                        "This button requires a bot as the sender"
+                    )
+
+                r = await self._client.invoke(
+                    raw.functions.messages.RequestWebView(
+                        peer=await self._client.resolve_peer(self.chat.id),
+                        bot=await self._client.resolve_peer(bot_peer_id),
+                        url=web_app.url,
+                        platform=self._client.client_platform.value,
+                        # TODO
+                    )
+                )
+                return r.url
+            elif button.user_id:
+                return await self._client.get_chat(
+                    button.user_id,
+                    force_full=False
+                )
             elif button.switch_inline_query:
                 return button.switch_inline_query
             elif button.switch_inline_query_current_chat:
@@ -1940,7 +2030,7 @@ class Message(Object, Update):
             else:
                 raise ValueError("This button is not supported yet")
         else:
-            await self.reply(button, quote=quote)
+            await self.reply(text=button, quote=quote)
 
     async def react(self, emoji: str = "", big: bool = False, add_to_recent: bool = True) -> "types.MessageReactions":
         return await self._client.send_reaction(
