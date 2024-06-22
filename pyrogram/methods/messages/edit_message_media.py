@@ -18,10 +18,11 @@ class EditMessageMedia:
         media: "types.InputMedia",
         reply_markup: "types.InlineKeyboardMarkup" = None,
         file_name: str = None,
+        parse_mode: Optional["enums.ParseMode"] = None,
         invert_media: bool = False
     ) -> "types.Message":
         caption = media.caption
-        parse_mode = media.parse_mode
+        parse_mode = parse_mode
 
         message, entities = None, None
 

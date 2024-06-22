@@ -1736,6 +1736,7 @@ class Message(Object, Update):
     async def edit_media(
         self,
         media: "types.InputMedia",
+        parse_mode: Optional["enums.ParseMode"] = None,
         invert_media: bool = None,
         reply_markup: "types.InlineKeyboardMarkup" = None
     ) -> "Message":
@@ -1743,6 +1744,7 @@ class Message(Object, Update):
             chat_id=self.chat.id,
             message_id=self.id,
             media=media,
+            parse_mode=parse_mode,
             invert_media=invert_media,
             reply_markup=reply_markup
         )
