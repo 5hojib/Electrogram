@@ -1,10 +1,10 @@
 import io
 import os
 import re
-from typing import Union
+from typing import Union, Optional
 
 import pyrogram
-from pyrogram import raw
+from pyrogram import raw, enums
 from pyrogram import types
 from pyrogram import utils
 from pyrogram.file_id import FileType
