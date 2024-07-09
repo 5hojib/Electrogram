@@ -15,7 +15,7 @@ from importlib import import_module
 from io import StringIO, BytesIO
 from mimetypes import MimeTypes
 from pathlib import Path
-from typing import Union, List, Optional, Callable, AsyncGenerator
+from typing import Union, List, Optional, Callable, AsyncGenerator, Type
 
 import pyrogram
 from pyrogram import enums, raw, utils
@@ -23,8 +23,7 @@ from pyrogram.crypto import aes
 from pyrogram.errors import CDNFileHashMismatch
 from pyrogram.errors import (
     SessionPasswordNeeded,
-    VolumeLocNotFound,
-    ChannelPrivate,
+    VolumeLocNotFound, ChannelPrivate,
     BadRequest
 )
 from pyrogram.handlers.handler import Handler
@@ -34,6 +33,8 @@ from pyrogram.storage import FileStorage, MemoryStorage, Storage
 from pyrogram.storage import MongoStorage
 from pyrogram.types import User, TermsOfService
 from pyrogram.utils import ainput
+from .connection import Connection
+from .connection.transport import TCP, TCPAbridged
 from .dispatcher import Dispatcher
 from .file_id import FileId, FileType, ThumbnailSource
 from .filters import Filter
@@ -48,11 +49,15 @@ class Client(Methods):
     APP_VERSION = "pyrogram"
     DEVICE_MODEL = f"{platform.python_implementation()} {platform.python_version()}"
     SYSTEM_VERSION = f"{platform.system()} {platform.release()}"
+
     LANG_CODE = "en"
+
     PARENT_DIR = Path(sys.argv[0]).parent
+
     INVITE_LINK_RE = re.compile(r"^(?:https?://)?(?:www\.)?(?:t(?:elegram)?\.(?:org|me|dog)/(?:joinchat/|\+))([\w-]+)$")
     WORKERS = 32
     WORKDIR = PARENT_DIR
+
     UPDATES_WATCHDOG_INTERVAL = 15 * 60
     MAX_CONCURRENT_TRANSMISSIONS = 1000
 
@@ -145,6 +150,9 @@ class Client(Methods):
                 self.storage = MongoStorage(self.name, **self.mongodb)
         else:
             self.storage = FileStorage(self.name, self.workdir)
+
+        self.connection_factory = Connection
+        self.protocol_factory = TCPAbridged
 
         self.dispatcher = Dispatcher(self)
         self.rnd_id = MsgId
@@ -551,16 +559,15 @@ class Client(Methods):
                                 if isinstance(handler, Handler) and isinstance(group, int):
                                     self.add_handler(handler, group)
 
-                                    log.info(
-                                        f'[{self.name}] [LOAD] {type(handler).__name__}("{name}") in group {group} from "{module_path}"'
-                                    )
+                                    log.info('[{}] [LOAD] {}("{}") in group {} from "{}"'.format(
+                                        self.name, type(handler).__name__, name, group, module_path))
 
                                     count += 1
                         except Exception:
                             pass
             else:
                 for path, handlers in include:
-                    module_path = f"{root}.{path}"
+                    module_path = root + "." + path
                     warn_non_existent_functions = True
 
                     try:
@@ -578,25 +585,24 @@ class Client(Methods):
                         warn_non_existent_functions = False
 
                     for name in handlers:
+                        # noinspection PyBroadException
                         try:
                             for handler, group in getattr(module, name).handlers:
                                 if isinstance(handler, Handler) and isinstance(group, int):
                                     self.add_handler(handler, group)
 
-                                    log.info(
-                                        f'[{self.name}] [LOAD] {type(handler).__name__}("{name}") in group {group} from "{module_path}"'
-                                    )
+                                    log.info('[{}] [LOAD] {}("{}") in group {} from "{}"'.format(
+                                        self.name, type(handler).__name__, name, group, module_path))
 
                                     count += 1
                         except Exception:
                             if warn_non_existent_functions:
-                                log.warning(
-                                    f'[{self.name}] [LOAD] Ignoring non-existent function "{name}" from "{module_path}"'
-                                )
+                                log.warning('[{}] [LOAD] Ignoring non-existent function "{}" from "{}"'.format(
+                                    self.name, name, module_path))
 
             if exclude:
                 for path, handlers in exclude:
-                    module_path = f"{root}.{path}"
+                    module_path = root + "." + path
                     warn_non_existent_functions = True
 
                     try:
@@ -619,21 +625,18 @@ class Client(Methods):
                                 if isinstance(handler, Handler) and isinstance(group, int):
                                     self.remove_handler(handler, group)
 
-                                    log.info(
-                                        f'[{self.name}] [UNLOAD] {type(handler).__name__}("{name}") from group {group} in "{module_path}"'
-                                    )
+                                    log.info('[{}] [UNLOAD] {}("{}") from group {} in "{}"'.format(
+                                        self.name, type(handler).__name__, name, group, module_path))
 
                                     count -= 1
                         except Exception:
                             if warn_non_existent_functions:
-                                log.warning(
-                                    f'[{self.name}] [UNLOAD] Ignoring non-existent function "{name}" from "{module_path}"'
-                                )
+                                log.warning('[{}] [UNLOAD] Ignoring non-existent function "{}" from "{}"'.format(
+                                    self.name, name, module_path))
 
             if count > 0:
-                log.info(
-                    f'[{self.name}] Successfully loaded {count} plugin{"s" if count > 1 else ""} from "{root}"'
-                )
+                log.info('[{}] Successfully loaded {} plugin{} from "{}"'.format(
+                    self.name, count, "s" if count > 1 else "", root))
             else:
                 log.warning('[%s] No plugin loaded from "%s"', self.name, root)
 
