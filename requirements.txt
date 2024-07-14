@@ -2,4 +2,4 @@ aiosqlite
 pymediainfo
 pymongo
 pysocks
-tgcrypto
+TgCrypto-pyrofork

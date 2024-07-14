@@ -136,16 +136,7 @@ class Client(Methods):
         elif self.in_memory:
             self.storage = MemoryStorage(self.name)
         elif self.mongodb:
-            try:
-                pass
-            except Exception:
-                log.warning(
-                    "pymongo is missing! "
-                    "Using MemoryStorage as session storage"
-                )
-                self.storage = MemoryStorage(self.name)
-            else:
-                self.storage = MongoStorage(self.name, **self.mongodb)
+            self.storage = MongoStorage(self.name, **self.mongodb)
         else:
             self.storage = FileStorage(self.name, self.workdir)
 
