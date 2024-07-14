@@ -8,7 +8,6 @@ from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime, timezone
 from getpass import getpass
 from typing import Union, List, Dict, Optional, Any, Callable, TypeVar
-from types import SimpleNamespace
 
 import pyrogram
 from pyrogram import raw, enums, types

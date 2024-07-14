@@ -1,8 +1,5 @@
-from typing import List, Optional, Union
 
-import pyrogram
 from pyrogram import raw
-from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType, ThumbnailSource
 from ..object import Object
 
 

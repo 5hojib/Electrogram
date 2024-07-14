@@ -4,9 +4,7 @@ import logging
 from collections import OrderedDict
 
 import pyrogram
-from pyrogram import errors
 from pyrogram import utils
-from pyrogram import raw
 from pyrogram.handlers import (
     CallbackQueryHandler,
     MessageHandler,
