@@ -11,7 +11,7 @@ errors_compiler.start()
 
 setup(
     name="pyrogram",
-    version="v1.182.0",
+    version="v1.184.0",
     author="5hojib",
     author_email="yesiamshojib@gmail.com",
     description="A simple fork of pyrogram",
