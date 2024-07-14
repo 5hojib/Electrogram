@@ -101,7 +101,6 @@ class Message(Object, Update):
         contact: "types.Contact" = None,
         location: "types.Location" = None,
         venue: "types.Venue" = None,
-        poll: "types.Poll" = None,
         dice: "types.Dice" = None,
         new_chat_members: List["types.User"] = None,
         chat_joined_by_request: "types.ChatJoinedByRequest" = None,
@@ -205,7 +204,6 @@ class Message(Object, Update):
         self.contact = contact
         self.location = location
         self.venue = venue
-        self.poll = poll
         self.dice = dice
         self.new_chat_members = new_chat_members
         self.chat_joined_by_request = chat_joined_by_request
@@ -550,7 +548,6 @@ class Message(Object, Update):
             web_page_preview = None
             sticker = None
             document = None
-            poll = None
             dice = None
 
             media = message.media
@@ -625,9 +622,6 @@ class Message(Object, Update):
                         else:
                             document = types.Document._parse(client, doc, file_name)
                             media_type = enums.MessageMediaType.DOCUMENT
-                elif isinstance(media, raw.types.MessageMediaPoll):
-                    poll = types.Poll._parse(client, media)
-                    media_type = enums.MessageMediaType.POLL
                 elif isinstance(media, raw.types.MessageMediaDice):
                     dice = types.Dice._parse(client, media)
                     media_type = enums.MessageMediaType.DICE
@@ -715,7 +709,6 @@ class Message(Object, Update):
                 web_page_preview=web_page_preview,
                 sticker=sticker,
                 document=document,
-                poll=poll,
                 dice=dice,
                 views=message.views,
                 forwards=message.forwards,
@@ -798,9 +791,6 @@ class Message(Object, Update):
                             pass
                         else:
                             parsed_message.reply_to_story = reply_to_story
-
-            if not parsed_message.poll:
-                client.message_cache[(parsed_message.chat.id, parsed_message.id)] = parsed_message
 
             return parsed_message
 
