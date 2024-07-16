@@ -1,0 +1,25 @@
+name: Auto Tag Workflow
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set Version
+        run: echo "VERSION=v1.0.0" >> $GITHUB_ENV
+
+      - name: Tag Commit
+        run: git tag ${{ env.VERSION }}
+        
+      - name: Push Tag
+        if: success()
+        run: git push origin ${{ env.VERSION }}
