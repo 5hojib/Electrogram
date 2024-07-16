@@ -13,11 +13,10 @@ class AddStickerToSet:
         sticker: str,
         emoji: str = "🤔",
     ) -> "types.StickerSet":
-        file = None
 
         if isinstance(sticker, str):
             if os.path.isfile(sticker) or re.match("^https?://", sticker):
-                raise ValueError(f"file_id is invalid!")
+                raise ValueError("file_id is invalid!")
             else:
                 decoded = FileId.decode(sticker)
                 media = raw.types.InputDocument(
@@ -26,7 +25,7 @@ class AddStickerToSet:
                     file_reference=decoded.file_reference
                 )
         else:
-            raise ValueError(f"file_id is invalid!")
+            raise ValueError("file_id is invalid!")
 
         r = await self.invoke(
             raw.functions.stickers.AddStickerToSet(

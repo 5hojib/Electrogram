@@ -6,7 +6,6 @@ import os
 import platform
 import re
 import shutil
-import pymongo
 import sys
 from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime, timedelta
@@ -15,7 +14,7 @@ from importlib import import_module
 from io import StringIO, BytesIO
 from mimetypes import MimeTypes
 from pathlib import Path
-from typing import Union, List, Optional, Callable, AsyncGenerator, Type
+from typing import Union, List, Optional, Callable, AsyncGenerator
 
 import pyrogram
 from pyrogram import enums, raw, utils
@@ -34,10 +33,9 @@ from pyrogram.storage import MongoStorage
 from pyrogram.types import User, TermsOfService
 from pyrogram.utils import ainput
 from .connection import Connection
-from .connection.transport import TCP, TCPAbridged
+from .connection.transport import TCPAbridged
 from .dispatcher import Dispatcher
 from .file_id import FileId, FileType, ThumbnailSource
-from .filters import Filter
 from .mime_types import mime_types
 from .parser import Parser
 from .session.internals import MsgId
@@ -138,16 +136,7 @@ class Client(Methods):
         elif self.in_memory:
             self.storage = MemoryStorage(self.name)
         elif self.mongodb:
-            try:
-                import pymongo
-            except Exception:
-                log.warning(
-                    "pymongo is missing! "
-                    "Using MemoryStorage as session storage"
-                )
-                self.storage = MemoryStorage(self.name)
-            else:
-                self.storage = MongoStorage(self.name, **self.mongodb)
+            self.storage = MongoStorage(self.name, **self.mongodb)
         else:
             self.storage = FileStorage(self.name, self.workdir)
 
