@@ -1,4 +1,5 @@
-__version__ = "1.184.4"
+__version__ = "1.184.5"
+__license__ = "MIT License"
 
 from concurrent.futures.thread import ThreadPoolExecutor
 

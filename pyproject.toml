@@ -3,23 +3,23 @@ name = "pyrogram"
 dynamic = ["version"]
 description = "Sleek, advanced, and asynchronous Telegram MTProto API framework in Python, designed for fluid user and bot interactions."
 authors = [{ name = "5hojib", email = "yesiamshojib@gmail.com" }]
-dependencies = ["pyaes", "pysocks", "aiosqlite"]
-license = "LGPL-3.0-or-later"
+license = { text = "MIT License" }
+dependencies = [
+    "pyaes",
+    "pysocks",
+    "aiosqlite",
+    "pymediainfo",
+    "TgCrypto-pyrofork"
+]
 requires-python = ">=3.9"
+
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
-    "Intended Audience :: Developers",
-    "Natural Language :: English",
-    "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12"
 ]
-keywords = ["telegram", "chat", "messenger", "mtproto", "api", "client", "library", "python"]
 
 [tool.hatch.version]
 path = "pyrogram/__init__.py"
@@ -28,9 +28,8 @@ path = "pyrogram/__init__.py"
 
 [project.urls]
 homepage = "https://github.com/5hojib/pyrogram"
-tracker = "https://github.com/5hojib/pyrogram/issues"
 community = "https://t.me/ProjectAeon"
-source = "https://github.com/5hojib/pyrogram"
+repository = "https://github.com/5hojib/pyrogram"
 
 [build-system]
 requires = ["hatchling"]
