@@ -1,17 +1,17 @@
 from setuptools import setup, find_packages
 from compiler.api import compiler as api_compiler
-#from compiler.errors import compiler as errors_compiler
+from compiler.errors import compiler as errors_compiler
 
 
 with open("requirements.txt", encoding="utf-8") as r:
     requires = [i.strip() for i in r]
 
 api_compiler.start()
-#errors_compiler.start()
+errors_compiler.start()
 
 setup(
     name="pyrogram",
-    version="v1.184.2",
+    version="v1.184.3",
     author="5hojib",
     author_email="yesiamshojib@gmail.com",
     description="A simple fork of pyrogram",

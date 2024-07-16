@@ -20,7 +20,7 @@ jobs:
         python-version: '3.11'
 
     - name: Install Rye
-      run: curl -sSf https://rye-up.com/get | sh
+      run: curl -sSf https://rye.astral.sh/get | sh
 
     - name: Initialize Rye
       run: rye init
