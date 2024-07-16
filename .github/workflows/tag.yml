@@ -16,14 +16,16 @@ jobs:
 
       - name: Set Version from File
         id: version
-        run: echo "::set-output name=version::$(grep -E '__version__ = ".*"' pyrogram/__init__.py | cut -d\" -f2)"
+        run: |
+          VERSION=$(grep -E '__version__ = ".*"' pyrogram/__init__.py | cut -d\" -f2)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Check Existing Release
         id: check_release
         run: |
-          TAG_EXISTS=$(curl -s -o /dev/null -w "%{http_code}" https://api.github.com/repos/$GITHUB_REPOSITORY/releases/tags/${{ steps.version.outputs.version }})
+          TAG_EXISTS=$(curl -s -o /dev/null -w "%{http_code}" https://api.github.com/repos/$GITHUB_REPOSITORY/releases/tags/${{ env.VERSION }})
           if [[ "$TAG_EXISTS" -eq 200 ]]; then
-            echo "Release with tag ${{ steps.version.outputs.version }} already exists."
+            echo "Release with tag ${{ env.VERSION }} already exists."
             echo "RELEASE_EXISTS=true" >> $GITHUB_ENV  # Set environment variable
           fi
 
@@ -34,7 +36,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GX_TOKEN }}
         with:
-          tag_name: ${{ steps.version.outputs.version }}
-          release_name: Release ${{ steps.version.outputs.version }}
+          tag_name: ${{ env.VERSION }}
+          release_name: Release ${{ env.VERSION }}
           body: |
-            Release ${{ steps.version.outputs.version }}
+            Release ${{ env.VERSION }}
