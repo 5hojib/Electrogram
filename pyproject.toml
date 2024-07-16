@@ -4,7 +4,6 @@ dynamic = ["version"]
 description = "Sleek, advanced, and asynchronous Telegram MTProto API framework in Python, designed for fluid user and bot interactions."
 authors = [{ name = "5hojib", email = "yesiamshojib@gmail.com" }]
 dependencies = ["pyaes", "pysocks", "aiosqlite"]
-readme = "README.md"
 license = "LGPL-3.0-or-later"
 requires-python = ">=3.9"
 classifiers = [
