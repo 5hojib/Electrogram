@@ -1,14 +1,14 @@
 [project]
-name = "pyrogram"
+name = "electrogram"
 dynamic = ["version"]
-description = "Sleek, advanced, and asynchronous Telegram MTProto API framework in Python, designed for fluid user and bot interactions."
+description = "Telegram MTProto API framework in Python, designed for fluid user and bot interactions."
 authors = [{ name = "5hojib", email = "yesiamshojib@gmail.com" }]
 license = { text = "MIT License" }
 dependencies = [
-    "pyaes",
     "pysocks",
     "aiosqlite",
     "pymediainfo",
+    "pymongo",
     "TgCrypto-pyrofork"
 ]
 requires-python = ">=3.9"
@@ -34,6 +34,15 @@ repository = "https://github.com/5hojib/pyrogram"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[project.optional-dependencies]
+dev = [
+    "hatch",
+    "pytest",
+    "pytest-asyncio",
+    "pytest-cov",
+    "twine"
+]
 
 [tool.hatch.metadata]
 allow-direct-references = true

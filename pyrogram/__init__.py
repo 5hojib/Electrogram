@@ -1,4 +1,4 @@
-__version__ = "1.184.5"
+__version__ = "1.184.0"
 __license__ = "MIT License"
 
 from concurrent.futures.thread import ThreadPoolExecutor
@@ -20,6 +20,7 @@ crypto_executor = ThreadPoolExecutor(1, thread_name_prefix="CryptoWorker")
 
 __all__ = [
     "__version__",
+    "__license__",
     "StopTransmission",
     "StopPropagation",
     "ContinuePropagation",
