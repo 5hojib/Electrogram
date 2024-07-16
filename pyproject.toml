@@ -18,9 +18,9 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "P]
-keywords = ["telegram chat messenger mtproto api client library python"]
+    "Programming Language :: Python :: 3.12"
+]
+keywords = ["telegram", "chat", "messenger", "mtproto", "api", "client", "library", "python"]
 
 [tool.hatch.version]
 path = "pyrogram/__init__.py"
@@ -43,7 +43,7 @@ allow-direct-references = true
 [tool.hatch.build.targets.sdist]
 exclude = [
     ".github/",
-    ".gitignore",
+    ".gitignore"
 ]
 
 [tool.hatch.build.targets.wheel]
