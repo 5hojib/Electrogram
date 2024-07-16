@@ -16,7 +16,7 @@ jobs:
 
       - name: Set Version from File
         id: version
-        run: echo "::set-output name=version::$(grep -oP '__version__ = "\K[^"]+' pyrogram/__init__.py)"
+        run: echo "::set-output name=version::$(grep -E '__version__ = ".*"' electrogram/pyrogram/__init__.py | cut -d\" -f2)"
 
       - name: Tag Commit
         run: git tag ${{ steps.version.outputs.version }} || echo "Tag already exists, skipping."
