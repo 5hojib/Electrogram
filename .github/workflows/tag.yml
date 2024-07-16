@@ -14,12 +14,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Set Version
-        run: echo "VERSION=v1.0.0" >> $GITHUB_ENV
+      - name: Set Version from File
+        id: version
+        run: echo "::set-output name=version::$(grep -oP '__version__ = "\K[^"]+' electrogram/pyrogram/__init__.py)"
 
       - name: Tag Commit
-        run: git tag ${{ env.VERSION }}
-        
+        run: git tag ${{ steps.version.outputs.version }} || echo "Tag already exists, skipping."
+
       - name: Push Tag
         if: success()
-        run: git push origin ${{ env.VERSION }}
+        run: git push origin ${{ steps.version.outputs.version }}
