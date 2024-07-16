@@ -13,7 +13,6 @@ class AddStickerToSet:
         sticker: str,
         emoji: str = "🤔",
     ) -> "types.StickerSet":
-        file = None
 
         if isinstance(sticker, str):
             if os.path.isfile(sticker) or re.match("^https?://", sticker):

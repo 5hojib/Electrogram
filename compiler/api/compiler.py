@@ -350,7 +350,6 @@ def start(format: bool = False):
         for i, arg in enumerate(sorted_args):
             arg_name, arg_type = arg
             is_optional = FLAGS_RE.match(arg_type)
-            flag_number = is_optional.group(1) if is_optional else -1
             arg_type = arg_type.split("?")[-1]
 
             arg_docs = combinator_docs.get(c.qualname, None)
@@ -364,7 +363,7 @@ def start(format: bool = False):
                 "{} ({}{}):\n            {}\n".format(
                     arg_name,
                     get_docstring_arg_type(arg_type),
-                    ", *optional*".format() if is_optional else "",
+                    ", *optional*") if is_optional else "",
                     arg_docs
                 )
             )

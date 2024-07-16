@@ -105,8 +105,7 @@ class SendSticker:
                                 self, i.message,
                                 {i.id: i for i in r.users},
                                 {i.id: i for i in r.chats},
-                                is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
-                                business_connection_id=business_connection_id
+                                is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage)
                             )
         except StopTransmission:
             return None

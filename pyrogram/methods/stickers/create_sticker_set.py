@@ -18,7 +18,6 @@ class CreateStickerSet:
         emoji: str = "🤔",
         masks: bool = None
     ) -> Optional["types.Message"]:
-        file = None
 
         if isinstance(sticker, str):
             if os.path.isfile(sticker) or re.match("^https?://", sticker):
