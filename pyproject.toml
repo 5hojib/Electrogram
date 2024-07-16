@@ -60,4 +60,6 @@ exclude = [
     "venv",
     "hatch_build.py"
 ]
-package = "pyrogram"
+packages = [
+    "pyrogram"
+]
