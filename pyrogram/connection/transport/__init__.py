@@ -2,7 +2,7 @@ from .tcp import TCP, Proxy, TCPAbridged, TCPAbridgedO, TCPFull, TCPIntermediate
 
 __all__ = [
     "TCP",
-    "Proxy"
+    "Proxy",
     "TCPAbridged",
     "TCPAbridgedO",
     "TCPFull",

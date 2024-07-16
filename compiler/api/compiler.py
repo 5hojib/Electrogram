@@ -363,7 +363,7 @@ def start(format: bool = False):
                 "{} ({}{}):\n            {}\n".format(
                     arg_name,
                     get_docstring_arg_type(arg_type),
-                    ", *optional*") if is_optional else "",
+                    ", *optional*" if is_optional else "",
                     arg_docs
                 )
             )
