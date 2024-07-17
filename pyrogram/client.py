@@ -7,6 +7,7 @@ import platform
 import re
 import shutil
 import sys
+
 from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime, timedelta
 from hashlib import sha256
@@ -17,7 +18,7 @@ from pathlib import Path
 from typing import Union, List, Optional, Callable, AsyncGenerator
 
 import pyrogram
-from pyrogram import enums, raw, utils
+from pyrogram import __version__, enums, raw, utils
 from pyrogram.crypto import aes
 from pyrogram.errors import CDNFileHashMismatch
 from pyrogram.errors import (
@@ -44,7 +45,7 @@ log = logging.getLogger(__name__)
 
 
 class Client(Methods):
-    APP_VERSION = "pyrogram"
+    APP_VERSION = f"electrogram {__version__}"
     DEVICE_MODEL = f"{platform.python_implementation()} {platform.python_version()}"
     SYSTEM_VERSION = f"{platform.system()} {platform.release()}"
 
