@@ -27,10 +27,13 @@ jobs:
 
       - name: Install dependencies
         if: steps.setup-rye.outputs.cache-hit != 'true'
-        run: rye sync
+        run: |
+          rye sync
+          pip install pytest
 
       - name: Generate API
         run: rye run api
 
       - name: Run tests
-        run: rye run python -m pytest
+        run: |
+          rye run python -m pytest
