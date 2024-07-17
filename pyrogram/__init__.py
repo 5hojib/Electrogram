@@ -17,7 +17,7 @@ class ContinuePropagation(StopAsyncIteration):
 
 
 # ruff: noqa: E402
-from . import enums, errors, filters, handlers, raw, types
+from . import raw, types, filters, handlers, emoji, enums
 from .client import Client
 from .sync import idle, compose
 
