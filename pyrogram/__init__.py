@@ -19,15 +19,10 @@ class ContinuePropagation(StopAsyncIteration):
 crypto_executor = ThreadPoolExecutor(1, thread_name_prefix="CryptoWorker")
 
 # ruff: noqa: E402
-import asyncio
-import uvloop
-
 from . import enums, errors, filters, handlers, raw, types
 from .client import Client
 from .methods.utilities.compose import compose
 from .methods.utilities.idle import idle
-
-asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 __all__ = [
     "Client",
