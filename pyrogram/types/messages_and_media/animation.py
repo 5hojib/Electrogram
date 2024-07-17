@@ -89,7 +89,6 @@ class Animation(Object):
                     media_id=video.id,
                     access_hash=video.access_hash,
                     file_reference=video.file_reference,
-                    thumbnail_source=ThumbnailSource.THUMBNAIL,
                     thumbnail_file_type=FileType.PHOTO,
                     thumbnail_size=video_size.type,
                     volume_id=0,

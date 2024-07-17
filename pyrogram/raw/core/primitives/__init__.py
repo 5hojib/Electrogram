@@ -4,7 +4,6 @@ from .double import Double
 from .int import Int, Long, Int128, Int256
 from .string import String
 from .vector import Vector
-from .tl_object import TLObject
 
 __all__ = [
     'Bool',
@@ -18,5 +17,4 @@ __all__ = [
     'Int256',
     'String',
     'Vector',
-    'TLObject',
 ]
