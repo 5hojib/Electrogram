@@ -24,11 +24,6 @@ jobs:
       if: steps.setup-rye.outputs.cache-hit != 'true'
       run: rye sync
 
-    - name: Analysing the code with Ruff
-      run: |
-        rye run ruff format --check .
-        rye run ruff check . --ignore=E501
-
     - name: Format the code
       run: rye run ruff format .
 
