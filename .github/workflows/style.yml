@@ -26,7 +26,7 @@ jobs:
     - name: Format the code
       run: |
         rye run ruff format .
-        git add .
+        git add -u
 
     - name: Commit and push changes
       run: |
