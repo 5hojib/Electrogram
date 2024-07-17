@@ -1,6 +1,6 @@
 import sys
 
-from hatchling.builders.hooks.plugin.interface import (BuildHookInterface)
+from hatchling.builders.hooks.plugin.interface import BuildHookInterface
 
 sys.path.insert(0, ".")
 
