@@ -9,12 +9,7 @@ from pymongo.read_preferences import (
     SecondaryPreferred,
 )
 from pymongo.write_concern import WriteConcern
-from typing import Any, Optional, Union
-
-try:
-    from typing import Protocol, runtime_checkable
-except ImportError:
-    from typing_extensions import Protocol, runtime_checkable
+from typing import Any, Optional, Union, Protocol, runtime_checkable
 
 ReadPreferences = Union[Primary, PrimaryPreferred, Secondary, SecondaryPreferred, Nearest]
 

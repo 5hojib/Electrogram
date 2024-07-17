@@ -16,12 +16,12 @@ class ContinuePropagation(StopAsyncIteration):
     pass
 
 
-crypto_executor = ThreadPoolExecutor(1, thread_name_prefix="CryptoWorker")
-
 # ruff: noqa: E402
 from . import enums, errors, filters, handlers, raw, types
 from .client import Client
 from .sync import idle, compose
+
+crypto_executor = ThreadPoolExecutor(1, thread_name_prefix="CryptoWorker")
 
 __all__ = [
     "Client",
