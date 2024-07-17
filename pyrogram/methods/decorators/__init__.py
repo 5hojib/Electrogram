@@ -12,6 +12,7 @@ from .on_user_status import OnUserStatus
 from .on_message_reaction_updated import OnMessageReactionUpdated
 from .on_message_reaction_count_updated import OnMessageReactionCountUpdated
 
+
 class Decorators(
     OnMessage,
     OnEditedMessage,
@@ -25,6 +26,6 @@ class Decorators(
     OnChatMemberUpdated,
     OnChatJoinRequest,
     OnMessageReactionUpdated,
-    OnMessageReactionCountUpdated
+    OnMessageReactionCountUpdated,
 ):
     pass

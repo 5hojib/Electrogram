@@ -41,5 +41,5 @@ class ChatJoiner(Object):
                 if joiner.approved_by
                 else None
             ),
-            client=client
+            client=client,
         )

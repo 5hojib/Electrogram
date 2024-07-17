@@ -2,10 +2,7 @@ import pyrogram
 
 
 class Stop:
-    async def stop(
-        self: "pyrogram.Client",
-        block: bool = True
-    ):
+    async def stop(self: "pyrogram.Client", block: bool = True):
         async def do_it():
             await self.terminate()
             await self.disconnect()

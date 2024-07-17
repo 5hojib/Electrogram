@@ -19,7 +19,7 @@ class InlineQueryResultAudio(InlineQueryResult):
         description: str = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
         input_message_content: "types.InputMessageContent" = None,
-        thumb_url: str = None
+        thumb_url: str = None,
     ):
         super().__init__("audio", id, input_message_content, reply_markup)
 
@@ -38,16 +38,20 @@ class InlineQueryResultAudio(InlineQueryResult):
             url=self.audio_url,
             size=0,
             mime_type="audio/mpeg",
-            attributes=[raw.types.DocumentAttributeAudio(
-                duration=self.audio_duration,
-                title=self.title,
-                performer=self.performer
-            )]
+            attributes=[
+                raw.types.DocumentAttributeAudio(
+                    duration=self.audio_duration,
+                    title=self.title,
+                    performer=self.performer,
+                )
+            ],
         )
 
-        message, entities = (await utils.parse_text_entities(
-            client, self.caption, self.parse_mode, self.caption_entities
-        )).values()
+        message, entities = (
+            await utils.parse_text_entities(
+                client, self.caption, self.parse_mode, self.caption_entities
+            )
+        ).values()
 
         return raw.types.InputBotInlineResult(
             id=self.id,
@@ -56,18 +60,19 @@ class InlineQueryResultAudio(InlineQueryResult):
             content=audio,
             description=self.description,
             thumb=raw.types.InputWebDocument(
-                url=self.thumb_url,
-                size=0,
-                mime_type="image/jpeg",
-                attributes=[]
-            ) if self.thumb_url else None,
+                url=self.thumb_url, size=0, mime_type="image/jpeg", attributes=[]
+            )
+            if self.thumb_url
+            else None,
             send_message=(
                 await self.input_message_content.write(client, self.reply_markup)
                 if self.input_message_content
                 else raw.types.InputBotInlineMessageMediaAuto(
-                    reply_markup=await self.reply_markup.write(client) if self.reply_markup else None,
+                    reply_markup=await self.reply_markup.write(client)
+                    if self.reply_markup
+                    else None,
                     message=message,
-                    entities=entities
+                    entities=entities,
                 )
-            )
+            ),
         )

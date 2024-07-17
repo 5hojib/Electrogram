@@ -19,7 +19,7 @@ class Connection:
         alt_port: bool,
         proxy: dict,
         media: bool = False,
-        protocol_factory: Type[TCP] = TCPAbridged
+        protocol_factory: Type[TCP] = TCPAbridged,
     ) -> None:
         self.dc_id = dc_id
         self.test_mode = test_mode

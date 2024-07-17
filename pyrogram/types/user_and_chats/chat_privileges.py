@@ -20,7 +20,7 @@ class ChatPrivileges(Object):
         can_post_stories: bool = False,
         can_edit_stories: bool = False,
         can_delete_stories: bool = False,
-        is_anonymous: bool = False
+        is_anonymous: bool = False,
     ):
         super().__init__(None)
 
@@ -57,5 +57,5 @@ class ChatPrivileges(Object):
             can_post_stories=admin_rights.post_stories,
             can_edit_stories=admin_rights.edit_stories,
             can_delete_stories=admin_rights.delete_stories,
-            is_anonymous=admin_rights.anonymous
+            is_anonymous=admin_rights.anonymous,
         )

@@ -11,7 +11,7 @@ from pyrogram.types import (
     Message,
     ReplyKeyboardMarkup,
     Story,
-    Update
+    Update,
 )
 
 
@@ -38,9 +38,7 @@ class InvertFilter(Filter):
             x = await self.base(client, update)
         else:
             x = await client.loop.run_in_executor(
-                client.executor,
-                self.base,
-                client, update
+                client.executor, self.base, client, update
             )
 
         return not x
@@ -56,9 +54,7 @@ class AndFilter(Filter):
             x = await self.base(client, update)
         else:
             x = await client.loop.run_in_executor(
-                client.executor,
-                self.base,
-                client, update
+                client.executor, self.base, client, update
             )
 
         if not x:
@@ -68,9 +64,7 @@ class AndFilter(Filter):
             y = await self.other(client, update)
         else:
             y = await client.loop.run_in_executor(
-                client.executor,
-                self.other,
-                client, update
+                client.executor, self.other, client, update
             )
 
         return x and y
@@ -86,9 +80,7 @@ class OrFilter(Filter):
             x = await self.base(client, update)
         else:
             x = await client.loop.run_in_executor(
-                client.executor,
-                self.base,
-                client, update
+                client.executor, self.base, client, update
             )
 
         if x:
@@ -98,9 +90,7 @@ class OrFilter(Filter):
             y = await self.other(client, update)
         else:
             y = await client.loop.run_in_executor(
-                client.executor,
-                self.other,
-                client, update
+                client.executor, self.other, client, update
             )
 
         return x or y
@@ -113,7 +103,7 @@ def create(func: Callable, name: str = None, **kwargs) -> Filter:
     return type(
         name or func.__name__ or CUSTOM_FILTER_NAME,
         (Filter,),
-        {"__call__": func, **kwargs}
+        {"__call__": func, **kwargs},
     )()
 
 
@@ -136,6 +126,7 @@ async def bot_filter(_, __, m: Message):
 
 
 bot = create(bot_filter)
+
 
 async def incoming_filter(_, __, m: Message):
     return not m.outgoing
@@ -170,6 +161,7 @@ async def reaction_filter(_, __, m: Message):
 
 
 react = create(reaction_filter)
+
 
 async def forwarded_filter(_, __, m: Message):
     return bool(m.forward_date)
@@ -312,7 +304,9 @@ private = create(private_filter)
 
 
 async def group_filter(_, __, m: Message):
-    return bool(m.chat and m.chat.type in {enums.ChatType.GROUP, enums.ChatType.SUPERGROUP})
+    return bool(
+        m.chat and m.chat.type in {enums.ChatType.GROUP, enums.ChatType.SUPERGROUP}
+    )
 
 
 group = create(group_filter)
@@ -496,10 +490,13 @@ linked_channel = create(linked_channel_filter)
 async def forum_topic_closed_filter(_, __, m: Message):
     return bool(m.forum_topic_closed)
 
+
 forum_topic_closed = create(forum_topic_closed_filter)
+
 
 async def forum_topic_created_filter(_, __, m: Message):
     return bool(m.forum_topic_created)
+
 
 forum_topic_created = create(forum_topic_created_filter)
 
@@ -507,11 +504,13 @@ forum_topic_created = create(forum_topic_created_filter)
 async def forum_topic_edited_filter(_, __, m: Message):
     return bool(m.forum_topic_edited)
 
+
 forum_topic_edited = create(forum_topic_edited_filter)
 
 
 async def forum_topic_reopened_filter(_, __, m: Message):
     return bool(m.forum_topic_reopened)
+
 
 forum_topic_reopened = create(forum_topic_reopened_filter)
 
@@ -519,16 +518,22 @@ forum_topic_reopened = create(forum_topic_reopened_filter)
 async def general_topic_hidden_filter(_, __, m: Message):
     return bool(m.general_topic_hidden)
 
+
 general_forum_topic_hidden = create(general_topic_hidden_filter)
 
 
 async def general_topic_unhidden_filter(_, __, m: Message):
     return bool(m.general_topic_unhidden)
 
+
 general_forum_topic_unhidden = create(general_topic_unhidden_filter)
 
 
-def command(commands: Union[str, List[str]], prefixes: Union[str, List[str]] = "/", case_sensitive: bool = False):
+def command(
+    commands: Union[str, List[str]],
+    prefixes: Union[str, List[str]] = "/",
+    case_sensitive: bool = False,
+):
     command_re = re.compile(r"([\"'])(.*?)(?<!\\)\1|(\S+)")
 
     async def func(flt, client: pyrogram.Client, message: Message):
@@ -543,15 +548,23 @@ def command(commands: Union[str, List[str]], prefixes: Union[str, List[str]] = "
             if not text.startswith(prefix):
                 continue
 
-            without_prefix = text[len(prefix):]
+            without_prefix = text[len(prefix) :]
 
             for cmd in flt.commands:
-                if not re.match(rf"^(?:{cmd}(?:@?{username})?)(?:\s|$)", without_prefix,
-                                flags=re.IGNORECASE if not flt.case_sensitive else 0):
+                if not re.match(
+                    rf"^(?:{cmd}(?:@?{username})?)(?:\s|$)",
+                    without_prefix,
+                    flags=re.IGNORECASE if not flt.case_sensitive else 0,
+                ):
                     continue
 
-                without_command = re.sub(rf"{cmd}(?:@?{username})?\s?", "", without_prefix, count=1,
-                                         flags=re.IGNORECASE if not flt.case_sensitive else 0)
+                without_command = re.sub(
+                    rf"{cmd}(?:@?{username})?\s?",
+                    "",
+                    without_prefix,
+                    count=1,
+                    flags=re.IGNORECASE if not flt.case_sensitive else 0,
+                )
 
                 message.command = [cmd] + [
                     re.sub(r"\\([\"'])", r"\1", m.group(2) or m.group(3) or "")
@@ -574,7 +587,7 @@ def command(commands: Union[str, List[str]], prefixes: Union[str, List[str]] = "
         "CommandFilter",
         commands=commands,
         prefixes=prefixes,
-        case_sensitive=case_sensitive
+        case_sensitive=case_sensitive,
     )
 
 
@@ -597,7 +610,7 @@ def regex(pattern: Union[str, Pattern], flags: int = 0):
     return create(
         func,
         "RegexFilter",
-        p=pattern if isinstance(pattern, Pattern) else re.compile(pattern, flags)
+        p=pattern if isinstance(pattern, Pattern) else re.compile(pattern, flags),
     )
 
 
@@ -606,18 +619,23 @@ class user(Filter, set):
         users = [] if users is None else users if isinstance(users, list) else [users]
 
         super().__init__(
-            "me" if u in ["me", "self"]
-            else u.lower().strip("@") if isinstance(u, str)
-            else u for u in users
+            "me"
+            if u in ["me", "self"]
+            else u.lower().strip("@")
+            if isinstance(u, str)
+            else u
+            for u in users
         )
 
     async def __call__(self, _, message: Message):
-        return (message.from_user
-                and (message.from_user.id in self
-                     or (message.from_user.username
-                         and message.from_user.username.lower() in self)
-                     or ("me" in self
-                         and message.from_user.is_self)))
+        return message.from_user and (
+            message.from_user.id in self
+            or (
+                message.from_user.username
+                and message.from_user.username.lower() in self
+            )
+            or ("me" in self and message.from_user.is_self)
+        )
 
 
 class chat(Filter, set):
@@ -625,50 +643,55 @@ class chat(Filter, set):
         chats = [] if chats is None else chats if isinstance(chats, list) else [chats]
 
         super().__init__(
-            "me" if c in ["me", "self"]
-            else c.lower().strip("@") if isinstance(c, str)
-            else c for c in chats
+            "me"
+            if c in ["me", "self"]
+            else c.lower().strip("@")
+            if isinstance(c, str)
+            else c
+            for c in chats
         )
 
     async def __call__(self, _, message: Union[Message, Story]):
         if isinstance(message, Story):
             return (
-                    message.sender_chat
-                    and (
-                        message.sender_chat.id in self
-                        or (
-                            message.sender_chat.username
-                            and message.sender_chat.username.lower() in self
-                        )
-                    )
-                ) or (
-                    message.from_user
-                    and (
-                        message.from_user.id in self
-                        or (
-                            message.from_user.username
-                            and message.from_user.username.lower() in self
-                        )
+                message.sender_chat
+                and (
+                    message.sender_chat.id in self
+                    or (
+                        message.sender_chat.username
+                        and message.sender_chat.username.lower() in self
                     )
                 )
+            ) or (
+                message.from_user
+                and (
+                    message.from_user.id in self
+                    or (
+                        message.from_user.username
+                        and message.from_user.username.lower() in self
+                    )
+                )
+            )
         else:
-            return (message.chat
-                    and (message.chat.id in self
-                         or (message.chat.username
-                             and message.chat.username.lower() in self)
-                         or ("me" in self
-                             and message.from_user
-                             and message.from_user.is_self
-                             and not message.outgoing)))
+            return message.chat and (
+                message.chat.id in self
+                or (message.chat.username and message.chat.username.lower() in self)
+                or (
+                    "me" in self
+                    and message.from_user
+                    and message.from_user.is_self
+                    and not message.outgoing
+                )
+            )
 
 
 class topic(Filter, set):
     def __init__(self, topics: Union[int, List[int]] = None):
-        topics = [] if topics is None else topics if isinstance(topics, list) else [topics]
-
-        super().__init__(
-            t for t in topics
+        topics = (
+            [] if topics is None else topics if isinstance(topics, list) else [topics]
         )
+
+        super().__init__(t for t in topics)
 
     async def __call__(self, _, message: Message):
         return message.topic and message.topic.id in self

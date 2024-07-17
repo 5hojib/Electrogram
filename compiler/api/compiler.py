@@ -12,14 +12,26 @@ DESTINATION_PATH = Path("pyrogram/raw")
 
 SECTION_RE = re.compile(r"---(\w+)---")
 LAYER_RE = re.compile(r"//\sLAYER\s(\d+)")
-COMBINATOR_RE = re.compile(r"^([\w.]+)#([0-9a-f]+)\s(?:.*)=\s([\w<>.]+);$", re.MULTILINE)
+COMBINATOR_RE = re.compile(
+    r"^([\w.]+)#([0-9a-f]+)\s(?:.*)=\s([\w<>.]+);$", re.MULTILINE
+)
 ARGS_RE = re.compile(r"[^{](\w+):([\w?!.<>#]+)")
 FLAGS_RE = re.compile(r"flags(\d?)\.(\d+)\?")
 FLAGS_RE_2 = re.compile(r"flags(\d?)\.(\d+)\?([\w<>.]+)")
 FLAGS_RE_3 = re.compile(r"flags(\d?):#")
 INT_RE = re.compile(r"int(\d+)")
 
-CORE_TYPES = ["int", "long", "int128", "int256", "double", "bytes", "string", "Bool", "true"]
+CORE_TYPES = [
+    "int",
+    "long",
+    "int128",
+    "int256",
+    "double",
+    "bytes",
+    "string",
+    "Bool",
+    "true",
+]
 
 WARNING = """
 # # # # # # # # # # # # # # # # # # # # # # # #
@@ -42,11 +54,7 @@ try:
     with open("docs.json") as f:
         docs = json.load(f)
 except FileNotFoundError:
-    docs = {
-        "type": {},
-        "constructor": {},
-        "method": {}
-    }
+    docs = {"type": {}, "constructor": {}, "method": {}}
 
 
 class Combinator(NamedTuple):
@@ -178,13 +186,14 @@ def start(format: bool = False):
     shutil.rmtree(DESTINATION_PATH / "functions", ignore_errors=True)
     shutil.rmtree(DESTINATION_PATH / "base", ignore_errors=True)
 
-    with open(HOME_PATH / "source/auth_key.tl") as f1, \
-        open(HOME_PATH / "source/sys_msgs.tl") as f2, \
-        open(HOME_PATH / "source/main_api.tl") as f3:
+    with open(HOME_PATH / "source/auth_key.tl") as f1, open(
+        HOME_PATH / "source/sys_msgs.tl"
+    ) as f2, open(HOME_PATH / "source/main_api.tl") as f3:
         schema = (f1.read() + f2.read() + f3.read()).splitlines()
 
-    with open(HOME_PATH / "template/type.txt") as f1, \
-        open(HOME_PATH / "template/combinator.txt") as f2:
+    with open(HOME_PATH / "template/type.txt") as f1, open(
+        HOME_PATH / "template/combinator.txt"
+    ) as f2:
         type_tmpl = f1.read()
         combinator_tmpl = f2.read()
 
@@ -236,7 +245,7 @@ def start(format: bool = False):
                 args=args,
                 qualtype=qualtype,
                 typespace=typespace,
-                type=type
+                type=type,
             )
 
             combinators.append(combinator)
@@ -294,22 +303,26 @@ def start(format: bool = False):
 
         docstring = type_docs
 
-        docstring += f"\n\n    Constructors:\n" \
-                     f"        This base type has {constr_count} constructor{'s' if constr_count > 1 else ''} available.\n\n" \
-                     f"        .. currentmodule:: pyrogram.raw.types\n\n" \
-                     f"        .. autosummary::\n" \
-                     f"            :nosignatures:\n\n" \
-                     f"            {items}"
+        docstring += (
+            f"\n\n    Constructors:\n"
+            f"        This base type has {constr_count} constructor{'s' if constr_count > 1 else ''} available.\n\n"
+            f"        .. currentmodule:: pyrogram.raw.types\n\n"
+            f"        .. autosummary::\n"
+            f"            :nosignatures:\n\n"
+            f"            {items}"
+        )
 
         references, ref_count = get_references(qualtype, "types")
 
         if references:
-            docstring += f"\n\n    Functions:\n        This object can be returned by " \
-                         f"{ref_count} function{'s' if ref_count > 1 else ''}.\n\n" \
-                         f"        .. currentmodule:: pyrogram.raw.functions\n\n" \
-                         f"        .. autosummary::\n" \
-                         f"            :nosignatures:\n\n" \
-                         f"            " + references
+            docstring += (
+                f"\n\n    Functions:\n        This object can be returned by "
+                f"{ref_count} function{'s' if ref_count > 1 else ''}.\n\n"
+                f"        .. currentmodule:: pyrogram.raw.functions\n\n"
+                f"        .. autosummary::\n"
+                f"            :nosignatures:\n\n"
+                f"            " + references
+            )
 
         with open(dir_path / f"{snake(module)}.py", "w") as f:
             f.write(
@@ -319,25 +332,24 @@ def start(format: bool = False):
                     name=type,
                     qualname=qualtype,
                     types=", ".join([f"raw.types.{c}" for c in constructors]),
-                    doc_name=snake(type).replace("_", "-")
+                    doc_name=snake(type).replace("_", "-"),
                 )
             )
 
     for c in combinators:
         sorted_args = sort_args(c.args)
 
-        arguments = (
-            (", *, " if c.args else "") +
-            (", ".join(
-                [f"{i[0]}: {get_type_hint(i[1])}"
-                 for i in sorted_args]
-            ) if sorted_args else "")
+        arguments = (", *, " if c.args else "") + (
+            ", ".join([f"{i[0]}: {get_type_hint(i[1])}" for i in sorted_args])
+            if sorted_args
+            else ""
         )
 
-        fields = "\n        ".join(
-            [f"self.{i[0]} = {i[0]}  # {i[1]}"
-             for i in sorted_args]
-        ) if sorted_args else "pass"
+        fields = (
+            "\n        ".join([f"self.{i[0]} = {i[0]}  # {i[1]}" for i in sorted_args])
+            if sorted_args
+            else "pass"
+        )
 
         docstring = ""
         docstring_args = []
@@ -364,7 +376,7 @@ def start(format: bool = False):
                     arg_name,
                     get_docstring_arg_type(arg_type),
                     ", *optional*" if is_optional else "",
-                    arg_docs
+                    arg_docs,
                 )
             )
 
@@ -387,8 +399,11 @@ def start(format: bool = False):
                 docstring += "Telegram API function."
 
         docstring += f"\n\n    Details:\n        - Layer: ``{layer}``\n        - ID: ``{c.id[2:].upper()}``\n\n"
-        docstring += "    Parameters:\n        " + \
-                     ("\n        ".join(docstring_args) if docstring_args else "No parameters required.\n")
+        docstring += "    Parameters:\n        " + (
+            "\n        ".join(docstring_args)
+            if docstring_args
+            else "No parameters required.\n"
+        )
 
         if c.section == "functions":
             docstring += "\n    Returns:\n        " + get_docstring_arg_type(c.qualtype)
@@ -396,12 +411,14 @@ def start(format: bool = False):
             references, count = get_references(c.qualname, "constructors")
 
             if references:
-                docstring += f"\n    Functions:\n        This object can be returned by " \
-                             f"{count} function{'s' if count > 1 else ''}.\n\n" \
-                             f"        .. currentmodule:: pyrogram.raw.functions\n\n" \
-                             f"        .. autosummary::\n" \
-                             f"            :nosignatures:\n\n" \
-                             f"            " + references
+                docstring += (
+                    f"\n    Functions:\n        This object can be returned by "
+                    f"{count} function{'s' if count > 1 else ''}.\n\n"
+                    f"        .. currentmodule:: pyrogram.raw.functions\n\n"
+                    f"        .. autosummary::\n"
+                    f"            :nosignatures:\n\n"
+                    f"            " + references
+                )
 
         write_types = read_types = "" if c.has_flags else "# No flags\n        "
 
@@ -418,17 +435,24 @@ def start(format: bool = False):
                         if arg_name != f"flags{flag.group(1)}":
                             continue
 
-                        if flag.group(3) == "true" or flag.group(3).startswith("Vector"):
-                            write_flags.append(f"{arg_name} |= (1 << {flag.group(2)}) if self.{i[0]} else 0")
+                        if flag.group(3) == "true" or flag.group(3).startswith(
+                            "Vector"
+                        ):
+                            write_flags.append(
+                                f"{arg_name} |= (1 << {flag.group(2)}) if self.{i[0]} else 0"
+                            )
                         else:
                             write_flags.append(
-                                f"{arg_name} |= (1 << {flag.group(2)}) if self.{i[0]} is not None else 0")
+                                f"{arg_name} |= (1 << {flag.group(2)}) if self.{i[0]} is not None else 0"
+                            )
 
-                write_flags = "\n        ".join([
-                    f"{arg_name} = 0",
-                    "\n        ".join(write_flags),
-                    f"b.write(Int({arg_name}))\n        "
-                ])
+                write_flags = "\n        ".join(
+                    [
+                        f"{arg_name} = 0",
+                        "\n        ".join(write_flags),
+                        f"b.write(Int({arg_name}))\n        ",
+                    ]
+                )
 
                 write_types += write_flags
                 read_types += f"\n        {arg_name} = Int.read(b)\n        "
@@ -444,7 +468,9 @@ def start(format: bool = False):
                 elif flag_type in CORE_TYPES:
                     write_types += "\n        "
                     write_types += f"if self.{arg_name} is not None:\n            "
-                    write_types += f"b.write({flag_type.title()}(self.{arg_name}))\n        "
+                    write_types += (
+                        f"b.write({flag_type.title()}(self.{arg_name}))\n        "
+                    )
 
                     read_types += "\n        "
                     read_types += f"{arg_name} = {flag_type.title()}.read(b) if flags{number} & (1 << {index}) else None"
@@ -454,12 +480,16 @@ def start(format: bool = False):
                     write_types += "\n        "
                     write_types += f"if self.{arg_name} is not None:\n            "
                     write_types += "b.write(Vector(self.{}{}))\n        ".format(
-                        arg_name, f", {sub_type.title()}" if sub_type in CORE_TYPES else ""
+                        arg_name,
+                        f", {sub_type.title()}" if sub_type in CORE_TYPES else "",
                     )
 
                     read_types += "\n        "
                     read_types += "{} = TLObject.read(b{}) if flags{} & (1 << {}) else []\n        ".format(
-                        arg_name, f", {sub_type.title()}" if sub_type in CORE_TYPES else "", number, index
+                        arg_name,
+                        f", {sub_type.title()}" if sub_type in CORE_TYPES else "",
+                        number,
+                        index,
                     )
                 else:
                     write_types += "\n        "
@@ -471,7 +501,9 @@ def start(format: bool = False):
             else:
                 if arg_type in CORE_TYPES:
                     write_types += "\n        "
-                    write_types += f"b.write({arg_type.title()}(self.{arg_name}))\n        "
+                    write_types += (
+                        f"b.write({arg_type.title()}(self.{arg_name}))\n        "
+                    )
 
                     read_types += "\n        "
                     read_types += f"{arg_name} = {arg_type.title()}.read(b)\n        "
@@ -480,12 +512,14 @@ def start(format: bool = False):
 
                     write_types += "\n        "
                     write_types += "b.write(Vector(self.{}{}))\n        ".format(
-                        arg_name, f", {sub_type.title()}" if sub_type in CORE_TYPES else ""
+                        arg_name,
+                        f", {sub_type.title()}" if sub_type in CORE_TYPES else "",
                     )
 
                     read_types += "\n        "
                     read_types += "{} = TLObject.read(b{})\n        ".format(
-                        arg_name, f", {sub_type.title()}" if sub_type in CORE_TYPES else ""
+                        arg_name,
+                        f", {sub_type.title()}" if sub_type in CORE_TYPES else "",
                     )
                 else:
                     write_types += "\n        "
@@ -508,7 +542,7 @@ def start(format: bool = False):
             fields=fields,
             read_types=read_types,
             write_types=write_types,
-            return_arguments=return_arguments
+            return_arguments=return_arguments,
         )
 
         directory = "types" if c.section == "types" else c.section
@@ -525,7 +559,11 @@ def start(format: bool = False):
         with open(dir_path / f"{snake(module)}.py", "w") as f:
             f.write(compiled_combinator)
 
-        d = namespaces_to_constructors if c.section == "types" else namespaces_to_functions
+        d = (
+            namespaces_to_constructors
+            if c.section == "types"
+            else namespaces_to_functions
+        )
 
         if c.namespace not in d:
             d[c.namespace] = []
@@ -560,7 +598,9 @@ def start(format: bool = False):
                 f.write(f"from .{snake(module)} import {t}\n")
 
             if not namespace:
-                f.write(f"from . import {', '.join(filter(bool, namespaces_to_constructors))}\n")
+                f.write(
+                    f"from . import {', '.join(filter(bool, namespaces_to_constructors))}\n"
+                )
 
     for namespace, types in namespaces_to_functions.items():
         with open(DESTINATION_PATH / "functions" / namespace / "__init__.py", "w") as f:
@@ -575,7 +615,9 @@ def start(format: bool = False):
                 f.write(f"from .{snake(module)} import {t}\n")
 
             if not namespace:
-                f.write(f"from . import {', '.join(filter(bool, namespaces_to_functions))}")
+                f.write(
+                    f"from . import {', '.join(filter(bool, namespaces_to_functions))}"
+                )
 
     with open(DESTINATION_PATH / "all.py", "w", encoding="utf-8") as f:
         f.write(WARNING + "\n\n")

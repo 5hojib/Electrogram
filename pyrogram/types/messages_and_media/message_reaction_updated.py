@@ -18,7 +18,7 @@ class MessageReactionUpdated(Object, Update):
         date: datetime,
         chat: "types.Chat",
         old_reaction: List["types.ReactionType"],
-        new_reaction: List["types.ReactionType"]
+        new_reaction: List["types.ReactionType"],
     ):
         super().__init__(client)
 
@@ -35,7 +35,7 @@ class MessageReactionUpdated(Object, Update):
         client: "pyrogram.Client",
         update: "raw.types.UpdateBotMessageReaction",
         users: Dict[int, "raw.types.User"],
-        chats: Dict[int, "raw.types.Chat"]
+        chats: Dict[int, "raw.types.Chat"],
     ) -> "MessageReactionUpdated":
         chat = None
         peer_id = utils.get_peer_id(update.peer)
@@ -54,7 +54,9 @@ class MessageReactionUpdated(Object, Update):
         if actor_peer_id > 0:
             from_user = types.User._parse(client, users[raw_actor_peer_id])
         else:
-            actor_chat = types.Chat._parse_channel_chat(client, chats[raw_actor_peer_id])
+            actor_chat = types.Chat._parse_channel_chat(
+                client, chats[raw_actor_peer_id]
+            )
 
         return MessageReactionUpdated(
             client=client,
@@ -63,14 +65,6 @@ class MessageReactionUpdated(Object, Update):
             date=utils.timestamp_to_datetime(update.date),
             chat=chat,
             actor_chat=actor_chat,
-            old_reaction=[
-                types.ReactionType._parse(
-                    rt
-                ) for rt in update.old_reactions
-            ],
-            new_reaction=[
-                types.ReactionType._parse(
-                    rt
-                ) for rt in update.new_reactions
-            ]
+            old_reaction=[types.ReactionType._parse(rt) for rt in update.old_reactions],
+            new_reaction=[types.ReactionType._parse(rt) for rt in update.new_reactions],
         )

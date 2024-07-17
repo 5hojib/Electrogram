@@ -37,10 +37,10 @@ class SendPhoto:
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply"
+            "types.ForceReply",
         ] = None,
         progress: Callable = None,
-        progress_args: tuple = ()
+        progress_args: tuple = (),
     ) -> Optional["types.Message"]:
         file = None
 
@@ -53,13 +53,15 @@ class SendPhoto:
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
-            parse_mode=parse_mode
+            parse_mode=parse_mode,
         )
 
         try:
             if isinstance(photo, str):
                 if os.path.isfile(photo):
-                    file = await self.save_file(photo, progress=progress, progress_args=progress_args)
+                    file = await self.save_file(
+                        photo, progress=progress, progress_args=progress_args
+                    )
                     media = raw.types.InputMediaUploadedPhoto(
                         file=file,
                         ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds,
@@ -69,17 +71,23 @@ class SendPhoto:
                     media = raw.types.InputMediaPhotoExternal(
                         url=photo,
                         ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds,
-                        spoiler=has_spoiler
+                        spoiler=has_spoiler,
                     )
                 else:
-                    media = utils.get_input_media_from_file_id(photo, FileType.PHOTO, ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds)
+                    media = utils.get_input_media_from_file_id(
+                        photo,
+                        FileType.PHOTO,
+                        ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds,
+                    )
                     media.spoiler = has_spoiler
             else:
-                file = await self.save_file(photo, progress=progress, progress_args=progress_args)
+                file = await self.save_file(
+                    photo, progress=progress, progress_args=progress_args
+                )
                 media = raw.types.InputMediaUploadedPhoto(
                     file=file,
                     ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds,
-                    spoiler=has_spoiler
+                    spoiler=has_spoiler,
                 )
 
             while True:
@@ -94,22 +102,34 @@ class SendPhoto:
                         noforwards=protect_content,
                         effect=message_effect_id,
                         invert_media=invert_media,
-                        reply_markup=await reply_markup.write(self) if reply_markup else None,
-                        **await utils.parse_text_entities(self, caption, parse_mode, caption_entities)
+                        reply_markup=await reply_markup.write(self)
+                        if reply_markup
+                        else None,
+                        **await utils.parse_text_entities(
+                            self, caption, parse_mode, caption_entities
+                        ),
                     )
                     r = await self.invoke(rpc)
                 except FilePartMissing as e:
                     await self.save_file(photo, file_id=file.id, file_part=e.value)
                 else:
                     for i in r.updates:
-                        if isinstance(i, (raw.types.UpdateNewMessage,
-                                          raw.types.UpdateNewChannelMessage,
-                                          raw.types.UpdateNewScheduledMessage)):
+                        if isinstance(
+                            i,
+                            (
+                                raw.types.UpdateNewMessage,
+                                raw.types.UpdateNewChannelMessage,
+                                raw.types.UpdateNewScheduledMessage,
+                            ),
+                        ):
                             return await types.Message._parse(
-                                self, i.message,
+                                self,
+                                i.message,
                                 {i.id: i for i in r.users},
                                 {i.id: i for i in r.chats},
-                                is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage)
+                                is_scheduled=isinstance(
+                                    i, raw.types.UpdateNewScheduledMessage
+                                ),
                             )
         except pyrogram.StopTransmission:
             return None

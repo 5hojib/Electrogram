@@ -17,5 +17,5 @@ __all__ = [
     "InputMediaVideo",
     "InputPhoneContact",
     "InputMediaArea",
-    "InputMediaAreaChannelPost"
+    "InputMediaAreaChannelPost",
 ]

@@ -24,7 +24,7 @@ class SaveFile:
         file_id: int = None,
         file_part: int = 0,
         progress: Callable = None,
-        progress_args: tuple = ()
+        progress_args: tuple = (),
     ):
         async with self.save_file_semaphore:
             if path is None:
@@ -136,7 +136,7 @@ class SaveFile:
                             progress,
                             min(file_part * part_size, file_size),
                             file_size,
-                            *progress_args
+                            *progress_args,
                         )
 
                         if inspect.iscoroutinefunction(progress):
@@ -159,7 +159,7 @@ class SaveFile:
                         id=file_id,
                         parts=file_total_parts,
                         name=file_name,
-                        md5_checksum=md5_sum
+                        md5_checksum=md5_sum,
                     )
             finally:
                 for _ in workers:

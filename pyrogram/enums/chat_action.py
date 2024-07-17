@@ -1,6 +1,7 @@
 from pyrogram import raw
 from .auto_name import AutoName
 
+
 class ChatAction(AutoName):
     TYPING = raw.types.SendMessageTypingAction
     UPLOAD_PHOTO = raw.types.SendMessageUploadPhotoAction

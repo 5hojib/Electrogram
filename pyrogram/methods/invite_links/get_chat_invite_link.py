@@ -13,8 +13,7 @@ class GetChatInviteLink:
     ) -> "types.ChatInviteLink":
         r = await self.invoke(
             raw.functions.messages.GetExportedChatInvite(
-                peer=await self.resolve_peer(chat_id),
-                link=invite_link
+                peer=await self.resolve_peer(chat_id), link=invite_link
             )
         )
 

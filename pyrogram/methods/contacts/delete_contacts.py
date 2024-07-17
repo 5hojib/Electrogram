@@ -6,8 +6,7 @@ from pyrogram import raw, types
 
 class DeleteContacts:
     async def delete_contacts(
-        self: "pyrogram.Client",
-        user_ids: Union[int, str, List[Union[int, str]]]
+        self: "pyrogram.Client", user_ids: Union[int, str, List[Union[int, str]]]
     ) -> Union["types.User", List["types.User"], None]:
         is_list = isinstance(user_ids, list)
 

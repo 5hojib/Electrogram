@@ -6,10 +6,7 @@ from pyrogram.methods.utilities.idle import idle
 
 
 class Run:
-    def run(
-        self: "pyrogram.Client",
-        coroutine=None
-    ):
+    def run(self: "pyrogram.Client", coroutine=None):
         loop = asyncio.get_event_loop()
         run = loop.run_until_complete
 

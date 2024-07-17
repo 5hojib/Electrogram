@@ -10,6 +10,6 @@ class SendRecoveryCode:
     async def send_recovery_code(
         self: "pyrogram.Client",
     ) -> str:
-        return (await self.invoke(
-            raw.functions.auth.RequestPasswordRecovery()
-        )).email_pattern
+        return (
+            await self.invoke(raw.functions.auth.RequestPasswordRecovery())
+        ).email_pattern

@@ -1,6 +1,7 @@
 from pyrogram import raw
 from .auto_name import AutoName
 
+
 class MessagesFilter(AutoName):
     EMPTY = raw.types.InputMessagesFilterEmpty
     PHOTO = raw.types.InputMessagesFilterPhotos

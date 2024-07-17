@@ -19,7 +19,7 @@ class MessageReactions(Object):
     @staticmethod
     def _parse(
         client: "pyrogram.Client",
-        message_reactions: Optional["raw.base.MessageReactions"] = None
+        message_reactions: Optional["raw.base.MessageReactions"] = None,
     ) -> Optional["MessageReactions"]:
         if not message_reactions:
             return None
@@ -29,5 +29,5 @@ class MessageReactions(Object):
             reactions=[
                 types.Reaction._parse_count(client, reaction)
                 for reaction in message_reactions.results
-            ]
+            ],
         )

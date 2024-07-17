@@ -9,23 +9,26 @@ from pyrogram import utils
 log = logging.getLogger(__name__)
 
 
-
 class GetMessages:
     async def get_messages(
         self: "pyrogram.Client",
         chat_id: Union[int, str],
         message_ids: Union[int, Iterable[int]] = None,
         reply_to_message_ids: Union[int, Iterable[int]] = None,
-        replies: int = 1
+        replies: int = 1,
     ) -> Union["types.Message", List["types.Message"]]:
         ids, ids_type = (
-            (message_ids, raw.types.InputMessageID) if message_ids
-            else (reply_to_message_ids, raw.types.InputMessageReplyTo) if reply_to_message_ids
+            (message_ids, raw.types.InputMessageID)
+            if message_ids
+            else (reply_to_message_ids, raw.types.InputMessageReplyTo)
+            if reply_to_message_ids
             else (None, None)
         )
 
         if ids is None:
-            raise ValueError("No argument supplied. Either pass message_ids or reply_to_message_ids")
+            raise ValueError(
+                "No argument supplied. Either pass message_ids or reply_to_message_ids"
+            )
 
         peer = await self.resolve_peer(chat_id)
 

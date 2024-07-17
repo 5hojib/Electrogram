@@ -13,7 +13,7 @@ class SignUp:
         phone_number: str,
         phone_code_hash: str,
         first_name: str,
-        last_name: str = ""
+        last_name: str = "",
     ) -> "types.User":
         phone_number = phone_number.strip(" +")
 
@@ -22,7 +22,7 @@ class SignUp:
                 phone_number=phone_number,
                 first_name=first_name,
                 last_name=last_name,
-                phone_code_hash=phone_code_hash
+                phone_code_hash=phone_code_hash,
             )
         )
 

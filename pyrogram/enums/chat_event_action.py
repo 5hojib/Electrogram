@@ -1,6 +1,7 @@
 from enum import auto
 from .auto_name import AutoName
 
+
 class ChatEventAction(AutoName):
     DESCRIPTION_CHANGED = auto()
     HISTORY_TTL_CHANGED = auto()

@@ -4,13 +4,9 @@ from pyrogram import types
 
 
 class GetMe:
-    async def get_me(
-        self: "pyrogram.Client"
-    ) -> "types.User":
+    async def get_me(self: "pyrogram.Client") -> "types.User":
         r = await self.invoke(
-            raw.functions.users.GetFullUser(
-                id=raw.types.InputUserSelf()
-            )
+            raw.functions.users.GetFullUser(id=raw.types.InputUserSelf())
         )
 
         users = {u.id: u for u in r.users}

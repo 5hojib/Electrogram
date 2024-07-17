@@ -2,10 +2,7 @@ import pyrogram
 
 
 class Restart:
-    async def restart(
-        self: "pyrogram.Client",
-        block: bool = True
-    ):
+    async def restart(self: "pyrogram.Client", block: bool = True):
         async def do_it():
             await self.stop()
             await self.start()

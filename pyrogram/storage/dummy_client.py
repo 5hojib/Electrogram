@@ -11,7 +11,10 @@ from pymongo.read_preferences import (
 from pymongo.write_concern import WriteConcern
 from typing import Any, Optional, Union, Protocol, runtime_checkable
 
-ReadPreferences = Union[Primary, PrimaryPreferred, Secondary, SecondaryPreferred, Nearest]
+ReadPreferences = Union[
+    Primary, PrimaryPreferred, Secondary, SecondaryPreferred, Nearest
+]
+
 
 @runtime_checkable
 class DummyMongoClient(Protocol):
@@ -28,7 +31,7 @@ class DummyMongoClient(Protocol):
         read_concern: Optional[ReadConcern] = None,
     ):
         raise NotImplementedError
-    
+
     async def start_session(
         self,
         *,

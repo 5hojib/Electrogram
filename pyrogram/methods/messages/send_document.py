@@ -37,10 +37,10 @@ class SendDocument:
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply"
+            "types.ForceReply",
         ] = None,
         progress: Callable = None,
-        progress_args: tuple = ()
+        progress_args: tuple = (),
     ) -> Optional["types.Message"]:
         file = None
 
@@ -53,39 +53,48 @@ class SendDocument:
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
-            parse_mode=parse_mode
+            parse_mode=parse_mode,
         )
 
         try:
             if isinstance(document, str):
                 if os.path.isfile(document):
                     thumb = await self.save_file(thumb)
-                    file = await self.save_file(document, progress=progress, progress_args=progress_args)
+                    file = await self.save_file(
+                        document, progress=progress, progress_args=progress_args
+                    )
                     media = raw.types.InputMediaUploadedDocument(
                         mime_type=self.guess_mime_type(document) or "application/zip",
                         file=file,
                         force_file=force_document or None,
                         thumb=thumb,
                         attributes=[
-                            raw.types.DocumentAttributeFilename(file_name=file_name or os.path.basename(document))
-                        ]
+                            raw.types.DocumentAttributeFilename(
+                                file_name=file_name or os.path.basename(document)
+                            )
+                        ],
                     )
                 elif re.match("^https?://", document):
-                    media = raw.types.InputMediaDocumentExternal(
-                        url=document
-                    )
+                    media = raw.types.InputMediaDocumentExternal(url=document)
                 else:
-                    media = utils.get_input_media_from_file_id(document, FileType.DOCUMENT)
+                    media = utils.get_input_media_from_file_id(
+                        document, FileType.DOCUMENT
+                    )
             else:
                 thumb = await self.save_file(thumb)
-                file = await self.save_file(document, progress=progress, progress_args=progress_args)
+                file = await self.save_file(
+                    document, progress=progress, progress_args=progress_args
+                )
                 media = raw.types.InputMediaUploadedDocument(
-                    mime_type=self.guess_mime_type(file_name or document.name) or "application/zip",
+                    mime_type=self.guess_mime_type(file_name or document.name)
+                    or "application/zip",
                     file=file,
                     thumb=thumb,
                     attributes=[
-                        raw.types.DocumentAttributeFilename(file_name=file_name or document.name)
-                    ]
+                        raw.types.DocumentAttributeFilename(
+                            file_name=file_name or document.name
+                        )
+                    ],
                 )
 
             while True:
@@ -99,22 +108,34 @@ class SendDocument:
                         schedule_date=utils.datetime_to_timestamp(schedule_date),
                         noforwards=protect_content,
                         effect=message_effect_id,
-                        reply_markup=await reply_markup.write(self) if reply_markup else None,
-                        **await utils.parse_text_entities(self, caption, parse_mode, caption_entities)
+                        reply_markup=await reply_markup.write(self)
+                        if reply_markup
+                        else None,
+                        **await utils.parse_text_entities(
+                            self, caption, parse_mode, caption_entities
+                        ),
                     )
                     r = await self.invoke(rpc)
                 except FilePartMissing as e:
                     await self.save_file(document, file_id=file.id, file_part=e.value)
                 else:
                     for i in r.updates:
-                        if isinstance(i, (raw.types.UpdateNewMessage,
-                                          raw.types.UpdateNewChannelMessage,
-                                          raw.types.UpdateNewScheduledMessage)):
+                        if isinstance(
+                            i,
+                            (
+                                raw.types.UpdateNewMessage,
+                                raw.types.UpdateNewChannelMessage,
+                                raw.types.UpdateNewScheduledMessage,
+                            ),
+                        ):
                             return await types.Message._parse(
-                                self, i.message,
+                                self,
+                                i.message,
                                 {i.id: i for i in r.users},
                                 {i.id: i for i in r.chats},
-                                is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage)
+                                is_scheduled=isinstance(
+                                    i, raw.types.UpdateNewScheduledMessage
+                                ),
                             )
         except StopTransmission:
             return None

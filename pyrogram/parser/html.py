@@ -131,7 +131,7 @@ class HTML:
 
         return {
             "message": utils.remove_surrogates(parser.text),
-            "entities": sorted(entities, key=lambda e: e.offset) or None
+            "entities": sorted(entities, key=lambda e: e.offset) or None,
         }
 
     @staticmethod
@@ -153,7 +153,9 @@ class HTML:
             elif entity_type == MessageEntityType.PRE:
                 name = entity_type.name.lower()
                 language = getattr(entity, "language", "") or ""
-                start_tag = f'<{name} language="{language}">' if language else f"<{name}>"
+                start_tag = (
+                    f'<{name} language="{language}">' if language else f"<{name}>"
+                )
                 end_tag = f"</{name}>"
             elif entity_type == MessageEntityType.EXPANDABLE_BLOCKQUOTE:
                 name = "blockquote"
@@ -209,7 +211,12 @@ class HTML:
         if entities_offsets:
             last_offset = entities_offsets[-1][1]
             for entity, offset in reversed(entities_offsets):
-                text = text[:offset] + entity + html.escape(text[offset:last_offset]) + text[last_offset:]
+                text = (
+                    text[:offset]
+                    + entity
+                    + html.escape(text[offset:last_offset])
+                    + text[last_offset:]
+                )
                 last_offset = offset
 
         return utils.remove_surrogates(text)

@@ -12,7 +12,7 @@ class AddContact:
         first_name: str,
         last_name: str = "",
         phone_number: str = "",
-        share_phone_number: bool = False
+        share_phone_number: bool = False,
     ):
         r = await self.invoke(
             raw.functions.contacts.AddContact(
@@ -20,7 +20,7 @@ class AddContact:
                 first_name=first_name,
                 last_name=last_name,
                 phone=phone_number,
-                add_phone_privacy_exception=share_phone_number
+                add_phone_privacy_exception=share_phone_number,
             )
         )
 

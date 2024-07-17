@@ -11,10 +11,14 @@ from pyrogram import raw
 from pyrogram.connection import Connection
 from pyrogram.crypto import mtproto
 from pyrogram.errors import (
-    RPCError, InternalServerError, AuthKeyDuplicated,
-    FloodWait, FloodPremiumWait,
-    ServiceUnavailable, BadMsgNotification,
-    SecurityCheckMismatch
+    RPCError,
+    InternalServerError,
+    AuthKeyDuplicated,
+    FloodWait,
+    FloodPremiumWait,
+    ServiceUnavailable,
+    BadMsgNotification,
+    SecurityCheckMismatch,
 )
 from pyrogram.raw.all import layer
 from pyrogram.raw.core import TLObject, MsgContainer, Int, FutureSalts
@@ -41,7 +45,7 @@ class Session:
     TRANSPORT_ERRORS = {
         404: "auth key not found",
         429: "transport flood",
-        444: "invalid DC"
+        444: "invalid DC",
     }
 
     def __init__(
@@ -51,7 +55,7 @@ class Session:
         auth_key: bytes,
         test_mode: bool,
         is_media: bool = False,
-        is_cdn: bool = False
+        is_cdn: bool = False,
     ):
         self.client = client
         self.dc_id = dc_id
@@ -93,7 +97,7 @@ class Session:
                 alt_port=self.client.alt_port,
                 proxy=self.client.proxy,
                 media=self.is_media,
-                protocol_factory=self.client.protocol_factory
+                protocol_factory=self.client.protocol_factory,
             )
 
             try:
@@ -101,7 +105,9 @@ class Session:
 
                 self.recv_task = self.loop.create_task(self.recv_worker())
 
-                await self.send(raw.functions.Ping(ping_id=0), timeout=self.START_TIMEOUT)
+                await self.send(
+                    raw.functions.Ping(ping_id=0), timeout=self.START_TIMEOUT
+                )
 
                 if not self.is_cdn:
                     await self.send(
@@ -116,9 +122,9 @@ class Session:
                                 lang_code=self.client.lang_code,
                                 lang_pack="",
                                 query=raw.functions.help.GetConfig(),
-                            )
+                            ),
                         ),
-                        timeout=self.START_TIMEOUT
+                        timeout=self.START_TIMEOUT,
                     )
 
                 self.ping_task = self.loop.create_task(self.ping_worker())
@@ -172,14 +178,10 @@ class Session:
             BytesIO(packet),
             self.session_id,
             self.auth_key,
-            self.auth_key_id
+            self.auth_key_id,
         )
 
-        messages = (
-            data.body.messages
-            if isinstance(data.body, MsgContainer)
-            else [data]
-        )
+        messages = data.body.messages if isinstance(data.body, MsgContainer) else [data]
 
         log.debug("Received: %s", data)
 
@@ -192,24 +194,32 @@ class Session:
 
             try:
                 if len(self.stored_msg_ids) > Session.STORED_MSG_IDS_MAX_SIZE:
-                    del self.stored_msg_ids[:Session.STORED_MSG_IDS_MAX_SIZE // 2]
+                    del self.stored_msg_ids[: Session.STORED_MSG_IDS_MAX_SIZE // 2]
 
                 if self.stored_msg_ids:
                     if msg.msg_id < self.stored_msg_ids[0]:
-                        raise SecurityCheckMismatch("The msg_id is lower than all the stored values")
+                        raise SecurityCheckMismatch(
+                            "The msg_id is lower than all the stored values"
+                        )
 
                     if msg.msg_id in self.stored_msg_ids:
-                        raise SecurityCheckMismatch("The msg_id is equal to any of the stored values")
+                        raise SecurityCheckMismatch(
+                            "The msg_id is equal to any of the stored values"
+                        )
 
-                    time_diff = (msg.msg_id - MsgId()) / 2 ** 32
+                    time_diff = (msg.msg_id - MsgId()) / 2**32
 
                     if time_diff > 30:
-                        raise SecurityCheckMismatch("The msg_id belongs to over 30 seconds in the future. "
-                                                    "Most likely the client time has to be synchronized.")
+                        raise SecurityCheckMismatch(
+                            "The msg_id belongs to over 30 seconds in the future. "
+                            "Most likely the client time has to be synchronized."
+                        )
 
                     if time_diff < -300:
-                        raise SecurityCheckMismatch("The msg_id belongs to over 300 seconds in the past. "
-                                                    "Most likely the client time has to be synchronized.")
+                        raise SecurityCheckMismatch(
+                            "The msg_id belongs to over 300 seconds in the past. "
+                            "Most likely the client time has to be synchronized."
+                        )
             except SecurityCheckMismatch as e:
                 log.info("Discarding packet: %s", e)
                 await self.connection.close()
@@ -217,7 +227,9 @@ class Session:
             else:
                 bisect.insort(self.stored_msg_ids, msg.msg_id)
 
-            if isinstance(msg.body, (raw.types.MsgDetailedInfo, raw.types.MsgNewDetailedInfo)):
+            if isinstance(
+                msg.body, (raw.types.MsgDetailedInfo, raw.types.MsgNewDetailedInfo)
+            ):
                 self.pending_acks.add(msg.body.answer_msg_id)
                 continue
 
@@ -226,7 +238,9 @@ class Session:
 
             msg_id = None
 
-            if isinstance(msg.body, (raw.types.BadMsgNotification, raw.types.BadServerSalt)):
+            if isinstance(
+                msg.body, (raw.types.BadMsgNotification, raw.types.BadServerSalt)
+            ):
                 msg_id = msg.body.bad_msg_id
             elif isinstance(msg.body, (FutureSalts, raw.types.RpcResult)):
                 msg_id = msg.body.req_msg_id
@@ -243,7 +257,9 @@ class Session:
             log.debug("Sending %s acks", len(self.pending_acks))
 
             try:
-                await self.send(raw.types.MsgsAck(msg_ids=list(self.pending_acks)), False)
+                await self.send(
+                    raw.types.MsgsAck(msg_ids=list(self.pending_acks)), False
+                )
             except OSError:
                 pass
             else:
@@ -262,7 +278,8 @@ class Session:
                 await self.send(
                     raw.functions.PingDelayDisconnect(
                         ping_id=0, disconnect_delay=self.WAIT_TIMEOUT + 10
-                    ), False
+                    ),
+                    False,
                 )
             except OSError:
                 self.loop.create_task(self.restart())
@@ -280,7 +297,8 @@ class Session:
 
                     log.warning(
                         "Server sent transport error: %s (%s)",
-                        error_code, Session.TRANSPORT_ERRORS.get(error_code, "unknown error")
+                        error_code,
+                        Session.TRANSPORT_ERRORS.get(error_code, "unknown error"),
                     )
 
                 if self.is_started.is_set():
@@ -290,7 +308,13 @@ class Session:
 
             self.loop.create_task(self.handle_packet(packet))
 
-    async def send(self, data: TLObject, wait_response: bool = True, timeout: float = WAIT_TIMEOUT, retry: int = 0):
+    async def send(
+        self,
+        data: TLObject,
+        wait_response: bool = True,
+        timeout: float = WAIT_TIMEOUT,
+        retry: int = 0,
+    ):
         message = self.msg_factory(data)
         msg_id = message.msg_id
 
@@ -306,7 +330,7 @@ class Session:
             self.salt,
             self.session_id,
             self.auth_key,
-            self.auth_key_id
+            self.auth_key_id,
         )
 
         try:
@@ -327,7 +351,13 @@ class Session:
                 raise TimeoutError("Request timed out")
 
             if isinstance(result, raw.types.RpcError):
-                if isinstance(data, (raw.functions.InvokeWithoutUpdates, raw.functions.InvokeWithTakeout)):
+                if isinstance(
+                    data,
+                    (
+                        raw.functions.InvokeWithoutUpdates,
+                        raw.functions.InvokeWithTakeout,
+                    ),
+                ):
                     data = data.query
 
                 RPCError.raise_it(result, type(data))
@@ -347,24 +377,30 @@ class Session:
 
     def _handle_bad_notification(self):
         new_msg_id = MsgId()
-        if self.stored_msg_ids[len(self.stored_msg_ids)-1] >= new_msg_id:
-            new_msg_id = self.stored_msg_ids[len(self.stored_msg_ids)-1] + 4
-            log.debug("Changing msg_id old=%s new=%s", self.stored_msg_ids[len(self.stored_msg_ids)-1], new_msg_id)
-        self.stored_msg_ids[len(self.stored_msg_ids)-1] = new_msg_id
+        if self.stored_msg_ids[len(self.stored_msg_ids) - 1] >= new_msg_id:
+            new_msg_id = self.stored_msg_ids[len(self.stored_msg_ids) - 1] + 4
+            log.debug(
+                "Changing msg_id old=%s new=%s",
+                self.stored_msg_ids[len(self.stored_msg_ids) - 1],
+                new_msg_id,
+            )
+        self.stored_msg_ids[len(self.stored_msg_ids) - 1] = new_msg_id
 
     async def invoke(
         self,
         query: TLObject,
         retries: int = MAX_RETRIES,
         timeout: float = WAIT_TIMEOUT,
-        sleep_threshold: float = SLEEP_THRESHOLD
+        sleep_threshold: float = SLEEP_THRESHOLD,
     ):
         try:
             await asyncio.wait_for(self.is_started.wait(), self.WAIT_TIMEOUT)
         except asyncio.TimeoutError:
             pass
 
-        if isinstance(query, (raw.functions.InvokeWithoutUpdates, raw.functions.InvokeWithTakeout)):
+        if isinstance(
+            query, (raw.functions.InvokeWithoutUpdates, raw.functions.InvokeWithTakeout)
+        ):
             inner_query = query.query
         else:
             inner_query = query
@@ -380,8 +416,12 @@ class Session:
                 if amount > sleep_threshold >= 0:
                     raise
 
-                log.warning('[%s] Waiting for %s seconds before continuing (required by "%s")',
-                            self.client.name, amount, query_name)
+                log.warning(
+                    '[%s] Waiting for %s seconds before continuing (required by "%s")',
+                    self.client.name,
+                    amount,
+                    query_name,
+                )
 
                 await asyncio.sleep(amount)
             except (OSError, InternalServerError, ServiceUnavailable) as e:
@@ -391,7 +431,8 @@ class Session:
                 (log.warning if retries < 2 else log.info)(
                     '[%s] Retrying "%s" due to: %s',
                     Session.MAX_RETRIES - retries + 1,
-                    query_name, str(e) or repr(e)
+                    query_name,
+                    str(e) or repr(e),
                 )
 
                 await asyncio.sleep(0.5)

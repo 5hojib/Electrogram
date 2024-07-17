@@ -25,7 +25,7 @@ class ChatPermissions(Object):
         can_send_roundvideos: bool = None,
         can_send_stickers: bool = None,
         can_send_videos: bool = None,
-        can_send_voices: bool = None
+        can_send_voices: bool = None,
     ):
         super().__init__(None)
 
@@ -95,7 +95,7 @@ class ChatPermissions(Object):
                 denied_permissions.send_roundvideos,
                 denied_permissions.send_stickers,
                 denied_permissions.send_videos,
-                denied_permissions.send_voices
+                denied_permissions.send_voices,
             ]
             all_params_not = [
                 not denied_permissions.send_messages,
@@ -115,7 +115,7 @@ class ChatPermissions(Object):
                 not denied_permissions.send_roundvideos,
                 not denied_permissions.send_stickers,
                 not denied_permissions.send_videos,
-                not denied_permissions.send_voices
+                not denied_permissions.send_voices,
             ]
             if all(all_params):
                 all_permissions = False
@@ -141,5 +141,5 @@ class ChatPermissions(Object):
                 can_send_roundvideos=not denied_permissions.send_roundvideos,
                 can_send_stickers=not denied_permissions.send_stickers,
                 can_send_videos=not denied_permissions.send_videos,
-                can_send_voices=not denied_permissions.send_voices
+                can_send_voices=not denied_permissions.send_voices,
             )

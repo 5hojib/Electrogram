@@ -3,7 +3,8 @@ from ..object import Object
 
 class WebAppInfo(Object):
     def __init__(
-        self, *,
+        self,
+        *,
         url: str,
     ):
         super().__init__()

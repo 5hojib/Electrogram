@@ -1,6 +1,7 @@
 from enum import auto
 from .auto_name import AutoName
 
+
 class MessageMediaType(AutoName):
     AUDIO = auto()
     DOCUMENT = auto()

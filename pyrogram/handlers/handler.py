@@ -5,6 +5,7 @@ from typing import Callable
 from pyrogram.filters import Filter
 from pyrogram.types import Update
 
+
 class Handler:
     def __init__(self, callback: Callable, filters: Filter = None):
         self.callback = callback
@@ -15,9 +16,7 @@ class Handler:
             if inspect.iscoroutinefunction(self.filters.__call__):
                 return await self.filters(client, update)
             return await client.loop.run_in_executor(
-                    client.executor,
-                    self.filters,
-                    client, update
-                )
+                client.executor, self.filters, client, update
+            )
 
         return True

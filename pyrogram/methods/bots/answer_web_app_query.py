@@ -7,12 +7,11 @@ class AnswerWebAppQuery:
     async def answer_web_app_query(
         self: "pyrogram.Client",
         web_app_query_id: str,
-        result: "types.InlineQueryResult"
+        result: "types.InlineQueryResult",
     ) -> "types.SentWebAppMessage":
         r = await self.invoke(
             raw.functions.messages.SendWebViewResultMessage(
-                bot_query_id=web_app_query_id,
-                result=await result.write(self)
+                bot_query_id=web_app_query_id, result=await result.write(self)
             )
         )
 

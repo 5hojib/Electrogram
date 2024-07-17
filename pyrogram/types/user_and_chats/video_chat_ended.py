@@ -3,10 +3,7 @@ from ..object import Object
 
 
 class VideoChatEnded(Object):
-    def __init__(
-        self, *,
-        duration: int
-    ):
+    def __init__(self, *, duration: int):
         super().__init__()
 
         self.duration = duration

@@ -5,11 +5,7 @@ from ..object import Object
 
 
 class InviteLinkImporter(Object):
-    def __init__(
-        self, *,
-        date: datetime,
-        user: "types.User"
-    ):
+    def __init__(self, *, date: datetime, user: "types.User"):
         super().__init__(None)
 
         self.date = date
@@ -25,7 +21,7 @@ class InviteLinkImporter(Object):
             importers.append(
                 InviteLinkImporter(
                     date=utils.timestamp_to_datetime(j.date),
-                    user=types.User._parse(client=None, user=d[j.user_id])
+                    user=types.User._parse(client=None, user=d[j.user_id]),
                 )
             )
 

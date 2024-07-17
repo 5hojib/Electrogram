@@ -39,5 +39,5 @@ __all__ = [
     "InlineQueryResultCachedDocument",
     "InlineQueryResultCachedVideo",
     "InlineQueryResultCachedVoice",
-    "InlineQueryResultCachedAudio"
+    "InlineQueryResultCachedAudio",
 ]

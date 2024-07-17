@@ -4,11 +4,11 @@ from ..object import Object
 class RequestPeerTypeChat(Object):
     def __init__(
         self,
-        is_creator: bool=None,
-        is_bot_participant: bool=None,
-        is_username: bool=None,
-        is_forum: bool=None,
-        max: int=1
+        is_creator: bool = None,
+        is_bot_participant: bool = None,
+        is_username: bool = None,
+        is_forum: bool = None,
+        max: int = 1,
     ):
         super().__init__()
 

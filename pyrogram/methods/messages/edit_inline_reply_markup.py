@@ -9,7 +9,7 @@ class EditInlineReplyMarkup:
     async def edit_inline_reply_markup(
         self: "pyrogram.Client",
         inline_message_id: str,
-        reply_markup: "types.InlineKeyboardMarkup" = None
+        reply_markup: "types.InlineKeyboardMarkup" = None,
     ) -> bool:
         unpacked = utils.unpack_inline_message_id(inline_message_id)
         dc_id = unpacked.dc_id
@@ -21,5 +21,5 @@ class EditInlineReplyMarkup:
                 id=unpacked,
                 reply_markup=await reply_markup.write(self) if reply_markup else None,
             ),
-            sleep_threshold=self.sleep_threshold
+            sleep_threshold=self.sleep_threshold,
         )

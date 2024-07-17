@@ -4,10 +4,7 @@ from pyrogram.utils import compute_password_check
 
 
 class RemoveCloudPassword:
-    async def remove_cloud_password(
-        self: "pyrogram.Client",
-        password: str
-    ) -> bool:
+    async def remove_cloud_password(self: "pyrogram.Client", password: str) -> bool:
         r = await self.invoke(raw.functions.account.GetPassword())
 
         if not r.has_password:
@@ -19,8 +16,8 @@ class RemoveCloudPassword:
                 new_settings=raw.types.account.PasswordInputSettings(
                     new_algo=raw.types.PasswordKdfAlgoUnknown(),
                     new_password_hash=b"",
-                    hint=""
-                )
+                    hint="",
+                ),
             )
         )
 

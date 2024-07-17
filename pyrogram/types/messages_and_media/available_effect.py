@@ -14,7 +14,7 @@ class AvailableEffect(Object):
         sticker: Optional["types.Sticker"] = None,
         is_premium: Optional[bool] = None,
         static_icon_id: Optional[int] = None,
-        effect_animation_id: Optional[int] = None
+        effect_animation_id: Optional[int] = None,
     ):
         super().__init__()
 
@@ -27,7 +27,11 @@ class AvailableEffect(Object):
         self.effect_animation_id = effect_animation_id
 
     @staticmethod
-    async def _parse(client, effect: "raw.types.AvailableEffect", document: "raw.types.Document" = None) -> "AvailableEffect":
+    async def _parse(
+        client,
+        effect: "raw.types.AvailableEffect",
+        document: "raw.types.Document" = None,
+    ) -> "AvailableEffect":
         sticker = None
 
         if document:
@@ -41,5 +45,5 @@ class AvailableEffect(Object):
             sticker=sticker,
             is_premium=getattr(effect, "premium_required", None),
             static_icon_id=getattr(effect, "static_icon_id", None),
-            effect_animation_id=getattr(effect, "effect_animation_id", None)
+            effect_animation_id=getattr(effect, "effect_animation_id", None),
         )

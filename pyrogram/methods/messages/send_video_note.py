@@ -36,10 +36,10 @@ class SendVideoNote:
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply"
+            "types.ForceReply",
         ] = None,
         progress: Callable = None,
-        progress_args: tuple = ()
+        progress_args: tuple = (),
     ) -> Optional["types.Message"]:
         file = None
 
@@ -52,14 +52,16 @@ class SendVideoNote:
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
-            parse_mode=parse_mode
+            parse_mode=parse_mode,
         )
 
         try:
             if isinstance(video_note, str):
                 if os.path.isfile(video_note):
                     thumb = await self.save_file(thumb)
-                    file = await self.save_file(video_note, progress=progress, progress_args=progress_args)
+                    file = await self.save_file(
+                        video_note, progress=progress, progress_args=progress_args
+                    )
                     media = raw.types.InputMediaUploadedDocument(
                         mime_type=self.guess_mime_type(video_note) or "video/mp4",
                         file=file,
@@ -69,28 +71,29 @@ class SendVideoNote:
                                 round_message=True,
                                 duration=duration,
                                 w=length,
-                                h=length
+                                h=length,
                             )
                         ],
-                        ttl_seconds=ttl_seconds
+                        ttl_seconds=ttl_seconds,
                     )
                 else:
-                    media = utils.get_input_media_from_file_id(video_note, FileType.VIDEO_NOTE)
+                    media = utils.get_input_media_from_file_id(
+                        video_note, FileType.VIDEO_NOTE
+                    )
             else:
                 thumb = await self.save_file(thumb)
-                file = await self.save_file(video_note, progress=progress, progress_args=progress_args)
+                file = await self.save_file(
+                    video_note, progress=progress, progress_args=progress_args
+                )
                 media = raw.types.InputMediaUploadedDocument(
                     mime_type=self.guess_mime_type(video_note.name) or "video/mp4",
                     file=file,
                     thumb=thumb,
                     attributes=[
                         raw.types.DocumentAttributeVideo(
-                            round_message=True,
-                            duration=duration,
-                            w=length,
-                            h=length
+                            round_message=True, duration=duration, w=length, h=length
                         )
-                    ]
+                    ],
                 )
 
             while True:
@@ -104,22 +107,32 @@ class SendVideoNote:
                         schedule_date=utils.datetime_to_timestamp(schedule_date),
                         noforwards=protect_content,
                         effect=message_effect_id,
-                        reply_markup=await reply_markup.write(self) if reply_markup else None,
-                        message=""
+                        reply_markup=await reply_markup.write(self)
+                        if reply_markup
+                        else None,
+                        message="",
                     )
                     r = await self.invoke(rpc)
                 except FilePartMissing as e:
                     await self.save_file(video_note, file_id=file.id, file_part=e.value)
                 else:
                     for i in r.updates:
-                        if isinstance(i, (raw.types.UpdateNewMessage,
-                                          raw.types.UpdateNewChannelMessage,
-                                          raw.types.UpdateNewScheduledMessage)):
+                        if isinstance(
+                            i,
+                            (
+                                raw.types.UpdateNewMessage,
+                                raw.types.UpdateNewChannelMessage,
+                                raw.types.UpdateNewScheduledMessage,
+                            ),
+                        ):
                             return await types.Message._parse(
-                                self, i.message,
+                                self,
+                                i.message,
                                 {i.id: i for i in r.users},
                                 {i.id: i for i in r.chats},
-                                is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage)
+                                is_scheduled=isinstance(
+                                    i, raw.types.UpdateNewScheduledMessage
+                                ),
                             )
         except StopTransmission:
             return None

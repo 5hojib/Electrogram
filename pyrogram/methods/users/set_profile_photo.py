@@ -9,13 +9,12 @@ class SetProfilePhoto:
         self: "pyrogram.Client",
         *,
         photo: Union[str, BinaryIO] = None,
-        video: Union[str, BinaryIO] = None
+        video: Union[str, BinaryIO] = None,
     ) -> bool:
         return bool(
             await self.invoke(
                 raw.functions.photos.UploadProfilePhoto(
-                    file=await self.save_file(photo),
-                    video=await self.save_file(video)
+                    file=await self.save_file(photo), video=await self.save_file(video)
                 )
             )
         )

@@ -16,9 +16,8 @@ class CreateStickerSet:
         short_name: str,
         sticker: str,
         emoji: str = "🤔",
-        masks: bool = None
+        masks: bool = None,
     ) -> Optional["types.Message"]:
-
         if isinstance(sticker, str):
             if os.path.isfile(sticker) or re.match("^https?://", sticker):
                 raise ValueError("file_id is invalid!")
@@ -27,7 +26,7 @@ class CreateStickerSet:
                 media = raw.types.InputDocument(
                     id=decoded.media_id,
                     access_hash=decoded.access_hash,
-                    file_reference=decoded.file_reference
+                    file_reference=decoded.file_reference,
                 )
         else:
             raise ValueError("file_id is invalid!")
@@ -37,13 +36,8 @@ class CreateStickerSet:
                 user_id=await self.resolve_peer(user_id),
                 title=title,
                 short_name=short_name,
-                stickers=[
-                    raw.types.InputStickerSetItem(
-                        document=media,
-                        emoji=emoji
-                    )
-                ],
-                masks=masks
+                stickers=[raw.types.InputStickerSetItem(document=media, emoji=emoji)],
+                masks=masks,
             )
         )
 

@@ -6,9 +6,10 @@ SMP_RE = re.compile(r"[\U00010000-\U0010FFFF]")
 
 def add_surrogates(text):
     return SMP_RE.sub(
-        lambda match:
-        "".join(chr(i) for i in unpack("<HH", match.group().encode("utf-16le"))),
-        text
+        lambda match: "".join(
+            chr(i) for i in unpack("<HH", match.group().encode("utf-16le"))
+        ),
+        text,
     )
 
 

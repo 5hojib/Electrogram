@@ -1,5 +1,6 @@
 from .auto_name import AutoName
 
+
 class ReplyColor(AutoName):
     RED = 0
     ORANGE = 1

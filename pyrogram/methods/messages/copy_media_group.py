@@ -23,7 +23,10 @@ class CopyMediaGroup:
 
         reply_to = None
         if reply_to_message_id or message_thread_id:
-            reply_to = types.InputReplyToMessage(reply_to_message_id=reply_to_message_id, message_thread_id=message_thread_id)
+            reply_to = types.InputReplyToMessage(
+                reply_to_message_id=reply_to_message_id,
+                message_thread_id=message_thread_id,
+            )
 
         for i, message in enumerate(media_group):
             if message.photo:
@@ -43,10 +46,18 @@ class CopyMediaGroup:
                     media=media,
                     random_id=self.rnd_id(),
                     **await self.parser.parse(
-                        captions[i] if isinstance(captions, list) and i < len(captions) and captions[i] else
-                        captions if isinstance(captions, str) and i == 0 else
-                        message.caption if message.caption and message.caption != "None" and type(
-                            captions) is not str else "")
+                        captions[i]
+                        if isinstance(captions, list)
+                        and i < len(captions)
+                        and captions[i]
+                        else captions
+                        if isinstance(captions, str) and i == 0
+                        else message.caption
+                        if message.caption
+                        and message.caption != "None"
+                        and type(captions) is not str
+                        else ""
+                    ),
                 )
             )
 
@@ -57,25 +68,29 @@ class CopyMediaGroup:
                 silent=disable_notification or None,
                 reply_to=reply_to,
                 noforwards=protect_content,
-                schedule_date=utils.datetime_to_timestamp(schedule_date)              
+                schedule_date=utils.datetime_to_timestamp(schedule_date),
             ),
-            sleep_threshold=60
+            sleep_threshold=60,
         )
 
         return await utils.parse_messages(
             self,
             raw.types.messages.Messages(
-                messages=[m.message for m in filter(
-                    lambda u: isinstance(
-                        u, (
-                            raw.types.UpdateNewMessage,
-                            raw.types.UpdateNewChannelMessage,
-                            raw.types.UpdateNewScheduledMessage
-                        )
-                    ),
-                    r.updates
-                )],
+                messages=[
+                    m.message
+                    for m in filter(
+                        lambda u: isinstance(
+                            u,
+                            (
+                                raw.types.UpdateNewMessage,
+                                raw.types.UpdateNewChannelMessage,
+                                raw.types.UpdateNewScheduledMessage,
+                            ),
+                        ),
+                        r.updates,
+                    )
+                ],
                 users=r.users,
-                chats=r.chats
-            )
+                chats=r.chats,
+            ),
         )

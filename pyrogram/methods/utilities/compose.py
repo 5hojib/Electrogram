@@ -5,10 +5,7 @@ import pyrogram
 from .idle import idle
 
 
-async def compose(
-    clients: List["pyrogram.Client"],
-    sequential: bool = False
-):
+async def compose(clients: List["pyrogram.Client"], sequential: bool = False):
     if sequential:
         for c in clients:
             await c.start()

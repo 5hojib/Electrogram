@@ -5,10 +5,7 @@ from ..object import Object
 
 
 class VideoChatMembersInvited(Object):
-    def __init__(
-        self, *,
-        users: List["types.User"]
-    ):
+    def __init__(self, *, users: List["types.User"]):
         super().__init__()
 
         self.users = users
@@ -17,7 +14,7 @@ class VideoChatMembersInvited(Object):
     def _parse(
         client,
         action: "raw.types.MessageActionInviteToGroupCall",
-        users: Dict[int, "raw.types.User"]
+        users: Dict[int, "raw.types.User"],
     ) -> "VideoChatMembersInvited":
         users = [types.User._parse(client, users[i]) for i in action.users]
 

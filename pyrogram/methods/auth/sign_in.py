@@ -13,7 +13,7 @@ class SignIn:
         self: "pyrogram.Client",
         phone_number: str,
         phone_code_hash: str,
-        phone_code: str
+        phone_code: str,
     ) -> Union["types.User", "types.TermsOfService", bool]:
         phone_number = phone_number.strip(" +")
 
@@ -21,7 +21,7 @@ class SignIn:
             raw.functions.auth.SignIn(
                 phone_number=phone_number,
                 phone_code_hash=phone_code_hash,
-                phone_code=phone_code
+                phone_code=phone_code,
             )
         )
 

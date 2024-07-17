@@ -13,7 +13,7 @@ class GetChatEventLog:
         offset_id: int = 0,
         limit: int = 0,
         filters: "types.ChatEventFilter" = None,
-        user_ids: List[Union[int, str]] = None
+        user_ids: List[Union[int, str]] = None,
     ) -> Optional[AsyncGenerator["types.ChatEvent", None]]:
         current = 0
         total = abs(limit) or (1 << 31)
@@ -32,7 +32,7 @@ class GetChatEventLog:
                         [await self.resolve_peer(i) for i in user_ids]
                         if user_ids is not None
                         else user_ids
-                    )
+                    ),
                 )
             )
 

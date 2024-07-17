@@ -14,7 +14,7 @@ class EditChatInviteLink:
         name: str = None,
         expire_date: datetime = None,
         member_limit: int = None,
-        creates_join_request: bool = None
+        creates_join_request: bool = None,
     ) -> "types.ChatInviteLink":
         r = await self.invoke(
             raw.functions.messages.EditExportedChatInvite(
@@ -23,7 +23,7 @@ class EditChatInviteLink:
                 expire_date=utils.datetime_to_timestamp(expire_date),
                 usage_limit=member_limit,
                 title=name,
-                request_needed=creates_join_request
+                request_needed=creates_join_request,
             )
         )
 

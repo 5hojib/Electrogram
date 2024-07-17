@@ -5,14 +5,9 @@ from pyrogram import raw
 
 
 class SetUsername:
-    async def set_username(
-        self: "pyrogram.Client",
-        username: Optional[str]
-    ) -> bool:
+    async def set_username(self: "pyrogram.Client", username: Optional[str]) -> bool:
         return bool(
             await self.invoke(
-                raw.functions.account.UpdateUsername(
-                    username=username or ""
-                )
+                raw.functions.account.UpdateUsername(username=username or "")
             )
         )

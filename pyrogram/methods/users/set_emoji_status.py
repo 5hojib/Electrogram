@@ -6,8 +6,7 @@ from pyrogram import raw, types
 
 class SetEmojiStatus:
     async def set_emoji_status(
-        self: "pyrogram.Client",
-        emoji_status: Optional["types.EmojiStatus"] = None
+        self: "pyrogram.Client", emoji_status: Optional["types.EmojiStatus"] = None
     ) -> bool:
         await self.invoke(
             raw.functions.account.UpdateEmojiStatus(

@@ -4,8 +4,8 @@ from .mongo_storage import MongoStorage
 from .storage import Storage
 
 __all__ = [
-    'FileStorage',
-    'MemoryStorage',
-    'MongoStorage',
-    'Storage',
+    "FileStorage",
+    "MemoryStorage",
+    "MongoStorage",
+    "Storage",
 ]

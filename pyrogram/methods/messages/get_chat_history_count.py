@@ -9,8 +9,7 @@ log = logging.getLogger(__name__)
 
 class GetChatHistoryCount:
     async def get_chat_history_count(
-        self: "pyrogram.Client",
-        chat_id: Union[int, str]
+        self: "pyrogram.Client", chat_id: Union[int, str]
     ) -> int:
         r = await self.invoke(
             raw.functions.messages.GetHistory(
@@ -21,7 +20,7 @@ class GetChatHistoryCount:
                 limit=1,
                 max_id=0,
                 min_id=0,
-                hash=0
+                hash=0,
             )
         )
 

@@ -15,7 +15,7 @@ class AnswerInlineQuery:
         is_personal: bool = False,
         next_offset: str = "",
         switch_pm_text: str = "",
-        switch_pm_parameter: str = ""
+        switch_pm_parameter: str = "",
     ):
         return await self.invoke(
             raw.functions.messages.SetInlineBotResults(
@@ -26,8 +26,9 @@ class AnswerInlineQuery:
                 private=is_personal or None,
                 next_offset=next_offset or None,
                 switch_pm=raw.types.InlineBotSwitchPM(
-                    text=switch_pm_text,
-                    start_param=switch_pm_parameter
-                ) if switch_pm_text else None
+                    text=switch_pm_text, start_param=switch_pm_parameter
+                )
+                if switch_pm_text
+                else None,
             )
         )

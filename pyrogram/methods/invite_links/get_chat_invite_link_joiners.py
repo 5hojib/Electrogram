@@ -10,7 +10,7 @@ class GetChatInviteLinkJoiners:
         self: "pyrogram.Client",
         chat_id: Union[int, str],
         invite_link: str,
-        limit: int = 0
+        limit: int = 0,
     ) -> Optional[AsyncGenerator["types.ChatJoiner", None]]:
         current = 0
         total = abs(limit) or (1 << 31) - 1
@@ -26,7 +26,7 @@ class GetChatInviteLinkJoiners:
                     link=invite_link,
                     limit=limit,
                     offset_date=offset_date,
-                    offset_user=offset_user
+                    offset_user=offset_user,
                 )
             )
 

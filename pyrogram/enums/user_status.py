@@ -1,6 +1,7 @@
 from enum import auto
 from .auto_name import AutoName
 
+
 class UserStatus(AutoName):
     ONLINE = auto()
     OFFLINE = auto()

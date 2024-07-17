@@ -15,7 +15,7 @@ class InlineQueryResultContact(InlineQueryResult):
         input_message_content: "types.InputMessageContent" = None,
         thumb_url: str = None,
         thumb_width: int = 0,
-        thumb_height: int = 0
+        thumb_height: int = 0,
     ):
         super().__init__("contact", id, input_message_content, reply_markup)
 
@@ -40,7 +40,9 @@ class InlineQueryResultContact(InlineQueryResult):
                     first_name=self.first_name,
                     last_name=self.last_name,
                     vcard=self.vcard,
-                    reply_markup=await self.reply_markup.write(client) if self.reply_markup else None,
+                    reply_markup=await self.reply_markup.write(client)
+                    if self.reply_markup
+                    else None,
                 )
             ),
             thumb=raw.types.InputWebDocument(
@@ -49,9 +51,10 @@ class InlineQueryResultContact(InlineQueryResult):
                 mime_type="image/jpg",
                 attributes=[
                     raw.types.DocumentAttributeImageSize(
-                        w=self.thumb_width,
-                        h=self.thumb_height
+                        w=self.thumb_width, h=self.thumb_height
                     )
-                ]
-            ) if self.thumb_url else None
+                ],
+            )
+            if self.thumb_url
+            else None,
         )

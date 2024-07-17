@@ -10,10 +10,7 @@ log = logging.getLogger(__name__)
 
 
 class SendCode:
-    async def send_code(
-        self: "pyrogram.Client",
-        phone_number: str
-    ) -> "types.SentCode":
+    async def send_code(self: "pyrogram.Client", phone_number: str) -> "types.SentCode":
         phone_number = phone_number.strip(" +")
 
         while True:
@@ -23,7 +20,7 @@ class SendCode:
                         phone_number=phone_number,
                         api_id=self.api_id,
                         api_hash=self.api_hash,
-                        settings=raw.types.CodeSettings()
+                        settings=raw.types.CodeSettings(),
                     )
                 )
             except (PhoneMigrate, NetworkMigrate) as e:
@@ -32,13 +29,14 @@ class SendCode:
                 await self.storage.dc_id(e.value)
                 await self.storage.auth_key(
                     await Auth(
-                        self, await self.storage.dc_id(),
-                        await self.storage.test_mode()
+                        self, await self.storage.dc_id(), await self.storage.test_mode()
                     ).create()
                 )
                 self.session = Session(
-                    self, await self.storage.dc_id(),
-                    await self.storage.auth_key(), await self.storage.test_mode()
+                    self,
+                    await self.storage.dc_id(),
+                    await self.storage.auth_key(),
+                    await self.storage.test_mode(),
                 )
 
                 await self.session.start()

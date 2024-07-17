@@ -13,9 +13,7 @@ class RevokeChatInviteLink:
     ) -> "types.ChatInviteLink":
         r = await self.invoke(
             raw.functions.messages.EditExportedChatInvite(
-                peer=await self.resolve_peer(chat_id),
-                link=invite_link,
-                revoked=True
+                peer=await self.resolve_peer(chat_id), link=invite_link, revoked=True
             )
         )
 

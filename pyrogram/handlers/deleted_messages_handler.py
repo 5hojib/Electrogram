@@ -4,6 +4,7 @@ from pyrogram.filters import Filter
 from pyrogram.types import Message
 from .handler import Handler
 
+
 class DeletedMessagesHandler(Handler):
     def __init__(self, callback: Callable, filters: Filter = None):
         super().__init__(callback, filters)

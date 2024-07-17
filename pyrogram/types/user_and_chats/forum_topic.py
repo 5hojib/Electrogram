@@ -42,7 +42,7 @@ class ForumTopic(Object):
         self.pinned = pinned
         self.short = short
         self.icon_emoji_id = icon_emoji_id
-   
+
     @staticmethod
     def _parse(forum_topic: "raw.types.forum_topic") -> "ForumTopic":
         from_id = forum_topic.from_id
@@ -52,20 +52,20 @@ class ForumTopic(Object):
             peer = types.PeerUser._parse(from_id)
 
         return ForumTopic(
-            id=getattr(forum_topic,"id", None),
-            date=getattr(forum_topic,"date", None),
-            title=getattr(forum_topic,"title", None),
-            icon_color=getattr(forum_topic,"icon_color", None),
-            top_message=getattr(forum_topic,"top_message", None),
-            read_inbox_max_id=getattr(forum_topic,"read_inbox_max_id", None),
-            read_outbox_max_id=getattr(forum_topic,"read_outbox_max_id", None),
-            unread_count=getattr(forum_topic,"unread_count", None),
-            unread_mentions_count=getattr(forum_topic,"unread_mentions_count", None),
-            unread_reactions_count=getattr(forum_topic,"unread_reactions_count", None),
+            id=getattr(forum_topic, "id", None),
+            date=getattr(forum_topic, "date", None),
+            title=getattr(forum_topic, "title", None),
+            icon_color=getattr(forum_topic, "icon_color", None),
+            top_message=getattr(forum_topic, "top_message", None),
+            read_inbox_max_id=getattr(forum_topic, "read_inbox_max_id", None),
+            read_outbox_max_id=getattr(forum_topic, "read_outbox_max_id", None),
+            unread_count=getattr(forum_topic, "unread_count", None),
+            unread_mentions_count=getattr(forum_topic, "unread_mentions_count", None),
+            unread_reactions_count=getattr(forum_topic, "unread_reactions_count", None),
             from_id=peer,
-            my=getattr(forum_topic,"my", None),
-            closed=getattr(forum_topic,"closed", None),
-            pinned=getattr(forum_topic,"pinned", None),
-            short=getattr(forum_topic,"short", None),
-            icon_emoji_id=getattr(forum_topic,"icon_emoji_id", None),
+            my=getattr(forum_topic, "my", None),
+            closed=getattr(forum_topic, "closed", None),
+            pinned=getattr(forum_topic, "pinned", None),
+            short=getattr(forum_topic, "short", None),
+            icon_emoji_id=getattr(forum_topic, "icon_emoji_id", None),
         )
