@@ -60,6 +60,17 @@ packages = [
     "pyrogram"
 ]
 
+[tool.rye]
+managed = true
+dev-dependencies = [
+    "ruff",
+    "pytest",
+    "pytest-asyncio",
+    "pytest-cov",
+    "twine",
+    "pre-commit",
+]
+
 [tool.rye.scripts]
 clean = { chain = ["clean:api"] }
 "clean:api" = { cmd = "rm -rf pyrogram/errors/exceptions pyrogram/raw/all.py pyrogram/raw/base pyrogram/raw/functions pyrogram/raw/types" }
