@@ -7,7 +7,8 @@ import struct
 from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime, timezone
 from getpass import getpass
-from typing import Union, List, Dict, Optional, Any, Callable, TypeVar
+from typing import (Union,
+    List, Dict, Optional, Any, Callable, TypeVar)
 
 import pyrogram
 from pyrogram import raw, enums, types
