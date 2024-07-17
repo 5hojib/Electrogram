@@ -16,9 +16,6 @@ jobs:
 
     - name: Install the latest version of rye
       uses: eifinger/setup-rye@v4
-      id: setup-rye
-      with:
-        enable-cache: false
 
     - name: Install dependencies
       run: rye sync
