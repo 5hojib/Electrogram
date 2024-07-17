@@ -1,3 +1,4 @@
+# ruff: noqa: F403
 from .authorization import *
 from .bots_and_keyboards import *
 from .inline_mode import *

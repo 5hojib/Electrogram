@@ -9,7 +9,8 @@ dependencies = [
     "aiosqlite",
     "pymediainfo",
     "pymongo",
-    "TgCrypto-pyrofork"
+    "TgCrypto-pyrofork",
+    "uvloop"
 ]
 requires-python = ">=3.9"
 

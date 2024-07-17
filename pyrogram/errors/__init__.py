@@ -1,6 +1,10 @@
-from .exceptions import *
+from .exceptions import *  # noqa: F403
 from .rpc_error import UnknownError
 
+
+__all__ = [
+    "UnknownError"
+]
 
 class BadMsgNotification(Exception):
     descriptions = {

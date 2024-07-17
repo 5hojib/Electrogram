@@ -3,35 +3,44 @@ __license__ = "MIT License"
 
 from concurrent.futures.thread import ThreadPoolExecutor
 
-class StopTransmission(Exception):
+
+class StopTransmission(Exception):  # noqa: N818
     pass
+
 
 class StopPropagation(StopAsyncIteration):
     pass
 
+
 class ContinuePropagation(StopAsyncIteration):
     pass
 
-from . import raw, types, filters, handlers, emoji, enums
-from .client import Client
-from .sync import idle, compose
 
 crypto_executor = ThreadPoolExecutor(1, thread_name_prefix="CryptoWorker")
 
+# ruff: noqa: E402
+import asyncio
+import uvloop
+
+from . import enums, errors, filters, handlers, raw, types
+from .client import Client
+from .methods.utilities.compose import compose
+from .methods.utilities.idle import idle
+
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+
 __all__ = [
-    "__version__",
-    "__license__",
-    "StopTransmission",
-    "StopPropagation",
+    "Client",
     "ContinuePropagation",
-    "raw",
-    "types",
+    "StopPropagation",
+    "StopTransmission",
+    "compose",
+    "crypto_executor",
+    "enums",
+    "errors",
     "filters",
     "handlers",
-    "emoji",
-    "enums",
-    "Client",
     "idle",
-    "compose",
-    "crypto_executor"
+    "raw",
+    "types",
 ]
