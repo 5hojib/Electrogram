@@ -15,13 +15,12 @@ jobs:
         token: ${{ secrets.GX_TOKEN }}
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
-        python-version: '3.11'
+        python-version: '3.12'
 
     - name: Install ruff
-      run: |
-        pip install ruff
+      run: pip install ruff
 
     - name: Run ruff and format code
       run: |

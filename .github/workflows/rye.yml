@@ -4,42 +4,33 @@ on: [push, pull_request]
 
 jobs:
   build:
-
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest]
-        python-version: ["3.10", "3.11", "3.12"]
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.12"
 
       - name: Install the latest version of rye
         uses: eifinger/setup-rye@v4
         id: setup-rye
         with:
           enable-cache: true
-          cache-prefix: ${{ matrix.python-version }}
+          cache-prefix: "3.12"
 
-      - name: Pin python-version ${{ matrix.python-version }}
+      - name: Pin python-version 3.12
         if: steps.setup-rye.outputs.cache-hit != 'true'
-        run: rye pin ${{ matrix.python-version }}
+        run: rye pin 3.12
 
       - name: Install dependencies
         if: steps.setup-rye.outputs.cache-hit != 'true'
-        run: |
-          rye sync
+        run: rye sync
 
       - name: Generate API
-        run: |
-          rye run api
+        run: rye run api
 
       - name: Run tests
-        run: |
-          rye run python -m pytest
+        run: rye run python -m pytest
