@@ -12,7 +12,7 @@ PublicKey = namedtuple("PublicKey", ["m", "e"])
 
 server_public_keys = {
     # -4344800451088585951
-    0xC3B42B026CE86B21 - (1 << 64): PublicKey(  # Telegram servers #1
+    0xc3b42b026ce86b21 - (1 << 64): PublicKey(  # Telegram servers #1
         # -----BEGIN RSA PUBLIC KEY-----
         # MIIBCgKCAQEAwVACPi9w23mF3tBkdZz+zwrzKOaaQdr01vAbU4E1pvkfj4sqDsm6
         # lyDONS789sVoD/xCS9Y0hkkC3gtL1tSfTlgCMOOul9lcixlEKzwKENj1Yz/s7daS
@@ -34,8 +34,9 @@ server_public_keys = {
         ),  # Modulus
         int("010001", 16),  # Exponent
     ),
+
     # 847625836280919973
-    0x10BC35F3509F7B7A5 - (1 << 64): PublicKey(  # Telegram servers #2
+    0x10bc35f3509f7b7a5 - (1 << 64): PublicKey(  # Telegram servers #2
         # -----BEGIN PUBLIC KEY-----
         # MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAruw2yP/BCcsJliRoW5eB
         # VBVle9dtjJw+OYED160Wybum9SXtBBLXriwt4rROd9csv0t0OHCaTmRqBcQ0J8fx
@@ -58,8 +59,9 @@ server_public_keys = {
         ),  # Modulus
         int("010001", 16),  # Exponent
     ),
+
     # 1562291298945373506
-    0x115AE5FA8B5529542 - (1 << 64): PublicKey(  # Telegram servers #3
+    0x115ae5fa8b5529542 - (1 << 64): PublicKey(  # Telegram servers #3
         # -----BEGIN PUBLIC KEY-----
         # MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvfLHfYH2r9R70w8prHbl
         # Wt/nDkh+XkgpflqQVcnAfSuTtO05lNPspQmL8Y2XjVT4t8cT6xAkdgfmmvnvRPOO
@@ -82,8 +84,9 @@ server_public_keys = {
         ),  # Modulus
         int("010001", 16),  # Exponent
     ),
+
     # -5859577972006586033
-    0xAEAE98E13CD7F94F - (1 << 64): PublicKey(  # Telegram servers #4
+    0xaeae98e13cd7f94f - (1 << 64): PublicKey(  # Telegram servers #4
         # -----BEGIN PUBLIC KEY-----
         # MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAs/ditzm+mPND6xkhzwFI
         # z6J/968CtkcSE/7Z2qAJiXbmZ3UDJPGrzqTDHkO30R8VeRM/Kz2f4nR05GIFiITl
@@ -106,8 +109,9 @@ server_public_keys = {
         ),  # Modulus
         int("010001", 16),  # Exponent
     ),
+
     # 6491968696586960280
-    0x15A181B2235057D98 - (1 << 64): PublicKey(  # Telegram servers #5
+    0x15a181b2235057d98 - (1 << 64): PublicKey(  # Telegram servers #5
         # -----BEGIN PUBLIC KEY-----
         # MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvmpxVY7ld/8DAjz6F6q0
         # 5shjg8/4p6047bn6/m8yPy1RBsvIyvuDuGnP/RzPEhzXQ9UJ5Ynmh2XJZgHoE9xb
@@ -130,8 +134,9 @@ server_public_keys = {
         ),  # Modulus
         int("010001", 16),  # Exponent
     ),
+
     # -7395192255793472640
-    0x995EFFD323B5DB80 - (1 << 64): PublicKey(  # CDN DC-121
+    0x995effd323b5db80 - (1 << 64): PublicKey(  # CDN DC-121
         # -----BEGIN RSA PUBLIC KEY-----
         # MIIBCgKCAQEA4tWHcGJlElkxuxKQJwFjJaulmVHgdxNA3wgI2E8XbNnA88y51Xog
         # V5m8BEYuTSP4llXZY4ZSJW5VlFXnmsJT/hmjyeFqqTajyAW6nb9vwZX291QvqD/1
@@ -153,8 +158,9 @@ server_public_keys = {
         ),  # Modulus
         int("010001", 16),  # Exponent
     ),
+
     # 2685959930972952888
-    0x1254672538E935938 - (1 << 64): PublicKey(  # CDN DC-140
+    0x1254672538e935938 - (1 << 64): PublicKey(  # CDN DC-140
         # -----BEGIN RSA PUBLIC KEY-----
         # MIIBCgKCAQEAzuHVC7sE50Kho/yDVZtWnlmA5Bf/aM8KZY3WzS16w6w1sBqipj8o
         # gMGG7ULbGBtYmKEaI7IIJO6WM2m1MaXVnsqS8d7PaGAZiy8rSN3S7S2a8wp4RXZe
@@ -176,8 +182,9 @@ server_public_keys = {
         ),  # Modulus
         int("010001", 16),  # Exponent
     ),
+
     # -3997872768018684475
-    0xC884B3E62D09E5C5 - (1 << 64): PublicKey(  # CDN DC-201
+    0xc884b3e62d09e5c5 - (1 << 64): PublicKey(  # CDN DC-201
         # -----BEGIN RSA PUBLIC KEY-----
         # MIIBCgKCAQEAug6fETVb7NkXYYu5ueZuM0pqw1heuqUrZNYomQN0lS0o7i6mAWwb
         # 1/FiscFK+y4LQSSEx+oUzXAhjmll9fmb4e7PbUiXo8MuXO0Rj3e5416DXfTiOYGW
@@ -199,8 +206,9 @@ server_public_keys = {
         ),  # Modulus
         int("010001", 16),  # Exponent
     ),
+
     # -4960899639492471258
-    0xBB27580FD5B01626 - (1 << 64): PublicKey(  # CDN DC-203
+    0xbb27580fd5b01626 - (1 << 64): PublicKey(  # CDN DC-203
         # -----BEGIN RSA PUBLIC KEY-----
         # MIIBCgKCAQEAv/L6td+mj7Dl81NHfu+Xf1KNtvZPR1tS5xFqkiUson1u7D2ulK05
         # jM8HKvpV1o+1HPPqhaXhasvsX90u3TIHRQ0zuJKJxKAiZo3GK7phHozjAJ9VUFbO
