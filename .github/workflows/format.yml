@@ -20,15 +20,9 @@ jobs:
     - name: Install dependencies
       run: rye sync
 
-    - name: Install pyupgrade
-      run: pip install pyupgrade
-
-    - name: Run pyupgrade to update type hints
-      run: pyupgrade --py310-plus **/*.py
-
-    - name: Format the code
+    - name: Run ruff to update type hints and format code
       run: |
-        rye run ruff check . --fix --exit-zero
+        rye run ruff check . --fix --select UP012
         rye run ruff format .
         git add -u
 
@@ -39,7 +33,7 @@ jobs:
         if git diff-index --quiet HEAD --; then
           echo "No changes to commit."
         else
-          git commit -m "Auto-format code and update type hints using pyupgrade and ruff [skip actions]"
+          git commit -m "Auto-format code and update type hints using ruff [skip actions]"
           git push origin ${{ github.ref }}
       env:
         GITHUB_TOKEN: ${{ secrets.GX_TOKEN }}
