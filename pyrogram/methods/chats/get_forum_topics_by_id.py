@@ -4,7 +4,6 @@ from typing import Union, List, Iterable
 import pyrogram
 from pyrogram import raw
 from pyrogram import types
-from pyrogram import utils
 
 log = logging.getLogger(__name__)
 

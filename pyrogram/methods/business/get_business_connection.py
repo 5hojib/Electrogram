@@ -1,8 +1,5 @@
-from datetime import datetime
-from typing import Union, List
-
 import pyrogram
-from pyrogram import types, utils, raw
+from pyrogram import types, raw
 
 
 class GetBusinessConnection:

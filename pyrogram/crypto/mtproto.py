@@ -54,7 +54,7 @@ def unpack(
     except KeyError as e:
         if e.args[0] == 0:
             raise ConnectionError(
-                f"Received empty data. Check your internet connection."
+                "Received empty data. Check your internet connection."
             )
 
         left = data.read().hex()

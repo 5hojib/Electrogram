@@ -1,4 +1,4 @@
-from typing import Callable, Optional, Union
+from typing import Callable
 
 import pyrogram
 from pyrogram.filters import Filter

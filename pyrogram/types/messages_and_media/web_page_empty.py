@@ -1,6 +1,4 @@
-import pyrogram
 from pyrogram import raw
-from pyrogram import types
 from ..object import Object
 
 

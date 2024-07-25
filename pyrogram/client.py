@@ -14,10 +14,10 @@ from importlib import import_module
 from io import StringIO, BytesIO
 from mimetypes import MimeTypes
 from pathlib import Path
-from typing import Union, List, Optional, Callable, AsyncGenerator, Type
+from typing import Union, List, Optional, Callable, AsyncGenerator
 
 import pyrogram
-from pyrogram import __version__, __license__
+from pyrogram import __version__
 from pyrogram import enums
 from pyrogram import raw
 from pyrogram import utils
@@ -37,10 +37,9 @@ from pyrogram.storage import MongoStorage
 from pyrogram.types import User, TermsOfService
 from pyrogram.utils import ainput
 from .connection import Connection
-from .connection.transport import TCP, TCPAbridged
+from .connection.transport import TCPAbridged
 from .dispatcher import Dispatcher
 from .file_id import FileId, FileType, ThumbnailSource
-from .filters import Filter
 from .mime_types import mime_types
 from .parser import Parser
 from .session.internals import MsgId

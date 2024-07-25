@@ -9,7 +9,6 @@ from pyrogram.file_id import (
     FileType,
     FileUniqueId,
     FileUniqueType,
-    ThumbnailSource,
 )
 from ..object import Object
 

@@ -1,11 +1,7 @@
-from typing import Union, List, Match, Optional
-
 import pyrogram
-from pyrogram import raw, enums
 from pyrogram import types
 from ..object import Object
 from ..update import Update
-from ... import utils
 
 
 class PreCheckoutQuery(Object, Update):

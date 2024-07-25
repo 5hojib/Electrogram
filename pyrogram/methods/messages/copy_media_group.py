@@ -116,7 +116,7 @@ class CopyMediaGroup:
                         else message.caption
                         if message.caption
                         and message.caption != "None"
-                        and not type(captions) is str
+                        and type(captions) is not str
                         else ""
                     ),
                 )

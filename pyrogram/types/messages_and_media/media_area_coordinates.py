@@ -1,4 +1,4 @@
-from pyrogram import types, raw
+from pyrogram import raw
 from ..object import Object
 
 

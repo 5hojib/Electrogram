@@ -1,5 +1,3 @@
-from typing import Union, Optional
-
 import pyrogram
 from pyrogram import raw, types
 

@@ -1,5 +1,4 @@
 from pyrogram import raw
-from typing import List
 from ..object import Object
 
 
