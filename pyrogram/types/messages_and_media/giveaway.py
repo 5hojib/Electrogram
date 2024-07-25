@@ -58,7 +58,7 @@ class Giveaway(Object):
 
     @staticmethod
     async def _parse(client, message: "raw.types.Message") -> "Giveaway":
-        giveaway: "raw.types.MessageMediaGiveaway" = message.media
+        giveaway: raw.types.MessageMediaGiveaway = message.media
         chats = []
         private_ids = []
         for raw_chat_id in giveaway.channels:
