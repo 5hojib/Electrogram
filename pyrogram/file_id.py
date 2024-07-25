@@ -236,8 +236,8 @@ class FileId:
         media_id, access_hash = struct.unpack("<qq", buffer.read(16))
 
         if file_type in PHOTO_TYPES:
-            (volume_id,) = struct.unpack("<q", buffer.read(8))
-            (thumbnail_source,) = (
+            volume_id = struct.unpack("<q", buffer.read(8))
+            thumbnail_source = (
                 (0,) if major < 4 else struct.unpack("<i", buffer.read(4))
             )
 
