@@ -221,7 +221,7 @@ class FileId:
 
         if has_web_location:
             url = String.read(buffer)
-            (access_hash,) = struct.unpack("<q", buffer.read(8))
+            access_hash = struct.unpack("<q", buffer.read(8))
 
             return FileId(
                 major=major,
@@ -440,7 +440,7 @@ class FileUniqueId:
     @staticmethod
     def decode(file_unique_id: str):
         buffer = BytesIO(rle_decode(b64_decode(file_unique_id)))
-        (file_unique_type,) = struct.unpack("<i", buffer.read(4))
+        file_unique_type = struct.unpack("<i", buffer.read(4))
 
         try:
             file_unique_type = FileUniqueType(file_unique_type)
@@ -464,7 +464,7 @@ class FileUniqueId:
             )
 
         if file_unique_type == FileUniqueType.DOCUMENT:
-            (media_id,) = struct.unpack("<q", buffer.read())
+            media_id = struct.unpack("<q", buffer.read())
 
             return FileUniqueId(file_unique_type=file_unique_type, media_id=media_id)
 

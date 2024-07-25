@@ -22,6 +22,7 @@ jobs:
 
     - name: Format the code
       run: |
+        rye run ruff check . --fix --exit-zero
         rye run ruff format .
         git add -u
 
