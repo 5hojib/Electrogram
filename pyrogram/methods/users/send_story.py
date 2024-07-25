@@ -29,10 +29,10 @@ class SendStory:
         self: "pyrogram.Client",
         chat_id: Union[int, str] = None,
         privacy: "enums.StoriesPrivacyRules" = None,
-        allowed_users: List[int] = None,
-        denied_users: List[int] = None,
-        # allowed_chats: List[int] = None,
-        # denied_chats: List[int] = None,
+        allowed_users: list[int] = None,
+        denied_users: list[int] = None,
+        # allowed_chats: list[int] = None,
+        # denied_chats: list[int] = None,
         photo: Union[str, BinaryIO] = None,
         video: Union[str, BinaryIO] = None,
         file_name: str = None,
@@ -40,11 +40,11 @@ class SendStory:
         protect_content: bool = None,
         caption: str = None,
         parse_mode: "enums.ParseMode" = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         period: int = None,
         forward_from_chat_id: Union[int, str] = None,
         forward_from_story_id: int = None,
-        media_areas: List["types.InputMediaArea"] = None,
+        media_areas: list["types.InputMediaArea"] = None,
     ) -> "types.Story":
         """Send new story.
 

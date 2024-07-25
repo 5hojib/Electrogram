@@ -6,7 +6,7 @@ from ..object import Object
 class InputMediaArea(Object):
     """Content of a media area to be included in story.
 
-    Pyrofork currently supports the following types:
+    Electrogram currently supports the following types:
 
     - :obj:`~pyrogram.types.InputMediaAreaChannelPost`
     """

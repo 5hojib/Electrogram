@@ -70,7 +70,7 @@ class Video(Object):
         supports_streaming: bool = None,
         ttl_seconds: int = None,
         date: datetime = None,
-        thumbs: List["types.Thumbnail"] = None,
+        thumbs: list["types.Thumbnail"] = None,
     ):
         super().__init__(client)
 

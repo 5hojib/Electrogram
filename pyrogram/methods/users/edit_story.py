@@ -16,17 +16,17 @@ class EditStory:
         story_id: int,
         chat_id: int = None,
         privacy: "enums.StoriesPrivacyRules" = None,
-        allowed_users: List[int] = None,
-        denied_users: List[int] = None,
-        # allowed_chats: List[int] = None,
-        # denied_chats: List[int] = None,
+        allowed_users: list[int] = None,
+        denied_users: list[int] = None,
+        # allowed_chats: list[int] = None,
+        # denied_chats: list[int] = None,
         animation: str = None,
         photo: str = None,
         video: str = None,
         caption: str = None,
         parse_mode: "enums.ParseMode" = None,
-        caption_entities: List["types.MessageEntity"] = None,
-        media_areas: List["types.InputMediaArea"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
+        media_areas: list["types.InputMediaArea"] = None,
     ) -> "types.Story":
         """Edit story.
 

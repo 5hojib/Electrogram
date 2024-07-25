@@ -56,7 +56,6 @@ class CreateStickerSet:
                 # Send document by uploading from local file
                 await app.create_sticker_set("me", "My First Pack", "myfirstpack", "AAjjHjk")
         """
-        file = None
 
         if isinstance(sticker, str):
             if os.path.isfile(sticker) or re.match("^https?://", sticker):

@@ -7,7 +7,7 @@ from pyrogram import types
 
 class ImportContacts:
     async def import_contacts(
-        self: "pyrogram.Client", contacts: List["types.InputPhoneContact"]
+        self: "pyrogram.Client", contacts: list["types.InputPhoneContact"]
     ):
         """Import contacts to your Telegram address book.
 

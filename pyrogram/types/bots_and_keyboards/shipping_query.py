@@ -44,7 +44,7 @@ class ShippingQuery(Object, Update):
         client: "pyrogram.Client",
         shipping_query: "raw.types.updateBotShippingQuery",
         users: dict,
-    ) -> "PreCheckoutQuery":
+    ) -> "ShippingQuery":
         # Try to decode pre-checkout query payload into string. If that fails, fallback to bytes instead of decoding by
         # ignoring/replacing errors, this way, button clicks will still work.
         try:
@@ -52,7 +52,7 @@ class ShippingQuery(Object, Update):
         except (UnicodeDecodeError, AttributeError):
             payload = shipping_query.payload
 
-        return PreCheckoutQuery(
+        return ShippingQuery(
             id=str(shipping_query.query_id),
             from_user=types.User._parse(client, users[shipping_query.user_id]),
             invoice_payload=payload,

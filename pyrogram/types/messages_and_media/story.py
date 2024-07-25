@@ -114,16 +114,16 @@ class Story(Object, Update):
         contacts: bool = None,
         selected_contacts: bool = None,
         caption: str = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         views: "types.StoryViews" = None,
         privacy: "enums.StoryPrivacy" = None,
         forward_from: "types.StoryForwardHeader" = None,
-        allowed_users: List[int] = None,
-        denied_users: List[int] = None,
-        media_areas: List["types.MediaArea"] = None,
+        allowed_users: list[int] = None,
+        denied_users: list[int] = None,
+        media_areas: list["types.MediaArea"] = None,
         raw: "raw.types.StoryItem" = None,
-        # allowed_chats: List[int] = None,
-        # denied_chats: List[int] = None
+        # allowed_chats: list[int] = None,
+        # denied_chats: list[int] = None
     ):
         super().__init__(client)
 
@@ -338,7 +338,7 @@ class Story(Object, Update):
         self,
         text: str,
         parse_mode: Optional["enums.ParseMode"] = None,
-        entities: List["types.MessageEntity"] = None,
+        entities: list["types.MessageEntity"] = None,
         disable_web_page_preview: bool = None,
         disable_notification: bool = None,
         reply_to_story_id: int = None,
@@ -426,7 +426,7 @@ class Story(Object, Update):
         animation: Union[str, BinaryIO],
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         has_spoiler: bool = None,
         duration: int = 0,
         width: int = 0,
@@ -569,7 +569,7 @@ class Story(Object, Update):
         audio: Union[str, BinaryIO],
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         duration: int = 0,
         performer: str = None,
         title: str = None,
@@ -707,7 +707,7 @@ class Story(Object, Update):
         file_id: str,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         disable_notification: bool = None,
         reply_to_story_id: int = None,
         reply_markup: Union[
@@ -782,7 +782,7 @@ class Story(Object, Update):
 
     async def reply_media_group(
         self,
-        media: List[
+        media: list[
             Union[
                 "types.InputMediaPhoto",
                 "types.InputMediaVideo",
@@ -792,7 +792,7 @@ class Story(Object, Update):
         ],
         disable_notification: bool = None,
         reply_to_story_id: int = None,
-    ) -> List["types.Message"]:
+    ) -> list["types.Message"]:
         """Bound method *reply_media_group* of :obj:`~pyrogram.types.Story`.
 
         Use as a shortcut for:
@@ -845,7 +845,7 @@ class Story(Object, Update):
         photo: Union[str, BinaryIO],
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         has_spoiler: bool = None,
         ttl_seconds: int = None,
         view_once: bool = None,
@@ -1064,7 +1064,7 @@ class Story(Object, Update):
         video: Union[str, BinaryIO],
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         has_spoiler: bool = None,
         ttl_seconds: int = None,
         duration: int = 0,
@@ -1328,7 +1328,7 @@ class Story(Object, Update):
         voice: Union[str, BinaryIO],
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         duration: int = 0,
         disable_notification: bool = None,
         reply_to_story_id: int = None,
@@ -1498,17 +1498,17 @@ class Story(Object, Update):
     async def edit(
         self,
         privacy: "enums.StoriesPrivacyRules" = None,
-        allowed_users: List[int] = None,
-        denied_users: List[int] = None,
-        # allowed_chats: List[int] = None,
-        # denied_chats: List[int] = None,
+        allowed_users: list[int] = None,
+        denied_users: list[int] = None,
+        # allowed_chats: list[int] = None,
+        # denied_chats: list[int] = None,
         animation: str = None,
         photo: str = None,
         video: str = None,
         caption: str = None,
         parse_mode: "enums.ParseMode" = None,
-        caption_entities: List["types.MessageEntity"] = None,
-        media_areas: List["types.InputMediaArea"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
+        media_areas: list["types.InputMediaArea"] = None,
     ) -> "types.Story":
         """Bound method *edit* of :obj:`~pyrogram.types.Story`.
 
@@ -1600,7 +1600,7 @@ class Story(Object, Update):
         self,
         caption: str,
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
     ) -> "types.Story":
         """Bound method *edit_caption* of :obj:`~pyrogram.types.Story`.
 
@@ -1679,10 +1679,10 @@ class Story(Object, Update):
     async def edit_privacy(
         self,
         privacy: "enums.StoriesPrivacyRules" = None,
-        allowed_users: List[int] = None,
-        denied_users: List[int] = None,
-        # allowed_chats: List[int] = None,
-        # denied_chats: List[int] = None
+        allowed_users: list[int] = None,
+        denied_users: list[int] = None,
+        # allowed_chats: list[int] = None,
+        # denied_chats: list[int] = None
     ) -> "types.Story":
         """Bound method *edit_privacy* of :obj:`~pyrogram.types.Story`.
 
@@ -1791,15 +1791,15 @@ class Story(Object, Update):
         self,
         chat_id: int = None,
         privacy: "enums.StoriesPrivacyRules" = None,
-        allowed_users: List[int] = None,
-        denied_users: List[int] = None,
-        # allowed_chats: List[int] = None,
-        # denied_chats: List[int] = None,
+        allowed_users: list[int] = None,
+        denied_users: list[int] = None,
+        # allowed_chats: list[int] = None,
+        # denied_chats: list[int] = None,
         pinned: bool = None,
         protect_content: bool = None,
         caption: str = None,
         parse_mode: "enums.ParseMode" = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         period: int = None,
     ):
         """Bound method *forward* of :obj:`~pyrogram.types.Message`.

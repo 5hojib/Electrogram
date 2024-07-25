@@ -13,7 +13,7 @@ class GetForumTopicsByID:
         self: "pyrogram.Client",
         chat_id: Union[int, str],
         topic_ids: Union[int, Iterable[int]],
-    ) -> Union["types.ForumTopic", List["types.ForumTopic"]]:
+    ) -> Union["types.ForumTopic", list["types.ForumTopic"]]:
         """Get one or more topic from a chat by using topic identifiers.
 
         .. include:: /_includes/usable-by/users.rst

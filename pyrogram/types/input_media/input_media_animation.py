@@ -52,7 +52,7 @@ class InputMediaAnimation(InputMedia):
         thumb: str = None,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List[MessageEntity] = None,
+        caption_entities: list[MessageEntity] = None,
         width: int = 0,
         height: int = 0,
         duration: int = 0,

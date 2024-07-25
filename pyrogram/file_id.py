@@ -3,7 +3,6 @@ import logging
 import struct
 from enum import IntEnum
 from io import BytesIO
-from typing import List
 
 from pyrogram.raw.core import Bytes, String
 
@@ -46,7 +45,7 @@ def rle_encode(s: bytes) -> bytes:
     Returns:
         ``bytes``: The encoded bytes
     """
-    r: List[int] = []
+    r: list[int] = []
     n: int = 0
 
     for b in s:
@@ -75,7 +74,7 @@ def rle_decode(s: bytes) -> bytes:
     Returns:
         ``bytes``: The decoded bytes
     """
-    r: List[int] = []
+    r: list[int] = []
     z: bool = False
 
     for b in s:
@@ -153,19 +152,19 @@ class FileId:
         file_type: FileType,
         dc_id: int,
         file_reference: bytes = b"",
-        url: str = None,
-        media_id: int = None,
-        access_hash: int = None,
-        volume_id: int = None,
+        url: str | None = None,
+        media_id: int | None = None,
+        access_hash: int | None = None,
+        volume_id: int | None = None,
         thumbnail_source: ThumbnailSource = None,
         thumbnail_file_type: FileType = None,
         thumbnail_size: str = "",
-        secret: int = None,
-        local_id: int = None,
-        chat_id: int = None,
-        chat_access_hash: int = None,
-        sticker_set_id: int = None,
-        sticker_set_access_hash: int = None,
+        secret: int | None = None,
+        local_id: int | None = None,
+        chat_id: int | None = None,
+        chat_access_hash: int | None = None,
+        sticker_set_id: int | None = None,
+        sticker_set_access_hash: int | None = None,
     ):
         self.major = major
         self.minor = minor
@@ -216,8 +215,8 @@ class FileId:
 
         try:
             file_type = FileType(file_type)
-        except ValueError:
-            raise ValueError(f"Unknown file_type {file_type} of file_id {file_id}")
+        except ValueError as e:
+            raise ValueError(f"Unknown file_type {file_type} of file_id {file_id}") from e
 
         if has_web_location:
             url = String.read(buffer)
@@ -243,10 +242,10 @@ class FileId:
 
             try:
                 thumbnail_source = ThumbnailSource(thumbnail_source)
-            except ValueError:
+            except ValueError as e:
                 raise ValueError(
                     f"Unknown thumbnail_source {thumbnail_source} of file_id {file_id}"
-                )
+                ) from e
 
             if thumbnail_source == ThumbnailSource.LEGACY:
                 secret, local_id = struct.unpack("<qi", buffer.read(12))
@@ -286,13 +285,11 @@ class FileId:
                     local_id=local_id,
                 )
 
-            if thumbnail_source in (
+            if thumbnail_source in {
                 ThumbnailSource.CHAT_PHOTO_SMALL,
                 ThumbnailSource.CHAT_PHOTO_BIG,
-            ):
-                chat_id, chat_access_hash, local_id = struct.unpack(
-                    "<qqi", buffer.read(20)
-                )
+            }:
+                chat_id, chat_access_hash, local_id = struct.unpack("<qqi", buffer.read(20))
 
                 return FileId(
                     major=major,
@@ -339,8 +336,9 @@ class FileId:
                 media_id=media_id,
                 access_hash=access_hash,
             )
+        return None
 
-    def encode(self, *, major: int = None, minor: int = None):
+    def encode(self, *, major: int | None = None, minor: int | None = None):
         major = major if major is not None else self.major
         minor = minor if minor is not None else self.minor
 
@@ -381,10 +379,10 @@ class FileId:
                         self.local_id,
                     )
                 )
-            elif self.thumbnail_source in (
+            elif self.thumbnail_source in {
                 ThumbnailSource.CHAT_PHOTO_SMALL,
                 ThumbnailSource.CHAT_PHOTO_BIG,
-            ):
+            }:
                 buffer.write(
                     struct.pack(
                         "<qqi", self.chat_id, self.chat_access_hash, self.local_id
@@ -426,10 +424,10 @@ class FileUniqueId:
         self,
         *,
         file_unique_type: FileUniqueType,
-        url: str = None,
-        media_id: int = None,
-        volume_id: int = None,
-        local_id: int = None,
+        url: str | None = None,
+        media_id: int | None = None,
+        volume_id: int | None = None,
+        local_id: int | None = None,
     ):
         self.file_unique_type = file_unique_type
         self.url = url
@@ -444,10 +442,10 @@ class FileUniqueId:
 
         try:
             file_unique_type = FileUniqueType(file_unique_type)
-        except ValueError:
+        except ValueError as e:
             raise ValueError(
                 f"Unknown file_unique_type {file_unique_type} of file_unique_id {file_unique_id}"
-            )
+            ) from e
 
         if file_unique_type == FileUniqueType.WEB:
             url = String.read(buffer)

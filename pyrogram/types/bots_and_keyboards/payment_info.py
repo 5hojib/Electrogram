@@ -1,5 +1,5 @@
+from pyrogram import types
 from ..object import Object
-
 
 class PaymentInfo(Object):
     """Contains information about a payment.

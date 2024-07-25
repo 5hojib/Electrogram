@@ -4,7 +4,7 @@ from typing import List
 import pyrogram
 from pyrogram import raw, utils
 from pyrogram import types
-from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType
+from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType, ThumbnailSource
 from ..object import Object
 
 
@@ -57,7 +57,7 @@ class Animation(Object):
         mime_type: str = None,
         file_size: int = None,
         date: datetime = None,
-        thumbs: List["types.Thumbnail"] = None,
+        thumbs: list["types.Thumbnail"] = None,
     ):
         super().__init__(client)
 
@@ -106,7 +106,7 @@ class Animation(Object):
         if isinstance(video, raw.types.Photo):
             if not video.video_sizes:
                 return
-            video_sizes: List[raw.types.VideoSize] = []
+            video_sizes: list[raw.types.VideoSize] = []
             for p in video.video_sizes:
                 if isinstance(p, raw.types.VideoSize):
                     video_sizes.append(p)

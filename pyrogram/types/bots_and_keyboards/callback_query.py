@@ -55,7 +55,7 @@ class CallbackQuery(Object, Update):
         inline_message_id: str = None,
         data: Union[str, bytes] = None,
         game_short_name: str = None,
-        matches: List[Match] = None,
+        matches: list[Match] = None,
     ):
         super().__init__(client)
 

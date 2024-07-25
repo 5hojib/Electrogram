@@ -11,7 +11,7 @@ class GetGameHighScores:
         user_id: Union[int, str],
         chat_id: Union[int, str],
         message_id: int = None,
-    ) -> List["types.GameHighScore"]:
+    ) -> list["types.GameHighScore"]:
         """Get data for high score tables.
 
         .. include:: /_includes/usable-by/bots.rst

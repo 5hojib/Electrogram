@@ -20,7 +20,7 @@ class SendMediaGroup:
     async def send_media_group(
         self: "pyrogram.Client",
         chat_id: Union[int, str],
-        media: List[
+        media: list[
             Union[
                 "types.InputMediaPhoto",
                 "types.InputMediaVideo",
@@ -36,13 +36,13 @@ class SendMediaGroup:
         reply_to_story_id: int = None,
         reply_to_chat_id: Union[int, str] = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
         message_effect_id: int = None,
         invert_media: bool = None,
-    ) -> List["types.Message"]:
+    ) -> list["types.Message"]:
         """Send a group of photos or videos as an album.
 
         .. include:: /_includes/usable-by/users-bots.rst

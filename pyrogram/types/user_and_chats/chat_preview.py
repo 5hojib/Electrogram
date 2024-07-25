@@ -34,7 +34,7 @@ class ChatPreview(Object):
         type: str,
         members_count: int,
         photo: "types.Photo" = None,
-        members: List["types.User"] = None,
+        members: list["types.User"] = None,
     ):
         super().__init__(client)
 

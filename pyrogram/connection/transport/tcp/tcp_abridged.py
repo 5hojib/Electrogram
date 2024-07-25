@@ -10,7 +10,7 @@ class TCPAbridged(TCP):
     def __init__(self, ipv6: bool, proxy: Proxy) -> None:
         super().__init__(ipv6, proxy)
 
-    async def connect(self, address: Tuple[str, int]) -> None:
+    async def connect(self, address: tuple[str, int]) -> None:
         await super().connect(address)
         await super().send(b"\xef")
 

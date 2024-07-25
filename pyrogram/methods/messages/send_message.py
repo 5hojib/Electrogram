@@ -12,7 +12,7 @@ class SendMessage:
         chat_id: Union[int, str],
         text: str,
         parse_mode: Optional["enums.ParseMode"] = None,
-        entities: List["types.MessageEntity"] = None,
+        entities: list["types.MessageEntity"] = None,
         disable_web_page_preview: bool = None,
         disable_notification: bool = None,
         message_thread_id: int = None,
@@ -21,7 +21,7 @@ class SendMessage:
         reply_to_story_id: int = None,
         reply_to_chat_id: int = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
         invert_media: bool = None,
@@ -114,7 +114,7 @@ class SendMessage:
                 await app.send_message("me", "Message sent with **Pyrogram**!")
 
                 # Disable web page previews
-                await app.send_message("me", "https://pyrofork.mayuri.my.id",
+                await app.send_message("me", "https://github.com",
                     disable_web_page_preview=True)
 
                 # Reply to a message using its id
@@ -138,7 +138,7 @@ class SendMessage:
                     reply_markup=InlineKeyboardMarkup(
                         [
                             [InlineKeyboardButton("Data", callback_data="callback_data")],
-                            [InlineKeyboardButton("Docs", url="https://pyrofork.mayuri.my.id")]
+                            [InlineKeyboardButton("Docs", url="https://github.com")]
                         ]))
         """
 

@@ -37,7 +37,7 @@ class InputReplyToMessage(Object):
             "raw.types.InputPeerChannel", "raw.types.InputPeerUser"
         ] = None,
         quote_text: str = None,
-        quote_entities: List["raw.base.MessageEntity"] = None,
+        quote_entities: list["raw.base.MessageEntity"] = None,
     ):
         super().__init__()
 

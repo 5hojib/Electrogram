@@ -7,14 +7,14 @@ from pyrogram import raw
 class ArchiveChats:
     async def archive_chats(
         self: "pyrogram.Client",
-        chat_ids: Union[int, str, List[Union[int, str]]],
+        chat_ids: Union[int, str, list[Union[int, str]]],
     ) -> bool:
         """Archive one or more chats.
 
         .. include:: /_includes/usable-by/users.rst
 
         Parameters:
-            chat_ids (``int`` | ``str`` | List[``int``, ``str``]):
+            chat_ids (``int`` | ``str`` | list[``int``, ``str``]):
                 Unique identifier (int) or username (str) of the target chat.
                 You can also pass a list of ids (int) or usernames (str).
                 You can also use chat public link in form of *t.me/<username>* (str).

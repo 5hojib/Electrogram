@@ -13,7 +13,7 @@ class EditMessageText:
         message_id: int,
         text: str,
         parse_mode: Optional["enums.ParseMode"] = None,
-        entities: List["types.MessageEntity"] = None,
+        entities: list["types.MessageEntity"] = None,
         disable_web_page_preview: bool = None,
         invert_media: bool = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,

@@ -38,13 +38,13 @@ class Giveaway(Object):
         self,
         *,
         client: "pyrogram.Client" = None,
-        chats: List["types.Chat"],
+        chats: list["types.Chat"],
         quantity: int,
         months: int,
         expire_date: datetime,
         new_subscribers: bool,
-        allowed_countries: List[str] = None,
-        private_channel_ids: List[int] = None,
+        allowed_countries: list[str] = None,
+        private_channel_ids: list[int] = None,
     ):
         super().__init__(client)
 

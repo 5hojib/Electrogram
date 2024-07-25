@@ -200,7 +200,7 @@ class Chat(Object):
         first_name: str = None,
         last_name: str = None,
         photo: "types.ChatPhoto" = None,
-        stories: List["types.Story"] = None,
+        stories: list["types.Story"] = None,
         wallpaper: "types.Document" = None,
         bio: str = None,
         description: str = None,
@@ -213,13 +213,13 @@ class Chat(Object):
         can_set_sticker_set: bool = None,
         members_count: int = None,
         slow_mode_delay: int = None,
-        restrictions: List["types.Restriction"] = None,
+        restrictions: list["types.Restriction"] = None,
         permissions: "types.ChatPermissions" = None,
         distance: int = None,
         linked_chat: "types.Chat" = None,
         send_as_chat: "types.Chat" = None,
         available_reactions: Optional["types.ChatReactions"] = None,
-        usernames: List["types.Username"] = None,
+        usernames: list["types.Username"] = None,
         reply_color: "types.ChatColor" = None,
         profile_color: "types.ChatColor" = None,
         business_info: "types.BusinessInfo" = None,
@@ -1163,7 +1163,7 @@ class Chat(Object):
 
     async def add_members(
         self,
-        user_ids: Union[Union[int, str], List[Union[int, str]]],
+        user_ids: Union[Union[int, str], list[Union[int, str]]],
         forward_limit: int = 100,
     ) -> bool:
         """Bound method *add_members* of :obj:`~pyrogram.types.Chat`.

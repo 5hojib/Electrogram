@@ -21,7 +21,7 @@ class InputMedia(Object):
         media: Union[str, BinaryIO],
         caption: str = "",
         parse_mode: str = None,
-        caption_entities: List[MessageEntity] = None,
+        caption_entities: list[MessageEntity] = None,
     ):
         super().__init__()
 

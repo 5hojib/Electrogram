@@ -14,7 +14,7 @@ class SendInlineBotResult:
         message_thread_id: int = None,
         reply_to_message_id: int = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
     ) -> "raw.base.Updates":
         """Send an inline bot result.

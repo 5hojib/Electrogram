@@ -14,7 +14,7 @@ class TCPFull(TCP):
 
         self.seq_no: Optional[int] = None
 
-    async def connect(self, address: Tuple[str, int]) -> None:
+    async def connect(self, address: tuple[str, int]) -> None:
         await super().connect(address)
         self.seq_no = 0
 

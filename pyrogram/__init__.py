@@ -30,6 +30,7 @@ __all__ = [
     "StopTransmission",
     "compose",
     "crypto_executor",
+    "emoji",
     "enums",
     "errors",
     "filters",

@@ -13,7 +13,7 @@ class SendWebPage:
         url: str,
         text: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        entities: List["types.MessageEntity"] = None,
+        entities: list["types.MessageEntity"] = None,
         large_media: bool = None,
         invert_media: bool = None,
         disable_notification: bool = None,
@@ -23,7 +23,7 @@ class SendWebPage:
         reply_to_story_id: int = None,
         reply_to_chat_id: Union[int, str] = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
         reply_markup: Union[
@@ -110,7 +110,7 @@ class SendWebPage:
         Example:
             .. code-block:: python
 
-                await app.send_web_page("me", "https://github.com/Mayuri-Chan/pyrofork")
+                await app.send_web_page("me", "https://github.com")
 
         """
 

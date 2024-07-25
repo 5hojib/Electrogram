@@ -18,7 +18,7 @@ class TCPIntermediateO(TCP):
         self.encrypt = None
         self.decrypt = None
 
-    async def connect(self, address: Tuple[str, int]) -> None:
+    async def connect(self, address: tuple[str, int]) -> None:
         await super().connect(address)
 
         while True:

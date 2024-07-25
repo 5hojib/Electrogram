@@ -9,7 +9,7 @@ from pyrogram import types
 class GetUsers:
     async def get_users(
         self: "pyrogram.Client", user_ids: Union[int, str, Iterable[Union[int, str]]]
-    ) -> Union["types.User", List["types.User"]]:
+    ) -> Union["types.User", list["types.User"]]:
         """Get information about a user.
         You can retrieve up to 200 users at once.
 

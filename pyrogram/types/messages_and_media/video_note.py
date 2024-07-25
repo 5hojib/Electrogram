@@ -46,7 +46,7 @@ class VideoNote(Object):
         file_unique_id: str,
         length: int,
         duration: int,
-        thumbs: List["types.Thumbnail"] = None,
+        thumbs: list["types.Thumbnail"] = None,
         mime_type: str = None,
         file_size: int = None,
         date: datetime = None,

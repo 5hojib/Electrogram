@@ -11,13 +11,13 @@ class CopyMediaGroup:
         chat_id: Union[int, str],
         from_chat_id: Union[int, str],
         message_id: int,
-        captions: Union[List[str], str] = None,
+        captions: Union[list[str], str] = None,
         disable_notification: bool = None,
         message_thread_id: int = None,
         reply_to_message_id: int = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
-    ) -> List["types.Message"]:
+    ) -> list["types.Message"]:
         """Copy a media group by providing one of the message ids.
 
         .. include:: /_includes/usable-by/users-bots.rst

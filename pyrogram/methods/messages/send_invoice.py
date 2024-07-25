@@ -11,7 +11,7 @@ class SendInvoice:
         title: str,
         description: str,
         currency: str,
-        prices: List["types.LabeledPrice"],
+        prices: list["types.LabeledPrice"],
         provider: str = None,
         provider_data: str = None,
         payload: str = None,
@@ -23,7 +23,7 @@ class SendInvoice:
         reply_to_message_id: int = None,
         message_thread_id: int = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
     ):
         """Use this method to send invoices.

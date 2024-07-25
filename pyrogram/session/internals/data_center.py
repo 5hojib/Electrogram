@@ -41,7 +41,7 @@ class DataCenter:
 
     def __new__(
         cls, dc_id: int, test_mode: bool, ipv6: bool, alt_port: bool, media: bool
-    ) -> Tuple[str, int]:
+    ) -> tuple[str, int]:
         if test_mode:
             if ipv6:
                 ip = cls.TEST_IPV6[dc_id]

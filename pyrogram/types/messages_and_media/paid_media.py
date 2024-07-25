@@ -20,7 +20,7 @@ class PaidMedia(Object):
         self,
         *,
         stars_amount: int,
-        extended_media: List[
+        extended_media: list[
             Union[
                 "types.Animation",
                 "types.ExtendedMediaPreview",

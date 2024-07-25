@@ -33,7 +33,7 @@ class MessageReactionCountUpdated(Object, Update):
         chat: "types.Chat",
         message_id: int,
         date: datetime,
-        reactions: List["types.ReactionCount"],
+        reactions: list["types.ReactionCount"],
     ):
         super().__init__(client)
 
@@ -48,7 +48,7 @@ class MessageReactionCountUpdated(Object, Update):
         update: "raw.types.UpdateBotMessageReactions",
         users: Dict[int, "raw.types.User"],
         chats: Dict[int, "raw.types.Chat"],
-    ) -> "MessageReactionUpdated":
+    ) -> "MessageReactionCountUpdated":
         chat = None
         peer_id = utils.get_peer_id(update.peer)
         raw_peer_id = utils.get_raw_peer_id(update.peer)

@@ -28,7 +28,7 @@ class PollOption(Object):
         text: str,
         voter_count: int = 0,
         data: bytes = None,
-        entities: Optional[List["pyrogram.types.MessageEntity"]] = None,
+        entities: Optional[list["pyrogram.types.MessageEntity"]] = None,
     ):
         super().__init__(client)
 

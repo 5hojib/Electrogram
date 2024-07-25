@@ -16,7 +16,7 @@ class SendPaidMedia:
         self: "pyrogram.Client",
         chat_id: Union[int, str],
         stars_amount: int,
-        media: List[
+        media: list[
             Union[
                 "types.InputMediaAnimation",
                 "types.InputMediaPhoto",
@@ -24,7 +24,7 @@ class SendPaidMedia:
             ]
         ],
         caption: str = "",
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
         disable_notification: bool = None,
         schedule_date: datetime = None,
