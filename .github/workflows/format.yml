@@ -35,5 +35,6 @@ jobs:
         else
           git commit -m "Auto-format code using ruff [skip actions]"
           git push origin ${{ github.ref }}
+        fi
       env:
         GITHUB_TOKEN: ${{ secrets.GX_TOKEN }}
