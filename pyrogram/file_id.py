@@ -216,7 +216,9 @@ class FileId:
         try:
             file_type = FileType(file_type)
         except ValueError as e:
-            raise ValueError(f"Unknown file_type {file_type} of file_id {file_id}") from e
+            raise ValueError(
+                f"Unknown file_type {file_type} of file_id {file_id}"
+            ) from e
 
         if has_web_location:
             url = String.read(buffer)
@@ -289,7 +291,9 @@ class FileId:
                 ThumbnailSource.CHAT_PHOTO_SMALL,
                 ThumbnailSource.CHAT_PHOTO_BIG,
             }:
-                chat_id, chat_access_hash, local_id = struct.unpack("<qqi", buffer.read(20))
+                chat_id, chat_access_hash, local_id = struct.unpack(
+                    "<qqi", buffer.read(20)
+                )
 
                 return FileId(
                     major=major,
