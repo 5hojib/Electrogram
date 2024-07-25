@@ -11,6 +11,29 @@ class GetDiscussionReplies:
         message_id: int,
         limit: int = 0,
     ) -> Optional[AsyncGenerator["types.Message", None]]:
+        """Get the message replies of a discussion thread.
+
+        .. include:: /_includes/usable-by/users.rst
+
+        Parameters:
+            chat_id (``int`` | ``str``):
+                Unique identifier (int) or username (str) of the target chat.
+                You can also use chat public link in form of *t.me/<username>* (str).
+
+            message_id (``int``):
+                Message id.
+
+            limit (``int``, *optional*):
+                Limits the number of messages to be retrieved.
+                By default, no limit is applied and all messages are returned.
+
+        Example:
+            .. code-block:: python
+
+                async for message in app.get_discussion_replies(chat_id, message_id):
+                    print(message)
+        """
+
         current = 0
         total = limit or (1 << 31) - 1
         limit = min(100, total)
@@ -26,7 +49,7 @@ class GetDiscussionReplies:
                     limit=limit,
                     max_id=0,
                     min_id=0,
-                    hash=0,
+                    hash=0
                 )
             )
 

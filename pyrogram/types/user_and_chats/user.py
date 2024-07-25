@@ -3,7 +3,9 @@ from datetime import datetime
 from typing import List, Optional
 
 import pyrogram
-from pyrogram import enums, utils, raw, types
+from pyrogram import enums, utils
+from pyrogram import raw
+from pyrogram import types
 from ..object import Object
 from ..update import Update
 
@@ -40,6 +42,112 @@ class Link(str):
 
 
 class User(Object, Update):
+    """A Telegram user or bot.
+
+    Parameters:
+        id (``int``):
+            Unique identifier for this user or bot.
+
+        is_self(``bool``, *optional*):
+            True, if this user is you yourself.
+
+        is_contact(``bool``, *optional*):
+            True, if this user is in your contacts.
+
+        is_mutual_contact(``bool``, *optional*):
+            True, if you both have each other's contact.
+
+        is_deleted(``bool``, *optional*):
+            True, if this user is deleted.
+
+        is_bot (``bool``, *optional*):
+            True, if this user is a bot.
+
+        is_verified (``bool``, *optional*):
+            True, if this user has been verified by Telegram.
+
+        is_restricted (``bool``, *optional*):
+            True, if this user has been restricted. Bots only.
+            See *restriction_reason* for details.
+
+        is_scam (``bool``, *optional*):
+            True, if this user has been flagged for scam.
+
+        is_fake (``bool``, *optional*):
+            True, if this user has been flagged for impersonation.
+
+        is_support (``bool``, *optional*):
+            True, if this user is part of the Telegram support team.
+
+        is_premium (``bool``, *optional*):
+            True, if this user is a premium user.
+
+        is_contacts_only (``bool``, *optional*):
+            True, if this user is only allow incoming message from users in their contacts/premium users.
+
+        is_bot_business (``bool``, *optional*):
+            True, if this bot can connect to business account.
+
+        first_name (``str``, *optional*):
+            User's or bot's first name.
+
+        last_name (``str``, *optional*):
+            User's or bot's last name.
+
+        status (:obj:`~pyrogram.enums.UserStatus`, *optional*):
+            User's last seen & online status. ``None``, for bots.
+
+        last_online_date (:py:obj:`~datetime.datetime`, *optional*):
+            Last online date of a user. Only available in case status is :obj:`~pyrogram.enums.UserStatus.OFFLINE`.
+
+        next_offline_date (:py:obj:`~datetime.datetime`, *optional*):
+            Date when a user will automatically go offline. Only available in case status is :obj:`~pyrogram.enums.UserStatus.ONLINE`.
+
+        username (``str``, *optional*):
+            User's or bot's username.
+
+        usernames (List of :obj:`~pyrogram.types.Username`, *optional*):
+            List of all chat (fragment) usernames; for private chats, supergroups and channels.
+            Returned only in :meth:`~pyrogram.Client.get_chat`.
+
+        language_code (``str``, *optional*):
+            IETF language tag of the user's language.
+
+        emoji_status (:obj:`~pyrogram.types.EmojiStatus`, *optional*):
+            Emoji status.
+
+        dc_id (``int``, *optional*):
+            User's or bot's assigned DC (data center). Available only in case the user has set a public profile photo.
+            Note that this information is approximate; it is based on where Telegram stores a user profile pictures and
+            does not by any means tell you the user location (i.e. a user might travel far away, but will still connect
+            to its assigned DC). More info at `FAQs </faq#what-are-the-ip-addresses-of-telegram-data-centers>`_.
+
+        phone_number (``str``, *optional*):
+            User's phone number.
+
+        photo (:obj:`~pyrogram.types.ChatPhoto`, *optional*):
+            User's or bot's current profile photo. Suitable for downloads only.
+
+        restrictions (List of :obj:`~pyrogram.types.Restriction`, *optional*):
+            The list of reasons why this bot might be unavailable to some users.
+            This field is available only in case *is_restricted* is True.
+
+        full_name (``str``, *optional*):
+            User's or bot's full name.
+
+        mention (``str``, *property*):
+            Generate a text mention for this user.
+            You can use ``user.mention()`` to mention the user using their first name (styled using html), or
+            ``user.mention("another name")`` for a custom name. To choose a different style
+            ("html" or "md"/"markdown") use ``user.mention(style="md")``.
+
+        reply_color (:obj:`~pyrogram.types.ChatColor`, *optional*)
+            Chat reply color.
+
+        profile_color (:obj:`~pyrogram.types.ChatColor`, *optional*)
+            Chat profile color.
+    """
+
     def __init__(
         self,
         *,
@@ -57,6 +165,7 @@ class User(Object, Update):
         is_support: bool = None,
         is_premium: bool = None,
         is_contacts_only: bool = None,
+        is_bot_business: bool = None,
         first_name: str = None,
         last_name: str = None,
         status: "enums.UserStatus" = None,
@@ -71,7 +180,7 @@ class User(Object, Update):
         photo: "types.ChatPhoto" = None,
         restrictions: List["types.Restriction"] = None,
         reply_color: "types.ChatColor" = None,
-        profile_color: "types.ChatColor" = None,
+        profile_color: "types.ChatColor" = None
     ):
         super().__init__(client)
 
@@ -88,6 +197,7 @@ class User(Object, Update):
         self.is_support = is_support
         self.is_premium = is_premium
         self.is_contacts_only = is_contacts_only
+        self.is_bot_business = is_bot_business
         self.first_name = first_name
         self.last_name = last_name
         self.status = status
@@ -113,7 +223,7 @@ class User(Object, Update):
         return Link(
             f"tg://user?id={self.id}",
             self.first_name or "Deleted Account",
-            self._client.parse_mode,
+            self._client.parse_mode
         )
 
     @staticmethod
@@ -148,6 +258,7 @@ class User(Object, Update):
             is_support=user.support,
             is_premium=user.premium,
             is_contacts_only=user.contact_require_premium,
+            is_bot_business=user.bot_business,
             first_name=user.first_name,
             last_name=user.last_name,
             **User._parse_status(user.status, user.bot),
@@ -158,15 +269,10 @@ class User(Object, Update):
             dc_id=getattr(user.photo, "dc_id", None),
             phone_number=user.phone,
             photo=types.ChatPhoto._parse(client, user.photo, user.id, user.access_hash),
-            restrictions=types.List(
-                [types.Restriction._parse(r) for r in user.restriction_reason]
-            )
-            or None,
+            restrictions=types.List([types.Restriction._parse(r) for r in user.restriction_reason]) or None,
             reply_color=types.ChatColor._parse(getattr(user, "color", None)),
-            profile_color=types.ChatColor._parse_profile_color(
-                getattr(user, "profile_color", None)
-            ),
-            client=client,
+            profile_color=types.ChatColor._parse_profile_color(getattr(user, "profile_color", None)),
+            client=client
         )
 
     @staticmethod
@@ -199,7 +305,7 @@ class User(Object, Update):
         return {
             "status": status,
             "last_online_date": last_online_date,
-            "next_offline_date": next_offline_date,
+            "next_offline_date": next_offline_date
         }
 
     @staticmethod
@@ -207,29 +313,206 @@ class User(Object, Update):
         return User(
             id=user_status.user_id,
             **User._parse_status(user_status.status),
-            client=client,
+            client=client
         )
 
     def listen(self, *args, **kwargs):
+        """Bound method *listen* of :obj:`~pyrogram.types.User`.
+
+        Use as a shortcut for:
+
+        .. code-block:: python
+
+            client.wait_for_message(user_id)
+
+        Parameters:
+            args (*optional*):
+                The arguments to pass to the :meth:`~pyrogram.Client.listen` method.
+
+            kwargs (*optional*):
+                The keyword arguments to pass to the :meth:`~pyrogram.Client.listen` method.
+
+        Example:
+            .. code-block:: python
+
+                user.listen()
+
+        Returns:
+            :obj:`~pyrogram.types.Message`: On success, the reply message is returned.
+        Raises:
+            RPCError: In case of a Telegram RPC error.
+            asyncio.TimeoutError: In case reply not received within the timeout.
+        """
         return self._client.listen(*args, user_id=self.id, **kwargs)
 
     def ask(self, text, *args, **kwargs):
+        """Bound method *ask* of :obj:`~pyrogram.types.User`.
+        
+        Use as a shortcut for:
+
+        .. code-block:: python
+
+            client.send_message(user_id, "What is your name?")
+
+            client.wait_for_message(user_id)
+
+        Parameters:
+            text (``str``):
+                Text of the message to be sent.
+
+            args:
+                The arguments to pass to the :meth:`~pyrogram.Client.listen` method.
+
+            kwargs:
+                The keyword arguments to pass to the :meth:`~pyrogram.Client.listen` method.
+
+        Example:
+            .. code-block:: python
+
+                user.ask("What is your name?")
+
+        Returns:
+            :obj:`~pyrogram.types.Message`: On success, the reply message is returned.
+        Raises:
+            RPCError: In case of a Telegram RPC error.
+            asyncio.TimeoutError: In case reply not received within the timeout.
+        """
         return self._client.ask(self.id, text, *args, user_id=self.id, **kwargs)
 
     def stop_listening(self, *args, **kwargs):
+        """Bound method *stop_listening* of :obj:`~pyrogram.types.User`.
+        
+        Use as a shortcut for:
+
+        .. code-block:: python
+
+            client.stop_listening(user_id=user_id)
+
+        Parameters:
+            args (*optional*):
+                The arguments to pass to the :meth:`~pyrogram.Client.listen` method.
+
+            kwargs (*optional*):
+                The keyword arguments to pass to the :meth:`~pyrogram.Client.listen` method.
+
+        Example:
+            .. code-block:: python
+
+                user.stop_listen()
+        """
         return self._client.stop_listening(*args, user_id=self.id, **kwargs)
 
     async def archive(self):
+        """Bound method *archive* of :obj:`~pyrogram.types.User`.
+
+        Use as a shortcut for:
+
+        .. code-block:: python
+
+            await client.archive_chats(123456789)
+
+        Example:
+            .. code-block:: python
+
+               await user.archive()
+
+        Returns:
+            True on success.
+
+        Raises:
+            RPCError: In case of a Telegram RPC error.
+        """
+
         return await self._client.archive_chats(self.id)
 
     async def unarchive(self):
+        """Bound method *unarchive* of :obj:`~pyrogram.types.User`.
+
+        Use as a shortcut for:
+
+        .. code-block:: python
+
+            await client.unarchive_chats(123456789)
+
+        Example:
+            .. code-block:: python
+
+                await user.unarchive()
+
+        Returns:
+            True on success.
+
+        Raises:
+            RPCError: In case of a Telegram RPC error.
+        """
+
         return await self._client.unarchive_chats(self.id)
 
     def block(self):
+        """Bound method *block* of :obj:`~pyrogram.types.User`.
+
+        Use as a shortcut for:
+
+        .. code-block:: python
+
+            await client.block_user(123456789)
+
+        Example:
+            .. code-block:: python
+
+                await user.block()
+
+        Returns:
+            True on success.
+
+        Raises:
+            RPCError: In case of a Telegram RPC error.
+        """
+
         return self._client.block_user(self.id)
 
     def unblock(self):
+        """Bound method *unblock* of :obj:`~pyrogram.types.User`.
+
+        Use as a shortcut for:
+
+        .. code-block:: python
+
+            client.unblock_user(123456789)
+
+        Example:
+            .. code-block:: python
+
+                user.unblock()
+
+        Returns:
+            True on success.
+
+        Raises:
+            RPCError: In case of a Telegram RPC error.
+        """
+
         return self._client.unblock_user(self.id)
 
     def get_common_chats(self):
+        """Bound method *get_common_chats* of :obj:`~pyrogram.types.User`.
+
+        Use as a shortcut for:
+
+        .. code-block:: python
+
+            client.get_common_chats(123456789)
+
+        Example:
+            .. code-block:: python
+
+                user.get_common_chats()
+
+        Returns:
+            True on success.
+
+        Raises:
+            RPCError: In case of a Telegram RPC error.
+        """
+
         return self._client.get_common_chats(self.id)

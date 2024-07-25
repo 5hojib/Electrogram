@@ -9,6 +9,32 @@ from ..update import Update
 
 
 class ChosenInlineResult(Object, Update):
+    """A :doc:`result <InlineQueryResult>` of an inline query chosen by the user and sent to their chat partner.
+
+    .. note::
+
+        In order to receive these updates, your bot must have "inline feedback" enabled. You can enable this feature
+        with `@BotFather <https://t.me/botfather>`_.
+
+    Parameters:
+        result_id (``str``):
+            The unique identifier for the result that was chosen.
+
+        from_user (:obj:`~pyrogram.types.User`):
+            The user that chose the result.
+
+        query (``str``):
+            The query that was used to obtain the result.
+
+        location (:obj:`~pyrogram.types.Location`, *optional*):
+            Sender location, only for bots that require user location.
+
+        inline_message_id (``str``, *optional*):
+            Identifier of the sent inline message.
+            Available only if there is an :doc:`inline keyboard <InlineKeyboardMarkup>` attached to the message.
+            Will be also received in :doc:`callback queries <CallbackQuery>` and can be used to edit the message.
+    """
+
     def __init__(
         self,
         *,
@@ -17,7 +43,7 @@ class ChosenInlineResult(Object, Update):
         from_user: "types.User",
         query: str,
         location: "types.Location" = None,
-        inline_message_id: str = None,
+        inline_message_id: str = None
     ):
         super().__init__(client)
 
@@ -28,25 +54,19 @@ class ChosenInlineResult(Object, Update):
         self.inline_message_id = inline_message_id
 
     @staticmethod
-    def _parse(
-        client, chosen_inline_result: raw.types.UpdateBotInlineSend, users
-    ) -> "ChosenInlineResult":
+    def _parse(client, chosen_inline_result: raw.types.UpdateBotInlineSend, users) -> "ChosenInlineResult":
         inline_message_id = None
 
         if isinstance(chosen_inline_result.msg_id, raw.types.InputBotInlineMessageID):
-            inline_message_id = (
-                b64encode(
-                    pack(
-                        "<iqq",
-                        chosen_inline_result.msg_id.dc_id,
-                        chosen_inline_result.msg_id.id,
-                        chosen_inline_result.msg_id.access_hash,
-                    ),
-                    b"-_",
-                )
-                .decode()
-                .rstrip("=")
-            )
+            inline_message_id = b64encode(
+                pack(
+                    "<iqq",
+                    chosen_inline_result.msg_id.dc_id,
+                    chosen_inline_result.msg_id.id,
+                    chosen_inline_result.msg_id.access_hash
+                ),
+                b"-_"
+            ).decode().rstrip("=")
 
         return ChosenInlineResult(
             result_id=str(chosen_inline_result.id),
@@ -55,9 +75,7 @@ class ChosenInlineResult(Object, Update):
             location=types.Location(
                 longitude=chosen_inline_result.geo.long,
                 latitude=chosen_inline_result.geo.lat,
-                client=client,
-            )
-            if chosen_inline_result.geo
-            else None,
-            inline_message_id=inline_message_id,
+                client=client
+            ) if chosen_inline_result.geo else None,
+            inline_message_id=inline_message_id
         )

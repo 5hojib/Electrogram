@@ -35,6 +35,17 @@ class Storage:
 
     @abstractmethod
     async def update_state(self, update_state: Tuple[int, int, int, int, int] = object):
+        """Get or set the update state of the current session.
+
+        Parameters:
+            update_state (``Tuple[int, int, int, int, int]``): A tuple containing the update state to set.
+                Tuple must contain the following information:
+                - ``int``: The id of the entity.
+                - ``int``: The pts.
+                - ``int``: The qts.
+                - ``int``: The date.
+                - ``int``: The seq.
+        """
         raise NotImplementedError
 
     async def get_peer_by_id(self, peer_id: int):
@@ -75,7 +86,7 @@ class Storage:
             await self.test_mode(),
             await self.auth_key(),
             await self.user_id(),
-            await self.is_bot(),
+            await self.is_bot()
         )
 
         return base64.urlsafe_b64encode(packed).decode().rstrip("=")

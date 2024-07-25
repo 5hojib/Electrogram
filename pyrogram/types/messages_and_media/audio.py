@@ -9,6 +9,41 @@ from ..object import Object
 
 
 class Audio(Object):
+    """An audio file to be treated as music by the Telegram clients.
+
+    Parameters:
+        file_id (``str``):
+            Identifier for this file, which can be used to download or reuse the file.
+
+        file_unique_id (``str``):
+            Unique identifier for this file, which is supposed to be the same over time and for different accounts.
+            Can't be used to download or reuse the file.
+
+        duration (``int``):
+            Duration of the audio in seconds as defined by sender.
+
+        performer (``str``, *optional*):
+            Performer of the audio as defined by sender or by audio tags.
+
+        title (``str``, *optional*):
+            Title of the audio as defined by sender or by audio tags.
+
+        file_name (``str``, *optional*):
+            Audio file name.
+
+        mime_type (``str``, *optional*):
+            MIME type of the file as defined by sender.
+
+        file_size (``int``, *optional*):
+            File size.
+
+        date (:py:obj:`~datetime.datetime`, *optional*):
+            Date the audio was originally sent.
+
+        thumbs (List of :obj:`~pyrogram.types.Thumbnail`, *optional*):
+            Thumbnails of the music file album cover.
+    """
+
     def __init__(
         self,
         *,
@@ -22,7 +57,7 @@ class Audio(Object):
         mime_type: str = None,
         file_size: int = None,
         date: datetime = None,
-        thumbs: List["types.Thumbnail"] = None,
+        thumbs: List["types.Thumbnail"] = None
     ):
         super().__init__(client)
 
@@ -42,7 +77,7 @@ class Audio(Object):
         client,
         audio: "raw.types.Document",
         audio_attributes: "raw.types.DocumentAttributeAudio",
-        file_name: str,
+        file_name: str
     ) -> "Audio":
         return Audio(
             file_id=FileId(
@@ -50,10 +85,11 @@ class Audio(Object):
                 dc_id=audio.dc_id,
                 media_id=audio.id,
                 access_hash=audio.access_hash,
-                file_reference=audio.file_reference,
+                file_reference=audio.file_reference
             ).encode(),
             file_unique_id=FileUniqueId(
-                file_unique_type=FileUniqueType.DOCUMENT, media_id=audio.id
+                file_unique_type=FileUniqueType.DOCUMENT,
+                media_id=audio.id
             ).encode(),
             duration=audio_attributes.duration,
             performer=audio_attributes.performer,
@@ -63,5 +99,5 @@ class Audio(Object):
             file_name=file_name,
             date=utils.timestamp_to_datetime(audio.date),
             thumbs=types.Thumbnail._parse(client, audio),
-            client=client,
+            client=client
         )

@@ -7,6 +7,43 @@ from ...file_id import FileId
 
 
 class InlineQueryResultCachedVideo(InlineQueryResult):
+    """A link to a video file stored on the Telegram servers.
+
+    By default, this video file will be sent by the user with an optional caption.
+    Alternatively, you can use *input_message_content* to send a message with the specified content instead of the
+    video.
+
+    Parameters:
+        video_file_id (``str``):
+            A valid file identifier for the video file.
+
+        title (``str``):
+            Title for the result.
+
+        id (``str``, *optional*):
+            Unique identifier for this result, 1-64 bytes.
+            Defaults to a randomly generated UUID4.
+
+        description (``str``, *optional*):
+            Short description of the result.
+
+        caption (``str``, *optional*):
+            Caption of the photo to be sent, 0-1024 characters.
+
+        parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+            By default, texts are parsed using both Markdown and HTML styles.
+            You can combine both syntaxes together.
+
+        caption_entities (List of :obj:`~pyrogram.types.MessageEntity`):
+            List of special entities that appear in the caption, which can be specified instead of *parse_mode*.
+
+        reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup`, *optional*):
+            An InlineKeyboardMarkup object.
+
+        input_message_content (:obj:`~pyrogram.types.InputMessageContent`):
+            Content of the message to be sent instead of the photo.
+    """
+
     def __init__(
         self,
         video_file_id: str,
@@ -17,7 +54,7 @@ class InlineQueryResultCachedVideo(InlineQueryResult):
         parse_mode: Optional["enums.ParseMode"] = None,
         caption_entities: List["types.MessageEntity"] = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        input_message_content: "types.InputMessageContent" = None,
+        input_message_content: "types.InputMessageContent" = None
     ):
         super().__init__("video", id, input_message_content, reply_markup)
 
@@ -31,11 +68,9 @@ class InlineQueryResultCachedVideo(InlineQueryResult):
         self.input_message_content = input_message_content
 
     async def write(self, client: "pyrogram.Client"):
-        message, entities = (
-            await utils.parse_text_entities(
-                client, self.caption, self.parse_mode, self.caption_entities
-            )
-        ).values()
+        message, entities = (await utils.parse_text_entities(
+            client, self.caption, self.parse_mode, self.caption_entities
+        )).values()
 
         file_id = FileId.decode(self.video_file_id)
 
@@ -53,11 +88,9 @@ class InlineQueryResultCachedVideo(InlineQueryResult):
                 await self.input_message_content.write(client, self.reply_markup)
                 if self.input_message_content
                 else raw.types.InputBotInlineMessageMediaAuto(
-                    reply_markup=await self.reply_markup.write(client)
-                    if self.reply_markup
-                    else None,
+                    reply_markup=await self.reply_markup.write(client) if self.reply_markup else None,
                     message=message,
-                    entities=entities,
+                    entities=entities
                 )
-            ),
+            )
         )

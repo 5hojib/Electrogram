@@ -16,6 +16,55 @@ class SetChatPhoto:
         video: Union[str, BinaryIO] = None,
         video_start_ts: float = None,
     ) -> bool:
+        """Set a new chat photo or video (H.264/MPEG-4 AVC video, max 5 seconds).
+
+        The ``photo`` and ``video`` arguments are mutually exclusive.
+        Pass either one as named argument (see examples below).
+
+        You must be an administrator in the chat for this to work and must have the appropriate admin rights.
+
+        .. include:: /_includes/usable-by/users-bots.rst
+
+        Parameters:
+            chat_id (``int`` | ``str``):
+                Unique identifier (int) or username (str) of the target chat.
+                You can also use chat public link in form of *t.me/<username>* (str).
+
+            photo (``str`` | ``BinaryIO``, *optional*):
+                New chat photo. You can pass a :obj:`~pyrogram.types.Photo` file_id, a file path to upload a new photo
+                from your local machine or a binary file-like object with its attribute
+                ".name" set for in-memory uploads.
+
+            video (``str`` | ``BinaryIO``, *optional*):
+                New chat video. You can pass a :obj:`~pyrogram.types.Video` file_id, a file path to upload a new video
+                from your local machine or a binary file-like object with its attribute
+                ".name" set for in-memory uploads.
+
+            video_start_ts (``float``, *optional*):
+                The timestamp in seconds of the video frame to use as photo profile preview.
+
+        Returns:
+            ``bool``: True on success.
+
+        Raises:
+            ValueError: if a chat_id belongs to user.
+
+        Example:
+            .. code-block:: python
+
+                # Set chat photo using a local file
+                await app.set_chat_photo(chat_id, photo="photo.jpg")
+
+                # Set chat photo using an existing Photo file_id
+                await app.set_chat_photo(chat_id, photo=photo.file_id)
+
+
+                # Set chat video using a local file
+                await app.set_chat_photo(chat_id, video="video.mp4")
+
+                # Set chat photo using an existing Video file_id
+                await app.set_chat_photo(chat_id, video=video.file_id)
+        """
         peer = await self.resolve_peer(chat_id)
 
         if isinstance(photo, str):
@@ -44,7 +93,10 @@ class SetChatPhoto:
             )
         elif isinstance(peer, raw.types.InputPeerChannel):
             await self.invoke(
-                raw.functions.channels.EditPhoto(channel=peer, photo=photo)
+                raw.functions.channels.EditPhoto(
+                    channel=peer,
+                    photo=photo
+                )
             )
         else:
             raise ValueError(f'The chat_id "{chat_id}" belongs to a user')

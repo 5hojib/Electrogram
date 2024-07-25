@@ -4,7 +4,19 @@ from ..object import Object
 
 
 class InputMediaArea(Object):
-    def __init__(self, coordinates: "types.MediaAreaCoordinates"):
+    """Content of a media area to be included in story.
+
+    Pyrofork currently supports the following types:
+
+    - :obj:`~pyrogram.types.InputMediaAreaChannelPost`
+    """
+
+    # TODO: InputMediaAreaVenue
+
+    def __init__(
+        self,
+        coordinates: "types.MediaAreaCoordinates"
+    ):
         super().__init__()
 
         self.coordinates = coordinates

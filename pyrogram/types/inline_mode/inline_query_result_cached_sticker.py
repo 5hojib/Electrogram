@@ -5,12 +5,32 @@ from ...file_id import FileId
 
 
 class InlineQueryResultCachedSticker(InlineQueryResult):
+    """A link to a sticker stored on the Telegram servers
+
+    By default, this sticker will be sent by the user. Alternatively, you can use *input_message_content* to send a
+    message with the specified content instead of the sticker.
+
+    Parameters:
+        sticker_file_id (``str``):
+            A valid file identifier of the sticker.
+
+        id (``str``, *optional*):
+            Unique identifier for this result, 1-64 bytes.
+            Defaults to a randomly generated UUID4.
+
+        reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup`, *optional*):
+            An InlineKeyboardMarkup object.
+
+        input_message_content (:obj:`~pyrogram.types.InputMessageContent`):
+            Content of the message to be sent instead of the photo.
+    """
+
     def __init__(
         self,
         sticker_file_id: str,
         id: str = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        input_message_content: "types.InputMessageContent" = None,
+        input_message_content: "types.InputMessageContent" = None
     ):
         super().__init__("sticker", id, input_message_content, reply_markup)
 
@@ -33,10 +53,8 @@ class InlineQueryResultCachedSticker(InlineQueryResult):
                 await self.input_message_content.write(client, self.reply_markup)
                 if self.input_message_content
                 else raw.types.InputBotInlineMessageMediaAuto(
-                    reply_markup=await self.reply_markup.write(client)
-                    if self.reply_markup
-                    else None,
+                    reply_markup=await self.reply_markup.write(client) if self.reply_markup else None,
                     message="",
                 )
-            ),
+            )
         )

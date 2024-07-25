@@ -11,19 +11,52 @@ class StreamMedia:
         self: "pyrogram.Client",
         message: Union["types.Message", str],
         limit: int = 0,
-        offset: int = 0,
+        offset: int = 0
     ) -> Optional[Union[str, BinaryIO]]:
-        available_media = (
-            "audio",
-            "document",
-            "photo",
-            "sticker",
-            "animation",
-            "video",
-            "voice",
-            "video_note",
-            "new_chat_photo",
-        )
+        """Stream the media from a message chunk by chunk.
+
+        You can use this method to partially download a file into memory or to selectively download chunks of file.
+        The chunk maximum size is 1 MiB (1024 * 1024 bytes).
+
+        .. include:: /_includes/usable-by/users-bots.rst
+
+        Parameters:
+            message (:obj:`~pyrogram.types.Message` | ``str``):
+                Pass a Message containing the media, the media itself (message.audio, message.video, ...) or a file id
+                as string.
+
+            limit (``int``, *optional*):
+                Limit the amount of chunks to stream.
+                Defaults to 0 (stream the whole media).
+
+            offset (``int``, *optional*):
+                How many chunks to skip before starting to stream.
+                Defaults to 0 (start from the beginning).
+
+        Returns:
+            ``Generator``: A generator yielding bytes chunk by chunk
+
+        Example:
+            .. code-block:: python
+
+                # Stream the whole media
+                async for chunk in app.stream_media(message):
+                    print(len(chunk))
+
+                # Stream the first 3 chunks only
+                async for chunk in app.stream_media(message, limit=3):
+                    print(len(chunk))
+
+                # Stream the rest of the media by skipping the first 3 chunks
+                async for chunk in app.stream_media(message, offset=3):
+                    print(len(chunk))
+
+                # Stream the last 3 chunks only (negative offset)
+                async for chunk in app.stream_media(message, offset=-3):
+                    print(len(chunk))
+        """
+        available_media = ("audio", "document", "photo", "sticker", "animation", "video", "voice", "video_note",
+                           "new_chat_photo")
 
         if isinstance(message, types.Message):
             for kind in available_media:
@@ -46,9 +79,7 @@ class StreamMedia:
 
         if offset < 0:
             if file_size == 0:
-                raise ValueError(
-                    "Negative offsets are not supported for file ids, pass a Message object instead"
-                )
+                raise ValueError("Negative offsets are not supported for file ids, pass a Message object instead")
 
             chunks = math.ceil(file_size / 1024 / 1024)
             offset += chunks

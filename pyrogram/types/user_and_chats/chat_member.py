@@ -7,6 +7,53 @@ from ..object import Object
 
 
 class ChatMember(Object):
+    """Contains information about one member of a chat.
+
+    Parameters:
+        status (:obj:`~pyrogram.enums.ChatMemberStatus`):
+            The member's status in the chat.
+
+        user (:obj:`~pyrogram.types.User`, *optional*):
+            Information about the user.
+
+        chat (:obj:`~pyrogram.types.Chat`, *optional*):
+            Information about the chat (useful in case of banned channel senders).
+
+        joined_date (:py:obj:`~datetime.datetime`, *optional*):
+            Date when the user joined.
+            Not available for the owner.
+
+        custom_title (``str``, *optional*):
+            A custom title that will be shown to all members instead of "Owner" or "Admin".
+            Creator (owner) and administrators only. Can be None in case there's no custom title set.
+
+        until_date (:py:obj:`~datetime.datetime`, *optional*):
+            Restricted and banned only.
+            Date when restrictions will be lifted for this user.
+
+        invited_by (:obj:`~pyrogram.types.User`, *optional*):
+            Administrators and self member only. Information about the user who invited this member.
+            In case the user joined by himself this will be the same as "user".
+
+        promoted_by (:obj:`~pyrogram.types.User`, *optional*):
+            Administrators only. Information about the user who promoted this member as administrator.
+
+        restricted_by (:obj:`~pyrogram.types.User`, *optional*):
+            Restricted and banned only. Information about the user who restricted or banned this member.
+
+        is_member (``bool``, *optional*):
+            Restricted only. True, if the user is a member of the chat at the moment of the request.
+
+        can_be_edited (``bool``, *optional*):
+            True, if the you are allowed to edit administrator privileges of the user.
+
+        permissions (:obj:`~pyrogram.types.ChatPermissions`, *optional*):
+            Restricted only. Restricted actions that a non-administrator user is allowed to take.
+
+        privileges (:obj:`~pyrogram.types.ChatPrivileges`, *optional*):
+            Administrators only. Privileged actions that an administrator is able to take.
+    """
+
     def __init__(
         self,
         *,
@@ -23,7 +70,7 @@ class ChatMember(Object):
         is_member: bool = None,
         can_be_edited: bool = None,
         permissions: "types.ChatPermissions" = None,
-        privileges: "types.ChatPrivileges" = None,
+        privileges: "types.ChatPrivileges" = None
     ):
         super().__init__(client)
 
@@ -46,15 +93,16 @@ class ChatMember(Object):
         client: "pyrogram.Client",
         member: Union["raw.base.ChatParticipant", "raw.base.ChannelParticipant"],
         users: Dict[int, "raw.base.User"],
-        chats: Dict[int, "raw.base.Chat"],
+        chats: Dict[int, "raw.base.Chat"]
     ) -> "ChatMember":
+        # Chat participants
         if isinstance(member, raw.types.ChatParticipant):
             return ChatMember(
                 status=enums.ChatMemberStatus.MEMBER,
                 user=types.User._parse(client, users[member.user_id]),
                 joined_date=utils.timestamp_to_datetime(member.date),
                 invited_by=types.User._parse(client, users[member.inviter_id]),
-                client=client,
+                client=client
             )
         elif isinstance(member, raw.types.ChatParticipantAdmin):
             return ChatMember(
@@ -62,21 +110,22 @@ class ChatMember(Object):
                 user=types.User._parse(client, users[member.user_id]),
                 joined_date=utils.timestamp_to_datetime(member.date),
                 invited_by=types.User._parse(client, users[member.inviter_id]),
-                client=client,
+                client=client
             )
         elif isinstance(member, raw.types.ChatParticipantCreator):
             return ChatMember(
                 status=enums.ChatMemberStatus.OWNER,
                 user=types.User._parse(client, users[member.user_id]),
-                client=client,
+                client=client
             )
 
+        # Channel participants
         if isinstance(member, raw.types.ChannelParticipant):
             return ChatMember(
                 status=enums.ChatMemberStatus.MEMBER,
                 user=types.User._parse(client, users[member.user_id]),
                 joined_date=utils.timestamp_to_datetime(member.date),
-                client=client,
+                client=client
             )
         elif isinstance(member, raw.types.ChannelParticipantAdmin):
             return ChatMember(
@@ -86,13 +135,12 @@ class ChatMember(Object):
                 promoted_by=types.User._parse(client, users[member.promoted_by]),
                 invited_by=(
                     types.User._parse(client, users[member.inviter_id])
-                    if member.inviter_id
-                    else None
+                    if member.inviter_id else None
                 ),
                 custom_title=member.rank,
                 can_be_edited=member.can_edit,
                 privileges=types.ChatPrivileges._parse(member.admin_rights),
-                client=client,
+                client=client
             )
         elif isinstance(member, raw.types.ChannelParticipantBanned):
             peer = member.peer
@@ -100,14 +148,12 @@ class ChatMember(Object):
 
             user = (
                 types.User._parse(client, users[peer_id])
-                if isinstance(peer, raw.types.PeerUser)
-                else None
+                if isinstance(peer, raw.types.PeerUser) else None
             )
 
             chat = (
                 types.Chat._parse_chat(client, chats[peer_id])
-                if not isinstance(peer, raw.types.PeerUser)
-                else None
+                if not isinstance(peer, raw.types.PeerUser) else None
             )
 
             return ChatMember(
@@ -123,7 +169,7 @@ class ChatMember(Object):
                 is_member=not member.left,
                 restricted_by=types.User._parse(client, users[member.kicked_by]),
                 permissions=types.ChatPermissions._parse(member.banned_rights),
-                client=client,
+                client=client
             )
         elif isinstance(member, raw.types.ChannelParticipantCreator):
             return ChatMember(
@@ -131,7 +177,7 @@ class ChatMember(Object):
                 user=types.User._parse(client, users[member.user_id]),
                 custom_title=member.rank,
                 privileges=types.ChatPrivileges._parse(member.admin_rights),
-                client=client,
+                client=client
             )
         elif isinstance(member, raw.types.ChannelParticipantLeft):
             peer = member.peer
@@ -139,18 +185,19 @@ class ChatMember(Object):
 
             user = (
                 types.User._parse(client, users[peer_id])
-                if isinstance(peer, raw.types.PeerUser)
-                else None
+                if isinstance(peer, raw.types.PeerUser) else None
             )
 
             chat = (
                 types.Chat._parse_chat(client, chats[peer_id])
-                if not isinstance(peer, raw.types.PeerUser)
-                else None
+                if not isinstance(peer, raw.types.PeerUser) else None
             )
 
             return ChatMember(
-                status=enums.ChatMemberStatus.LEFT, user=user, chat=chat, client=client
+                status=enums.ChatMemberStatus.LEFT,
+                user=user,
+                chat=chat,
+                client=client
             )
         elif isinstance(member, raw.types.ChannelParticipantSelf):
             return ChatMember(
@@ -158,5 +205,5 @@ class ChatMember(Object):
                 user=types.User._parse(client, users[member.user_id]),
                 joined_date=utils.timestamp_to_datetime(member.date),
                 invited_by=types.User._parse(client, users[member.inviter_id]),
-                client=client,
+                client=client
             )

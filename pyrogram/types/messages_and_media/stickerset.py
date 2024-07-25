@@ -1,8 +1,40 @@
+from typing import List, Optional, Union
+
+import pyrogram
 from pyrogram import raw
+from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType, ThumbnailSource
 from ..object import Object
 
 
 class StickerSet(Object):
+    """A stickerset.
+
+    Parameters:
+        id (``Integer``):
+            Identifier for this stickerset.
+
+        title (``String``):
+            Title of stickerset.
+
+        short_name (``String``):
+            Short name of stickerset, used when sharing stickerset using stickerset deep links.
+
+        count (``Integer``):
+            Number of stickers in stickerset.
+
+        masks (``Boolean``):
+            Is this a mask stickerset.
+
+        animated (``Boolean``):
+            Is this a animated stickerset.
+
+        videos (``Boolean``):
+            Is this a videos stickerset.
+
+        emojis (``Boolean``):
+            Is this a emojis stickerset.
+    """
+
     def __init__(
         self,
         *,
@@ -13,7 +45,7 @@ class StickerSet(Object):
         masks: bool = None,
         animated: bool = None,
         videos: bool = None,
-        emojis: bool = None,
+        emojis: bool = None
     ):
         self.id = id
         self.title = title
@@ -26,13 +58,14 @@ class StickerSet(Object):
 
     @staticmethod
     def _parse(stickerset: "raw.types.StickerSet") -> "StickerSet":
+
         return StickerSet(
-            id=getattr(stickerset, "id", None),
-            title=getattr(stickerset, "title", None),
-            short_name=getattr(stickerset, "short_name", None),
-            count=getattr(stickerset, "count", None),
-            masks=getattr(stickerset, "masks", None),
-            animated=getattr(stickerset, "animated", None),
-            videos=getattr(stickerset, "videos", None),
-            emojis=getattr(stickerset, "emojis", None),
+            id=getattr(stickerset,"id", None),
+            title=getattr(stickerset,"title", None),
+            short_name=getattr(stickerset,"short_name", None),
+            count=getattr(stickerset,"count", None),
+            masks=getattr(stickerset,"masks", None),
+            animated=getattr(stickerset,"animated", None),
+            videos=getattr(stickerset,"videos", None),
+            emojis=getattr(stickerset,"emojis", None)
         )

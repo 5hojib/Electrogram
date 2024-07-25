@@ -6,6 +6,14 @@ from .bot_command_scope import BotCommandScope
 
 
 class BotCommandScopeChat(BotCommandScope):
+    """Represents the scope of bot commands, covering a specific chat.
+
+    Parameters:
+        chat_id (``int`` | ``str``):
+            Unique identifier for the target chat or username of the target supergroup (in the format
+            @supergroupusername).
+    """
+
     def __init__(self, chat_id: Union[int, str]):
         super().__init__("chat")
 

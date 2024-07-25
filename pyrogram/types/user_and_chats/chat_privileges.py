@@ -3,24 +3,85 @@ from ..object import Object
 
 
 class ChatPrivileges(Object):
+    """Describes privileged actions an administrator is able to take in a chat.
+
+    Parameters:
+        can_manage_chat (``bool``, *optional*):
+            True, if the administrator can access the chat event log, chat statistics, message statistics in channels,
+            see channel members, see anonymous administrators in supergroups and ignore slow mode.
+            Implied by any other administrator privilege.
+
+        can_delete_messages (``bool``, *optional*):
+            True, if the administrator can delete messages of other users.
+
+        can_manage_video_chats (``bool``, *optional*):
+            Groups and supergroups only.
+            True, if the administrator can manage video chats (also called group calls).
+
+        can_restrict_members (``bool``, *optional*):
+            True, if the administrator can restrict, ban or unban chat members.
+
+        can_promote_members (``bool``, *optional*):
+            True, if the administrator can add new administrators with a subset of his own privileges or demote
+            administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed
+            by the user).
+
+        can_change_info (``bool``, *optional*):
+            True, if the user is allowed to change the chat title, photo and other settings.
+
+        can_post_messages (``bool``, *optional*):
+            Channels only.
+            True, if the administrator can post messages in the channel.
+
+        can_edit_messages (``bool``, *optional*):
+            Channels only.
+            True, if the administrator can edit messages of other users and can pin messages.
+
+        can_invite_users (``bool``, *optional*):
+            True, if the user is allowed to invite new users to the chat.
+
+        can_pin_messages (``bool``, *optional*):
+            Groups and supergroups only.
+            True, if the user is allowed to pin messages.
+
+        can_manage_topics (``bool``, *optional*):
+            supergroups only.
+            True, if the user is allowed to create, rename, close, and reopen forum topics.
+
+        can_post_stories (``bool``, *optional*):
+            Channels only.
+            True, if the administrator can post stories in the channel.
+
+        can_edit_stories (``bool``, *optional*):
+            Channels only.
+            True, if the administrator can edit stories in the channel.
+
+        can_delete_stories (``bool``, *optional*):
+            Channels only.
+            True, if the administrator can delete stories in the channel.
+
+        is_anonymous (``bool``, *optional*):
+            True, if the user's presence in the chat is hidden.
+    """
+
     def __init__(
         self,
         *,
         can_manage_chat: bool = True,
         can_delete_messages: bool = False,
-        can_manage_video_chats: bool = False,
+        can_manage_video_chats: bool = False,  # Groups and supergroups only
         can_restrict_members: bool = False,
         can_promote_members: bool = False,
         can_change_info: bool = False,
-        can_post_messages: bool = False,
-        can_edit_messages: bool = False,
+        can_post_messages: bool = False,  # Channels only
+        can_edit_messages: bool = False,  # Channels only
         can_invite_users: bool = False,
-        can_pin_messages: bool = False,
-        can_manage_topics: bool = False,
-        can_post_stories: bool = False,
-        can_edit_stories: bool = False,
-        can_delete_stories: bool = False,
-        is_anonymous: bool = False,
+        can_pin_messages: bool = False,  # Groups and supergroups only
+        can_manage_topics: bool = False, # supergroups only.
+        can_post_stories: bool = False, # Channels only
+        can_edit_stories: bool = False, # Channels only
+        can_delete_stories: bool = False, # Channels only
+        is_anonymous: bool = False
     ):
         super().__init__(None)
 
@@ -57,5 +118,5 @@ class ChatPrivileges(Object):
             can_post_stories=admin_rights.post_stories,
             can_edit_stories=admin_rights.edit_stories,
             can_delete_stories=admin_rights.delete_stories,
-            is_anonymous=admin_rights.anonymous,
+            is_anonymous=admin_rights.anonymous
         )

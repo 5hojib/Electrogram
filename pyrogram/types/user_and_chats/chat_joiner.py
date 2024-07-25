@@ -7,6 +7,25 @@ from ..object import Object
 
 
 class ChatJoiner(Object):
+    """Contains information about a joiner member of a chat.
+
+    Parameters:
+        user (:obj:`~pyrogram.types.User`):
+            Information about the user.
+
+        date (:py:obj:`~datetime.datetime`):
+            Date when the user joined.
+
+        bio (``str``, *optional*):
+            Bio of the user.
+
+        pending (``bool``, *optional*):
+            True in case the chat joiner has a pending request.
+
+        approved_by (:obj:`~pyrogram.types.User`, *optional*):
+            Administrator who approved this chat joiner.
+    """
+
     def __init__(
         self,
         *,
@@ -41,5 +60,5 @@ class ChatJoiner(Object):
                 if joiner.approved_by
                 else None
             ),
-            client=client,
+            client=client
         )

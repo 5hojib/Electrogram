@@ -3,7 +3,26 @@ from ..object import Object
 
 
 class Username(Object):
-    def __init__(self, *, username: str, editable: bool = None, active: bool = None):
+    """A Username.
+
+
+    Parameters:
+        username (``String``):
+            The channel/user username.
+
+        editable (``bool``, *optional*):
+            Can the username edited.
+
+        active (``bool``, *optional*)
+            Is the username active.
+    """
+
+    def __init__(
+        self, *,
+        username: str,
+        editable: bool = None,
+        active: bool = None
+    ):
         super().__init__()
 
         self.username = username
@@ -12,8 +31,10 @@ class Username(Object):
 
     @staticmethod
     def _parse(action: "raw.types.Username") -> "Username":
+
+
         return Username(
-            username=getattr(action, "username", None),
-            editable=getattr(action, "editable", None),
-            active=getattr(action, "active", None),
+            username=getattr(action,"username", None),
+            editable=getattr(action,"editable", None),
+            active=getattr(action,"active", None)
         )

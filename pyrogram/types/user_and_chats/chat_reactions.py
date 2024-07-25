@@ -6,6 +6,18 @@ from ..object import Object
 
 
 class ChatReactions(Object):
+    """A chat reactions
+
+    Parameters:
+        all_are_enabled (``bool``, *optional*)
+
+        allow_custom_emoji (``bool``, *optional*):
+            Whether custom emoji are allowed or not.
+
+        reactions (List of :obj:`~pyrogram.types.Reaction`, *optional*):
+            Reactions available.
+    """
+
     def __init__(
         self,
         *,
@@ -21,14 +33,12 @@ class ChatReactions(Object):
         self.reactions = reactions
 
     @staticmethod
-    def _parse(
-        client, chat_reactions: "raw.base.ChatReactions"
-    ) -> Optional["ChatReactions"]:
+    def _parse(client, chat_reactions: "raw.base.ChatReactions") -> Optional["ChatReactions"]:
         if isinstance(chat_reactions, raw.types.ChatReactionsAll):
             return ChatReactions(
                 client=client,
                 all_are_enabled=True,
-                allow_custom_emoji=chat_reactions.allow_custom,
+                allow_custom_emoji=chat_reactions.allow_custom
             )
 
         if isinstance(chat_reactions, raw.types.ChatReactionsSome):
@@ -37,7 +47,7 @@ class ChatReactions(Object):
                 reactions=[
                     types.ReactionType._parse(reaction)
                     for reaction in chat_reactions.reactions
-                ],
+                ]
             )
         if isinstance(chat_reactions, raw.types.ChatReactionsNone):
             return None

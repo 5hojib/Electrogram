@@ -4,17 +4,40 @@ from typing import List
 import pyrogram
 from pyrogram import raw, utils
 from pyrogram import types
-from pyrogram.file_id import (
-    FileId,
-    FileType,
-    FileUniqueId,
-    FileUniqueType,
-    ThumbnailSource,
-)
+from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType, ThumbnailSource
 from ..object import Object
 
 
 class Photo(Object):
+    """A Photo.
+
+    Parameters:
+        file_id (``str``):
+            Identifier for this file, which can be used to download or reuse the file.
+
+        file_unique_id (``str``):
+            Unique identifier for this file, which is supposed to be the same over time and for different accounts.
+            Can't be used to download or reuse the file.
+
+        width (``int``):
+            Photo width.
+
+        height (``int``):
+            Photo height.
+
+        file_size (``int``):
+            File size.
+
+        date (:py:obj:`~datetime.datetime`):
+            Date the photo was sent.
+
+        ttl_seconds (``int``, *optional*):
+            Time-to-live seconds, for secret photos.
+
+        thumbs (List of :obj:`~pyrogram.types.Thumbnail`, *optional*):
+            Available thumbnails of this photo.
+    """
+
     def __init__(
         self,
         *,
@@ -26,7 +49,7 @@ class Photo(Object):
         file_size: int,
         date: datetime,
         ttl_seconds: int = None,
-        thumbs: List["types.Thumbnail"] = None,
+        thumbs: List["types.Thumbnail"] = None
     ):
         super().__init__(client)
 
@@ -51,7 +74,10 @@ class Photo(Object):
                 if isinstance(p, raw.types.PhotoSizeProgressive):
                     photos.append(
                         raw.types.PhotoSize(
-                            type=p.type, w=p.w, h=p.h, size=max(p.sizes)
+                            type=p.type,
+                            w=p.w,
+                            h=p.h,
+                            size=max(p.sizes)
                         )
                     )
 
@@ -70,10 +96,11 @@ class Photo(Object):
                     thumbnail_file_type=FileType.PHOTO,
                     thumbnail_size=main.type,
                     volume_id=0,
-                    local_id=0,
+                    local_id=0
                 ).encode(),
                 file_unique_id=FileUniqueId(
-                    file_unique_type=FileUniqueType.DOCUMENT, media_id=photo.id
+                    file_unique_type=FileUniqueType.DOCUMENT,
+                    media_id=photo.id
                 ).encode(),
                 width=main.w,
                 height=main.h,
@@ -81,5 +108,5 @@ class Photo(Object):
                 date=utils.timestamp_to_datetime(photo.date),
                 ttl_seconds=ttl_seconds,
                 thumbs=types.Thumbnail._parse(client, photo),
-                client=client,
+                client=client
             )

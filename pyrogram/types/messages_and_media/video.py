@@ -4,11 +4,52 @@ from typing import List
 import pyrogram
 from pyrogram import raw, utils
 from pyrogram import types
-from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType
+from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType, ThumbnailSource
 from ..object import Object
 
 
 class Video(Object):
+    """A video file.
+
+    Parameters:
+        file_id (``str``):
+            Identifier for this file, which can be used to download or reuse the file.
+
+        file_unique_id (``str``):
+            Unique identifier for this file, which is supposed to be the same over time and for different accounts.
+            Can't be used to download or reuse the file.
+
+        width (``int``):
+            Video width as defined by sender.
+
+        height (``int``):
+            Video height as defined by sender.
+
+        duration (``int``):
+            Duration of the video in seconds as defined by sender.
+
+        file_name (``str``, *optional*):
+            Video file name.
+
+        mime_type (``str``, *optional*):
+            Mime type of a file as defined by sender.
+
+        file_size (``int``, *optional*):
+            File size.
+
+        supports_streaming (``bool``, *optional*):
+            True, if the video was uploaded with streaming support.
+
+        ttl_seconds (``int``. *optional*):
+            Time-to-live seconds, for secret photos.
+
+        date (:py:obj:`~datetime.datetime`, *optional*):
+            Date the video was sent.
+
+        thumbs (List of :obj:`~pyrogram.types.Thumbnail`, *optional*):
+            Video thumbnails.
+    """
+
     def __init__(
         self,
         *,
@@ -24,7 +65,7 @@ class Video(Object):
         supports_streaming: bool = None,
         ttl_seconds: int = None,
         date: datetime = None,
-        thumbs: List["types.Thumbnail"] = None,
+        thumbs: List["types.Thumbnail"] = None
     ):
         super().__init__(client)
 
@@ -47,7 +88,7 @@ class Video(Object):
         video: "raw.types.Document",
         video_attributes: "raw.types.DocumentAttributeVideo",
         file_name: str,
-        ttl_seconds: int = None,
+        ttl_seconds: int = None
     ) -> "Video":
         return Video(
             file_id=FileId(
@@ -55,10 +96,11 @@ class Video(Object):
                 dc_id=video.dc_id,
                 media_id=video.id,
                 access_hash=video.access_hash,
-                file_reference=video.file_reference,
+                file_reference=video.file_reference
             ).encode(),
             file_unique_id=FileUniqueId(
-                file_unique_type=FileUniqueType.DOCUMENT, media_id=video.id
+                file_unique_type=FileUniqueType.DOCUMENT,
+                media_id=video.id
             ).encode(),
             width=video_attributes.w,
             height=video_attributes.h,
@@ -70,5 +112,5 @@ class Video(Object):
             date=utils.timestamp_to_datetime(video.date),
             ttl_seconds=ttl_seconds,
             thumbs=types.Thumbnail._parse(client, video),
-            client=client,
+            client=client
         )

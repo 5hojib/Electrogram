@@ -3,6 +3,17 @@ from ..object import Object
 
 
 class WebAppData(Object):
+    """Contains data sent from a `Web App <https://core.telegram.org/bots/webapps>`_ to the bot.
+
+    Parameters:
+        data (``str``):
+            The data.
+
+        button_text (``str``):
+            Text of the *web_app* keyboard button, from which the Web App was opened.
+
+    """
+
     def __init__(
         self,
         *,
@@ -16,4 +27,7 @@ class WebAppData(Object):
 
     @staticmethod
     def _parse(action: "raw.types.MessageActionWebViewDataSentMe"):
-        return WebAppData(data=action.data, button_text=action.text)
+        return WebAppData(
+            data=action.data,
+            button_text=action.text
+        )

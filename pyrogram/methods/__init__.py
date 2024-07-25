@@ -10,6 +10,7 @@ from .password import Password
 from .stickers import Stickers
 from .users import Users
 from .utilities import Utilities
+from .business import TelegramBusiness
 
 
 class Methods(
@@ -25,5 +26,6 @@ class Methods(
     Decorators,
     Utilities,
     InviteLinks,
+    TelegramBusiness,
 ):
     pass

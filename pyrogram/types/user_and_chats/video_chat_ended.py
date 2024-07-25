@@ -3,7 +3,17 @@ from ..object import Object
 
 
 class VideoChatEnded(Object):
-    def __init__(self, *, duration: int):
+    """A service message about a voice chat ended in the chat.
+
+    Parameters:
+        duration (``int``):
+            Voice chat duration; in seconds.
+    """
+
+    def __init__(
+        self, *,
+        duration: int
+    ):
         super().__init__()
 
         self.duration = duration

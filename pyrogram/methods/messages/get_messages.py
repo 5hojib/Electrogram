@@ -9,26 +9,77 @@ from pyrogram import utils
 log = logging.getLogger(__name__)
 
 
+# TODO: Rewrite using a flag for replied messages and have message_ids non-optional
+
+
 class GetMessages:
     async def get_messages(
         self: "pyrogram.Client",
         chat_id: Union[int, str],
         message_ids: Union[int, Iterable[int]] = None,
         reply_to_message_ids: Union[int, Iterable[int]] = None,
-        replies: int = 1,
+        replies: int = 1
     ) -> Union["types.Message", List["types.Message"]]:
+        """Get one or more messages from a chat by using message identifiers.
+
+        You can retrieve up to 200 messages at once.
+
+        .. include:: /_includes/usable-by/users-bots.rst
+
+        Parameters:
+            chat_id (``int`` | ``str``):
+                Unique identifier (int) or username (str) of the target chat.
+                For your personal cloud (Saved Messages) you can simply use "me" or "self".
+                For a contact that exists in your Telegram address book you can use his phone number (str).
+                You can also use chat public link in form of *t.me/<username>* (str).
+
+            message_ids (``int`` | Iterable of ``int``, *optional*):
+                Pass a single message identifier or an iterable of message ids (as integers) to get the content of the
+                message themselves.
+
+            reply_to_message_ids (``int`` | Iterable of ``int``, *optional*):
+                Pass a single message identifier or an iterable of message ids (as integers) to get the content of
+                the previous message you replied to using this message.
+                If *message_ids* is set, this argument will be ignored.
+
+            replies (``int``, *optional*):
+                The number of subsequent replies to get for each message.
+                Pass 0 for no reply at all or -1 for unlimited replies.
+                Defaults to 1.
+
+        Returns:
+            :obj:`~pyrogram.types.Message` | List of :obj:`~pyrogram.types.Message`: In case *message_ids* was not
+            a list, a single message is returned, otherwise a list of messages is returned.
+
+        Example:
+            .. code-block:: python
+
+                # Get one message
+                await app.get_messages(chat_id, 12345)
+
+                # Get more than one message (list of messages)
+                await app.get_messages(chat_id, [12345, 12346])
+
+                # Get message by ignoring any replied-to message
+                await app.get_messages(chat_id, message_id, replies=0)
+
+                # Get message with all chained replied-to messages
+                await app.get_messages(chat_id, message_id, replies=-1)
+
+                # Get the replied-to message of a message
+                await app.get_messages(chat_id, reply_to_message_ids=message_id)
+
+        Raises:
+            ValueError: In case of invalid arguments.
+        """
         ids, ids_type = (
-            (message_ids, raw.types.InputMessageID)
-            if message_ids
-            else (reply_to_message_ids, raw.types.InputMessageReplyTo)
-            if reply_to_message_ids
+            (message_ids, raw.types.InputMessageID) if message_ids
+            else (reply_to_message_ids, raw.types.InputMessageReplyTo) if reply_to_message_ids
             else (None, None)
         )
 
         if ids is None:
-            raise ValueError(
-                "No argument supplied. Either pass message_ids or reply_to_message_ids"
-            )
+            raise ValueError("No argument supplied. Either pass message_ids or reply_to_message_ids")
 
         peer = await self.resolve_peer(chat_id)
 

@@ -1,4 +1,4 @@
-name: Check style
+name: format code
 
 on: 
   push:

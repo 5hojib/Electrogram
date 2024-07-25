@@ -3,14 +3,56 @@ from typing import Dict
 from typing import Optional
 
 import pyrogram
-from pyrogram import raw, utils, types
+from pyrogram import raw, utils
+from pyrogram import types
 from ..object import Object
 
 
 class ChatInviteLink(Object):
+    """An invite link for a chat.
+
+    Parameters:
+        invite_link (``str``):
+            The invite link. If the link was created by another chat administrator, then the second part of the
+            link will be replaced with "...".
+
+        date (:py:obj:`~datetime.datetime`):
+            The date when the link was created.
+
+        is_primary (``bool``):
+            True, if the link is primary.
+
+        is_revoked (``bool``):
+            True, if the link is revoked.
+
+        creator (:obj:`~pyrogram.types.User`, *optional*):
+            Creator of the link.
+
+        name (``str``, *optional*):
+            Invite link name
+
+        creates_join_request (``bool``, *optional*):
+            True, if users joining the chat via the link need to be approved by chat administrators.
+
+        start_date (:py:obj:`~datetime.datetime`, *optional*):
+            Point in time when the link has been edited.
+
+        expire_date (:py:obj:`~datetime.datetime`, *optional*):
+            Point in time when the link will expire or has been expired.
+
+        member_limit (``int``, *optional*):
+            Maximum number of users that can be members of the chat simultaneously after joining the chat via this
+            invite link; 1-99999.
+
+        member_count (``int``, *optional*):
+            Number of users that joined via this link and are currently member of the chat.
+
+        pending_join_request_count (``int``, *optional*):
+            Number of pending join requests created using this link
+    """
+
     def __init__(
-        self,
-        *,
+        self, *,
         invite_link: str,
         date: datetime,
         is_primary: bool = None,
@@ -22,7 +64,7 @@ class ChatInviteLink(Object):
         expire_date: datetime = None,
         member_limit: int = None,
         member_count: int = None,
-        pending_join_request_count: int = None,
+        pending_join_request_count: int = None
     ):
         super().__init__()
 
@@ -43,7 +85,7 @@ class ChatInviteLink(Object):
     def _parse(
         client: "pyrogram.Client",
         invite: "raw.base.ExportedChatInvite",
-        users: Dict[int, "raw.types.User"] = None,
+        users: Dict[int, "raw.types.User"] = None
     ) -> Optional["ChatInviteLink"]:
         if not isinstance(invite, raw.types.ChatInviteExported):
             return None
@@ -66,5 +108,5 @@ class ChatInviteLink(Object):
             expire_date=utils.timestamp_to_datetime(invite.expire_date),
             member_limit=invite.usage_limit,
             member_count=invite.usage,
-            pending_join_request_count=invite.requested,
+            pending_join_request_count=invite.requested
         )

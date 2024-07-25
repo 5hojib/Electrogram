@@ -1,4 +1,5 @@
 import html
+import logging
 import re
 from typing import Optional
 
@@ -17,32 +18,27 @@ PRE_DELIM = "```"
 BLOCKQUOTE_DELIM = ">"
 BLOCKQUOTE_EXPANDABLE_DELIM = "**>"
 
-MARKDOWN_RE = re.compile(
-    r"({d})|\[(.+?)\]\((.+?)\)".format(
-        d="|".join(
-            [
-                "".join(i)
-                for i in [
-                    [rf"\{j}" for j in i]
-                    for i in [
-                        PRE_DELIM,
-                        CODE_DELIM,
-                        STRIKE_DELIM,
-                        UNDERLINE_DELIM,
-                        ITALIC_DELIM,
-                        BOLD_DELIM,
-                        SPOILER_DELIM,
-                    ]
-                ]
+MARKDOWN_RE = re.compile(r"({d})|\[(.+?)\]\((.+?)\)".format(
+    d="|".join(
+        ["".join(i) for i in [
+            [rf"\{j}" for j in i]
+            for i in [
+                PRE_DELIM,
+                CODE_DELIM,
+                STRIKE_DELIM,
+                UNDERLINE_DELIM,
+                ITALIC_DELIM,
+                BOLD_DELIM,
+                SPOILER_DELIM
             ]
-        )
-    )
-)
+        ]]
+    )))
 
 OPENING_TAG = "<{}>"
 CLOSING_TAG = "</{}>"
 URL_MARKUP = '<a href="{}">{}</a>'
 FIXED_WIDTH_DELIMS = [CODE_DELIM, PRE_DELIM]
+CODE_TAG_RE = re.compile(r"<code>.*?</code>")
 
 
 class Markdown:
@@ -50,8 +46,8 @@ class Markdown:
         self.html = HTML(client)
 
     def blockquote_parser(self, text):
-        text = re.sub(r"\n&gt;", "\n>", re.sub(r"^&gt;", ">", text))
-        lines = text.split("\n")
+        text = re.sub(r'\n&gt;', '\n>', re.sub(r'^&gt;', '>', text))
+        lines = text.split('\n')
         result = []
 
         in_blockquote = False
@@ -59,20 +55,16 @@ class Markdown:
         for line in lines:
             if line.startswith(BLOCKQUOTE_DELIM):
                 if not in_blockquote:
-                    line = re.sub(r"^> ", OPENING_TAG.format("blockquote"), line)
-                    line = re.sub(r"^>", OPENING_TAG.format("blockquote"), line)
+                    line = re.sub(r'^> ', OPENING_TAG.format("blockquote"), line)
+                    line = re.sub(r'^>', OPENING_TAG.format("blockquote"), line)
                     in_blockquote = True
                     result.append(line.strip())
                 else:
                     result.append(line[1:].strip())
             elif line.startswith(BLOCKQUOTE_EXPANDABLE_DELIM):
                 if not in_blockquote:
-                    line = re.sub(
-                        r"^\*\*> ", OPENING_TAG.format("blockquote expandable"), line
-                    )
-                    line = re.sub(
-                        r"^\*\*>", OPENING_TAG.format("blockquote expandable"), line
-                    )
+                    line = re.sub(r'^\*\*> ', OPENING_TAG.format("blockquote expandable"), line)
+                    line = re.sub(r'^\*\*>', OPENING_TAG.format("blockquote expandable"), line)
                     in_blockquote = True
                     result.append(line.strip())
                 else:
@@ -84,11 +76,11 @@ class Markdown:
                 result.append(line)
 
         if in_blockquote:
-            line = result[len(result) - 1] + CLOSING_TAG.format("blockquote")
-            result.pop(len(result) - 1)
+            line = result[len(result)-1] + CLOSING_TAG.format("blockquote")
+            result.pop(len(result)-1)
             result.append(line)
 
-        return "\n".join(result)
+        return '\n'.join(result)
 
     async def parse(self, text: str, strict: bool = False):
         if strict:
@@ -97,6 +89,12 @@ class Markdown:
 
         delims = set()
         is_fixed_width = False
+
+        placeholders = {}
+        for i, code_section in enumerate(CODE_TAG_RE.findall(text)):
+            placeholder = f"{{CODE_SECTION_{i}}}"
+            placeholders[placeholder] = code_section
+            text = text.replace(code_section, placeholder, 1)
 
         for i, match in enumerate(re.finditer(MARKDOWN_RE, text)):
             start, _ = match.span()
@@ -110,9 +108,7 @@ class Markdown:
                 continue
 
             if text_url:
-                text = utils.replace_once(
-                    text, full, URL_MARKUP.format(url, text_url), start
-                )
+                text = utils.replace_once(text, full, URL_MARKUP.format(url, text_url), start)
                 continue
 
             if delim == BOLD_DELIM:
@@ -140,14 +136,15 @@ class Markdown:
                 tag = CLOSING_TAG.format(tag)
 
             if delim == PRE_DELIM and delim in delims:
-                delim_and_language = text[text.find(PRE_DELIM) :].split("\n")[0]
-                language = delim_and_language[len(PRE_DELIM) :]
-                text = utils.replace_once(
-                    text, delim_and_language, f'<pre language="{language}">', start
-                )
+                delim_and_language = text[text.find(PRE_DELIM):].split("\n")[0]
+                language = delim_and_language[len(PRE_DELIM):]
+                text = utils.replace_once(text, delim_and_language, f'<pre language="{language}">', start)
                 continue
 
             text = utils.replace_once(text, delim, tag, start)
+
+        for placeholder, code_section in placeholders.items():
+            text = text.replace(placeholder, code_section)
 
         return await self.html.parse(text)
 
@@ -188,22 +185,12 @@ class Markdown:
                 for line in lines:
                     if len(line) == 0 and last_length == end:
                         continue
-                    start_offset = start + last_length
-                    last_length = last_length + len(line)
-                    end_offset = start_offset + last_length
-                    entities_offsets.append(
-                        (
-                            start_tag,
-                            start_offset,
-                        )
-                    )
-                    entities_offsets.append(
-                        (
-                            end_tag,
-                            end_offset,
-                        )
-                    )
-                    last_length = last_length + 1
+                    start_offset = start+last_length
+                    last_length = last_length+len(line)
+                    end_offset = start_offset+last_length
+                    entities_offsets.append((start_tag, start_offset,))
+                    entities_offsets.append((end_tag, end_offset,))
+                    last_length = last_length+1
                 continue
             elif entity_type == MessageEntityType.SPOILER:
                 start_tag = end_tag = SPOILER_DELIM
@@ -218,24 +205,16 @@ class Markdown:
             else:
                 continue
 
-            entities_offsets.append(
-                (
-                    start_tag,
-                    start,
-                )
-            )
-            entities_offsets.append(
-                (
-                    end_tag,
-                    end,
-                )
-            )
+            entities_offsets.append((start_tag, start,))
+            entities_offsets.append((end_tag, end,))
 
         entities_offsets = map(
             lambda x: x[1],
             sorted(
-                enumerate(entities_offsets), key=lambda x: (x[1][1], x[0]), reverse=True
-            ),
+                enumerate(entities_offsets),
+                key=lambda x: (x[1][1], x[0]),
+                reverse=True
+            )
         )
 
         for entity, offset in entities_offsets:

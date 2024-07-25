@@ -13,6 +13,41 @@ class GetChatAdminInviteLinks:
         revoked: bool = False,
         limit: int = 0,
     ) -> Optional[AsyncGenerator["types.ChatInviteLink", None]]:
+        """Get the invite links created by an administrator in a chat.
+
+        .. note::
+
+            As an administrator you can only get your own links you have exported.
+            As the chat or channel owner you can get everyones links.
+
+        .. include:: /_includes/usable-by/users.rst
+
+        Parameters:
+            chat_id (``int`` | ``str``):
+                Unique identifier for the target chat or username of the target channel/supergroup
+                (in the format @username).
+                You can also use chat public link in form of *t.me/<username>* (str).
+
+            admin_id (``int`` | ``str``):
+                Unique identifier (int) or username (str) of the target user.
+                For you yourself you can simply use "me" or "self".
+                For a contact that exists in your Telegram address book you can use his phone number (str).
+                You can also use user profile link in form of *t.me/<username>* (str).
+
+            revoked (``bool``, *optional*):
+                True, if you want to get revoked links instead.
+                Defaults to False (get active links only).
+
+            limit (``int``, *optional*):
+                Limits the number of invite links to be retrieved.
+                By default, no limit is applied and all invite links are returned.
+
+        Returns:
+            ``Generator``: A generator yielding :obj:`~pyrogram.types.ChatInviteLink` objects.
+
+        Yields:
+            :obj:`~pyrogram.types.ChatInviteLink` objects.
+        """
         current = 0
         total = abs(limit) or (1 << 31) - 1
         limit = min(100, total)
@@ -28,7 +63,7 @@ class GetChatAdminInviteLinks:
                     limit=limit,
                     revoked=revoked,
                     offset_date=offset_date,
-                    offset_link=offset_link,
+                    offset_link=offset_link
                 )
             )
 

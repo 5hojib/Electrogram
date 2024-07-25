@@ -6,6 +6,58 @@ from .inline_query_result import InlineQueryResult
 
 
 class InlineQueryResultAnimation(InlineQueryResult):
+    """Link to an animated GIF file.
+
+    By default, this animated GIF file will be sent by the user with optional caption.
+    Alternatively, you can use *input_message_content* to send a message with the specified content instead of the
+    animation.
+
+    Parameters:
+        animation_url (``str``):
+            A valid URL for the animated GIF file.
+            File size must not exceed 1 MB.
+
+        animation_width (``int``, *optional*)
+            Width of the animation.
+
+        animation_height (``int``, *optional*)
+            Height of the animation.
+
+        animation_duration (``int``, *optional*)
+            Duration of the animation in seconds.
+
+        thumb_url (``str``, *optional*):
+            URL of the static thumbnail for the result (jpeg or gif)
+            Defaults to the value passed in *animation_url*.
+
+        thumb_mime_type (``str``, *optional*)
+            MIME type of the thumbnail, must be one of "image/jpeg", "image/gif", or "video/mp4".
+            Defaults to "image/jpeg".
+
+        id (``str``, *optional*):
+            Unique identifier for this result, 1-64 bytes.
+            Defaults to a randomly generated UUID4.
+
+        title (``str``, *optional*):
+            Title for the result.
+
+        caption (``str``, *optional*):
+            Caption of the animation to be sent, 0-1024 characters.
+
+        parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+            By default, texts are parsed using both Markdown and HTML styles.
+            You can combine both syntaxes together.
+
+        caption_entities (List of :obj:`~pyrogram.types.MessageEntity`):
+            List of special entities that appear in the caption, which can be specified instead of *parse_mode*.
+
+        reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup`, *optional*):
+            An InlineKeyboardMarkup object.
+
+        input_message_content (:obj:`~pyrogram.types.InputMessageContent`):
+            Content of the message to be sent instead of the photo.
+    """
+
     def __init__(
         self,
         animation_url: str,
@@ -21,7 +73,7 @@ class InlineQueryResultAnimation(InlineQueryResult):
         parse_mode: Optional["enums.ParseMode"] = None,
         caption_entities: List["types.MessageEntity"] = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        input_message_content: "types.InputMessageContent" = None,
+        input_message_content: "types.InputMessageContent" = None
     ):
         super().__init__("gif", id, input_message_content, reply_markup)
 
@@ -48,9 +100,9 @@ class InlineQueryResultAnimation(InlineQueryResult):
                 raw.types.DocumentAttributeVideo(
                     w=self.animation_width,
                     h=self.animation_height,
-                    duration=self.animation_duration,
+                    duration=self.animation_duration
                 )
-            ],
+            ]
         )
 
         if self.thumb_url is None:
@@ -60,14 +112,12 @@ class InlineQueryResultAnimation(InlineQueryResult):
                 url=self.thumb_url,
                 size=0,
                 mime_type=self.thumb_mime_type,
-                attributes=[],
+                attributes=[]
             )
 
-        message, entities = (
-            await utils.parse_text_entities(
-                client, self.caption, self.parse_mode, self.caption_entities
-            )
-        ).values()
+        message, entities = (await utils.parse_text_entities(
+            client, self.caption, self.parse_mode, self.caption_entities
+        )).values()
 
         return raw.types.InputBotInlineResult(
             id=self.id,
@@ -79,11 +129,9 @@ class InlineQueryResultAnimation(InlineQueryResult):
                 await self.input_message_content.write(client, self.reply_markup)
                 if self.input_message_content
                 else raw.types.InputBotInlineMessageMediaAuto(
-                    reply_markup=await self.reply_markup.write(client)
-                    if self.reply_markup
-                    else None,
+                    reply_markup=await self.reply_markup.write(client) if self.reply_markup else None,
                     message=message,
-                    entities=entities,
+                    entities=entities
                 )
-            ),
+            )
         )

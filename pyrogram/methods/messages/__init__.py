@@ -21,8 +21,11 @@ from .get_discussion_replies_count import GetDiscussionRepliesCount
 from .get_media_group import GetMediaGroup
 from .get_messages import GetMessages
 from .read_chat_history import ReadChatHistory
+from .retract_vote import RetractVote
 from .search_global import SearchGlobal
 from .search_global_count import SearchGlobalCount
+from .search_global_hashtag_messages import SearchGlobalHashtagMessages
+from .search_global_hashtag_messages_count import SearchGlobalHashtagMessagesCount
 from .search_messages import SearchMessages
 from .search_messages_count import SearchMessagesCount
 from .send_animation import SendAnimation
@@ -30,17 +33,25 @@ from .send_audio import SendAudio
 from .send_cached_media import SendCachedMedia
 from .send_chat_action import SendChatAction
 from .send_contact import SendContact
+from .send_dice import SendDice
 from .send_document import SendDocument
+from .send_invoice import SendInvoice
+from .send_location import SendLocation
 from .send_media_group import SendMediaGroup
 from .send_message import SendMessage
+from .send_paid_media import SendPaidMedia
 from .send_photo import SendPhoto
+from .send_poll import SendPoll
 from .send_reaction import SendReaction
 from .send_sticker import SendSticker
+from .send_venue import SendVenue
 from .send_video import SendVideo
 from .send_video_note import SendVideoNote
 from .send_voice import SendVoice
 from .send_web_page import SendWebPage
+from .stop_poll import StopPoll
 from .stream_media import StreamMedia
+from .vote_poll import VotePoll
 
 
 class Messages(
@@ -58,14 +69,22 @@ class Messages(
     SendContact,
     SendDocument,
     SendAnimation,
+    SendInvoice,
+    SendLocation,
     SendMediaGroup,
     SendMessage,
+    SendPaidMedia,
     SendPhoto,
     SendSticker,
+    SendVenue,
     SendVideo,
     SendVideoNote,
     SendVoice,
     SendWebPage,
+    SendPoll,
+    VotePoll,
+    StopPoll,
+    RetractVote,
     DownloadMedia,
     GetChatHistory,
     SendCachedMedia,
@@ -75,17 +94,20 @@ class Messages(
     EditInlineCaption,
     EditInlineMedia,
     EditInlineReplyMarkup,
+    SendDice,
     SearchMessages,
     SearchGlobal,
+    SearchGlobalHashtagMessages,
     CopyMessage,
     CopyMediaGroup,
     SearchMessagesCount,
     SearchGlobalCount,
+    SearchGlobalHashtagMessagesCount,
     GetDiscussionMessage,
     SendReaction,
     GetDiscussionReplies,
     GetDiscussionRepliesCount,
     StreamMedia,
-    GetCustomEmojiStickers,
+    GetCustomEmojiStickers
 ):
     pass

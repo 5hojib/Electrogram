@@ -100,6 +100,7 @@ class HTML:
         self.client = client
 
     async def parse(self, text: str):
+        # Strip whitespaces from the beginning and the end, but preserve closing tags
         text = re.sub(r"^\s*(<[\w<>=\s\"]*>)\s*", r"\1", text)
         text = re.sub(r"\s*(</[\w</>]*>)\s*$", r"\1", text)
 
@@ -127,16 +128,20 @@ class HTML:
 
             entities.append(entity)
 
+        # Remove zero-length entities
         entities = list(filter(lambda x: x.length > 0, entities))
 
         return {
             "message": utils.remove_surrogates(parser.text),
-            "entities": sorted(entities, key=lambda e: e.offset) or None,
+            "entities": sorted(entities, key=lambda e: e.offset) or None
         }
 
     @staticmethod
     def unparse(text: str, entities: list):
         def parse_one(entity):
+            """
+            Parses a single entity and returns (start_tag, start), (end_tag, end)
+            """
             entity_type = entity.type
             start = entity.offset
             end = start + entity.length
@@ -153,9 +158,7 @@ class HTML:
             elif entity_type == MessageEntityType.PRE:
                 name = entity_type.name.lower()
                 language = getattr(entity, "language", "") or ""
-                start_tag = (
-                    f'<{name} language="{language}">' if language else f"<{name}>"
-                )
+                start_tag = f'<{name} language="{language}">' if language else f"<{name}>"
                 end_tag = f"</{name}>"
             elif entity_type == MessageEntityType.EXPANDABLE_BLOCKQUOTE:
                 name = "blockquote"
@@ -187,12 +190,19 @@ class HTML:
             return (start_tag, start), (end_tag, end)
 
         def recursive(entity_i: int) -> int:
+            """
+            Takes the index of the entity to start parsing from, returns the number of parsed entities inside it.
+            Uses entities_offsets as a stack, pushing (start_tag, start) first, then parsing nested entities,
+            and finally pushing (end_tag, end) to the stack.
+            No need to sort at the end.
+            """
             this = parse_one(entities[entity_i])
             if this is None:
                 return 1
             (start_tag, start), (end_tag, end) = this
             entities_offsets.append((start_tag, start))
             internal_i = entity_i + 1
+            # while the next entity is inside the current one, keep parsing
             while internal_i < len(entities) and entities[internal_i].offset < end:
                 internal_i += recursive(internal_i)
             entities_offsets.append((end_tag, end))
@@ -202,21 +212,19 @@ class HTML:
 
         entities_offsets = []
 
+        # probably useless because entities are already sorted by telegram
         entities.sort(key=lambda e: (e.offset, -e.length))
 
+        # main loop for first-level entities
         i = 0
         while i < len(entities):
             i += recursive(i)
 
         if entities_offsets:
             last_offset = entities_offsets[-1][1]
+            # no need to sort, but still add entities starting from the end
             for entity, offset in reversed(entities_offsets):
-                text = (
-                    text[:offset]
-                    + entity
-                    + html.escape(text[offset:last_offset])
-                    + text[last_offset:]
-                )
+                text = text[:offset] + entity + html.escape(text[offset:last_offset]) + text[last_offset:]
                 last_offset = offset
 
         return utils.remove_surrogates(text)

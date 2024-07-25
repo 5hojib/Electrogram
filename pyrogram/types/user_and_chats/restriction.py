@@ -3,6 +3,19 @@ from ..object import Object
 
 
 class Restriction(Object):
+    """A restriction applied to bots or chats.
+
+    Parameters:
+        platform (``str``):
+            The platform the restriction is applied to, e.g. "ios", "android"
+
+        reason (``str``):
+            The restriction reason, e.g. "porn", "copyright".
+
+        text (``str``):
+            The restriction text.
+    """
+
     def __init__(self, *, platform: str, reason: str, text: str):
         super().__init__(None)
 
@@ -15,5 +28,5 @@ class Restriction(Object):
         return Restriction(
             platform=restriction.platform,
             reason=restriction.reason,
-            text=restriction.text,
+            text=restriction.text
         )

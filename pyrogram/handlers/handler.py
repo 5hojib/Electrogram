@@ -1,7 +1,7 @@
 import inspect
-import pyrogram
-
 from typing import Callable
+
+import pyrogram
 from pyrogram.filters import Filter
 from pyrogram.types import Update
 

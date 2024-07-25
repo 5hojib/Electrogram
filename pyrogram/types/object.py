@@ -11,6 +11,13 @@ class Object:
         self._client = client
 
     def bind(self, client: "pyrogram.Client"):
+        """Bind a Client instance to this and to all nested Pyrogram objects.
+
+        Parameters:
+            client (:obj:`~pyrogram.types.Client`):
+                The Client instance to bind this object with. Useful to re-enable bound methods after serializing and
+                deserializing Pyrogram objects with ``repr`` and ``eval``.
+        """
         self._client = client
 
         for i in self.__dict__:
@@ -24,6 +31,8 @@ class Object:
         if isinstance(obj, bytes):
             return repr(obj)
 
+        # https://t.me/pyrogramchat/167281
+        # Instead of re.Match, which breaks for python <=3.6
         if isinstance(obj, typing.Match):
             return repr(obj)
 
@@ -33,7 +42,9 @@ class Object:
         if isinstance(obj, datetime):
             return str(obj)
 
-        attributes_to_hide = ["raw"]
+        attributes_to_hide = [
+            "raw"
+        ]
 
         filtered_attributes = {
             attr: ("*" * 9 if attr == "phone_number" else getattr(obj, attr))
@@ -44,7 +55,10 @@ class Object:
             if getattr(obj, attr) is not None
         }
 
-        return {"_": obj.__class__.__name__, **filtered_attributes}
+        return {
+            "_": obj.__class__.__name__,
+            **filtered_attributes
+        }
 
     def __str__(self) -> str:
         return dumps(self, indent=4, default=Object.default, ensure_ascii=False)
@@ -56,7 +70,7 @@ class Object:
                 f"{attr}={repr(getattr(self, attr))}"
                 for attr in filter(lambda x: not x.startswith("_"), self.__dict__)
                 if getattr(self, attr) is not None
-            ),
+            )
         )
 
     def __eq__(self, other: "Object") -> bool:
@@ -76,6 +90,7 @@ class Object:
         for attr in state:
             obj = state[attr]
 
+            # Maybe a better alternative would be https://docs.python.org/3/library/inspect.html#inspect.signature
             if isinstance(obj, tuple) and len(obj) == 2 and obj[0] == "dt":
                 state[attr] = datetime.fromtimestamp(obj[1])
 

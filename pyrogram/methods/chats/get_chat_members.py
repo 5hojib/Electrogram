@@ -15,11 +15,9 @@ async def get_chunk(
     limit: int,
     query: str,
 ):
-    is_queryable = filter in [
-        enums.ChatMembersFilter.SEARCH,
-        enums.ChatMembersFilter.BANNED,
-        enums.ChatMembersFilter.RESTRICTED,
-    ]
+    is_queryable = filter in [enums.ChatMembersFilter.SEARCH,
+                              enums.ChatMembersFilter.BANNED,
+                              enums.ChatMembersFilter.RESTRICTED]
 
     filter = filter.value(q=query) if is_queryable else filter.value()
 
@@ -29,9 +27,9 @@ async def get_chunk(
             filter=filter,
             offset=offset,
             limit=limit,
-            hash=0,
+            hash=0
         ),
-        sleep_threshold=60,
+        sleep_threshold=60
     )
 
     members = r.participants
@@ -47,13 +45,63 @@ class GetChatMembers:
         chat_id: Union[int, str],
         query: str = "",
         limit: int = 0,
-        filter: "enums.ChatMembersFilter" = enums.ChatMembersFilter.SEARCH,
+        filter: "enums.ChatMembersFilter" = enums.ChatMembersFilter.SEARCH
     ) -> Optional[AsyncGenerator["types.ChatMember", None]]:
+        """Get the members list of a chat.
+
+        A chat can be either a basic group, a supergroup or a channel.
+        Requires administrator rights in channels.
+
+        .. include:: /_includes/usable-by/users-bots.rst
+
+        Parameters:
+            chat_id (``int`` | ``str``):
+                Unique identifier (int) or username (str) of the target chat.
+                You can also use chat public link in form of *t.me/<username>* (str).
+
+            query (``str``, *optional*):
+                Query string to filter members based on their display names and usernames.
+                Only applicable to supergroups and channels. Defaults to "" (empty string).
+                A query string is applicable only for :obj:`~pyrogram.enums.ChatMembersFilter.SEARCH`,
+                :obj:`~pyrogram.enums.ChatMembersFilter.BANNED` and :obj:`~pyrogram.enums.ChatMembersFilter.RESTRICTED`
+                filters only.
+
+            limit (``int``, *optional*):
+                Limits the number of members to be retrieved.
+
+            filter (:obj:`~pyrogram.enums.ChatMembersFilter`, *optional*):
+                Filter used to select the kind of members you want to retrieve. Only applicable for supergroups
+                and channels.
+
+        Returns:
+            ``Generator``: On success, a generator yielding :obj:`~pyrogram.types.ChatMember` objects is returned.
+
+        Example:
+            .. code-block:: python
+
+                from pyrogram import enums
+
+                # Get members
+                async for member in app.get_chat_members(chat_id):
+                    print(member)
+
+                # Get administrators
+                administrators = []
+                async for m in app.get_chat_members(chat_id, filter=enums.ChatMembersFilter.ADMINISTRATORS):
+                    administrators.append(m)
+
+                # Get bots
+                bots = []
+                async for m in app.get_chat_members(chat_id, filter=enums.ChatMembersFilter.BOTS):
+                    bots.append(m)
+        """
         peer = await self.resolve_peer(chat_id)
 
         if isinstance(peer, raw.types.InputPeerChat):
             r = await self.invoke(
-                raw.functions.messages.GetFullChat(chat_id=peer.chat_id)
+                raw.functions.messages.GetFullChat(
+                    chat_id=peer.chat_id
+                )
             )
 
             members = getattr(r.full_chat.participants, "participants", [])
@@ -76,7 +124,7 @@ class GetChatMembers:
                 offset=offset,
                 filter=filter,
                 limit=limit,
-                query=query,
+                query=query
             )
 
             if not members:

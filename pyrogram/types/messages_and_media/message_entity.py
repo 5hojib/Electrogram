@@ -7,6 +7,37 @@ from ..object import Object
 
 
 class MessageEntity(Object):
+    """One special entity in a text message.
+    
+    For example, hashtags, usernames, URLs, etc.
+
+    Parameters:
+        type (:obj:`~pyrogram.enums.MessageEntityType`):
+            Type of the entity.
+
+        offset (``int``):
+            Offset in UTF-16 code units to the start of the entity.
+
+        length (``int``):
+            Length of the entity in UTF-16 code units.
+
+        url (``str``, *optional*):
+            For :obj:`~pyrogram.enums.MessageEntityType.TEXT_LINK` only, url that will be opened after user taps on the text.
+
+        user (:obj:`~pyrogram.types.User`, *optional*):
+            For :obj:`~pyrogram.enums.MessageEntityType.TEXT_MENTION` only, the mentioned user.
+
+        language (``str``, *optional*):
+            For "pre" only, the programming language of the entity text.
+
+        custom_emoji_id (``int``, *optional*):
+            For :obj:`~pyrogram.enums.MessageEntityType.CUSTOM_EMOJI` only, unique identifier of the custom emoji.
+            Use :meth:`~pyrogram.Client.get_custom_emoji_stickers` to get full information about the sticker.
+
+        collapsed (``bool``, *optional*):
+            For :obj:`~pyrogram.enums.MessageEntityType.BLOCKQUOTE` only, whether the blockquote expandable.
+    """
+
     def __init__(
         self,
         *,
@@ -18,7 +49,7 @@ class MessageEntity(Object):
         user: "types.User" = None,
         language: str = None,
         custom_emoji_id: int = None,
-        collapsed: bool = None,
+        collapsed: bool = None
     ):
         super().__init__(client)
 
@@ -32,9 +63,9 @@ class MessageEntity(Object):
         self.collapsed = collapsed
 
     @staticmethod
-    def _parse(
-        client, entity: "raw.base.MessageEntity", users: dict
-    ) -> Optional["MessageEntity"]:
+    def _parse(client, entity: "raw.base.MessageEntity", users: dict) -> Optional["MessageEntity"]:
+        # Special case for InputMessageEntityMentionName -> MessageEntityType.TEXT_MENTION
+        # This happens in case of UpdateShortSentMessage inside send_message() where entities are parsed from the input
         if isinstance(entity, raw.types.InputMessageEntityMentionName):
             entity_type = enums.MessageEntityType.TEXT_MENTION
             user_id = entity.user_id.user_id
@@ -51,7 +82,7 @@ class MessageEntity(Object):
             language=getattr(entity, "language", None),
             custom_emoji_id=getattr(entity, "document_id", None),
             collapsed=getattr(entity, "collapsed", None),
-            client=client,
+            client=client
         )
 
     async def write(self):
@@ -75,7 +106,7 @@ class MessageEntity(Object):
 
         if self.type not in [
             enums.MessageEntityType.BLOCKQUOTE,
-            enums.MessageEntityType.EXPANDABLE_BLOCKQUOTE,
+            enums.MessageEntityType.EXPANDABLE_BLOCKQUOTE
         ]:
             args.pop("collapsed")
 

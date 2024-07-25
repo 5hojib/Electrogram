@@ -7,8 +7,45 @@ from pyrogram.utils import compute_password_hash, btoi, itob
 
 class EnableCloudPassword:
     async def enable_cloud_password(
-        self: "pyrogram.Client", password: str, hint: str = "", email: str = None
+        self: "pyrogram.Client",
+        password: str,
+        hint: str = "",
+        email: str = None
     ) -> bool:
+        """Enable the Two-Step Verification security feature (Cloud Password) on your account.
+
+        This password will be asked when you log-in on a new device in addition to the SMS code.
+
+        .. include:: /_includes/usable-by/users.rst
+
+        Parameters:
+            password (``str``):
+                Your password.
+
+            hint (``str``, *optional*):
+                A password hint.
+
+            email (``str``, *optional*):
+                Recovery e-mail.
+
+        Returns:
+            ``bool``: True on success.
+
+        Raises:
+            ValueError: In case there is already a cloud password enabled.
+
+        Example:
+            .. code-block:: python
+
+                # Enable password without hint and email
+                await app.enable_cloud_password("password")
+
+                # Enable password with hint and without email
+                await app.enable_cloud_password("password", hint="hint")
+
+                # Enable password with hint and email
+                await app.enable_cloud_password("password", hint="hint", email="user@email.com")
+        """
         r = await self.invoke(raw.functions.account.GetPassword())
 
         if r.has_password:
@@ -25,8 +62,8 @@ class EnableCloudPassword:
                     new_algo=r.new_algo,
                     new_password_hash=new_hash,
                     hint=hint,
-                    email=email,
-                ),
+                    email=email
+                )
             )
         )
 

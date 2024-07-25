@@ -10,6 +10,14 @@ class Terminate:
     async def terminate(
         self: "pyrogram.Client",
     ):
+        """Terminate the client by shutting down workers.
+
+        This method does the opposite of :meth:`~pyrogram.Client.initialize`.
+        It will stop the dispatcher and shut down updates and download workers.
+
+        Raises:
+            ConnectionError: In case you try to terminate a client that is already terminated.
+        """
         if not self.is_initialized:
             raise ConnectionError("Client is already terminated")
 

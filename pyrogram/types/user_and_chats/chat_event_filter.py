@@ -3,9 +3,58 @@ from ..object import Object
 
 
 class ChatEventFilter(Object):
+    """Set of filters used to obtain a chat event log.
+
+    Parameters:
+        new_restrictions (``bool``, *optional*):
+            True, if member restricted/unrestricted/banned/unbanned events should be returned.
+            Defaults to False.
+
+        new_privileges (``bool``, *optional*):
+            True, if member promotion/demotion events should be returned.
+            Defaults to False.
+
+        new_members (``bool``, *optional*):
+            True, if members joining events should be returned.
+            Defaults to False.
+
+        chat_info (``bool``, *optional*):
+            True, if chat info changes should be returned. That is, when description, linked chat, location, photo,
+            sticker set, title or username have been modified.
+            Defaults to False.
+
+        chat_settings (``bool``, *optional*):
+            True, if chat settings changes should be returned. That is, when invites, hidden history, message
+            signatures, default chat permissions have been modified.
+            Defaults to False.
+
+        invite_links (``bool``, *optional*):
+            True, if invite links events (edit, revoke, delete) should be returned.
+            Defaults to False.
+
+        deleted_messages (``bool``, *optional*):
+            True, if deleted messages events should be returned.
+            Defaults to False.
+
+        edited_messages (``bool``, *optional*):
+            True, if edited messages events, including closed polls, should be returned.
+            Defaults to False.
+
+        pinned_messages (``bool``, *optional*):
+            True, if pinned/unpinned messages events should be returned.
+            Defaults to False.
+
+        leaving_members (``bool``, *optional*):
+            True, if members leaving events should be returned.
+            Defaults to False.
+
+        video_chats (``bool``, *optional*):
+            True, if video chats events should be returned.
+            Defaults to False.
+    """
+
     def __init__(
-        self,
-        *,
+        self, *,
         new_restrictions: bool = False,
         new_privileges: bool = False,
         new_members: bool = False,
@@ -16,7 +65,7 @@ class ChatEventFilter(Object):
         edited_messages: bool = False,
         pinned_messages: bool = False,
         leaving_members: bool = False,
-        video_chats: bool = False,
+        video_chats: bool = False
     ):
         super().__init__()
 
@@ -104,5 +153,5 @@ class ChatEventFilter(Object):
             edit=edit,
             delete=delete,
             group_call=group_call,
-            invites=invites,
+            invites=invites
         )

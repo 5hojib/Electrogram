@@ -10,8 +10,37 @@ class ChangeCloudPassword:
         self: "pyrogram.Client",
         current_password: str,
         new_password: str,
-        new_hint: str = "",
+        new_hint: str = ""
     ) -> bool:
+        """Change your Two-Step Verification password (Cloud Password) with a new one.
+
+        .. include:: /_includes/usable-by/users.rst
+
+        Parameters:
+            current_password (``str``):
+                Your current password.
+
+            new_password (``str``):
+                Your new password.
+
+            new_hint (``str``, *optional*):
+                A new password hint.
+
+        Returns:
+            ``bool``: True on success.
+
+        Raises:
+            ValueError: In case there is no cloud password to change.
+
+        Example:
+            .. code-block:: python
+
+                # Change password only
+                await app.change_cloud_password("current_password", "new_password")
+
+                # Change password and hint
+                await app.change_cloud_password("current_password", "new_password", new_hint="hint")
+        """
         r = await self.invoke(raw.functions.account.GetPassword())
 
         if not r.has_password:
@@ -25,8 +54,10 @@ class ChangeCloudPassword:
             raw.functions.account.UpdatePasswordSettings(
                 password=compute_password_check(r, current_password),
                 new_settings=raw.types.account.PasswordInputSettings(
-                    new_algo=r.new_algo, new_password_hash=new_hash, hint=new_hint
-                ),
+                    new_algo=r.new_algo,
+                    new_password_hash=new_hash,
+                    hint=new_hint
+                )
             )
         )
 

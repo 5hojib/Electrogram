@@ -4,6 +4,56 @@ from .inline_query_result import InlineQueryResult
 
 
 class InlineQueryResultVenue(InlineQueryResult):
+    """A venue.
+
+    By default, the venue will be sent by the user. Alternatively, you can use *input_message_content* to send a message
+    with the specified content instead of the venue.
+
+    Parameters:
+        title (``str``):
+            Title for the result.
+
+        address (``str``):
+            Address of the venue.
+
+        latitude (``float``):
+            Location latitude in degrees.
+
+        longitude (``float``):
+            Location longitude in degrees.
+
+        id (``str``, *optional*):
+            Unique identifier for this result, 1-64 bytes.
+            Defaults to a randomly generated UUID4.
+
+        foursquare_id (``str``, *optional*):
+            Foursquare identifier of the venue if known.
+
+        foursquare_type (``str``, *optional*):
+            Foursquare type of the venue, if known.
+
+        google_place_id (``str``, *optional*):
+            Google Places identifier of the venue.
+
+        google_place_type (``str``, *optional*):
+            Google Places type of the venue.
+
+        reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup`, *optional*):
+            Inline keyboard attached to the message.
+
+        input_message_content (:obj:`~pyrogram.types.InputMessageContent`):
+            Content of the message to be sent instead of the file.
+
+        thumb_url (``str``, *optional*):
+            Url of the thumbnail for the result.
+
+        thumb_width (``int``, *optional*):
+            Thumbnail width.
+
+        thumb_height (``int``, *optional*):
+            Thumbnail height.
+    """
+
     def __init__(
         self,
         title: str,
@@ -19,7 +69,7 @@ class InlineQueryResultVenue(InlineQueryResult):
         input_message_content: "types.InputMessageContent" = None,
         thumb_url: str = None,
         thumb_width: int = 0,
-        thumb_height: int = 0,
+        thumb_height: int = 0
     ):
         super().__init__("venue", id, input_message_content, reply_markup)
 
@@ -45,22 +95,19 @@ class InlineQueryResultVenue(InlineQueryResult):
                 if self.input_message_content
                 else raw.types.InputBotInlineMessageMediaVenue(
                     geo_point=raw.types.InputGeoPoint(
-                        lat=self.latitude, long=self.longitude
+                        lat=self.latitude,
+                        long=self.longitude
                     ),
                     title=self.title,
                     address=self.address,
                     provider=(
-                        "foursquare"
-                        if self.foursquare_id or self.foursquare_type
-                        else "google"
-                        if self.google_place_id or self.google_place_type
+                        "foursquare" if self.foursquare_id or self.foursquare_type
+                        else "google" if self.google_place_id or self.google_place_type
                         else ""
                     ),
                     venue_id=self.foursquare_id or self.google_place_id or "",
                     venue_type=self.foursquare_type or self.google_place_type or "",
-                    reply_markup=await self.reply_markup.write(client)
-                    if self.reply_markup
-                    else None,
+                    reply_markup=await self.reply_markup.write(client) if self.reply_markup else None
                 )
-            ),
+            )
         )

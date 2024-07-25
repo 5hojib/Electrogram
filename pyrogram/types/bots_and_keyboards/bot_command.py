@@ -4,6 +4,17 @@ from ..object import Object
 
 
 class BotCommand(Object):
+    """A bot command with the standard slash "/" prefix.
+
+    Parameters:
+        command (``str``):
+            Text of the command; 1-32 characters.
+            Can contain only lowercase English letters, digits and underscores.
+
+        description (``str``):
+            Description of the command; 1-256 characters.
+    """
+
     def __init__(self, command: str, description: str):
         super().__init__()
 
@@ -18,4 +29,7 @@ class BotCommand(Object):
 
     @staticmethod
     def read(c: "raw.types.BotCommand") -> "BotCommand":
-        return BotCommand(command=c.command, description=c.description)
+        return BotCommand(
+            command=c.command,
+            description=c.description
+        )

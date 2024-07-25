@@ -13,7 +13,48 @@ class SearchGlobal:
         filter: "enums.MessagesFilter" = enums.MessagesFilter.EMPTY,
         limit: int = 0,
     ) -> Optional[AsyncGenerator["types.Message", None]]:
+        """Search messages globally from all of your chats.
+
+        If you want to get the messages count only, see :meth:`~pyrogram.Client.search_global_count`.
+
+        .. note::
+
+            Due to server-side limitations, you can only get up to around ~10,000 messages and each message
+            retrieved will not have any *reply_to_message* field.
+
+        .. include:: /_includes/usable-by/users.rst
+
+        Parameters:
+            query (``str``, *optional*):
+                Text query string.
+                Use "@" to search for mentions.
+            
+            filter (:obj:`~pyrogram.enums.MessagesFilter`, *optional*):
+                Pass a filter in order to search for specific kind of messages only.
+                Defaults to any message (no filter).
+
+            limit (``int``, *optional*):
+                Limits the number of messages to be retrieved.
+                By default, no limit is applied and all messages are returned.
+
+        Returns:
+            ``Generator``: A generator yielding :obj:`~pyrogram.types.Message` objects.
+
+        Example:
+            .. code-block:: python
+
+                from pyrogram import enums
+
+                # Search for "pyrogram". Get the first 50 results
+                async for message in app.search_global("pyrogram", limit=50):
+                    print(message.text)
+
+                # Search for recent photos from Global. Get the first 20 results
+                async for message in app.search_global(filter=enums.MessagesFilter.PHOTO, limit=20):
+                    print(message.photo)
+        """
         current = 0
+        # There seems to be an hard limit of 10k, beyond which Telegram starts spitting one message at a time.
         total = abs(limit) or (1 << 31)
         limit = min(100, total)
 
@@ -33,11 +74,11 @@ class SearchGlobal:
                         offset_rate=offset_date,
                         offset_peer=offset_peer,
                         offset_id=offset_id,
-                        limit=limit,
+                        limit=limit
                     ),
-                    sleep_threshold=60,
+                    sleep_threshold=60
                 ),
-                replies=0,
+                replies=0
             )
 
             if not messages:

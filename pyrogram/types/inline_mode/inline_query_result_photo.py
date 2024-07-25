@@ -6,6 +6,54 @@ from .inline_query_result import InlineQueryResult
 
 
 class InlineQueryResultPhoto(InlineQueryResult):
+    """Link to a photo.
+
+    By default, this photo will be sent by the user with optional caption.
+    Alternatively, you can use *input_message_content* to send a message with the specified content instead of the
+    photo.
+
+    Parameters:
+        photo_url (``str``):
+            A valid URL of the photo.
+            Photo must be in jpeg format an must not exceed 5 MB.
+
+        thumb_url (``str``, *optional*):
+            URL of the thumbnail for the photo.
+            Defaults to the value passed in *photo_url*.
+
+        photo_width (``int``, *optional*):
+            Width of the photo.
+
+        photo_height (``int``, *optional*):
+            Height of the photo
+
+        id (``str``, *optional*):
+            Unique identifier for this result, 1-64 bytes.
+            Defaults to a randomly generated UUID4.
+
+        title (``str``, *optional*):
+            Title for the result.
+
+        description (``str``, *optional*):
+            Short description of the result.
+
+        caption (``str``, *optional*):
+            Caption of the photo to be sent, 0-1024 characters.
+
+        parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+            By default, texts are parsed using both Markdown and HTML styles.
+            You can combine both syntaxes together.
+
+        caption_entities (List of :obj:`~pyrogram.types.MessageEntity`):
+            List of special entities that appear in the caption, which can be specified instead of *parse_mode*.
+
+        reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup`, *optional*):
+            An InlineKeyboardMarkup object.
+
+        input_message_content (:obj:`~pyrogram.types.InputMessageContent`):
+            Content of the message to be sent instead of the photo.
+    """
+
     def __init__(
         self,
         photo_url: str,
@@ -19,7 +67,7 @@ class InlineQueryResultPhoto(InlineQueryResult):
         parse_mode: Optional["enums.ParseMode"] = None,
         caption_entities: List["types.MessageEntity"] = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        input_message_content: "types.InputMessageContent" = None,
+        input_message_content: "types.InputMessageContent" = None
     ):
         super().__init__("photo", id, input_message_content, reply_markup)
 
@@ -42,23 +90,25 @@ class InlineQueryResultPhoto(InlineQueryResult):
             mime_type="image/jpeg",
             attributes=[
                 raw.types.DocumentAttributeImageSize(
-                    w=self.photo_width, h=self.photo_height
+                    w=self.photo_width,
+                    h=self.photo_height
                 )
-            ],
+            ]
         )
 
         if self.thumb_url is None:
             thumb = photo
         else:
             thumb = raw.types.InputWebDocument(
-                url=self.thumb_url, size=0, mime_type="image/jpeg", attributes=[]
+                url=self.thumb_url,
+                size=0,
+                mime_type="image/jpeg",
+                attributes=[]
             )
 
-        message, entities = (
-            await utils.parse_text_entities(
-                client, self.caption, self.parse_mode, self.caption_entities
-            )
-        ).values()
+        message, entities = (await utils.parse_text_entities(
+            client, self.caption, self.parse_mode, self.caption_entities
+        )).values()
 
         return raw.types.InputBotInlineResult(
             id=self.id,
@@ -71,11 +121,9 @@ class InlineQueryResultPhoto(InlineQueryResult):
                 await self.input_message_content.write(client, self.reply_markup)
                 if self.input_message_content
                 else raw.types.InputBotInlineMessageMediaAuto(
-                    reply_markup=await self.reply_markup.write(client)
-                    if self.reply_markup
-                    else None,
+                    reply_markup=await self.reply_markup.write(client) if self.reply_markup else None,
                     message=message,
-                    entities=entities,
+                    entities=entities
                 )
-            ),
+            )
         )

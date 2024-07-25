@@ -5,6 +5,67 @@ from ..object import Object
 
 
 class WebPage(Object):
+    # TODO: hash, cached_page
+    """A webpage preview
+
+    Parameters:
+        id (``str``):
+            Unique identifier for this webpage.
+
+        url (``str``):
+            Full URL for this webpage.
+
+        display_url (``str``):
+            Display URL for this webpage.
+
+        type (``str``, *optional*):
+            Type of webpage preview, known types (at the time of writing) are:
+            *"article"*, *"photo"*, *"gif"*, *"video"* and *"document"*,
+            *"telegram_user"*, *"telegram_bot"*, *"telegram_channel"*, *"telegram_megagroup"*.
+
+        site_name (``str``, *optional*):
+            Webpage site name.
+
+        title (``str``, *optional*):
+            Title of this webpage.
+
+        description (``str``, *optional*):
+            Description of this webpage.
+
+        audio (:obj:`~pyrogram.types.Audio`, *optional*):
+            Webpage preview is an audio file, information about the file.
+
+        document (:obj:`~pyrogram.types.Document`, *optional*):
+            Webpage preview is a general file, information about the file.
+
+        photo (:obj:`~pyrogram.types.Photo`, *optional*):
+            Webpage preview is a photo, information about the photo.
+
+        animation (:obj:`~pyrogram.types.Animation`, *optional*):
+            Webpage preview is an animation, information about the animation.
+
+        video (:obj:`~pyrogram.types.Video`, *optional*):
+            Webpage preview is a video, information about the video.
+
+        embed_url (``str``, *optional*):
+            Embedded content URL.
+
+        embed_type (``str``, *optional*):
+            Embedded content type, like `iframe`
+
+        embed_width (``int``, *optional*):
+            Embedded content width.
+
+        embed_height (``int``, *optional*):
+            Embedded content height.
+
+        duration (``int``, *optional*):
+            Unknown at the time of writing.
+
+        author (``str``, *optional*):
+            Author of the webpage, eg the Twitter user for a tweet, or the author in an article.
+    """
+
     def __init__(
         self,
         *,
@@ -26,7 +87,7 @@ class WebPage(Object):
         embed_width: int = None,
         embed_height: int = None,
         duration: int = None,
-        author: str = None,
+        author: str = None
     ):
         super().__init__(client)
 
@@ -66,9 +127,9 @@ class WebPage(Object):
             attributes = {type(i): i for i in doc.attributes}
 
             file_name = getattr(
-                attributes.get(raw.types.DocumentAttributeFilename, None),
-                "file_name",
-                None,
+                attributes.get(
+                    raw.types.DocumentAttributeFilename, None
+                ), "file_name", None
             )
 
             if raw.types.DocumentAttributeAudio in attributes:
@@ -76,12 +137,8 @@ class WebPage(Object):
                 audio = types.Audio._parse(client, doc, audio_attributes, file_name)
 
             elif raw.types.DocumentAttributeAnimated in attributes:
-                video_attributes = attributes.get(
-                    raw.types.DocumentAttributeVideo, None
-                )
-                animation = types.Animation._parse(
-                    client, doc, video_attributes, file_name
-                )
+                video_attributes = attributes.get(raw.types.DocumentAttributeVideo, None)
+                animation = types.Animation._parse(client, doc, video_attributes, file_name)
 
             elif raw.types.DocumentAttributeVideo in attributes:
                 video_attributes = attributes[raw.types.DocumentAttributeVideo]
@@ -108,5 +165,5 @@ class WebPage(Object):
             embed_width=webpage.embed_width,
             embed_height=webpage.embed_height,
             duration=webpage.duration,
-            author=webpage.author,
+            author=webpage.author
         )

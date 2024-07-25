@@ -13,8 +13,49 @@ class GetChatEventLog:
         offset_id: int = 0,
         limit: int = 0,
         filters: "types.ChatEventFilter" = None,
-        user_ids: List[Union[int, str]] = None,
+        user_ids: List[Union[int, str]] = None
     ) -> Optional[AsyncGenerator["types.ChatEvent", None]]:
+        """Get the actions taken by chat members and administrators in the last 48h.
+
+        Only available for supergroups and channels. Requires administrator rights.
+        Results are returned in reverse chronological order (i.e., newest first).
+
+        .. include:: /_includes/usable-by/users.rst
+
+        Parameters:
+            chat_id (``int`` | ``str``):
+                Unique identifier (int) or username (str) of the target chat.
+                You can also use chat public link in form of *t.me/<username>* (str).
+
+            query (``str``, *optional*):
+                Search query to filter events based on text.
+                By default, an empty query is applied and all events will be returned.
+
+            offset_id (``int``, *optional*):
+                Offset event identifier from which to start returning results.
+                By default, no offset is applied and events will be returned starting from the latest.
+
+            limit (``int``, *optional*):
+                Maximum amount of events to be returned.
+                By default, all events will be returned.
+
+            filters (:obj:`~pyrogram.types.ChatEventFilter`, *optional*):
+                The types of events to return.
+                By default, all types will be returned.
+
+            user_ids (List of ``int`` | ``str``, *optional*):
+                User identifiers (int) or usernames (str) by which to filter events.
+                By default, events relating to all users will be returned.
+
+        Yields:
+            :obj:`~pyrogram.types.ChatEvent` objects.
+
+        Example:
+            .. code-block:: python
+
+                async for event in app.get_chat_event_log(chat_id):
+                    print(event)
+        """
         current = 0
         total = abs(limit) or (1 << 31)
         limit = min(100, total)
@@ -32,7 +73,7 @@ class GetChatEventLog:
                         [await self.resolve_peer(i) for i in user_ids]
                         if user_ids is not None
                         else user_ids
-                    ),
+                    )
                 )
             )
 

@@ -1,10 +1,33 @@
 import pyrogram
-from pyrogram import raw, types
+from pyrogram import raw
+from pyrogram import types
 from ..object import Object
 from ... import utils
 
 
 class Dialog(Object):
+    """A user's dialog.
+
+    Parameters:
+        chat (:obj:`~pyrogram.types.Chat`):
+            Conversation the dialog belongs to.
+
+        top_message (:obj:`~pyrogram.types.Message`):
+            The last message sent in the dialog at this time.
+
+        unread_messages_count (``int``):
+            Amount of unread messages in this dialog.
+
+        unread_mentions_count (``int``):
+            Amount of unread messages containing a mention in this dialog.
+
+        unread_mark (``bool``):
+            True, if the dialog has the unread mark set.
+
+        is_pinned (``bool``):
+            True, if the dialog is pinned.
+    """
+
     def __init__(
         self,
         *,
@@ -14,7 +37,7 @@ class Dialog(Object):
         unread_messages_count: int,
         unread_mentions_count: int,
         unread_mark: bool,
-        is_pinned: bool,
+        is_pinned: bool
     ):
         super().__init__(client)
 
@@ -34,5 +57,5 @@ class Dialog(Object):
             unread_mentions_count=dialog.unread_mentions_count,
             unread_mark=dialog.unread_mark,
             is_pinned=dialog.pinned,
-            client=client,
+            client=client
         )

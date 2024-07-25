@@ -10,8 +10,31 @@ class GetChatInviteLinkJoiners:
         self: "pyrogram.Client",
         chat_id: Union[int, str],
         invite_link: str,
-        limit: int = 0,
+        limit: int = 0
     ) -> Optional[AsyncGenerator["types.ChatJoiner", None]]:
+        """Get the members who joined the chat with the invite link.
+
+        .. include:: /_includes/usable-by/users.rst
+
+        Parameters:
+            chat_id (``int`` | ``str``):
+                Unique identifier for the target chat or username of the target channel/supergroup
+                (in the format @username).
+                You can also use chat public link in form of *t.me/<username>* (str).
+
+            invite_link (str):
+                The invite link.
+
+            limit (``int``, *optional*):
+                Limits the number of invite links to be retrieved.
+                By default, no limit is applied and all invite links are returned.
+
+        Returns:
+            ``Generator``: A generator yielding :obj:`~pyrogram.types.ChatJoiner` objects.
+
+        Yields:
+            :obj:`~pyrogram.types.ChatJoiner` objects.
+        """
         current = 0
         total = abs(limit) or (1 << 31) - 1
         limit = min(100, total)
@@ -26,7 +49,7 @@ class GetChatInviteLinkJoiners:
                     link=invite_link,
                     limit=limit,
                     offset_date=offset_date,
-                    offset_user=offset_user,
+                    offset_user=offset_user
                 )
             )
 

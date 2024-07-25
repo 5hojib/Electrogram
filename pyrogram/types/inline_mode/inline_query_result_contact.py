@@ -4,6 +4,45 @@ from .inline_query_result import InlineQueryResult
 
 
 class InlineQueryResultContact(InlineQueryResult):
+    """Contact with a phone number
+    
+    By default, this contact will be sent by the user.
+    Alternatively, you can use *input_message_content* to send a message with the specified content instead of the
+    contact.
+    
+    Parameters:
+        phone_number (``str``):
+            Contact's phone number.
+
+        first_name (``str``):
+            Contact's first name.
+
+        last_name (``str``, *optional*):
+            Contact's last name.
+
+        vcard (``str``, *optional*):
+            Additional data about the contact in the form of a `vCard <https://en.wikipedia.org/wiki/VCard>`_.
+
+        id (``str``, *optional*):
+            Unique identifier for this result, 1-64 bytes.
+            Defaults to a randomly generated UUID4.
+
+        reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup`, *optional*):
+            Inline keyboard attached to the message.
+            
+        input_message_content (:obj:`~pyrogram.types.InputMessageContent`, *optional*):
+            Content of the message to be sent instead of the contact.
+
+        thumb_url (``str``, *optional*):
+            Url of the thumbnail for the result.
+
+        thumb_width (``int``, *optional*):
+            Thumbnail width.
+
+        thumb_height (``int``, *optional*):
+            Thumbnail height.
+    """
+
     def __init__(
         self,
         phone_number: str,
@@ -15,7 +54,7 @@ class InlineQueryResultContact(InlineQueryResult):
         input_message_content: "types.InputMessageContent" = None,
         thumb_url: str = None,
         thumb_width: int = 0,
-        thumb_height: int = 0,
+        thumb_height: int = 0
     ):
         super().__init__("contact", id, input_message_content, reply_markup)
 
@@ -40,9 +79,7 @@ class InlineQueryResultContact(InlineQueryResult):
                     first_name=self.first_name,
                     last_name=self.last_name,
                     vcard=self.vcard,
-                    reply_markup=await self.reply_markup.write(client)
-                    if self.reply_markup
-                    else None,
+                    reply_markup=await self.reply_markup.write(client) if self.reply_markup else None,
                 )
             ),
             thumb=raw.types.InputWebDocument(
@@ -51,10 +88,9 @@ class InlineQueryResultContact(InlineQueryResult):
                 mime_type="image/jpg",
                 attributes=[
                     raw.types.DocumentAttributeImageSize(
-                        w=self.thumb_width, h=self.thumb_height
+                        w=self.thumb_width,
+                        h=self.thumb_height
                     )
-                ],
-            )
-            if self.thumb_url
-            else None,
+                ]
+            ) if self.thumb_url else None
         )

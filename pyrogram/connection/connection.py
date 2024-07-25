@@ -19,7 +19,7 @@ class Connection:
         alt_port: bool,
         proxy: dict,
         media: bool = False,
-        protocol_factory: Type[TCP] = TCPAbridged,
+        protocol_factory: Type[TCP] = TCPAbridged
     ) -> None:
         self.dc_id = dc_id
         self.test_mode = test_mode
@@ -37,12 +37,18 @@ class Connection:
             self.protocol = self.protocol_factory(ipv6=self.ipv6, proxy=self.proxy)
 
             try:
+                log.info("Connecting...")
                 await self.protocol.connect(self.address)
             except OSError as e:
                 log.warning("Unable to connect due to network issues: %s", e)
                 await self.protocol.close()
                 await asyncio.sleep(1)
             else:
+                log.info("Connected! %s DC%s%s - IPv%s",
+                         "Test" if self.test_mode else "Production",
+                         self.dc_id,
+                         " (media)" if self.media else "",
+                         "6" if self.ipv6 else "4")
                 break
         else:
             log.warning("Connection failed! Trying again...")

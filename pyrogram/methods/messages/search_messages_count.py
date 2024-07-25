@@ -10,8 +10,36 @@ class SearchMessagesCount:
         chat_id: Union[int, str],
         query: str = "",
         filter: "enums.MessagesFilter" = enums.MessagesFilter.EMPTY,
-        from_user: Union[int, str] = None,
+        from_user: Union[int, str] = None
     ) -> int:
+        """Get the count of messages resulting from a search inside a chat.
+
+        If you want to get the actual messages, see :meth:`~pyrogram.Client.search_messages`.
+
+        .. include:: /_includes/usable-by/users.rst
+
+        Parameters:
+            chat_id (``int`` | ``str``):
+                Unique identifier (int) or username (str) of the target chat.
+                For your personal cloud (Saved Messages) you can simply use "me" or "self".
+                For a contact that exists in your Telegram address book you can use his phone number (str).
+                You can also use chat public link in form of *t.me/<username>* (str).
+
+            query (``str``, *optional*):
+                Text query string.
+                Required for text-only messages, optional for media messages (see the ``filter`` argument).
+                When passed while searching for media messages, the query will be applied to captions.
+                Defaults to "" (empty string).
+
+            filter (:obj:`~pyrogram.enums.MessagesFilter`, *optional*):
+                Pass a filter in order to search for specific kind of messages only:
+
+            from_user (``int`` | ``str``, *optional*):
+                Unique identifier (int) or username (str) of the target user you want to search for messages from.
+
+        Returns:
+            ``int``: On success, the messages count is returned.
+        """
         r = await self.invoke(
             raw.functions.messages.Search(
                 peer=await self.resolve_peer(chat_id),
@@ -24,8 +52,12 @@ class SearchMessagesCount:
                 limit=1,
                 min_id=0,
                 max_id=0,
-                from_id=(await self.resolve_peer(from_user) if from_user else None),
-                hash=0,
+                from_id=(
+                    await self.resolve_peer(from_user)
+                    if from_user
+                    else None
+                ),
+                hash=0
             )
         )
 

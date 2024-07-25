@@ -10,6 +10,17 @@ class GetChatMenuButton:
         self: "pyrogram.Client",
         chat_id: Union[int, str] = None,
     ) -> "types.MenuButton":
+        """Get the current value of the bot's menu button in a private chat, or the default menu button.
+
+        .. include:: /_includes/usable-by/bots.rst
+
+        Parameters:
+            chat_id (``int`` | ``str``):
+                Unique identifier (int) or username (str) of the target chat.
+                You can also use user profile/chat public link in form of *t.me/<username>* (str).
+                If not specified, default bot's menu button will be returned.
+        """
+
         if chat_id:
             r = await self.invoke(
                 raw.functions.bots.GetBotMenuButton(
@@ -17,11 +28,11 @@ class GetChatMenuButton:
                 )
             )
         else:
-            r = (
-                await self.invoke(
-                    raw.functions.users.GetFullUser(id=raw.types.InputUserSelf())
+            r = (await self.invoke(
+                raw.functions.users.GetFullUser(
+                    id=raw.types.InputUserSelf()
                 )
-            ).full_user.bot_info.menu_button
+            )).full_user.bot_info.menu_button
 
         if isinstance(r, raw.types.BotMenuButtonCommands):
             return types.MenuButtonCommands()
@@ -31,5 +42,8 @@ class GetChatMenuButton:
 
         if isinstance(r, raw.types.BotMenuButton):
             return types.MenuButtonWebApp(
-                text=r.text, web_app=types.WebAppInfo(url=r.url)
+                text=r.text,
+                web_app=types.WebAppInfo(
+                    url=r.url
+                )
             )

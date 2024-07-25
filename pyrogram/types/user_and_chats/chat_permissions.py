@@ -3,12 +3,82 @@ from ..object import Object
 
 
 class ChatPermissions(Object):
+    """Describes actions that a non-administrator user is allowed to take in a chat.
+
+    Parameters:
+        all_perms (``bool``, *optional*):
+            True, if all permissions are allowed.
+
+        can_send_messages (``bool``, *optional*):
+            True, if the user is allowed to send text messages, contacts, locations and venues.
+
+        can_send_media_messages (``bool``, *optional*):
+            True, if the user is allowed to send audios, documents, photos, videos, video notes and voice notes.
+            Implies *can_send_messages*.
+
+        can_send_polls (``bool``, *optional*):
+            True, if the user is allowed to send polls.
+            Implies can_send_messages
+
+        can_add_web_page_previews (``bool``, *optional*):
+            True, if the user is allowed to add web page previews to their messages.
+            Implies *can_send_media_messages*.
+
+        can_change_info (``bool``, *optional*):
+            True, if the user is allowed to change the chat title, photo and other settings.
+            Ignored in public supergroups
+
+        can_invite_users (``bool``, *optional*):
+            True, if the user is allowed to invite new users to the chat.
+
+        can_pin_messages (``bool``, *optional*):
+            True, if the user is allowed to pin messages.
+            Ignored in public supergroups.
+
+        can_manage_topics (``bool``, *optional*):
+            True, if the user is allowed to create, rename, close, and reopen forum topics.
+            supergroups only.
+
+        can_send_audios (``bool``, *optional*):
+            True, if the user is allowed to send audios.
+
+        can_send_docs (``bool``, *optional*):
+            True, if the user is allowed to send documents.
+
+        can_send_games (``bool``, *optional*):
+            True, if the user is allowed to send games.
+
+        can_send_gifs (``bool``, *optional*):
+            True, if the user is allowed to send gifs.
+
+        can_send_inline (``bool``, *optional*):
+            True, if the user is allowed to send bot inline.
+
+        can_send_photos (``bool``, *optional*):
+            True, if the user is allowed to send photos.
+
+        can_send_plain (``bool``, *optional*):
+            True, if the user is allowed to send plain texts.
+
+        can_send_roundvideos (``bool``, *optional*):
+            True, if the user is allowed to send rounded videos.
+
+        can_send_stickers (``bool``, *optional*):
+            True, if the user is allowed to send stickers.
+
+        can_send_videos (``bool``, *optional*):
+            True, if the user is allowed to send videos.
+
+        can_send_voices (``bool``, *optional*):
+            True, if the user is allowed to send voices.
+    """
+
     def __init__(
         self,
         *,
         all_perms: bool = None,
-        can_send_messages: bool = None,
-        can_send_media_messages: bool = None,
+        can_send_messages: bool = None,  # Text, contacts, locations and venues
+        can_send_media_messages: bool = None,  # Audio files, documents, photos, videos, video notes and voice notes
         can_send_polls: bool = None,
         can_add_web_page_previews: bool = None,
         can_change_info: bool = None,
@@ -25,7 +95,7 @@ class ChatPermissions(Object):
         can_send_roundvideos: bool = None,
         can_send_stickers: bool = None,
         can_send_videos: bool = None,
-        can_send_voices: bool = None,
+        can_send_voices: bool = None
     ):
         super().__init__(None)
 
@@ -95,7 +165,7 @@ class ChatPermissions(Object):
                 denied_permissions.send_roundvideos,
                 denied_permissions.send_stickers,
                 denied_permissions.send_videos,
-                denied_permissions.send_voices,
+                denied_permissions.send_voices
             ]
             all_params_not = [
                 not denied_permissions.send_messages,
@@ -115,7 +185,7 @@ class ChatPermissions(Object):
                 not denied_permissions.send_roundvideos,
                 not denied_permissions.send_stickers,
                 not denied_permissions.send_videos,
-                not denied_permissions.send_voices,
+                not denied_permissions.send_voices
             ]
             if all(all_params):
                 all_permissions = False
@@ -141,5 +211,5 @@ class ChatPermissions(Object):
                 can_send_roundvideos=not denied_permissions.send_roundvideos,
                 can_send_stickers=not denied_permissions.send_stickers,
                 can_send_videos=not denied_permissions.send_videos,
-                can_send_voices=not denied_permissions.send_voices,
+                can_send_voices=not denied_permissions.send_voices
             )

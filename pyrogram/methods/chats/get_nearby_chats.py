@@ -8,11 +8,37 @@ from pyrogram import utils
 
 class GetNearbyChats:
     async def get_nearby_chats(
-        self: "pyrogram.Client", latitude: float, longitude: float
+        self: "pyrogram.Client",
+        latitude: float,
+        longitude: float
     ) -> List["types.Chat"]:
+        """Get nearby chats.
+
+        .. include:: /_includes/usable-by/users.rst
+
+        Parameters:
+            latitude (``float``):
+                Latitude of the location.
+
+            longitude (``float``):
+                Longitude of the location.
+
+        Returns:
+            List of :obj:`~pyrogram.types.Chat`: On success, a list of nearby chats is returned.
+
+        Example:
+            .. code-block:: python
+
+                chats = await app.get_nearby_chats(latitude, longitude)
+                print(chats)
+        """
+
         r = await self.invoke(
             raw.functions.contacts.GetLocated(
-                geo_point=raw.types.InputGeoPoint(lat=latitude, long=longitude)
+                geo_point=raw.types.InputGeoPoint(
+                    lat=latitude,
+                    long=longitude
+                )
             )
         )
 

@@ -11,9 +11,34 @@ class GetDiscussionMessage:
         chat_id: Union[int, str],
         message_id: int,
     ) -> "types.Message":
+        """Get the first discussion message of a channel post or a discussion thread in a group.
+
+        Reply to the returned message to leave a comment on the linked channel post or to continue
+        the discussion thread.
+
+        .. include:: /_includes/usable-by/users.rst
+
+        Parameters:
+            chat_id (``int`` | ``str``):
+                Unique identifier (int) or username (str) of the target chat.
+                You can also use chat public link in form of *t.me/<username>* (str).
+
+            message_id (``int``):
+                Message id.
+
+        Example:
+            .. code-block:: python
+
+                # Get the discussion message
+                m = await app.get_discussion_message(channel_id, message_id)
+
+                # Comment to the post by replying
+                await m.reply("comment")
+        """
         r = await self.invoke(
             raw.functions.messages.GetDiscussionMessage(
-                peer=await self.resolve_peer(chat_id), msg_id=message_id
+                peer=await self.resolve_peer(chat_id),
+                msg_id=message_id
             )
         )
 
