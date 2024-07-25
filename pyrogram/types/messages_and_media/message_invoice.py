@@ -37,7 +37,7 @@ class MessageInvoice(Object):
         self,
         *,
         title: str,
-        description :  str,
+        description: str,
         currency: str,
         total_amount: int,
         start_parameter: str,
@@ -58,9 +58,7 @@ class MessageInvoice(Object):
         self.receipt_message_id = receipt_message_id
 
     @staticmethod
-    def _parse(
-        message_invoice: "raw.types.MessageMediaInvoice"
-    ) -> "MessageInvoice":
+    def _parse(message_invoice: "raw.types.MessageMediaInvoice") -> "MessageInvoice":
         return MessageInvoice(
             title=message_invoice.title,
             description=message_invoice.description,
@@ -69,5 +67,5 @@ class MessageInvoice(Object):
             start_parameter=message_invoice.start_param,
             shipping_address_requested=message_invoice.shipping_address_requested,
             test=message_invoice.test,
-            receipt_message_id=message_invoice.receipt_msg_id
+            receipt_message_id=message_invoice.receipt_msg_id,
         )

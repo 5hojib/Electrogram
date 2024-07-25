@@ -1,5 +1,6 @@
 from ..object import Object
 
+
 class GiveawayLaunched(Object):
     """A service message about a giveaway started in the channel.
 

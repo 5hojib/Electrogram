@@ -87,7 +87,7 @@ class WebPage(Object):
         embed_width: int = None,
         embed_height: int = None,
         duration: int = None,
-        author: str = None
+        author: str = None,
     ):
         super().__init__(client)
 
@@ -127,9 +127,9 @@ class WebPage(Object):
             attributes = {type(i): i for i in doc.attributes}
 
             file_name = getattr(
-                attributes.get(
-                    raw.types.DocumentAttributeFilename, None
-                ), "file_name", None
+                attributes.get(raw.types.DocumentAttributeFilename, None),
+                "file_name",
+                None,
             )
 
             if raw.types.DocumentAttributeAudio in attributes:
@@ -137,8 +137,12 @@ class WebPage(Object):
                 audio = types.Audio._parse(client, doc, audio_attributes, file_name)
 
             elif raw.types.DocumentAttributeAnimated in attributes:
-                video_attributes = attributes.get(raw.types.DocumentAttributeVideo, None)
-                animation = types.Animation._parse(client, doc, video_attributes, file_name)
+                video_attributes = attributes.get(
+                    raw.types.DocumentAttributeVideo, None
+                )
+                animation = types.Animation._parse(
+                    client, doc, video_attributes, file_name
+                )
 
             elif raw.types.DocumentAttributeVideo in attributes:
                 video_attributes = attributes[raw.types.DocumentAttributeVideo]
@@ -165,5 +169,5 @@ class WebPage(Object):
             embed_width=webpage.embed_width,
             embed_height=webpage.embed_height,
             duration=webpage.duration,
-            author=webpage.author
+            author=webpage.author,
         )

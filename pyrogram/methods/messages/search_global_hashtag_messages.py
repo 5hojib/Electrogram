@@ -30,7 +30,7 @@ class SearchGlobalHashtagMessages:
                 Pass a date as offset to retrieve only older messages starting from that date.
 
             limit (``int``, *optional*):
-                The maximum number of messages to be returned. 
+                The maximum number of messages to be returned.
                 By default, no limit is applied and all posts are returned.
 
         Returns:
@@ -42,7 +42,7 @@ class SearchGlobalHashtagMessages:
                 # Search for "#pyrogram". Get the first 50 results
                 async for message in app.search_public_hashtag_messages("#pyrogram"):
                     print(message.text)
-                    
+
         """
         current = 0
         total = abs(limit) or (1 << 31)
@@ -59,11 +59,11 @@ class SearchGlobalHashtagMessages:
                         offset_rate=utils.datetime_to_timestamp(offset_date),
                         offset_peer=offset_peer,
                         offset_id=offset_id,
-                        limit=limit
+                        limit=limit,
                     ),
-                    sleep_threshold=60
+                    sleep_threshold=60,
                 ),
-                replies=0
+                replies=0,
             )
 
             if not messages:

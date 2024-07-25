@@ -9,9 +9,7 @@ log = logging.getLogger(__name__)
 
 
 class GetContacts:
-    async def get_contacts(
-        self: "pyrogram.Client"
-    ) -> List["types.User"]:
+    async def get_contacts(self: "pyrogram.Client") -> List["types.User"]:
         """Get contacts from your Telegram address book.
 
         .. include:: /_includes/usable-by/users.rst

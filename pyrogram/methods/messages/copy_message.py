@@ -28,8 +28,8 @@ class CopyMessage:
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply"
-        ] = None
+            "types.ForceReply",
+        ] = None,
     ) -> "types.Message":
         """Copy messages of any kind.
 
@@ -117,5 +117,5 @@ class CopyMessage:
             schedule_date=schedule_date,
             protect_content=protect_content,
             invert_media=invert_media,
-            reply_markup=reply_markup
+            reply_markup=reply_markup,
         )

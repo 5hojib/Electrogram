@@ -49,7 +49,7 @@ class GetDiscussionReplies:
                     limit=limit,
                     max_id=0,
                     min_id=0,
-                    hash=0
+                    hash=0,
                 )
             )
 

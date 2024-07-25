@@ -6,14 +6,13 @@ import pyrogram
 from pyrogram import enums, raw, types, utils
 from pyrogram.file_id import FileType
 
+
 class SendStory:
     def _split(self, message, entities, *args, **kwargs):
         return message, entities
 
     async def _upload_video(
-        self: "pyrogram.Client",
-        file_name: str,
-        video: Union[str, BinaryIO]
+        self: "pyrogram.Client", file_name: str, video: Union[str, BinaryIO]
     ):
         file = await self.save_file(video)
         return raw.types.InputMediaUploadedDocument(
@@ -21,22 +20,19 @@ class SendStory:
             file=file,
             attributes=[
                 raw.types.DocumentAttributeVideo(
-                    supports_streaming=True,
-                    duration=0,
-                    w=0,
-                    h=0
+                    supports_streaming=True, duration=0, w=0, h=0
                 )
-            ]
+            ],
         )
 
     async def send_story(
         self: "pyrogram.Client",
-        chat_id: Union[int,str] = None,
+        chat_id: Union[int, str] = None,
         privacy: "enums.StoriesPrivacyRules" = None,
         allowed_users: List[int] = None,
         denied_users: List[int] = None,
-        #allowed_chats: List[int] = None,
-        #denied_chats: List[int] = None,
+        # allowed_chats: List[int] = None,
+        # denied_chats: List[int] = None,
         photo: Union[str, BinaryIO] = None,
         video: Union[str, BinaryIO] = None,
         file_name: str = None,
@@ -48,7 +44,7 @@ class SendStory:
         period: int = None,
         forward_from_chat_id: Union[int, str] = None,
         forward_from_story_id: int = None,
-        media_areas: List["types.InputMediaArea"] = None
+        media_areas: List["types.InputMediaArea"] = None,
     ) -> "types.Story":
         """Send new story.
 
@@ -118,7 +114,7 @@ class SendStory:
                 Unique identifier (int) or username (str) of the source chat where the original story was sent.
                 For your personal story you can simply use "me" or "self".
                 For a contact that exists in your Telegram address book you can use his phone number (str).
- 
+
             forward_from_story_id (``int``, *optional*):
                 Single story id.
 
@@ -144,26 +140,22 @@ class SendStory:
         if privacy:
             privacy_rules = [types.StoriesPrivacyRules(type=privacy)]
         else:
-            privacy_rules = [types.StoriesPrivacyRules(type=enums.StoriesPrivacyRules.PUBLIC)]
+            privacy_rules = [
+                types.StoriesPrivacyRules(type=enums.StoriesPrivacyRules.PUBLIC)
+            ]
 
         if photo:
             if isinstance(photo, str):
                 if os.path.isfile(photo):
                     file = await self.save_file(photo)
-                    media = raw.types.InputMediaUploadedPhoto(
-                        file=file
-                    )
+                    media = raw.types.InputMediaUploadedPhoto(file=file)
                 elif re.match("^https?://", photo):
-                    media = raw.types.InputMediaPhotoExternal(
-                        url=photo
-                    )
+                    media = raw.types.InputMediaPhotoExternal(url=photo)
                 else:
                     media = utils.get_input_media_from_file_id(photo, FileType.PHOTO)
             else:
                 file = await self.save_file(photo)
-                media = raw.types.InputMediaUploadedPhoto(
-                    file=file
-                )
+                media = raw.types.InputMediaUploadedPhoto(file=file)
         elif video:
             if isinstance(video, str):
                 if os.path.isfile(video):
@@ -173,36 +165,37 @@ class SendStory:
                         file=file,
                         attributes=[
                             raw.types.DocumentAttributeVideo(
-                                supports_streaming=True,
-                                duration=0,
-                                w=0,
-                                h=0
+                                supports_streaming=True, duration=0, w=0, h=0
                             )
-                        ]
+                        ],
                     )
                 elif re.match("^https?://", video):
-                    media = raw.types.InputMediaDocumentExternal(
-                        url=video
-                    )
+                    media = raw.types.InputMediaDocumentExternal(url=video)
                 else:
                     video = await self.download_media(video, in_memory=True)
-                    media = await self._upload_video(file_name,video)
+                    media = await self._upload_video(file_name, video)
             else:
-                media = await self._upload_video(file_name,video)
+                media = await self._upload_video(file_name, video)
         else:
             if forward_from_chat_id is None:
-                raise ValueError("You need to pass one of the following parameter photo/video/forward_from_chat_id!")
-        
-        text, entities = self._split(**await utils.parse_text_entities(self, caption, parse_mode, caption_entities))
+                raise ValueError(
+                    "You need to pass one of the following parameter photo/video/forward_from_chat_id!"
+                )
 
-        '''
+        text, entities = self._split(
+            **await utils.parse_text_entities(
+                self, caption, parse_mode, caption_entities
+            )
+        )
+
+        """
         if allowed_chats and len(allowed_chats) > 0:
             chats = [await self.resolve_peer(chat_id) for chat_id in allowed_chats]
             privacy_rules.append(raw.types.InputPrivacyValueAllowChatParticipants(chats=chats))
         if denied_chats and len(denied_chats) > 0:
             chats = [await self.resolve_peer(chat_id) for chat_id in denied_chats]
             privacy_rules.append(raw.types.InputPrivacyValueDisallowChatParticipants(chats=chats))
-        '''
+        """
         if allowed_users and len(allowed_users) > 0:
             users = [await self.resolve_peer(user_id) for user_id in allowed_users]
             privacy_rules.append(raw.types.InputPrivacyValueAllowUsers(users=users))
@@ -215,7 +208,9 @@ class SendStory:
             forward_from_chat = await self.resolve_peer(forward_from_chat_id)
             media = raw.types.InputMediaEmpty()
             if forward_from_story_id is None:
-                raise ValueError("You need to pass forward_from_story_id to forward story!")
+                raise ValueError(
+                    "You need to pass forward_from_story_id to forward story!"
+                )
 
         r = await self.invoke(
             raw.functions.stories.SendStory(
@@ -229,12 +224,15 @@ class SendStory:
                 entities=entities,
                 period=period,
                 fwd_from_id=forward_from_chat,
-                fwd_from_story=forward_from_story_id if forward_from_chat_id is not None else None,
-                fwd_modified=True if forward_from_chat_id is not None and caption is not None else False,
-                media_areas=[
-                    await media_area.write(self)
-                    for media_area in media_areas
-                ] if media_areas is not None else None
+                fwd_from_story=forward_from_story_id
+                if forward_from_chat_id is not None
+                else None,
+                fwd_modified=True
+                if forward_from_chat_id is not None and caption is not None
+                else False,
+                media_areas=[await media_area.write(self) for media_area in media_areas]
+                if media_areas is not None
+                else None,
             )
         )
         return await types.Story._parse(self, r.updates[0].story, r.updates[0].peer)

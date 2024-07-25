@@ -7,6 +7,7 @@ from pyrogram import types
 
 log = logging.getLogger(__name__)
 
+
 class ExportStoryLink:
     async def export_story_link(
         self: "pyrogram.Client",

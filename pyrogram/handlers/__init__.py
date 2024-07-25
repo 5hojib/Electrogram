@@ -43,5 +43,5 @@ __all__ = [
     "StoryHandler",
     "MessageReactionUpdatedHandler",
     "MessageReactionCountUpdatedHandler",
-    "ShippingQueryHandler"
+    "ShippingQueryHandler",
 ]

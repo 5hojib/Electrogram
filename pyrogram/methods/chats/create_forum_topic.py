@@ -10,7 +10,7 @@ class CreateForumTopic:
         chat_id: Union[int, str],
         title: str,
         icon_color: int = None,
-        icon_emoji_id: int = None
+        icon_emoji_id: int = None,
     ) -> "types.ForumTopicCreated":
         """Create a new forum topic.
 
@@ -44,7 +44,7 @@ class CreateForumTopic:
                 title=title,
                 random_id=self.rnd_id(),
                 icon_color=icon_color,
-                icon_emoji_id=icon_emoji_id
+                icon_emoji_id=icon_emoji_id,
             )
         )
 

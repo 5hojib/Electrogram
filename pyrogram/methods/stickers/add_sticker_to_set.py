@@ -6,6 +6,7 @@ from pyrogram import raw
 from pyrogram import types
 from pyrogram.file_id import FileId
 
+
 class AddStickerToSet:
     async def add_sticker_to_set(
         self: "pyrogram.Client",
@@ -47,18 +48,17 @@ class AddStickerToSet:
                 media = raw.types.InputDocument(
                     id=decoded.media_id,
                     access_hash=decoded.access_hash,
-                    file_reference=decoded.file_reference
+                    file_reference=decoded.file_reference,
                 )
         else:
             raise ValueError(f"file_id is invalid!")
 
         r = await self.invoke(
             raw.functions.stickers.AddStickerToSet(
-                stickerset=raw.types.InputStickerSetShortName(short_name=set_short_name),
-                sticker=raw.types.InputStickerSetItem(
-                    document=media,
-                    emoji=emoji
-                )
+                stickerset=raw.types.InputStickerSetShortName(
+                    short_name=set_short_name
+                ),
+                sticker=raw.types.InputStickerSetItem(document=media, emoji=emoji),
             )
         )
 

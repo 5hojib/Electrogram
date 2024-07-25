@@ -21,12 +21,7 @@ class ShippingOption(Object):
 
     """
 
-    def __init__(
-        self,
-        id: str,
-        title: str,
-        prices: "types.LabeledPrice"
-    ):
+    def __init__(self, id: str, title: str, prices: "types.LabeledPrice"):
         super().__init__()
 
         self.id = id
@@ -40,17 +35,13 @@ class ShippingOption(Object):
                 id=shipping_option.id,
                 title=shipping_option.title,
                 prices=[
-                    types.LabeledPrice._parse(price)
-                    for price in shipping_option.prices
-                ]
+                    types.LabeledPrice._parse(price) for price in shipping_option.prices
+                ],
             )
 
     def write(self):
         return raw.types.ShippingOption(
             id=self.id,
             title=self.title,
-            prices=[
-                price.write()
-                for price in self.prices
-            ]
+            prices=[price.write() for price in self.prices],
         )

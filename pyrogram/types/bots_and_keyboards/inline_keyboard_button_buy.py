@@ -4,6 +4,7 @@ from ..object import Object
 
 from pyrogram import raw
 
+
 class InlineKeyboardButtonBuy(Object):
     """One button of the inline keyboard.
     For simple invoice buttons.
@@ -14,21 +15,14 @@ class InlineKeyboardButtonBuy(Object):
             the button is pressed.
     """
 
-    def __init__(
-        self,
-        text: str
-    ):
+    def __init__(self, text: str):
         super().__init__()
 
         self.text = str(text)
 
     @staticmethod
     def read(b):
-        return InlineKeyboardButtonBuy(
-            text=b.text
-        )
+        return InlineKeyboardButtonBuy(text=b.text)
 
     async def write(self, _: "pyrogram.Client"):
-        return raw.types.KeyboardButtonBuy(
-            text=self.text
-        )
+        return raw.types.KeyboardButtonBuy(text=self.text)

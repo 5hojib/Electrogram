@@ -4,10 +4,7 @@ from pyrogram import raw, types
 
 class UpdateBirthday:
     async def update_birthday(
-        self: "pyrogram.Client",
-        day: int,
-        month: int,
-        year: int = None
+        self: "pyrogram.Client", day: int, month: int, year: int = None
     ) -> bool:
         """Update your birthday details.
 

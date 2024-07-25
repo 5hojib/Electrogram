@@ -19,11 +19,12 @@ class PaymentInfo(Object):
     """
 
     def __init__(
-        self, *,
+        self,
+        *,
         name: str = None,
         phone_number: str = None,
         email: str = None,
-        shipping_address: "types.ShippingAddress" = None
+        shipping_address: "types.ShippingAddress" = None,
     ):
         super().__init__()
 

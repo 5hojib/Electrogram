@@ -40,8 +40,7 @@ class ExportChatInviteLink:
         """
         r = await self.invoke(
             raw.functions.messages.ExportChatInvite(
-                peer=await self.resolve_peer(chat_id),
-                legacy_revoke_permanent=True
+                peer=await self.resolve_peer(chat_id), legacy_revoke_permanent=True
             )
         )
 

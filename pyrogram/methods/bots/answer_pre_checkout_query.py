@@ -7,7 +7,7 @@ class AnswerPreCheckoutQuery:
         self: "pyrogram.Client",
         pre_checkout_query_id: str,
         success: bool = None,
-        error: str = None
+        error: str = None,
     ):
         """Send answers to pre-checkout queries.
 
@@ -41,6 +41,6 @@ class AnswerPreCheckoutQuery:
             raw.functions.messages.SetBotPrecheckoutResults(
                 query_id=int(pre_checkout_query_id),
                 success=success or None,
-                error=error or None
+                error=error or None,
             )
         )

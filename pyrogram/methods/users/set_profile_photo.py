@@ -9,7 +9,7 @@ class SetProfilePhoto:
         self: "pyrogram.Client",
         *,
         photo: Union[str, BinaryIO] = None,
-        video: Union[str, BinaryIO] = None
+        video: Union[str, BinaryIO] = None,
     ) -> bool:
         """Set a new profile photo or video (H.264/MPEG-4 AVC video, max 5 seconds).
 
@@ -50,8 +50,7 @@ class SetProfilePhoto:
         return bool(
             await self.invoke(
                 raw.functions.photos.UploadProfilePhoto(
-                    file=await self.save_file(photo),
-                    video=await self.save_file(video)
+                    file=await self.save_file(photo), video=await self.save_file(video)
                 )
             )
         )

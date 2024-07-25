@@ -11,7 +11,7 @@ class StopPoll:
         chat_id: Union[int, str],
         message_id: int,
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        business_connection_id: str = None
+        business_connection_id: str = None,
     ) -> "types.Poll":
         """Stop a poll which was sent by you.
 
@@ -50,19 +50,15 @@ class StopPoll:
             id=message_id,
             media=raw.types.InputMediaPoll(
                 poll=raw.types.Poll(
-                    id=int(poll.id),
-                    closed=True,
-                    question="",
-                    answers=[]
+                    id=int(poll.id), closed=True, question="", answers=[]
                 )
             ),
-            reply_markup=await reply_markup.write(self) if reply_markup else None
+            reply_markup=await reply_markup.write(self) if reply_markup else None,
         )
         if business_connection_id is not None:
             r = await self.invoke(
                 raw.functions.InvokeWithBusinessConnection(
-                    connection_id=business_connection_id,
-                    query=rpc
+                    connection_id=business_connection_id, query=rpc
                 )
             )
         else:

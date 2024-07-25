@@ -27,9 +27,7 @@ class GetCustomEmojiStickers:
         custom_emoji_ids = [custom_emoji_ids] if not is_list else custom_emoji_ids
 
         result = await self.invoke(
-            raw.functions.messages.GetCustomEmojiDocuments(
-                document_id=custom_emoji_ids
-            )
+            raw.functions.messages.GetCustomEmojiDocuments(document_id=custom_emoji_ids)
         )
 
         stickers = pyrogram.types.List()

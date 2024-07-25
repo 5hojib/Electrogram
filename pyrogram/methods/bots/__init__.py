@@ -42,6 +42,6 @@ class Bots(
     AnswerWebAppQuery,
     AnswerPreCheckoutQuery,
     RefundStarPayment,
-    GetCollectibleItemInfo
+    GetCollectibleItemInfo,
 ):
     pass

@@ -2,6 +2,7 @@ from pyrogram import raw
 from typing import List
 from ..object import Object
 
+
 class StoryViews(Object):
     """Contains information about a story viewers.
 
@@ -14,11 +15,7 @@ class StoryViews(Object):
             List of user_id of recent stories viewers.
     """
 
-    def __init__(
-            self, *,
-            view_count: int,
-            recent_viewers: List[int] = None
-    ):
+    def __init__(self, *, view_count: int, recent_viewers: List[int] = None):
         super().__init__()
 
         self.view_count = view_count
@@ -27,6 +24,6 @@ class StoryViews(Object):
     @staticmethod
     def _parse(storyviews: "raw.types.StoryViews") -> "StoryViews":
         return StoryViews(
-            view_count=getattr(storyviews,"view_count", None),
-            recent_viewers=getattr(storyviews,"recent_viewers", None)
+            view_count=getattr(storyviews, "view_count", None),
+            recent_viewers=getattr(storyviews, "recent_viewers", None),
         )

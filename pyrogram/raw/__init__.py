@@ -8,10 +8,4 @@ for k, v in objects.items():
     objects[k] = getattr(import_module(path), name)
 
 
-__all__ = [
-    "base",
-    "core",
-    "functions",
-    "objects",
-    "types"
-]
+__all__ = ["base", "core", "functions", "objects", "types"]

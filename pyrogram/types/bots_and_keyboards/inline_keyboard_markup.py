@@ -16,7 +16,12 @@ class InlineKeyboardMarkup(Object):
             and only one needed in the first row.
     """
 
-    def __init__(self, inline_keyboard: List[List[Union["types.InlineKeyboardButton", "types.InlineKeyboardButtonBuy"]]]):
+    def __init__(
+        self,
+        inline_keyboard: List[
+            List[Union["types.InlineKeyboardButton", "types.InlineKeyboardButtonBuy"]]
+        ],
+    ):
         super().__init__()
 
         self.inline_keyboard = inline_keyboard
@@ -33,9 +38,7 @@ class InlineKeyboardMarkup(Object):
 
             inline_keyboard.append(row)
 
-        return InlineKeyboardMarkup(
-            inline_keyboard=inline_keyboard
-        )
+        return InlineKeyboardMarkup(inline_keyboard=inline_keyboard)
 
     async def write(self, client: "pyrogram.Client"):
         rows = []

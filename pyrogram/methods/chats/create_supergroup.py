@@ -5,9 +5,7 @@ from pyrogram import types
 
 class CreateSupergroup:
     async def create_supergroup(
-        self: "pyrogram.Client",
-        title: str,
-        description: str = ""
+        self: "pyrogram.Client", title: str, description: str = ""
     ) -> "types.Chat":
         """Create a new supergroup.
 
@@ -34,9 +32,7 @@ class CreateSupergroup:
         """
         r = await self.invoke(
             raw.functions.channels.CreateChannel(
-                title=title,
-                about=description,
-                megagroup=True
+                title=title, about=description, megagroup=True
             )
         )
 

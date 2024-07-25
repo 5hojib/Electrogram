@@ -180,7 +180,7 @@ class User(Object, Update):
         photo: "types.ChatPhoto" = None,
         restrictions: List["types.Restriction"] = None,
         reply_color: "types.ChatColor" = None,
-        profile_color: "types.ChatColor" = None
+        profile_color: "types.ChatColor" = None,
     ):
         super().__init__(client)
 
@@ -223,7 +223,7 @@ class User(Object, Update):
         return Link(
             f"tg://user?id={self.id}",
             self.first_name or "Deleted Account",
-            self._client.parse_mode
+            self._client.parse_mode,
         )
 
     @staticmethod
@@ -269,10 +269,15 @@ class User(Object, Update):
             dc_id=getattr(user.photo, "dc_id", None),
             phone_number=user.phone,
             photo=types.ChatPhoto._parse(client, user.photo, user.id, user.access_hash),
-            restrictions=types.List([types.Restriction._parse(r) for r in user.restriction_reason]) or None,
+            restrictions=types.List(
+                [types.Restriction._parse(r) for r in user.restriction_reason]
+            )
+            or None,
             reply_color=types.ChatColor._parse(getattr(user, "color", None)),
-            profile_color=types.ChatColor._parse_profile_color(getattr(user, "profile_color", None)),
-            client=client
+            profile_color=types.ChatColor._parse_profile_color(
+                getattr(user, "profile_color", None)
+            ),
+            client=client,
         )
 
     @staticmethod
@@ -305,7 +310,7 @@ class User(Object, Update):
         return {
             "status": status,
             "last_online_date": last_online_date,
-            "next_offline_date": next_offline_date
+            "next_offline_date": next_offline_date,
         }
 
     @staticmethod
@@ -313,7 +318,7 @@ class User(Object, Update):
         return User(
             id=user_status.user_id,
             **User._parse_status(user_status.status),
-            client=client
+            client=client,
         )
 
     def listen(self, *args, **kwargs):
@@ -347,7 +352,7 @@ class User(Object, Update):
 
     def ask(self, text, *args, **kwargs):
         """Bound method *ask* of :obj:`~pyrogram.types.User`.
-        
+
         Use as a shortcut for:
 
         .. code-block:: python
@@ -381,7 +386,7 @@ class User(Object, Update):
 
     def stop_listening(self, *args, **kwargs):
         """Bound method *stop_listening* of :obj:`~pyrogram.types.User`.
-        
+
         Use as a shortcut for:
 
         .. code-block:: python

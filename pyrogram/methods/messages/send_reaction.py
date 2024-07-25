@@ -12,7 +12,7 @@ class SendReaction:
         story_id: int = None,
         emoji: Union[int, str, List[Union[int, str]]] = None,
         big: bool = False,
-        add_to_recent: bool = False
+        add_to_recent: bool = False,
     ) -> "types.MessageReactions":
         """Use this method to send reactions on a message/stories.
         Service messages can't be reacted to.
@@ -42,7 +42,7 @@ class SendReaction:
                 Pass True to set the reaction with a big animation.
                 For message reactions only.
                 Defaults to False.
-                
+
             add_to_recent (``bool``, *optional*):
                 Pass True if the reaction should appear in the recently used reactions.
                 This option is applicable only for users.
@@ -65,12 +65,16 @@ class SendReaction:
                 await app.send_reaction(chat_id, story_id=story_id)
         """
         if isinstance(emoji, list):
-            reaction = [
+            reaction = (
+                [
                     raw.types.ReactionCustomEmoji(document_id=i)
                     if isinstance(i, int)
                     else raw.types.ReactionEmoji(emoticon=i)
                     for i in emoji
-            ] if emoji else None
+                ]
+                if emoji
+                else None
+            )
         else:
             if isinstance(emoji, int):
                 reaction = [raw.types.ReactionCustomEmoji(document_id=emoji)]
@@ -83,19 +87,19 @@ class SendReaction:
                     msg_id=message_id,
                     reaction=reaction,
                     big=big,
-                    add_to_recent=add_to_recent
+                    add_to_recent=add_to_recent,
                 )
             )
             for i in r.updates:
-              if isinstance(i, raw.types.UpdateMessageReactions):
-                  return types.MessageReactions._parse(self, i.reactions)
+                if isinstance(i, raw.types.UpdateMessageReactions):
+                    return types.MessageReactions._parse(self, i.reactions)
         elif story_id is not None:
             await self.invoke(
                 raw.functions.stories.SendReaction(
                     peer=await self.resolve_peer(chat_id),
                     story_id=story_id,
                     reaction=raw.types.ReactionEmoji(emoticon=emoji) if emoji else None,
-                    add_to_recent=add_to_recent
+                    add_to_recent=add_to_recent,
                 )
             )
             return True

@@ -112,6 +112,6 @@ class Chats(
     SetSendAsChat,
     SetChatProtectedContent,
     UpdateColor,
-    UpdateFolder
+    UpdateFolder,
 ):
     pass

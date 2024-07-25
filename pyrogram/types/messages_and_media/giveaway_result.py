@@ -52,9 +52,9 @@ class GiveawayResult(Object):
         winners: List["types.User"] = None,
         months: int = None,
         expire_date: datetime = None,
-        new_subscribers : bool = None,
+        new_subscribers: bool = None,
         is_refunded: bool = None,
-        is_winners_hidden: bool
+        is_winners_hidden: bool,
     ):
         super().__init__(client)
 
@@ -74,9 +74,9 @@ class GiveawayResult(Object):
         client,
         giveaway_result: Union[
             "raw.types.MessageActionGiveawayResults",
-            "raw.types.MessageMediaGiveawayResults"
+            "raw.types.MessageMediaGiveawayResults",
         ],
-        hide_winners: bool = False
+        hide_winners: bool = False,
     ) -> "GiveawayResult":
         chat = None
         giveaway_message = None
@@ -90,7 +90,9 @@ class GiveawayResult(Object):
                 )
             )
             chat = types.Chat._parse_chat(client, chat.chats[0])
-            giveaway_message = await client.get_messages(chat_id, giveaway_result.launch_msg_id)
+            giveaway_message = await client.get_messages(
+                chat_id, giveaway_result.launch_msg_id
+            )
             expired_date = utils.timestamp_to_datetime(giveaway_result.until_date)
             winners = []
             for winner in giveaway_result.winners:
@@ -107,5 +109,5 @@ class GiveawayResult(Object):
             new_subscribers=getattr(giveaway_result, "only_new_subscribers", None),
             is_refunded=getattr(giveaway_result, "refunded", None),
             is_winners_hidden=hide_winners,
-            client=client
+            client=client,
         )

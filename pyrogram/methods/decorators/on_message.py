@@ -5,11 +5,7 @@ from pyrogram.filters import Filter
 
 
 class OnMessage:
-    def on_message(
-        self=None,
-        filters=None,
-        group: int = 0
-    ) -> Callable:
+    def on_message(self=None, filters=None, group: int = 0) -> Callable:
         """Decorator for handling new messages.
 
         This does the same thing as :meth:`~pyrogram.Client.add_handler` using the
@@ -34,7 +30,7 @@ class OnMessage:
                 func.handlers.append(
                     (
                         pyrogram.handlers.MessageHandler(func, self),
-                        group if filters is None else filters
+                        group if filters is None else filters,
                     )
                 )
 

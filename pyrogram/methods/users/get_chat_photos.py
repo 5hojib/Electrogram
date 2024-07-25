@@ -11,8 +11,7 @@ class GetChatPhotos:
         limit: int = 0,
     ) -> Optional[
         Union[
-            AsyncGenerator["types.Photo", None],
-            AsyncGenerator["types.Animation", None]
+            AsyncGenerator["types.Photo", None], AsyncGenerator["types.Animation", None]
         ]
     ]:
         """Get a chat or a user profile photos sequentially.
@@ -43,16 +42,13 @@ class GetChatPhotos:
 
         if isinstance(peer_id, raw.types.InputPeerChannel):
             r = await self.invoke(
-                raw.functions.channels.GetFullChannel(
-                    channel=peer_id
-                )
+                raw.functions.channels.GetFullChannel(channel=peer_id)
             )
 
             current = types.Photo._parse(self, r.full_chat.chat_photo) or []
             current = [current]
             current_animation = types.Animation._parse_chat_animation(
-                self,
-                r.full_chat.chat_photo
+                self, r.full_chat.chat_photo
             )
             if current_animation:
                 current = current + [current_animation]
@@ -72,16 +68,20 @@ class GetChatPhotos:
                             limit=limit,
                             max_id=0,
                             min_id=0,
-                            hash=0
+                            hash=0,
                         )
-                    )
+                    ),
                 )
 
                 extra = [message.new_chat_photo for message in r]
 
             if extra:
                 if current:
-                    photos = (current + extra) if current[0].file_id != extra[0].file_id else extra
+                    photos = (
+                        (current + extra)
+                        if current[0].file_id != extra[0].file_id
+                        else extra
+                    )
                 else:
                     photos = extra
             else:
@@ -108,21 +108,15 @@ class GetChatPhotos:
             while True:
                 r = await self.invoke(
                     raw.functions.photos.GetUserPhotos(
-                        user_id=peer_id,
-                        offset=offset,
-                        max_id=0,
-                        limit=limit
+                        user_id=peer_id, offset=offset, max_id=0, limit=limit
                     )
                 )
 
                 photos = []
                 for photo in r.photos:
-                    photos.append(
-                        types.Photo._parse(self, photo)
-                    )
+                    photos.append(types.Photo._parse(self, photo))
                     current_animation = types.Animation._parse_chat_animation(
-                        self,
-                        photo
+                        self, photo
                     )
                     if current_animation:
                         photos.append(current_animation)

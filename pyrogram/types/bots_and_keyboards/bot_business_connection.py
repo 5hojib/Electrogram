@@ -11,7 +11,7 @@ class BotBusinessConnection(Object):
     Parameters:
         bot_connection_id (``str``):
             The business connection identifier.
-        
+
         user (:obj:`~pyrogram.types.User`):
             The user that connected to the bot.
 
@@ -27,6 +27,7 @@ class BotBusinessConnection(Object):
         is_disabled (``bool``, *optional*):
             Whether the connection is disabled.
     """
+
     def __init__(
         self,
         *,
@@ -36,7 +37,7 @@ class BotBusinessConnection(Object):
         dc_id: int,
         date: "datetime.datetime",
         can_reply: bool = None,
-        is_disabled: bool = None
+        is_disabled: bool = None,
     ):
         super().__init__(client)
 
@@ -49,15 +50,14 @@ class BotBusinessConnection(Object):
 
     @staticmethod
     async def _parse(
-        client: "pyrogram.Client",
-        bot_connection: "raw.types.BotBusinessConnection"
+        client: "pyrogram.Client", bot_connection: "raw.types.BotBusinessConnection"
     ) -> "BotBusinessConnection":
         return BotBusinessConnection(
-            bot_connection_id = bot_connection.connection_id,
-            user = await client.get_users(bot_connection.user_id),
-            dc_id = bot_connection.dc_id,
-            date = utils.timestamp_to_datetime(bot_connection.date),
-            can_reply = bot_connection.can_reply,
-            is_disabled = bot_connection.disabled,
-            client=client
+            bot_connection_id=bot_connection.connection_id,
+            user=await client.get_users(bot_connection.user_id),
+            dc_id=bot_connection.dc_id,
+            date=utils.timestamp_to_datetime(bot_connection.date),
+            can_reply=bot_connection.can_reply,
+            is_disabled=bot_connection.disabled,
+            client=client,
         )

@@ -3,6 +3,7 @@ from typing import List, Union
 import pyrogram
 from pyrogram import enums, types
 
+
 class ForwardStory:
     def _split(self, message, entities, *args, **kwargs):
         return message, entities
@@ -15,14 +16,14 @@ class ForwardStory:
         privacy: "enums.StoriesPrivacyRules" = None,
         allowed_users: List[int] = None,
         denied_users: List[int] = None,
-        #allowed_chats: List[int] = None,
-        #denied_chats: List[int] = None,
+        # allowed_chats: List[int] = None,
+        # denied_chats: List[int] = None,
         pinned: bool = None,
         protect_content: bool = None,
         caption: str = None,
         parse_mode: "enums.ParseMode" = None,
         caption_entities: List["types.MessageEntity"] = None,
-        period: int = None
+        period: int = None,
     ) -> "types.Story":
         """Forward a story.
 
@@ -87,7 +88,7 @@ class ForwardStory:
         Raises:
             ValueError: In case of invalid arguments.
         """
-        
+
         return await self.send_story(
             chat_id=chat_id,
             privacy=privacy,
@@ -100,5 +101,5 @@ class ForwardStory:
             parse_mode=parse_mode,
             period=period,
             forward_from_chat_id=from_chat_id,
-            forward_from_story_id=from_story_id
+            forward_from_story_id=from_story_id,
         )

@@ -52,7 +52,8 @@ class ChatInviteLink(Object):
     """
 
     def __init__(
-        self, *,
+        self,
+        *,
         invite_link: str,
         date: datetime,
         is_primary: bool = None,
@@ -64,7 +65,7 @@ class ChatInviteLink(Object):
         expire_date: datetime = None,
         member_limit: int = None,
         member_count: int = None,
-        pending_join_request_count: int = None
+        pending_join_request_count: int = None,
     ):
         super().__init__()
 
@@ -85,7 +86,7 @@ class ChatInviteLink(Object):
     def _parse(
         client: "pyrogram.Client",
         invite: "raw.base.ExportedChatInvite",
-        users: Dict[int, "raw.types.User"] = None
+        users: Dict[int, "raw.types.User"] = None,
     ) -> Optional["ChatInviteLink"]:
         if not isinstance(invite, raw.types.ChatInviteExported):
             return None
@@ -108,5 +109,5 @@ class ChatInviteLink(Object):
             expire_date=utils.timestamp_to_datetime(invite.expire_date),
             member_limit=invite.usage_limit,
             member_count=invite.usage,
-            pending_join_request_count=invite.requested
+            pending_join_request_count=invite.requested,
         )

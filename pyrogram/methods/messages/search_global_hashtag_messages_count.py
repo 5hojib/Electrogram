@@ -27,7 +27,7 @@ class SearchGlobalHashtagMessagesCount:
                 offset_rate=0,
                 offset_peer=raw.types.InputPeerEmpty(),
                 offset_id=0,
-                limit=1
+                limit=1,
             )
         )
 
