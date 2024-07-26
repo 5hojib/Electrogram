@@ -37,7 +37,7 @@ class ContinuePropagation(StopAsyncIteration):
     pass
 
 
-from . import raw, types, filters, handlers, emoji, enums # noqa
+from . import raw, types, filters, handlers, emoji, enums  # noqa
 from .client import Client
 from .sync import compose, idle
 
