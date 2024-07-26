@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from typing import Union
 
 import pyrogram
@@ -10,7 +29,7 @@ class SearchMessagesCount:
         chat_id: Union[int, str],
         query: str = "",
         filter: "enums.MessagesFilter" = enums.MessagesFilter.EMPTY,
-        from_user: Union[int, str] = None,
+        from_user: Union[int, str] = None
     ) -> int:
         """Get the count of messages resulting from a search inside a chat.
 
@@ -52,8 +71,12 @@ class SearchMessagesCount:
                 limit=1,
                 min_id=0,
                 max_id=0,
-                from_id=(await self.resolve_peer(from_user) if from_user else None),
-                hash=0,
+                from_id=(
+                    await self.resolve_peer(from_user)
+                    if from_user
+                    else None
+                ),
+                hash=0
             )
         )
 

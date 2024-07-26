@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 import html
 from datetime import datetime
 from typing import List, Optional
@@ -172,15 +191,15 @@ class User(Object, Update):
         last_online_date: datetime = None,
         next_offline_date: datetime = None,
         username: str = None,
-        usernames: list["types.Username"] = None,
+        usernames: List["types.Username"] = None,
         language_code: str = None,
         emoji_status: Optional["types.EmojiStatus"] = None,
         dc_id: int = None,
         phone_number: str = None,
         photo: "types.ChatPhoto" = None,
-        restrictions: list["types.Restriction"] = None,
+        restrictions: List["types.Restriction"] = None,
         reply_color: "types.ChatColor" = None,
-        profile_color: "types.ChatColor" = None,
+        profile_color: "types.ChatColor" = None
     ):
         super().__init__(client)
 
@@ -223,7 +242,7 @@ class User(Object, Update):
         return Link(
             f"tg://user?id={self.id}",
             self.first_name or "Deleted Account",
-            self._client.parse_mode,
+            self._client.parse_mode
         )
 
     @staticmethod
@@ -269,15 +288,10 @@ class User(Object, Update):
             dc_id=getattr(user.photo, "dc_id", None),
             phone_number=user.phone,
             photo=types.ChatPhoto._parse(client, user.photo, user.id, user.access_hash),
-            restrictions=types.List(
-                [types.Restriction._parse(r) for r in user.restriction_reason]
-            )
-            or None,
+            restrictions=types.List([types.Restriction._parse(r) for r in user.restriction_reason]) or None,
             reply_color=types.ChatColor._parse(getattr(user, "color", None)),
-            profile_color=types.ChatColor._parse_profile_color(
-                getattr(user, "profile_color", None)
-            ),
-            client=client,
+            profile_color=types.ChatColor._parse_profile_color(getattr(user, "profile_color", None)),
+            client=client
         )
 
     @staticmethod
@@ -310,7 +324,7 @@ class User(Object, Update):
         return {
             "status": status,
             "last_online_date": last_online_date,
-            "next_offline_date": next_offline_date,
+            "next_offline_date": next_offline_date
         }
 
     @staticmethod
@@ -318,7 +332,7 @@ class User(Object, Update):
         return User(
             id=user_status.user_id,
             **User._parse_status(user_status.status),
-            client=client,
+            client=client
         )
 
     def listen(self, *args, **kwargs):
@@ -352,7 +366,7 @@ class User(Object, Update):
 
     def ask(self, text, *args, **kwargs):
         """Bound method *ask* of :obj:`~pyrogram.types.User`.
-
+        
         Use as a shortcut for:
 
         .. code-block:: python
@@ -386,7 +400,7 @@ class User(Object, Update):
 
     def stop_listening(self, *args, **kwargs):
         """Bound method *stop_listening* of :obj:`~pyrogram.types.User`.
-
+        
         Use as a shortcut for:
 
         .. code-block:: python

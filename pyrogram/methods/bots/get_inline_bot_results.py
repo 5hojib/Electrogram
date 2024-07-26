@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from typing import Union
 
 import pyrogram
@@ -12,7 +31,7 @@ class GetInlineBotResults:
         query: str = "",
         offset: str = "",
         latitude: float = None,
-        longitude: float = None,
+        longitude: float = None
     ):
         """Get bot results via inline queries.
         You can then send a result using :meth:`~pyrogram.Client.send_inline_bot_result`
@@ -61,9 +80,10 @@ class GetInlineBotResults:
                     peer=raw.types.InputPeerSelf(),
                     query=query,
                     offset=offset,
-                    geo_point=raw.types.InputGeoPoint(lat=latitude, long=longitude)
-                    if (latitude is not None and longitude is not None)
-                    else None,
+                    geo_point=raw.types.InputGeoPoint(
+                        lat=latitude,
+                        long=longitude
+                    ) if (latitude is not None and longitude is not None) else None
                 )
             )
         except UnknownError as e:

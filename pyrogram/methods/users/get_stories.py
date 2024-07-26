@@ -1,3 +1,21 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 import logging
 from typing import Union, List, Iterable
 
@@ -7,13 +25,12 @@ from pyrogram import types
 
 log = logging.getLogger(__name__)
 
-
 class GetStories:
     async def get_stories(
         self: "pyrogram.Client",
         chat_id: Union[int, str],
         story_ids: Union[int, Iterable[int]],
-    ) -> Union["types.Story", list["types.Story"]]:
+    ) -> Union["types.Story", List["types.Story"]]:
         """Get one or more story from an user by using story identifiers.
 
         .. include:: /_includes/usable-by/users.rst
@@ -56,11 +73,5 @@ class GetStories:
         r = await self.invoke(rpc, sleep_threshold=-1)
 
         if is_iterable:
-            return types.List(
-                [await types.Story._parse(self, story, peer) for story in r.stories]
-            )
-        return (
-            await types.Story._parse(self, r.stories[0], peer)
-            if r.stories and len(r.stories) > 0
-            else None
-        )
+            return types.List([await types.Story._parse(self, story, peer) for story in r.stories])
+        return await types.Story._parse(self, r.stories[0], peer) if r.stories and len(r.stories) > 0 else None

@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from typing import Union, Optional
 
 import pyrogram
@@ -6,11 +25,11 @@ from pyrogram import raw, types, errors
 
 class PromoteChatMember:
     async def promote_chat_member(
-        self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        user_id: Union[int, str],
-        privileges: "types.ChatPrivileges" = None,
-        title: Optional[str] = "",
+            self: "pyrogram.Client",
+            chat_id: Union[int, str],
+            user_id: Union[int, str],
+            privileges: "types.ChatPrivileges" = None,
+            title: Optional[str] = "",
     ) -> bool:
         """Promote or demote a user in a supergroup or a channel.
 
@@ -54,13 +73,12 @@ class PromoteChatMember:
             privileges = types.ChatPrivileges()
 
         try:
-            raw_chat_member = (
-                await self.invoke(
-                    raw.functions.channels.GetParticipant(
-                        channel=chat_id, participant=user_id
-                    )
+            raw_chat_member = (await self.invoke(
+                raw.functions.channels.GetParticipant(
+                    channel=chat_id,
+                    participant=user_id
                 )
-            ).participant
+            )).participant
         except errors.RPCError:
             raw_chat_member = None
 
@@ -88,9 +106,9 @@ class PromoteChatMember:
                     post_stories=privileges.can_post_stories,
                     edit_stories=privileges.can_edit_stories,
                     delete_stories=privileges.can_delete_stories,
-                    other=privileges.can_manage_chat,
+                    other=privileges.can_manage_chat
                 ),
-                rank=rank,
+                rank=rank
             )
         )
 

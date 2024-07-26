@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from datetime import datetime
 
 from pyrogram import raw, utils
@@ -16,7 +35,11 @@ class InviteLinkImporter(Object):
             The user that has used the given invite link
     """
 
-    def __init__(self, *, date: datetime, user: "types.User"):
+    def __init__(
+        self, *,
+        date: datetime,
+        user: "types.User"
+    ):
         super().__init__(None)
 
         self.date = date
@@ -32,7 +55,7 @@ class InviteLinkImporter(Object):
             importers.append(
                 InviteLinkImporter(
                     date=utils.timestamp_to_datetime(j.date),
-                    user=types.User._parse(client=None, user=d[j.user_id]),
+                    user=types.User._parse(client=None, user=d[j.user_id])
                 )
             )
 

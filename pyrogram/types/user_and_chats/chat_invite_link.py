@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from datetime import datetime
 from typing import Dict
 from typing import Optional
@@ -52,8 +71,7 @@ class ChatInviteLink(Object):
     """
 
     def __init__(
-        self,
-        *,
+        self, *,
         invite_link: str,
         date: datetime,
         is_primary: bool = None,
@@ -65,7 +83,7 @@ class ChatInviteLink(Object):
         expire_date: datetime = None,
         member_limit: int = None,
         member_count: int = None,
-        pending_join_request_count: int = None,
+        pending_join_request_count: int = None
     ):
         super().__init__()
 
@@ -86,7 +104,7 @@ class ChatInviteLink(Object):
     def _parse(
         client: "pyrogram.Client",
         invite: "raw.base.ExportedChatInvite",
-        users: Dict[int, "raw.types.User"] = None,
+        users: Dict[int, "raw.types.User"] = None
     ) -> Optional["ChatInviteLink"]:
         if not isinstance(invite, raw.types.ChatInviteExported):
             return None
@@ -109,5 +127,5 @@ class ChatInviteLink(Object):
             expire_date=utils.timestamp_to_datetime(invite.expire_date),
             member_limit=invite.usage_limit,
             member_count=invite.usage,
-            pending_join_request_count=invite.requested,
+            pending_join_request_count=invite.requested
         )

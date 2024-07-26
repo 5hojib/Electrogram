@@ -1,16 +1,33 @@
+#  PyroFork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of PyroFork.
+#
+#  PyroFork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  PyroFork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with PyroFork.  If not, see <http://www.gnu.org/licenses/>.
+
 from typing import Union
 
 import pyrogram
 from pyrogram import raw
 from pyrogram import enums
 
-
 class UpdateColor:
     async def update_color(
         self: "pyrogram.Client",
         chat_id: Union[int, str],
         color: Union["enums.ReplyColor", "enums.ProfileColor"],
-        background_emoji_id: int = None,
+        background_emoji_id: int = None
     ) -> bool:
         """Update color
 
@@ -43,7 +60,7 @@ class UpdateColor:
                 raw.functions.account.UpdateColor(
                     for_profile=isinstance(color, enums.ProfileColor),
                     color=color.value,
-                    background_emoji_id=background_emoji_id,
+                    background_emoji_id=background_emoji_id
                 )
             )
         else:
@@ -51,7 +68,7 @@ class UpdateColor:
                 raw.functions.channels.UpdateColor(
                     channel=peer,
                     color=color.value,
-                    background_emoji_id=background_emoji_id,
+                    background_emoji_id=background_emoji_id
                 )
             )
 

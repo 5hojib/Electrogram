@@ -1,3 +1,21 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 import logging
 from typing import AsyncGenerator, Optional
 
@@ -7,10 +25,12 @@ from pyrogram import types
 
 log = logging.getLogger(__name__)
 
-
 class GetUserStoriesHistory:
     async def get_stories_history(
-        self: "pyrogram.Client", chat_id: int = None, limit: int = 0, offset_id: int = 0
+        self: "pyrogram.Client",
+        chat_id: int = None,
+        limit: int = 0,
+        offset_id: int = 0
     ) -> Optional[AsyncGenerator["types.Story", None]]:
         """Get stories history.
 
@@ -41,15 +61,13 @@ class GetUserStoriesHistory:
         Raises:
             ValueError: In case of invalid arguments.
         """
-
+        
         if chat_id:
             peer = await self.resolve_peer(chat_id)
         else:
             peer = await self.resolve_peer("me")
 
-        rpc = raw.functions.stories.GetStoriesArchive(
-            peer=peer, offset_id=offset_id, limit=limit
-        )
+        rpc = raw.functions.stories.GetStoriesArchive(peer=peer, offset_id=offset_id, limit=limit)
 
         r = await self.invoke(rpc, sleep_threshold=-1)
 

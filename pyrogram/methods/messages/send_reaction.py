@@ -1,3 +1,22 @@
+#  PyroFork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of PyroFork.
+#
+#  PyroFork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  PyroFork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with PyroFork.  If not, see <http://www.gnu.org/licenses/>.
+
 from typing import Union, List
 
 import pyrogram
@@ -10,9 +29,9 @@ class SendReaction:
         chat_id: Union[int, str],
         message_id: int = None,
         story_id: int = None,
-        emoji: Union[int, str, list[Union[int, str]]] = None,
+        emoji: Union[int, str, List[Union[int, str]]] = None,
         big: bool = False,
-        add_to_recent: bool = False,
+        add_to_recent: bool = False
     ) -> "types.MessageReactions":
         """Use this method to send reactions on a message/stories.
         Service messages can't be reacted to.
@@ -42,7 +61,7 @@ class SendReaction:
                 Pass True to set the reaction with a big animation.
                 For message reactions only.
                 Defaults to False.
-
+                
             add_to_recent (``bool``, *optional*):
                 Pass True if the reaction should appear in the recently used reactions.
                 This option is applicable only for users.
@@ -65,16 +84,12 @@ class SendReaction:
                 await app.send_reaction(chat_id, story_id=story_id)
         """
         if isinstance(emoji, list):
-            reaction = (
-                [
+            reaction = [
                     raw.types.ReactionCustomEmoji(document_id=i)
                     if isinstance(i, int)
                     else raw.types.ReactionEmoji(emoticon=i)
                     for i in emoji
-                ]
-                if emoji
-                else None
-            )
+            ] if emoji else None
         else:
             if isinstance(emoji, int):
                 reaction = [raw.types.ReactionCustomEmoji(document_id=emoji)]
@@ -87,19 +102,19 @@ class SendReaction:
                     msg_id=message_id,
                     reaction=reaction,
                     big=big,
-                    add_to_recent=add_to_recent,
+                    add_to_recent=add_to_recent
                 )
             )
             for i in r.updates:
-                if isinstance(i, raw.types.UpdateMessageReactions):
-                    return types.MessageReactions._parse(self, i.reactions)
+              if isinstance(i, raw.types.UpdateMessageReactions):
+                  return types.MessageReactions._parse(self, i.reactions)
         elif story_id is not None:
             await self.invoke(
                 raw.functions.stories.SendReaction(
                     peer=await self.resolve_peer(chat_id),
                     story_id=story_id,
                     reaction=raw.types.ReactionEmoji(emoticon=emoji) if emoji else None,
-                    add_to_recent=add_to_recent,
+                    add_to_recent=add_to_recent
                 )
             )
             return True

@@ -1,3 +1,22 @@
+#  Pyrogram - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrogram.
+#
+#  Pyrogram is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrogram is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
+
 from typing import List, Union
 
 import pyrogram
@@ -64,9 +83,9 @@ class Folder(Object):
         client: "pyrogram.Client" = None,
         id: int,
         title: str,
-        included_chats: list["types.Chat"] = None,
-        excluded_chats: list["types.Chat"] = None,
-        pinned_chats: list["types.Chat"] = None,
+        included_chats: List["types.Chat"] = None,
+        excluded_chats: List["types.Chat"] = None,
+        pinned_chats: List["types.Chat"] = None,
         contacts: bool = None,
         non_contacts: bool = None,
         groups: bool = None,
@@ -77,7 +96,7 @@ class Folder(Object):
         exclude_archived: bool = None,
         emoji: str = None,
         color: "enums.FolderColor" = None,
-        has_my_invites: bool = None,
+        has_my_invites: bool = None
     ):
         super().__init__(client)
 
@@ -106,26 +125,20 @@ class Folder(Object):
 
         for peer in folder.include_peers:
             try:
-                included_chats.append(
-                    types.Chat._parse_dialog(client, peer, users, chats)
-                )
+                included_chats.append(types.Chat._parse_dialog(client, peer, users, chats))
             except KeyError:
                 pass
 
         if getattr(folder, "exclude_peers", None):
             for peer in folder.exclude_peers:
                 try:
-                    excluded_chats.append(
-                        types.Chat._parse_dialog(client, peer, users, chats)
-                    )
+                    excluded_chats.append(types.Chat._parse_dialog(client, peer, users, chats))
                 except KeyError:
                     pass
 
         for peer in folder.pinned_peers:
             try:
-                pinned_chats.append(
-                    types.Chat._parse_dialog(client, peer, users, chats)
-                )
+                pinned_chats.append(types.Chat._parse_dialog(client, peer, users, chats))
             except KeyError:
                 pass
 
@@ -146,7 +159,7 @@ class Folder(Object):
             emoji=folder.emoticon or None,
             color=enums.FolderColor(getattr(folder, "color", None)),
             has_my_invites=getattr(folder, "has_my_invites", None),
-            client=client,
+            client=client
         )
 
     async def delete(self):
@@ -171,9 +184,9 @@ class Folder(Object):
 
     async def update(
         self,
-        included_chats: list[Union[int, str]] = None,
-        excluded_chats: list[Union[int, str]] = None,
-        pinned_chats: list[Union[int, str]] = None,
+        included_chats: List[Union[int, str]] = None,
+        excluded_chats: List[Union[int, str]] = None,
+        pinned_chats: List[Union[int, str]] = None,
         title: str = None,
         contacts: bool = None,
         non_contacts: bool = None,
@@ -184,7 +197,7 @@ class Folder(Object):
         exclude_read: bool = None,
         exclude_archived: bool = None,
         emoji: str = None,
-        color: "enums.FolderColor" = None,
+        color: "enums.FolderColor" = None
     ):
         """Bound method *update_peers* of :obj:`~pyrogram.types.Folder`.
 
@@ -278,7 +291,7 @@ class Folder(Object):
             exclude_read=exclude_read or self.exclude_read,
             exclude_archived=exclude_archived or self.exclude_archived,
             emoji=emoji or self.emoji,
-            color=color or self.color,
+            color=color or self.color
         )
 
     async def include_chat(self, chat_id: Union[int, str]):
@@ -312,7 +325,7 @@ class Folder(Object):
         return await self.update(
             included_chats=[i.id for i in self.included_chats or []] + [chat_id],
             excluded_chats=[i.id for i in self.excluded_chats or []],
-            pinned_chats=[i.id for i in self.pinned_chats or []],
+            pinned_chats=[i.id for i in self.pinned_chats or []]
         )
 
     async def exclude_chat(self, chat_id: Union[int, str]):
@@ -378,7 +391,9 @@ class Folder(Object):
             True on success.
         """
 
-        return await self.update(color=color)
+        return await self.update(
+            color=color
+        )
 
     async def pin_chat(self, chat_id: Union[int, str]):
         """Bound method *pin_chat* of :obj:`~pyrogram.types.Folder`.
@@ -411,7 +426,7 @@ class Folder(Object):
         return await self.update(
             included_chats=[i.id for i in self.included_chats or []] + [chat_id],
             excluded_chats=[i.id for i in self.excluded_chats or []],
-            pinned_chats=[i.id for i in self.pinned_chats or []] + [chat_id],
+            pinned_chats=[i.id for i in self.pinned_chats or []] + [chat_id]
         )
 
     async def remove_chat(self, chat_id: Union[int, str]):
@@ -449,7 +464,7 @@ class Folder(Object):
         return await self.update(
             included_chats=[i.id for i in self.included_chats or [] if peer_id != i.id],
             excluded_chats=[i.id for i in self.excluded_chats or [] if peer_id != i.id],
-            pinned_chats=[i.id for i in self.pinned_chats or [] if peer_id != i.id],
+            pinned_chats=[i.id for i in self.pinned_chats or [] if peer_id != i.id]
         )
 
     async def export_link(self):
@@ -470,4 +485,6 @@ class Folder(Object):
             ``str``: On success, a link to the folder as string is returned.
         """
 
-        return await self._client.export_folder_link(folder_id=self.id)
+        return await self._client.export_folder_link(
+            folder_id=self.id
+        )

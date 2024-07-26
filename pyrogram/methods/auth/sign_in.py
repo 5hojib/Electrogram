@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 import logging
 from typing import Union
 
@@ -13,7 +32,7 @@ class SignIn:
         self: "pyrogram.Client",
         phone_number: str,
         phone_code_hash: str,
-        phone_code: str,
+        phone_code: str
     ) -> Union["types.User", "types.TermsOfService", bool]:
         """Authorize a user in Telegram with a valid confirmation code.
 
@@ -46,7 +65,7 @@ class SignIn:
             raw.functions.auth.SignIn(
                 phone_number=phone_number,
                 phone_code_hash=phone_code_hash,
-                phone_code=phone_code,
+                phone_code=phone_code
             )
         )
 

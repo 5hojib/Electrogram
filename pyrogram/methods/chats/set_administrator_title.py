@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from typing import Union
 
 import pyrogram
@@ -43,26 +62,26 @@ class SetAdministratorTitle:
         chat_id = await self.resolve_peer(chat_id)
         user_id = await self.resolve_peer(user_id)
 
-        r = (
-            await self.invoke(
-                raw.functions.channels.GetParticipant(
-                    channel=chat_id, participant=user_id
-                )
+        r = (await self.invoke(
+            raw.functions.channels.GetParticipant(
+                channel=chat_id,
+                participant=user_id
             )
-        ).participant
+        )).participant
 
         if isinstance(r, raw.types.ChannelParticipantCreator):
             admin_rights = raw.types.ChatAdminRights()
         elif isinstance(r, raw.types.ChannelParticipantAdmin):
             admin_rights = r.admin_rights
         else:
-            raise ValueError(
-                "Custom titles can only be applied to owners or administrators of supergroups"
-            )
+            raise ValueError("Custom titles can only be applied to owners or administrators of supergroups")
 
         await self.invoke(
             raw.functions.channels.EditAdmin(
-                channel=chat_id, user_id=user_id, admin_rights=admin_rights, rank=title
+                channel=chat_id,
+                user_id=user_id,
+                admin_rights=admin_rights,
+                rank=title
             )
         )
 

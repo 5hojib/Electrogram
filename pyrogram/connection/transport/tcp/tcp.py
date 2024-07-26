@@ -1,7 +1,27 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 import asyncio
 import ipaddress
 import logging
 import socket
+from concurrent.futures import ThreadPoolExecutor
 from typing import Tuple, Dict, TypedDict, Optional
 
 import socks
@@ -36,7 +56,10 @@ class TCP:
         self.lock = asyncio.Lock()
         self.loop = asyncio.get_event_loop()
 
-    async def _connect_via_proxy(self, destination: tuple[str, int]) -> None:
+    async def _connect_via_proxy(
+        self,
+        destination: Tuple[str, int]
+    ) -> None:
         scheme = self.proxy.get("scheme")
         if scheme is None:
             raise ValueError("No scheme specified")
@@ -65,35 +88,43 @@ class TCP:
             addr=hostname,
             port=port,
             username=username,
-            password=password,
+            password=password
         )
         sock.settimeout(TCP.TIMEOUT)
 
-        await self.loop.sock_connect(sock=sock, address=destination)
+        await self.loop.sock_connect(
+            sock=sock,
+            address=destination
+        )
 
         sock.setblocking(False)
 
-        self.reader, self.writer = await asyncio.open_connection(sock=sock)
+        self.reader, self.writer = await asyncio.open_connection(
+            sock=sock
+        )
 
-    async def _connect_via_direct(self, destination: tuple[str, int]) -> None:
+    async def _connect_via_direct(
+        self,
+        destination: Tuple[str, int]
+    ) -> None:
         host, port = destination
         family = socket.AF_INET6 if self.ipv6 else socket.AF_INET
         self.reader, self.writer = await asyncio.open_connection(
-            host=host, port=port, family=family
+            host=host,
+            port=port,
+            family=family
         )
 
-    async def _connect(self, destination: tuple[str, int]) -> None:
+    async def _connect(self, destination: Tuple[str, int]) -> None:
         if self.proxy:
             await self._connect_via_proxy(destination)
         else:
             await self._connect_via_direct(destination)
 
-    async def connect(self, address: tuple[str, int]) -> None:
+    async def connect(self, address: Tuple[str, int]) -> None:
         try:
             await asyncio.wait_for(self._connect(address), TCP.TIMEOUT)
-        except (
-            asyncio.TimeoutError
-        ):  # Re-raise as TimeoutError. asyncio.TimeoutError is deprecated in 3.11
+        except asyncio.TimeoutError:  # Re-raise as TimeoutError. asyncio.TimeoutError is deprecated in 3.11
             raise TimeoutError("Connection timed out")
 
     async def close(self) -> None:
@@ -124,7 +155,8 @@ class TCP:
         while len(data) < length:
             try:
                 chunk = await asyncio.wait_for(
-                    self.reader.read(length - len(data)), TCP.TIMEOUT
+                    self.reader.read(length - len(data)),
+                    TCP.TIMEOUT
                 )
             except (OSError, asyncio.TimeoutError):
                 return None

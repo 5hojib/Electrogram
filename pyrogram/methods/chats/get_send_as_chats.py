@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from typing import List, Union
 
 import pyrogram
@@ -7,8 +26,9 @@ from pyrogram import types
 
 class GetSendAsChats:
     async def get_send_as_chats(
-        self: "pyrogram.Client", chat_id: Union[int, str]
-    ) -> list["types.Chat"]:
+        self: "pyrogram.Client",
+        chat_id: Union[int, str]
+    ) -> List["types.Chat"]:
         """Get the list of "send_as" chats available.
 
         .. include:: /_includes/usable-by/users.rst
@@ -19,7 +39,7 @@ class GetSendAsChats:
                 You can also use chat public link in form of *t.me/<username>* (str).
 
         Returns:
-            list[:obj:`~pyrogram.types.Chat`]: The list of chats.
+            List[:obj:`~pyrogram.types.Chat`]: The list of chats.
 
         Example:
             .. code-block:: python
@@ -28,7 +48,9 @@ class GetSendAsChats:
                 print(chats)
         """
         r = await self.invoke(
-            raw.functions.channels.GetSendAs(peer=await self.resolve_peer(chat_id))
+            raw.functions.channels.GetSendAs(
+                peer=await self.resolve_peer(chat_id)
+            )
         )
 
         users = {u.id: u for u in r.users}
@@ -38,12 +60,8 @@ class GetSendAsChats:
 
         for p in r.peers:
             if isinstance(p.peer, raw.types.PeerUser):
-                send_as_chats.append(
-                    types.Chat._parse_chat(self, users[p.peer.user_id])
-                )
+                send_as_chats.append(types.Chat._parse_chat(self, users[p.peer.user_id]))
             else:
-                send_as_chats.append(
-                    types.Chat._parse_chat(self, chats[p.peer.channel_id])
-                )
+                send_as_chats.append(types.Chat._parse_chat(self, chats[p.peer.channel_id]))
 
         return send_as_chats

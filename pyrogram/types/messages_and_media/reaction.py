@@ -1,3 +1,22 @@
+#  PyroFork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of PyroFork.
+#
+#  PyroFork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  PyroFork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with PyroFork.  If not, see <http://www.gnu.org/licenses/>.
+
 from typing import Optional
 
 import pyrogram
@@ -30,7 +49,7 @@ class Reaction(Object):
         emoji: Optional[str] = None,
         custom_emoji_id: Optional[int] = None,
         count: Optional[int] = None,
-        chosen_order: Optional[int] = None,
+        chosen_order: Optional[int] = None
     ):
         super().__init__(client)
 
@@ -40,16 +59,26 @@ class Reaction(Object):
         self.chosen_order = chosen_order
 
     @staticmethod
-    def _parse(client: "pyrogram.Client", reaction: "raw.base.Reaction") -> "Reaction":
+    def _parse(
+        client: "pyrogram.Client",
+        reaction: "raw.base.Reaction"
+    ) -> "Reaction":
         if isinstance(reaction, raw.types.ReactionEmoji):
-            return Reaction(client=client, emoji=reaction.emoticon)
+            return Reaction(
+                client=client,
+                emoji=reaction.emoticon
+            )
 
         if isinstance(reaction, raw.types.ReactionCustomEmoji):
-            return Reaction(client=client, custom_emoji_id=reaction.document_id)
+            return Reaction(
+                client=client,
+                custom_emoji_id=reaction.document_id
+            )
 
     @staticmethod
     def _parse_count(
-        client: "pyrogram.Client", reaction_count: "raw.base.ReactionCount"
+        client: "pyrogram.Client",
+        reaction_count: "raw.base.ReactionCount"
     ) -> "Reaction":
         reaction = Reaction._parse(client, reaction_count.reaction)
         reaction.count = reaction_count.count

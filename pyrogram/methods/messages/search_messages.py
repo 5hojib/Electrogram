@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from typing import Union, List, AsyncGenerator, Optional
 
 import pyrogram
@@ -12,8 +31,8 @@ async def get_chunk(
     filter: "enums.MessagesFilter" = enums.MessagesFilter.EMPTY,
     offset: int = 0,
     limit: int = 100,
-    from_user: Union[int, str] = None,
-) -> list["types.Message"]:
+    from_user: Union[int, str] = None
+) -> List["types.Message"]:
     r = await client.invoke(
         raw.functions.messages.Search(
             peer=await client.resolve_peer(chat_id),
@@ -26,10 +45,14 @@ async def get_chunk(
             limit=limit,
             min_id=0,
             max_id=0,
-            from_id=(await client.resolve_peer(from_user) if from_user else None),
-            hash=0,
+            from_id=(
+                await client.resolve_peer(from_user)
+                if from_user
+                else None
+            ),
+            hash=0
         ),
-        sleep_threshold=60,
+        sleep_threshold=60
     )
 
     return await utils.parse_messages(client, r, replies=0)
@@ -44,7 +67,7 @@ class SearchMessages:
         offset: int = 0,
         filter: "enums.MessagesFilter" = enums.MessagesFilter.EMPTY,
         limit: int = 0,
-        from_user: Union[int, str] = None,
+        from_user: Union[int, str] = None
     ) -> Optional[AsyncGenerator["types.Message", None]]:
         """Search for text and media messages inside a specific chat.
 
@@ -113,7 +136,7 @@ class SearchMessages:
                 filter=filter,
                 offset=offset,
                 limit=limit,
-                from_user=from_user,
+                from_user=from_user
             )
 
             if not messages:

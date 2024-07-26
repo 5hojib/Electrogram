@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from typing import List, Union, Optional
 
 import pyrogram
@@ -14,8 +33,8 @@ class SendInlineBotResult:
         message_thread_id: int = None,
         reply_to_message_id: int = None,
         quote_text: str = None,
-        quote_entities: list["types.MessageEntity"] = None,
-        parse_mode: Optional["enums.ParseMode"] = None,
+        quote_entities: List["types.MessageEntity"] = None,
+        parse_mode: Optional["enums.ParseMode"] = None
     ) -> "raw.base.Updates":
         """Send an inline bot result.
         Bot results can be retrieved using :meth:`~pyrogram.Client.get_inline_bot_results`
@@ -67,7 +86,7 @@ class SendInlineBotResult:
 
                 await app.send_inline_bot_result(chat_id, query_id, result_id)
         """
-
+    
         reply_to = await utils.get_reply_to(
             client=self,
             chat_id=chat_id,
@@ -75,7 +94,7 @@ class SendInlineBotResult:
             message_thread_id=message_thread_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
-            parse_mode=parse_mode,
+            parse_mode=parse_mode
         )
 
         return await self.invoke(
@@ -85,6 +104,6 @@ class SendInlineBotResult:
                 id=result_id,
                 random_id=self.rnd_id(),
                 silent=disable_notification or None,
-                reply_to=reply_to,
+                reply_to=reply_to
             )
         )

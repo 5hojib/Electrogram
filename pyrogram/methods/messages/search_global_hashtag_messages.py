@@ -1,3 +1,21 @@
+#  Pyrogram - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#
+#  This file is part of Pyrogram.
+#
+#  Pyrogram is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrogram is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
+
 from datetime import datetime
 from typing import AsyncGenerator
 
@@ -30,7 +48,7 @@ class SearchGlobalHashtagMessages:
                 Pass a date as offset to retrieve only older messages starting from that date.
 
             limit (``int``, *optional*):
-                The maximum number of messages to be returned.
+                The maximum number of messages to be returned. 
                 By default, no limit is applied and all posts are returned.
 
         Returns:
@@ -42,7 +60,7 @@ class SearchGlobalHashtagMessages:
                 # Search for "#pyrogram". Get the first 50 results
                 async for message in app.search_public_hashtag_messages("#pyrogram"):
                     print(message.text)
-
+                    
         """
         current = 0
         total = abs(limit) or (1 << 31)
@@ -59,11 +77,11 @@ class SearchGlobalHashtagMessages:
                         offset_rate=utils.datetime_to_timestamp(offset_date),
                         offset_peer=offset_peer,
                         offset_id=offset_id,
-                        limit=limit,
+                        limit=limit
                     ),
-                    sleep_threshold=60,
+                    sleep_threshold=60
                 ),
-                replies=0,
+                replies=0
             )
 
             if not messages:

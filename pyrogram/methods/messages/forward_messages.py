@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from datetime import datetime
 from typing import Union, List, Iterable
 
@@ -16,8 +35,8 @@ class ForwardMessages:
         disable_notification: bool = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
-        drop_author: bool = None,
-    ) -> Union["types.Message", list["types.Message"]]:
+        drop_author: bool = None
+    ) -> Union["types.Message", List["types.Message"]]:
         """Forward messages of any kind.
 
         .. include:: /_includes/usable-by/users-bots.rst
@@ -82,7 +101,7 @@ class ForwardMessages:
                 random_id=[self.rnd_id() for _ in message_ids],
                 schedule_date=utils.datetime_to_timestamp(schedule_date),
                 noforwards=protect_content,
-                drop_author=drop_author,
+                drop_author=drop_author
             )
         )
 
@@ -92,16 +111,14 @@ class ForwardMessages:
         chats = {i.id: i for i in r.chats}
 
         for i in r.updates:
-            if isinstance(
-                i,
-                (
-                    raw.types.UpdateNewMessage,
-                    raw.types.UpdateNewChannelMessage,
-                    raw.types.UpdateNewScheduledMessage,
-                ),
-            ):
+            if isinstance(i, (raw.types.UpdateNewMessage,
+                              raw.types.UpdateNewChannelMessage,
+                              raw.types.UpdateNewScheduledMessage)):
                 forwarded_messages.append(
-                    await types.Message._parse(self, i.message, users, chats)
+                    await types.Message._parse(
+                        self, i.message,
+                        users, chats
+                    )
                 )
 
         return types.List(forwarded_messages) if is_iterable else forwarded_messages[0]

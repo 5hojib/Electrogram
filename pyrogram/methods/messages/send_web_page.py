@@ -1,10 +1,28 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
+import re
 from datetime import datetime
 from typing import Union, List, Optional
 
 import pyrogram
 from pyrogram import raw, utils, enums
 from pyrogram import types
-
 
 class SendWebPage:
     async def send_web_page(
@@ -13,7 +31,7 @@ class SendWebPage:
         url: str,
         text: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        entities: list["types.MessageEntity"] = None,
+        entities: List["types.MessageEntity"] = None,
         large_media: bool = None,
         invert_media: bool = None,
         disable_notification: bool = None,
@@ -23,15 +41,15 @@ class SendWebPage:
         reply_to_story_id: int = None,
         reply_to_chat_id: Union[int, str] = None,
         quote_text: str = None,
-        quote_entities: list["types.MessageEntity"] = None,
+        quote_entities: List["types.MessageEntity"] = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = None,
+            "types.ForceReply"
+        ] = None
     ) -> "types.Message":
         """Send text Web Page Preview.
 
@@ -77,7 +95,7 @@ class SendWebPage:
 
             reply_to_message_id (``int``, *optional*):
                 If the message is a reply, ID of the original message.
-
+            
             reply_to_story_id (``int``, *optional*):
                 Unique identifier for the target story.
 
@@ -110,13 +128,11 @@ class SendWebPage:
         Example:
             .. code-block:: python
 
-                await app.send_web_page("me", "https://github.com")
+                await app.send_web_page("me", "https://github.com/Mayuri-Chan/pyrofork")
 
         """
 
-        message, entities = (
-            await utils.parse_text_entities(self, text, parse_mode, entities)
-        ).values()
+        message, entities = (await utils.parse_text_entities(self, text, parse_mode, entities)).values()
 
         reply_to = await utils.get_reply_to(
             client=self,
@@ -127,11 +143,13 @@ class SendWebPage:
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
-            parse_mode=parse_mode,
+            parse_mode=parse_mode
         )
 
         media = raw.types.InputMediaWebPage(
-            url=url, force_large_media=large_media, force_small_media=not large_media
+            url=url,
+            force_large_media=large_media,
+            force_small_media=not large_media
         )
         rpc = raw.functions.messages.SendMedia(
             peer=await self.resolve_peer(chat_id),
@@ -144,12 +162,13 @@ class SendWebPage:
             media=media,
             invert_media=invert_media,
             entities=entities,
-            noforwards=protect_content,
+            noforwards=protect_content
         )
         if business_connection_id is not None:
             r = await self.invoke(
                 raw.functions.InvokeWithBusinessConnection(
-                    connection_id=business_connection_id, query=rpc
+                    connection_id=business_connection_id,
+                    query=rpc
                 )
             )
         else:
@@ -165,34 +184,31 @@ class SendWebPage:
             )
             return types.Message(
                 id=r.id,
-                chat=types.Chat(id=peer_id, type=enums.ChatType.PRIVATE, client=self),
+                chat=types.Chat(
+                    id=peer_id,
+                    type=enums.ChatType.PRIVATE,
+                    client=self
+                ),
                 text=message,
                 date=utils.timestamp_to_datetime(r.date),
                 outgoing=r.out,
                 reply_markup=reply_markup,
                 entities=[
-                    types.MessageEntity._parse(None, entity, {}) for entity in entities
-                ]
-                if entities
-                else None,
-                client=self,
+                    types.MessageEntity._parse(None, entity, {})
+                    for entity in entities
+                ] if entities else None,
+                client=self
             )
 
         for i in r.updates:
-            if isinstance(
-                i,
-                (
-                    raw.types.UpdateNewMessage,
-                    raw.types.UpdateNewChannelMessage,
-                    raw.types.UpdateNewScheduledMessage,
-                    raw.types.UpdateBotNewBusinessMessage,
-                ),
-            ):
+            if isinstance(i, (raw.types.UpdateNewMessage,
+                              raw.types.UpdateNewChannelMessage,
+                              raw.types.UpdateNewScheduledMessage,
+                              raw.types.UpdateBotNewBusinessMessage)):
                 return await types.Message._parse(
-                    self,
-                    i.message,
+                    self, i.message,
                     {i.id: i for i in r.users},
                     {i.id: i for i in r.chats},
                     is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
-                    business_connection_id=business_connection_id,
+                    business_connection_id=business_connection_id
                 )

@@ -1,3 +1,21 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 import pyrogram
 
 from datetime import datetime
@@ -49,12 +67,12 @@ class GiveawayResult(Object):
         giveaway_message: "types.Message" = None,
         quantity: int,
         unclaimed_quantity: int,
-        winners: list["types.User"] = None,
+        winners: List["types.User"] = None,
         months: int = None,
         expire_date: datetime = None,
-        new_subscribers: bool = None,
+        new_subscribers : bool = None,
         is_refunded: bool = None,
-        is_winners_hidden: bool,
+        is_winners_hidden: bool
     ):
         super().__init__(client)
 
@@ -74,9 +92,9 @@ class GiveawayResult(Object):
         client,
         giveaway_result: Union[
             "raw.types.MessageActionGiveawayResults",
-            "raw.types.MessageMediaGiveawayResults",
+            "raw.types.MessageMediaGiveawayResults"
         ],
-        hide_winners: bool = False,
+        hide_winners: bool = False
     ) -> "GiveawayResult":
         chat = None
         giveaway_message = None
@@ -90,9 +108,7 @@ class GiveawayResult(Object):
                 )
             )
             chat = types.Chat._parse_chat(client, chat.chats[0])
-            giveaway_message = await client.get_messages(
-                chat_id, giveaway_result.launch_msg_id
-            )
+            giveaway_message = await client.get_messages(chat_id, giveaway_result.launch_msg_id)
             expired_date = utils.timestamp_to_datetime(giveaway_result.until_date)
             winners = []
             for winner in giveaway_result.winners:
@@ -109,5 +125,5 @@ class GiveawayResult(Object):
             new_subscribers=getattr(giveaway_result, "only_new_subscribers", None),
             is_refunded=getattr(giveaway_result, "refunded", None),
             is_winners_hidden=hide_winners,
-            client=client,
+            client=client
         )

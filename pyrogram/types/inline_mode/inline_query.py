@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from typing import List, Match
 
 import pyrogram
@@ -46,7 +65,7 @@ class InlineQuery(Object, Update):
         offset: str,
         chat_type: "enums.ChatType",
         location: "types.Location" = None,
-        matches: list[Match] = None,
+        matches: List[Match] = None
     ):
         super().__init__(client)
 
@@ -59,9 +78,7 @@ class InlineQuery(Object, Update):
         self.matches = matches
 
     @staticmethod
-    def _parse(
-        client, inline_query: raw.types.UpdateBotInlineQuery, users: dict
-    ) -> "InlineQuery":
+    def _parse(client, inline_query: raw.types.UpdateBotInlineQuery, users: dict) -> "InlineQuery":
         peer_type = inline_query.peer_type
         chat_type = None
 
@@ -85,22 +102,20 @@ class InlineQuery(Object, Update):
             location=types.Location(
                 longitude=inline_query.geo.long,
                 latitude=inline_query.geo.lat,
-                client=client,
-            )
-            if inline_query.geo
-            else None,
-            client=client,
+                client=client
+            ) if inline_query.geo else None,
+            client=client
         )
 
     async def answer(
         self,
-        results: list["types.InlineQueryResult"],
+        results: List["types.InlineQueryResult"],
         cache_time: int = 300,
         is_gallery: bool = False,
         is_personal: bool = False,
         next_offset: str = "",
         switch_pm_text: str = "",
-        switch_pm_parameter: str = "",
+        switch_pm_parameter: str = ""
     ):
         """Bound method *answer* of :obj:`~pyrogram.types.InlineQuery`.
 
@@ -163,5 +178,5 @@ class InlineQuery(Object, Update):
             is_personal=is_personal,
             next_offset=next_offset,
             switch_pm_text=switch_pm_text,
-            switch_pm_parameter=switch_pm_parameter,
+            switch_pm_parameter=switch_pm_parameter
         )

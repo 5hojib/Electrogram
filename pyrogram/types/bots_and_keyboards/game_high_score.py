@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 import pyrogram
 from pyrogram import raw, utils
 from pyrogram import types
@@ -24,7 +43,7 @@ class GameHighScore(Object):
         client: "pyrogram.Client" = None,
         user: "types.User",
         score: int,
-        position: int = None,
+        position: int = None
     ):
         super().__init__(client)
 
@@ -33,24 +52,20 @@ class GameHighScore(Object):
         self.position = position
 
     @staticmethod
-    def _parse(
-        client, game_high_score: raw.types.HighScore, users: dict
-    ) -> "GameHighScore":
+    def _parse(client, game_high_score: raw.types.HighScore, users: dict) -> "GameHighScore":
         users = {i.id: i for i in users}
 
         return GameHighScore(
             user=types.User._parse(client, users[game_high_score.user_id]),
             score=game_high_score.score,
             position=game_high_score.pos,
-            client=client,
+            client=client
         )
 
     @staticmethod
     def _parse_action(client, service: raw.types.MessageService, users: dict):
         return GameHighScore(
-            user=types.User._parse(
-                client, users[utils.get_raw_peer_id(service.from_id or service.peer_id)]
-            ),
+            user=types.User._parse(client, users[utils.get_raw_peer_id(service.from_id or service.peer_id)]),
             score=service.action.score,
-            client=client,
+            client=client
         )

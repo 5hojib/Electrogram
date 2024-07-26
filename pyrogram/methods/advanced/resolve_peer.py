@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 import logging
 import re
 from typing import Union
@@ -12,7 +31,8 @@ log = logging.getLogger(__name__)
 
 class ResolvePeer:
     async def resolve_peer(
-        self: "pyrogram.Client", peer_id: Union[int, str]
+        self: "pyrogram.Client",
+        peer_id: Union[int, str]
     ) -> Union[raw.base.InputPeer, raw.base.InputUser, raw.base.InputChannel]:
         """Get the InputPeer of a known peer id.
         Useful whenever an InputPeer type is required.
@@ -56,7 +76,9 @@ class ResolvePeer:
                         return await self.storage.get_peer_by_username(peer_id)
                     except KeyError:
                         await self.invoke(
-                            raw.functions.contacts.ResolveUsername(username=peer_id)
+                            raw.functions.contacts.ResolveUsername(
+                                username=peer_id
+                            )
                         )
 
                         return await self.storage.get_peer_by_username(peer_id)
@@ -72,18 +94,28 @@ class ResolvePeer:
                 await self.fetch_peers(
                     await self.invoke(
                         raw.functions.users.GetUsers(
-                            id=[raw.types.InputUser(user_id=peer_id, access_hash=0)]
+                            id=[
+                                raw.types.InputUser(
+                                    user_id=peer_id,
+                                    access_hash=0
+                                )
+                            ]
                         )
                     )
                 )
             elif peer_type == "chat":
-                await self.invoke(raw.functions.messages.GetChats(id=[-peer_id]))
+                await self.invoke(
+                    raw.functions.messages.GetChats(
+                        id=[-peer_id]
+                    )
+                )
             else:
                 await self.invoke(
                     raw.functions.channels.GetChannels(
                         id=[
                             raw.types.InputChannel(
-                                channel_id=utils.get_channel_id(peer_id), access_hash=0
+                                channel_id=utils.get_channel_id(peer_id),
+                                access_hash=0
                             )
                         ]
                     )

@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from typing import List, Optional
 
 import pyrogram
@@ -7,31 +26,31 @@ from .inline_query_result import InlineQueryResult
 
 class InlineQueryResultAudio(InlineQueryResult):
     """Link to an audio file.
-
+    
     By default, this audio file will be sent by the user with optional caption.
     Alternatively, you can use *input_message_content* to send a message with the specified content instead of the
     audio.
-
+    
     Parameters:
         audio_url (``str``):
             A valid URL for the audio file.
-
+            
         title (``str``):
             Title for the result.
-
+            
         id (``str``, *optional*):
             Unique identifier for this result, 1-64 bytes.
             Defaults to a randomly generated UUID4.
-
+            
         performer (``str``, *optional*):
             Audio performer.
-
+            
         audio_duration (``int``, *optional*):
             Audio duration in seconds.
 
         caption (``str``, *optional*):
             Caption of the audio to be sent, 0-1024 characters.
-
+            
         parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
             By default, texts are parsed using both Markdown and HTML styles.
             You can combine both syntaxes together.
@@ -41,10 +60,10 @@ class InlineQueryResultAudio(InlineQueryResult):
 
         description (``str``, *optional*):
             Short description of the result.
-
+            
         reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup`, *optional*):
             Inline keyboard attached to the message.
-
+            
         input_message_content (:obj:`~pyrogram.types.InputMessageContent`, *optional*):
             Content of the message to be sent instead of the audio.
 
@@ -61,11 +80,11 @@ class InlineQueryResultAudio(InlineQueryResult):
         audio_duration: int = 0,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] = None,
+        caption_entities: List["types.MessageEntity"] = None,
         description: str = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
         input_message_content: "types.InputMessageContent" = None,
-        thumb_url: str = None,
+        thumb_url: str = None
     ):
         super().__init__("audio", id, input_message_content, reply_markup)
 
@@ -84,20 +103,16 @@ class InlineQueryResultAudio(InlineQueryResult):
             url=self.audio_url,
             size=0,
             mime_type="audio/mpeg",
-            attributes=[
-                raw.types.DocumentAttributeAudio(
-                    duration=self.audio_duration,
-                    title=self.title,
-                    performer=self.performer,
-                )
-            ],
+            attributes=[raw.types.DocumentAttributeAudio(
+                duration=self.audio_duration,
+                title=self.title,
+                performer=self.performer
+            )]
         )
 
-        message, entities = (
-            await utils.parse_text_entities(
-                client, self.caption, self.parse_mode, self.caption_entities
-            )
-        ).values()
+        message, entities = (await utils.parse_text_entities(
+            client, self.caption, self.parse_mode, self.caption_entities
+        )).values()
 
         return raw.types.InputBotInlineResult(
             id=self.id,
@@ -106,19 +121,18 @@ class InlineQueryResultAudio(InlineQueryResult):
             content=audio,
             description=self.description,
             thumb=raw.types.InputWebDocument(
-                url=self.thumb_url, size=0, mime_type="image/jpeg", attributes=[]
-            )
-            if self.thumb_url
-            else None,
+                url=self.thumb_url,
+                size=0,
+                mime_type="image/jpeg",
+                attributes=[]
+            ) if self.thumb_url else None,
             send_message=(
                 await self.input_message_content.write(client, self.reply_markup)
                 if self.input_message_content
                 else raw.types.InputBotInlineMessageMediaAuto(
-                    reply_markup=await self.reply_markup.write(client)
-                    if self.reply_markup
-                    else None,
+                    reply_markup=await self.reply_markup.write(client) if self.reply_markup else None,
                     message=message,
-                    entities=entities,
+                    entities=entities
                 )
-            ),
+            )
         )

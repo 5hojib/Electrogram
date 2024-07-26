@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from .bot_business_connect_handler import BotBusinessConnectHandler
 from .bot_business_message_handler import BotBusinessMessageHandler
 from .callback_query_handler import CallbackQueryHandler
@@ -19,29 +38,5 @@ from .user_status_handler import UserStatusHandler
 from .story_handler import StoryHandler
 from .message_reaction_updated_handler import MessageReactionUpdatedHandler
 from .message_reaction_count_updated_handler import MessageReactionCountUpdatedHandler
+from .pre_checkout_query_handler import PreCheckoutQueryHandler
 from .shipping_query_handler import ShippingQueryHandler
-
-__all__ = [
-    "BotBusinessConnectHandler",
-    "BotBusinessMessageHandler",
-    "CallbackQueryHandler",
-    "ChatJoinRequestHandler",
-    "ChatMemberUpdatedHandler",
-    "ConversationHandler",
-    "ChosenInlineResultHandler",
-    "DeletedMessagesHandler",
-    "DeletedBotBusinessMessagesHandler",
-    "DisconnectHandler",
-    "EditedMessageHandler",
-    "EditedBotBusinessMessageHandler",
-    "InlineQueryHandler",
-    "MessageHandler",
-    "PollHandler",
-    "PreCheckoutQueryHandler",
-    "RawUpdateHandler",
-    "UserStatusHandler",
-    "StoryHandler",
-    "MessageReactionUpdatedHandler",
-    "MessageReactionCountUpdatedHandler",
-    "ShippingQueryHandler",
-]

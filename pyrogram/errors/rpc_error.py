@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 import re
 from datetime import datetime
 from importlib import import_module
@@ -19,18 +38,16 @@ class RPCError(Exception):
         value: Union[int, str, raw.types.RpcError] = None,
         rpc_name: str = None,
         is_unknown: bool = False,
-        is_signed: bool = False,
+        is_signed: bool = False
     ):
-        super().__init__(
-            "Telegram says: [{}{} {}] {} Pyrogram {} thinks: {}".format(
-                "-" if is_signed else "",
-                self.CODE,
-                self.ID or self.NAME,
-                f'(caused by "{rpc_name}")' if rpc_name else "",
-                __version__,
-                self.MESSAGE.format(value=value),
-            )
-        )
+        super().__init__("Telegram says: [{}{} {}] {} Pyrogram {} thinks: {}".format(
+            "-" if is_signed else "",
+            self.CODE,
+            self.ID or self.NAME,
+            f'(caused by "{rpc_name}")' if rpc_name else "",
+            __version__,
+            self.MESSAGE.format(value=value),
+        ))
 
         try:
             self.value = int(value)
@@ -56,27 +73,30 @@ class RPCError(Exception):
                 value=f"[{error_code} {error_message}]",
                 rpc_name=rpc_name,
                 is_unknown=True,
-                is_signed=is_signed,
+                is_signed=is_signed
             )
 
         error_id = re.sub(r"_\d+", "_X", error_message)
 
         if error_id not in exceptions[error_code]:
             raise getattr(
-                import_module("pyrogram.errors"), exceptions[error_code]["_"]
-            )(
-                value=f"[{error_code} {error_message}]",
-                rpc_name=rpc_name,
-                is_unknown=True,
-                is_signed=is_signed,
-            )
+                import_module("pyrogram.errors"),
+                exceptions[error_code]["_"]
+            )(value=f"[{error_code} {error_message}]",
+              rpc_name=rpc_name,
+              is_unknown=True,
+              is_signed=is_signed)
 
         value = re.search(r"_(\d+)", error_message)
         value = value.group(1) if value is not None else value
 
         raise getattr(
-            import_module("pyrogram.errors"), exceptions[error_code][error_id]
-        )(value=value, rpc_name=rpc_name, is_unknown=False, is_signed=is_signed)
+            import_module("pyrogram.errors"),
+            exceptions[error_code][error_id]
+        )(value=value,
+          rpc_name=rpc_name,
+          is_unknown=False,
+          is_signed=is_signed)
 
 
 class UnknownError(RPCError):

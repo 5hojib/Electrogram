@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from datetime import datetime
 from typing import List
 
@@ -57,7 +76,7 @@ class Audio(Object):
         mime_type: str = None,
         file_size: int = None,
         date: datetime = None,
-        thumbs: list["types.Thumbnail"] = None,
+        thumbs: List["types.Thumbnail"] = None
     ):
         super().__init__(client)
 
@@ -77,7 +96,7 @@ class Audio(Object):
         client,
         audio: "raw.types.Document",
         audio_attributes: "raw.types.DocumentAttributeAudio",
-        file_name: str,
+        file_name: str
     ) -> "Audio":
         return Audio(
             file_id=FileId(
@@ -85,10 +104,11 @@ class Audio(Object):
                 dc_id=audio.dc_id,
                 media_id=audio.id,
                 access_hash=audio.access_hash,
-                file_reference=audio.file_reference,
+                file_reference=audio.file_reference
             ).encode(),
             file_unique_id=FileUniqueId(
-                file_unique_type=FileUniqueType.DOCUMENT, media_id=audio.id
+                file_unique_type=FileUniqueType.DOCUMENT,
+                media_id=audio.id
             ).encode(),
             duration=audio_attributes.duration,
             performer=audio_attributes.performer,
@@ -98,5 +118,5 @@ class Audio(Object):
             file_name=file_name,
             date=utils.timestamp_to_datetime(audio.date),
             thumbs=types.Thumbnail._parse(client, audio),
-            client=client,
+            client=client
         )

@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 import logging
 from typing import Union, List, Iterable
 
@@ -18,8 +37,8 @@ class GetMessages:
         chat_id: Union[int, str],
         message_ids: Union[int, Iterable[int]] = None,
         reply_to_message_ids: Union[int, Iterable[int]] = None,
-        replies: int = 1,
-    ) -> Union["types.Message", list["types.Message"]]:
+        replies: int = 1
+    ) -> Union["types.Message", List["types.Message"]]:
         """Get one or more messages from a chat by using message identifiers.
 
         You can retrieve up to 200 messages at once.
@@ -73,17 +92,13 @@ class GetMessages:
             ValueError: In case of invalid arguments.
         """
         ids, ids_type = (
-            (message_ids, raw.types.InputMessageID)
-            if message_ids
-            else (reply_to_message_ids, raw.types.InputMessageReplyTo)
-            if reply_to_message_ids
+            (message_ids, raw.types.InputMessageID) if message_ids
+            else (reply_to_message_ids, raw.types.InputMessageReplyTo) if reply_to_message_ids
             else (None, None)
         )
 
         if ids is None:
-            raise ValueError(
-                "No argument supplied. Either pass message_ids or reply_to_message_ids"
-            )
+            raise ValueError("No argument supplied. Either pass message_ids or reply_to_message_ids")
 
         peer = await self.resolve_peer(chat_id)
 

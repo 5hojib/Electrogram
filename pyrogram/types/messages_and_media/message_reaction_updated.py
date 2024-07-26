@@ -1,3 +1,21 @@
+#  PyroFork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of PyroFork.
+#
+#  PyroFork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  PyroFork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with PyroFork.  If not, see <http://www.gnu.org/licenses/>.
+
 from datetime import datetime
 from typing import Dict, List
 
@@ -17,7 +35,7 @@ class MessageReactionUpdated(Object, Update):
     Parameters:
         id (``int``):
             Unique identifier of the message inside the chat
-
+            
         chat (:obj:`~pyrogram.types.Chat`):
             The chat containing the message the user reacted to
 
@@ -47,8 +65,8 @@ class MessageReactionUpdated(Object, Update):
         actor_chat: "types.Chat",
         date: datetime,
         chat: "types.Chat",
-        old_reaction: list["types.ReactionType"],
-        new_reaction: list["types.ReactionType"],
+        old_reaction: List["types.ReactionType"],
+        new_reaction: List["types.ReactionType"]
     ):
         super().__init__(client)
 
@@ -65,7 +83,7 @@ class MessageReactionUpdated(Object, Update):
         client: "pyrogram.Client",
         update: "raw.types.UpdateBotMessageReaction",
         users: Dict[int, "raw.types.User"],
-        chats: Dict[int, "raw.types.Chat"],
+        chats: Dict[int, "raw.types.Chat"]
     ) -> "MessageReactionUpdated":
         chat = None
         peer_id = utils.get_peer_id(update.peer)
@@ -84,9 +102,7 @@ class MessageReactionUpdated(Object, Update):
         if actor_peer_id > 0:
             from_user = types.User._parse(client, users[raw_actor_peer_id])
         else:
-            actor_chat = types.Chat._parse_channel_chat(
-                client, chats[raw_actor_peer_id]
-            )
+            actor_chat = types.Chat._parse_channel_chat(client, chats[raw_actor_peer_id])
 
         return MessageReactionUpdated(
             client=client,
@@ -95,6 +111,14 @@ class MessageReactionUpdated(Object, Update):
             date=utils.timestamp_to_datetime(update.date),
             chat=chat,
             actor_chat=actor_chat,
-            old_reaction=[types.ReactionType._parse(rt) for rt in update.old_reactions],
-            new_reaction=[types.ReactionType._parse(rt) for rt in update.new_reactions],
+            old_reaction=[
+                types.ReactionType._parse(
+                    rt
+                ) for rt in update.old_reactions
+            ],
+            new_reaction=[
+                types.ReactionType._parse(
+                    rt
+                ) for rt in update.new_reactions
+            ]
         )

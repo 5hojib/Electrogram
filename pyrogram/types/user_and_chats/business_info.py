@@ -1,3 +1,21 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from typing import Optional
 
 from pyrogram import types, raw
@@ -32,6 +50,7 @@ class BusinessInfo(Object):
         greeting_message: "types.BusinessMessage" = None,
         away_message: "types.BusinessMessage" = None,
         working_hours: "types.BusinessWorkingHours" = None,
+
     ):
         self.address = address
         self.location = location
@@ -41,7 +60,9 @@ class BusinessInfo(Object):
 
     @staticmethod
     def _parse(
-        client, user: "raw.types.UserFull" = None, users: dict = None
+        client,
+        user: "raw.types.UserFull" = None,
+        users: dict = None
     ) -> Optional["BusinessInfo"]:
         working_hours = getattr(user, "business_work_hours", None)
         location = getattr(user, "business_location", None)
@@ -53,12 +74,8 @@ class BusinessInfo(Object):
 
         return BusinessInfo(
             address=getattr(location, "address", None),
-            location=types.Location._parse(
-                client, getattr(location, "geo_point", None)
-            ),
-            greeting_message=types.BusinessMessage._parse(
-                client, greeting_message, users
-            ),
+            location=types.Location._parse(client, getattr(location, "geo_point", None)),
+            greeting_message=types.BusinessMessage._parse(client, greeting_message, users),
             away_message=types.BusinessMessage._parse(client, away_message, users),
             working_hours=types.BusinessWorkingHours._parse(working_hours),
         )

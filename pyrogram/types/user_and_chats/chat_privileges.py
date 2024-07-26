@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from pyrogram import raw
 from ..object import Object
 
@@ -77,11 +96,11 @@ class ChatPrivileges(Object):
         can_edit_messages: bool = False,  # Channels only
         can_invite_users: bool = False,
         can_pin_messages: bool = False,  # Groups and supergroups only
-        can_manage_topics: bool = False,  # supergroups only.
-        can_post_stories: bool = False,  # Channels only
-        can_edit_stories: bool = False,  # Channels only
-        can_delete_stories: bool = False,  # Channels only
-        is_anonymous: bool = False,
+        can_manage_topics: bool = False, # supergroups only.
+        can_post_stories: bool = False, # Channels only
+        can_edit_stories: bool = False, # Channels only
+        can_delete_stories: bool = False, # Channels only
+        is_anonymous: bool = False
     ):
         super().__init__(None)
 
@@ -118,5 +137,5 @@ class ChatPrivileges(Object):
             can_post_stories=admin_rights.post_stories,
             can_edit_stories=admin_rights.edit_stories,
             can_delete_stories=admin_rights.delete_stories,
-            is_anonymous=admin_rights.anonymous,
+            is_anonymous=admin_rights.anonymous
         )

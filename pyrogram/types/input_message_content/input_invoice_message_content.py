@@ -1,3 +1,21 @@
+#  Pyrogram - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#
+#  This file is part of Pyrogram.
+#
+#  Pyrogram is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrogram is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
+
 import logging
 from typing import Optional, List, Union
 
@@ -80,10 +98,10 @@ class InputInvoiceMessageContent(InputMessageContent):
         description: str,
         payload: Union[str, bytes],
         currency: str,
-        prices: list["types.LabeledPrice"],
+        prices: List["types.LabeledPrice"],
         provider_token: Optional[str] = None,
         max_tip_amount: Optional[int] = None,
-        suggested_tip_amounts: list[int] = None,
+        suggested_tip_amounts: List[int] = None,
         provider_data: Optional[str] = None,
         photo_url: Optional[str] = None,
         photo_size: Optional[int] = None,
@@ -95,7 +113,7 @@ class InputInvoiceMessageContent(InputMessageContent):
         need_shipping_address: Optional[bool] = None,
         send_phone_number_to_provider: Optional[bool] = None,
         send_email_to_provider: Optional[bool] = None,
-        is_flexible: Optional[bool] = None,
+        is_flexible: Optional[bool] = None
     ):
         super().__init__()
 
@@ -130,12 +148,11 @@ class InputInvoiceMessageContent(InputMessageContent):
                 size=self.photo_size,
                 attributes=[
                     raw.types.DocumentAttributeImageSize(
-                        w=self.photo_width, h=self.photo_height
+                        w=self.photo_width,
+                        h=self.photo_height
                     )
-                ],
-            )
-            if self.photo_url
-            else None,
+                ]
+            ) if self.photo_url else None,
             invoice=raw.types.Invoice(
                 currency=self.currency,
                 prices=[i.write() for i in self.prices],
@@ -146,14 +163,12 @@ class InputInvoiceMessageContent(InputMessageContent):
                 shipping_address_requested=self.need_shipping_address,
                 flexible=self.is_flexible,
                 phone_to_provider=self.send_phone_number_to_provider,
-                email_to_provider=self.send_email_to_provider,
+                email_to_provider=self.send_email_to_provider
             ),
-            payload=self.payload.encode()
-            if isinstance(self.payload, str)
-            else self.payload,
+            payload=self.payload.encode() if isinstance(self.payload, str) else self.payload,
             provider=self.provider_token,
             provider_data=raw.types.DataJSON(
                 data=self.provider_data if self.provider_data else "{}"
             ),
-            reply_markup=await reply_markup.write(client) if reply_markup else None,
+            reply_markup=await reply_markup.write(client) if reply_markup else None
         )

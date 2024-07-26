@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from pyrogram import raw
 from ..object import Object
 
@@ -95,7 +114,7 @@ class ChatPermissions(Object):
         can_send_roundvideos: bool = None,
         can_send_stickers: bool = None,
         can_send_videos: bool = None,
-        can_send_voices: bool = None,
+        can_send_voices: bool = None
     ):
         super().__init__(None)
 
@@ -165,7 +184,7 @@ class ChatPermissions(Object):
                 denied_permissions.send_roundvideos,
                 denied_permissions.send_stickers,
                 denied_permissions.send_videos,
-                denied_permissions.send_voices,
+                denied_permissions.send_voices
             ]
             all_params_not = [
                 not denied_permissions.send_messages,
@@ -185,7 +204,7 @@ class ChatPermissions(Object):
                 not denied_permissions.send_roundvideos,
                 not denied_permissions.send_stickers,
                 not denied_permissions.send_videos,
-                not denied_permissions.send_voices,
+                not denied_permissions.send_voices
             ]
             if all(all_params):
                 all_permissions = False
@@ -211,5 +230,5 @@ class ChatPermissions(Object):
                 can_send_roundvideos=not denied_permissions.send_roundvideos,
                 can_send_stickers=not denied_permissions.send_stickers,
                 can_send_videos=not denied_permissions.send_videos,
-                can_send_voices=not denied_permissions.send_voices,
+                can_send_voices=not denied_permissions.send_voices
             )

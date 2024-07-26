@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 import os
 import re
 from datetime import datetime
@@ -18,7 +37,7 @@ class SendPhoto:
         photo: Union[str, BinaryIO],
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] = None,
+        caption_entities: List["types.MessageEntity"] = None,
         has_spoiler: bool = None,
         ttl_seconds: int = None,
         disable_notification: bool = None,
@@ -28,7 +47,7 @@ class SendPhoto:
         reply_to_story_id: int = None,
         reply_to_chat_id: Union[int, str] = None,
         quote_text: str = None,
-        quote_entities: list["types.MessageEntity"] = None,
+        quote_entities: List["types.MessageEntity"] = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
         message_effect_id: int = None,
@@ -38,10 +57,10 @@ class SendPhoto:
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply",
+            "types.ForceReply"
         ] = None,
         progress: Callable = None,
-        progress_args: tuple = (),
+        progress_args: tuple = ()
     ) -> Optional["types.Message"]:
         """Send photos.
 
@@ -93,7 +112,7 @@ class SendPhoto:
 
             reply_to_message_id (``int``, *optional*):
                 If the message is a reply, ID of the original message.
-
+            
             reply_to_story_id (``int``, *optional*):
                 Unique identifier for the target story.
 
@@ -182,15 +201,13 @@ class SendPhoto:
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
-            parse_mode=parse_mode,
+            parse_mode=parse_mode
         )
 
         try:
             if isinstance(photo, str):
                 if os.path.isfile(photo):
-                    file = await self.save_file(
-                        photo, progress=progress, progress_args=progress_args
-                    )
+                    file = await self.save_file(photo, progress=progress, progress_args=progress_args)
                     media = raw.types.InputMediaUploadedPhoto(
                         file=file,
                         ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds,
@@ -200,23 +217,17 @@ class SendPhoto:
                     media = raw.types.InputMediaPhotoExternal(
                         url=photo,
                         ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds,
-                        spoiler=has_spoiler,
+                        spoiler=has_spoiler
                     )
                 else:
-                    media = utils.get_input_media_from_file_id(
-                        photo,
-                        FileType.PHOTO,
-                        ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds,
-                    )
+                    media = utils.get_input_media_from_file_id(photo, FileType.PHOTO, ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds)
                     media.spoiler = has_spoiler
             else:
-                file = await self.save_file(
-                    photo, progress=progress, progress_args=progress_args
-                )
+                file = await self.save_file(photo, progress=progress, progress_args=progress_args)
                 media = raw.types.InputMediaUploadedPhoto(
                     file=file,
                     ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds,
-                    spoiler=has_spoiler,
+                    spoiler=has_spoiler
                 )
 
             while True:
@@ -231,17 +242,14 @@ class SendPhoto:
                         noforwards=protect_content,
                         effect=message_effect_id,
                         invert_media=invert_media,
-                        reply_markup=await reply_markup.write(self)
-                        if reply_markup
-                        else None,
-                        **await utils.parse_text_entities(
-                            self, caption, parse_mode, caption_entities
-                        ),
+                        reply_markup=await reply_markup.write(self) if reply_markup else None,
+                        **await utils.parse_text_entities(self, caption, parse_mode, caption_entities)
                     )
                     if business_connection_id is not None:
                         r = await self.invoke(
                             raw.functions.InvokeWithBusinessConnection(
-                                connection_id=business_connection_id, query=rpc
+                                connection_id=business_connection_id,
+                                query=rpc
                             )
                         )
                     else:
@@ -250,24 +258,16 @@ class SendPhoto:
                     await self.save_file(photo, file_id=file.id, file_part=e.value)
                 else:
                     for i in r.updates:
-                        if isinstance(
-                            i,
-                            (
-                                raw.types.UpdateNewMessage,
-                                raw.types.UpdateNewChannelMessage,
-                                raw.types.UpdateNewScheduledMessage,
-                                raw.types.UpdateBotNewBusinessMessage,
-                            ),
-                        ):
+                        if isinstance(i, (raw.types.UpdateNewMessage,
+                                          raw.types.UpdateNewChannelMessage,
+                                          raw.types.UpdateNewScheduledMessage,
+                                          raw.types.UpdateBotNewBusinessMessage)):
                             return await types.Message._parse(
-                                self,
-                                i.message,
+                                self, i.message,
                                 {i.id: i for i in r.users},
                                 {i.id: i for i in r.chats},
-                                is_scheduled=isinstance(
-                                    i, raw.types.UpdateNewScheduledMessage
-                                ),
-                                business_connection_id=business_connection_id,
+                                is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
+                                business_connection_id=business_connection_id
                             )
         except pyrogram.StopTransmission:
             return None

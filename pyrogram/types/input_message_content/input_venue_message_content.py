@@ -1,3 +1,21 @@
+#  Pyrogram - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#
+#  This file is part of Pyrogram.
+#
+#  Pyrogram is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrogram is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
+
 import logging
 from typing import Optional
 
@@ -41,7 +59,7 @@ class InputVenueMessageContent(InputMessageContent):
         foursquare_id: Optional[str] = None,
         foursquare_type: Optional[str] = None,
         google_place_id: Optional[str] = None,
-        google_place_type: Optional[str] = None,
+        google_place_type: Optional[str] = None
     ):
         super().__init__()
 
@@ -56,11 +74,14 @@ class InputVenueMessageContent(InputMessageContent):
 
     async def write(self, client: "pyrogram.Client", reply_markup):
         return raw.types.InputBotInlineMessageMediaVenue(
-            geo_point=raw.types.InputGeoPoint(lat=self.latitude, long=self.longitude),
+            geo_point=raw.types.InputGeoPoint(
+                lat=self.latitude,
+                long=self.longitude
+            ),
             title=self.title,
             address=self.address,
-            provider="",  # TODO
+            provider="", # TODO
             venue_id=self.foursquare_id,
             venue_type=self.foursquare_type,
-            reply_markup=await reply_markup.write(client) if reply_markup else None,
+            reply_markup=await reply_markup.write(client) if reply_markup else None
         )

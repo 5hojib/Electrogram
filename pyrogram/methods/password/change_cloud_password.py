@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 import os
 
 import pyrogram
@@ -10,7 +29,7 @@ class ChangeCloudPassword:
         self: "pyrogram.Client",
         current_password: str,
         new_password: str,
-        new_hint: str = "",
+        new_hint: str = ""
     ) -> bool:
         """Change your Two-Step Verification password (Cloud Password) with a new one.
 
@@ -54,8 +73,10 @@ class ChangeCloudPassword:
             raw.functions.account.UpdatePasswordSettings(
                 password=compute_password_check(r, current_password),
                 new_settings=raw.types.account.PasswordInputSettings(
-                    new_algo=r.new_algo, new_password_hash=new_hash, hint=new_hint
-                ),
+                    new_algo=r.new_algo,
+                    new_password_hash=new_hash,
+                    hint=new_hint
+                )
             )
         )
 

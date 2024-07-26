@@ -1,3 +1,21 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from typing import Optional, List
 
 from pyrogram import types, raw
@@ -22,17 +40,16 @@ class BusinessWorkingHours(Object):
         self,
         *,
         timezone: str,
-        working_hours: list["types.BusinessWeeklyOpen"],
-        is_open_now: bool = None,
+        working_hours: List["types.BusinessWeeklyOpen"],
+        is_open_now: bool = None
+
     ):
         self.timezone = timezone
         self.is_open_now = is_open_now
         self.working_hours = working_hours
 
     @staticmethod
-    def _parse(
-        work_hours: "raw.types.BusinessWorkHours" = None,
-    ) -> Optional["BusinessWorkingHours"]:
+    def _parse(work_hours: "raw.types.BusinessWorkHours" = None) -> Optional["BusinessWorkingHours"]:
         if not work_hours:
             return None
 

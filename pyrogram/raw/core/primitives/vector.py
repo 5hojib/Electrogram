@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from io import BytesIO
 from typing import cast, Union, Any
 
@@ -16,7 +35,10 @@ class Vector(bytes, TLObject):
     def read_bare(b: BytesIO, size: int) -> Union[int, Any]:
         if size == 4:
             # cek
-            e = int.from_bytes(b.read(4), "little")
+            e = int.from_bytes(
+                b.read(4),
+                "little"
+            )
             # bak
             b.seek(-4, 1)
             # cond
@@ -42,7 +64,9 @@ class Vector(bytes, TLObject):
         data.seek(-left, 1)
 
         return List(
-            t.read(data) if t else Vector.read_bare(data, size) for _ in range(count)
+            t.read(data) if t
+            else Vector.read_bare(data, size)
+            for _ in range(count)
         )
 
     def __new__(cls, value: list, t: Any = None) -> bytes:  # type: ignore

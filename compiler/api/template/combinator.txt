@@ -1,3 +1,5 @@
+{notice}
+
 from io import BytesIO
 
 from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector

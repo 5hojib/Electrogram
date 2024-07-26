@@ -1,16 +1,29 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from datetime import datetime
 from typing import List
 
 import pyrogram
 from pyrogram import raw, utils
 from pyrogram import types
-from pyrogram.file_id import (
-    FileId,
-    FileType,
-    FileUniqueId,
-    FileUniqueType,
-    ThumbnailSource,
-)
+from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType, ThumbnailSource
 from ..object import Object
 
 
@@ -55,7 +68,7 @@ class Photo(Object):
         file_size: int,
         date: datetime,
         ttl_seconds: int = None,
-        thumbs: list["types.Thumbnail"] = None,
+        thumbs: List["types.Thumbnail"] = None
     ):
         super().__init__(client)
 
@@ -71,7 +84,7 @@ class Photo(Object):
     @staticmethod
     def _parse(client, photo: "raw.types.Photo", ttl_seconds: int = None) -> "Photo":
         if isinstance(photo, raw.types.Photo):
-            photos: list[raw.types.PhotoSize] = []
+            photos: List[raw.types.PhotoSize] = []
 
             for p in photo.sizes:
                 if isinstance(p, raw.types.PhotoSize):
@@ -80,7 +93,10 @@ class Photo(Object):
                 if isinstance(p, raw.types.PhotoSizeProgressive):
                     photos.append(
                         raw.types.PhotoSize(
-                            type=p.type, w=p.w, h=p.h, size=max(p.sizes)
+                            type=p.type,
+                            w=p.w,
+                            h=p.h,
+                            size=max(p.sizes)
                         )
                     )
 
@@ -99,10 +115,11 @@ class Photo(Object):
                     thumbnail_file_type=FileType.PHOTO,
                     thumbnail_size=main.type,
                     volume_id=0,
-                    local_id=0,
+                    local_id=0
                 ).encode(),
                 file_unique_id=FileUniqueId(
-                    file_unique_type=FileUniqueType.DOCUMENT, media_id=photo.id
+                    file_unique_type=FileUniqueType.DOCUMENT,
+                    media_id=photo.id
                 ).encode(),
                 width=main.w,
                 height=main.h,
@@ -110,5 +127,5 @@ class Photo(Object):
                 date=utils.timestamp_to_datetime(photo.date),
                 ttl_seconds=ttl_seconds,
                 thumbs=types.Thumbnail._parse(client, photo),
-                client=client,
+                client=client
             )

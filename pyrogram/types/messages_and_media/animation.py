@@ -1,16 +1,29 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from datetime import datetime
 from typing import List
 
 import pyrogram
 from pyrogram import raw, utils
 from pyrogram import types
-from pyrogram.file_id import (
-    FileId,
-    FileType,
-    FileUniqueId,
-    FileUniqueType,
-    ThumbnailSource,
-)
+from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType
 from ..object import Object
 
 
@@ -63,7 +76,7 @@ class Animation(Object):
         mime_type: str = None,
         file_size: int = None,
         date: datetime = None,
-        thumbs: list["types.Thumbnail"] = None,
+        thumbs: List["types.Thumbnail"] = None
     ):
         super().__init__(client)
 
@@ -83,7 +96,7 @@ class Animation(Object):
         client,
         animation: "raw.types.Document",
         video_attributes: "raw.types.DocumentAttributeVideo",
-        file_name: str,
+        file_name: str
     ) -> "Animation":
         return Animation(
             file_id=FileId(
@@ -91,10 +104,11 @@ class Animation(Object):
                 dc_id=animation.dc_id,
                 media_id=animation.id,
                 access_hash=animation.access_hash,
-                file_reference=animation.file_reference,
+                file_reference=animation.file_reference
             ).encode(),
             file_unique_id=FileUniqueId(
-                file_unique_type=FileUniqueType.DOCUMENT, media_id=animation.id
+                file_unique_type=FileUniqueType.DOCUMENT,
+                media_id=animation.id
             ).encode(),
             width=getattr(video_attributes, "w", 0),
             height=getattr(video_attributes, "h", 0),
@@ -104,15 +118,18 @@ class Animation(Object):
             file_name=file_name,
             date=utils.timestamp_to_datetime(animation.date),
             thumbs=types.Thumbnail._parse(client, animation),
-            client=client,
+            client=client
         )
 
     @staticmethod
-    def _parse_chat_animation(client, video: "raw.types.Photo") -> "Animation":
+    def _parse_chat_animation(
+        client,
+        video: "raw.types.Photo"
+    ) -> "Animation":
         if isinstance(video, raw.types.Photo):
             if not video.video_sizes:
                 return
-            video_sizes: list[raw.types.VideoSize] = []
+            video_sizes: List[raw.types.VideoSize] = []
             for p in video.video_sizes:
                 if isinstance(p, raw.types.VideoSize):
                     video_sizes.append(p)
@@ -130,20 +147,17 @@ class Animation(Object):
                     thumbnail_file_type=FileType.PHOTO,
                     thumbnail_size=video_size.type,
                     volume_id=0,
-                    local_id=0,
-                ).encode()
-                if video
-                else None,
+                    local_id=0
+                ).encode() if video else None,
                 file_unique_id=FileUniqueId(
-                    file_unique_type=FileUniqueType.DOCUMENT, media_id=video.id
-                ).encode()
-                if video
-                else None,
+                    file_unique_type=FileUniqueType.DOCUMENT,
+                    media_id=video.id
+                ).encode() if video else None,
                 width=video_size.w,
                 height=video_size.h,
                 file_size=video_size.size,
                 date=utils.timestamp_to_datetime(video.date) if video else None,
                 file_name=f"chat_video_{video.date}_{client.rnd_id()}.mp4",
                 mime_type="video/mp4",
-                client=client,
+                client=client
             )

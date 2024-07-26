@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from typing import Optional
 
 import pyrogram
@@ -7,7 +26,8 @@ from pyrogram import types
 
 class GetBotDefaultPrivileges:
     async def get_bot_default_privileges(
-        self: "pyrogram.Client", for_channels: bool = None
+        self: "pyrogram.Client",
+        for_channels: bool = None
     ) -> Optional["types.ChatPrivileges"]:
         """Get the current default privileges of the bot.
 
@@ -28,12 +48,12 @@ class GetBotDefaultPrivileges:
         """
 
         bot_info = await self.invoke(
-            raw.functions.users.GetFullUser(id=raw.types.InputUserSelf())
+            raw.functions.users.GetFullUser(
+                id=raw.types.InputUserSelf()
+            )
         )
 
-        field = (
-            "bot_broadcast_admin_rights" if for_channels else "bot_group_admin_rights"
-        )
+        field = "bot_broadcast_admin_rights" if for_channels else "bot_group_admin_rights"
 
         admin_rights = getattr(bot_info.full_user, field)
 

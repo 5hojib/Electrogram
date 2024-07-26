@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from typing import Union
 
 import pyrogram
@@ -8,7 +27,8 @@ from pyrogram import utils
 
 class GetChat:
     async def get_chat(
-        self: "pyrogram.Client", chat_id: Union[int, str]
+        self: "pyrogram.Client",
+        chat_id: Union[int, str]
     ) -> Union["types.Chat", "types.ChatPreview"]:
         """Get up to date information about a chat.
 
@@ -41,7 +61,9 @@ class GetChat:
 
         if match:
             r = await self.invoke(
-                raw.functions.messages.CheckChatInvite(hash=match.group(1))
+                raw.functions.messages.CheckChatInvite(
+                    hash=match.group(1)
+                )
             )
 
             if isinstance(r, raw.types.ChatInvite):
@@ -62,8 +84,6 @@ class GetChat:
         elif isinstance(peer, (raw.types.InputPeerUser, raw.types.InputPeerSelf)):
             r = await self.invoke(raw.functions.users.GetFullUser(id=peer))
         else:
-            r = await self.invoke(
-                raw.functions.messages.GetFullChat(chat_id=peer.chat_id)
-            )
+            r = await self.invoke(raw.functions.messages.GetFullChat(chat_id=peer.chat_id))
 
         return await types.Chat._parse_full(self, r)

@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 import pyrogram
 from pyrogram import raw
 from pyrogram import types
@@ -9,7 +28,7 @@ class EditInlineReplyMarkup:
     async def edit_inline_reply_markup(
         self: "pyrogram.Client",
         inline_message_id: str,
-        reply_markup: "types.InlineKeyboardMarkup" = None,
+        reply_markup: "types.InlineKeyboardMarkup" = None
     ) -> bool:
         """Edit only the reply markup of inline messages sent via the bot (for inline bots).
 
@@ -47,5 +66,5 @@ class EditInlineReplyMarkup:
                 id=unpacked,
                 reply_markup=await reply_markup.write(self) if reply_markup else None,
             ),
-            sleep_threshold=self.sleep_threshold,
+            sleep_threshold=self.sleep_threshold
         )

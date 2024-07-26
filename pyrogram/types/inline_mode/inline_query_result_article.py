@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 import pyrogram
 from pyrogram import raw
 from pyrogram import types
@@ -48,7 +67,7 @@ class InlineQueryResultArticle(InlineQueryResult):
         reply_markup: "types.InlineKeyboardMarkup" = None,
         thumb_url: str = None,
         thumb_width: int = 0,
-        thumb_height: int = 0,
+        thumb_height: int = 0
     ):
         super().__init__("article", id, input_message_content, reply_markup)
 
@@ -63,9 +82,7 @@ class InlineQueryResultArticle(InlineQueryResult):
         return raw.types.InputBotInlineResult(
             id=self.id,
             type=self.type,
-            send_message=await self.input_message_content.write(
-                client, self.reply_markup
-            ),
+            send_message=await self.input_message_content.write(client, self.reply_markup),
             title=self.title,
             description=self.description,
             url=self.url,
@@ -75,10 +92,9 @@ class InlineQueryResultArticle(InlineQueryResult):
                 mime_type="image/jpeg",
                 attributes=[
                     raw.types.DocumentAttributeImageSize(
-                        w=self.thumb_width, h=self.thumb_height
+                        w=self.thumb_width,
+                        h=self.thumb_height
                     )
-                ],
-            )
-            if self.thumb_url
-            else None,
+                ]
+            ) if self.thumb_url else None
         )

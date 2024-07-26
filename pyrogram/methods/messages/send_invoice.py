@@ -1,8 +1,24 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 import pyrogram
 
 from pyrogram import types, raw, utils
 from typing import Union, List
-
 
 class SendInvoice:
     async def send_invoice(
@@ -11,7 +27,7 @@ class SendInvoice:
         title: str,
         description: str,
         currency: str,
-        prices: list["types.LabeledPrice"],
+        prices: List["types.LabeledPrice"],
         provider: str = None,
         provider_data: str = None,
         payload: str = None,
@@ -23,8 +39,8 @@ class SendInvoice:
         reply_to_message_id: int = None,
         message_thread_id: int = None,
         quote_text: str = None,
-        quote_entities: list["types.MessageEntity"] = None,
-        reply_markup: "types.InlineKeyboardMarkup" = None,
+        quote_entities: List["types.MessageEntity"] = None,
+        reply_markup: "types.InlineKeyboardMarkup" = None
     ):
         """Use this method to send invoices.
 
@@ -129,9 +145,7 @@ class SendInvoice:
                     for price in prices:
                         prices_total += price.amount
                     text = f"Pay ⭐️{prices_total}"
-                reply_markup.inline_keyboard.insert(
-                    0, [types.InlineKeyboardButtonBuy(text=text)]
-                )
+                reply_markup.inline_keyboard.insert(0, [types.InlineKeyboardButtonBuy(text=text)])
 
         reply_to = await utils.get_reply_to(
             client=self,
@@ -139,7 +153,7 @@ class SendInvoice:
             reply_to_message_id=reply_to_message_id,
             message_thread_id=message_thread_id,
             quote_text=quote_text,
-            quote_entities=quote_entities,
+            quote_entities=quote_entities
         )
 
         if payload is not None:
@@ -153,40 +167,39 @@ class SendInvoice:
                     title=title,
                     description=description,
                     invoice=raw.types.Invoice(
-                        currency=currency, prices=[price.write() for price in prices]
+                        currency=currency,
+                        prices=[price.write() for price in prices]
                     ),
                     payload=encoded_payload,
                     provider=provider,
-                    provider_data=raw.types.DataJSON(
-                        data=provider_data if provider_data else "{}"
-                    ),
+                    provider_data=raw.types.DataJSON(data=provider_data if provider_data else "{}"),
                     photo=raw.types.InputWebDocument(
                         url=photo_url,
                         size=photo_size or 0,
                         mime_type=photo_mime_type or "image/jpeg",
-                        attributes=[],
-                    )
-                    if photo_url
-                    else None,
+                        attributes=[]
+                    ) if photo_url else None,
                     start_param=start_parameter,
-                    extended_media=extended_media,
+                    extended_media=extended_media
                 ),
                 random_id=self.rnd_id(),
                 reply_to=reply_to,
                 message="",
-                reply_markup=await reply_markup.write(self)
-                if reply_markup is not None
-                else None,
+                reply_markup=await reply_markup.write(self) if reply_markup is not None else None
             )
         )
 
         for i in r.updates:
             if isinstance(
-                i, (raw.types.UpdateNewMessage, raw.types.UpdateNewChannelMessage)
+                i,
+                (
+                    raw.types.UpdateNewMessage,
+                    raw.types.UpdateNewChannelMessage
+                )
             ):
                 return await types.Message._parse(
                     self,
                     i.message,
                     users={i.id: i for i in r.users},
-                    chats={i.id: i for i in r.chats},
+                    chats={i.id: i for i in r.chats}
                 )

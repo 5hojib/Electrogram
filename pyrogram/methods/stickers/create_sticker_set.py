@@ -1,3 +1,21 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 import os
 import re
 from typing import Union, Optional
@@ -16,7 +34,7 @@ class CreateStickerSet:
         short_name: str,
         sticker: str,
         emoji: str = "🤔",
-        masks: bool = None,
+        masks: bool = None
     ) -> Optional["types.Message"]:
         """Create a new stickerset.
 
@@ -56,27 +74,33 @@ class CreateStickerSet:
                 # Send document by uploading from local file
                 await app.create_sticker_set("me", "My First Pack", "myfirstpack", "AAjjHjk")
         """
+        file = None
 
         if isinstance(sticker, str):
             if os.path.isfile(sticker) or re.match("^https?://", sticker):
-                raise ValueError("file_id is invalid!")
+                raise ValueError(f"file_id is invalid!")
             else:
                 decoded = FileId.decode(sticker)
                 media = raw.types.InputDocument(
                     id=decoded.media_id,
                     access_hash=decoded.access_hash,
-                    file_reference=decoded.file_reference,
+                    file_reference=decoded.file_reference
                 )
         else:
-            raise ValueError("file_id is invalid!")
+            raise ValueError(f"file_id is invalid!")
 
         r = await self.invoke(
             raw.functions.stickers.CreateStickerSet(
                 user_id=await self.resolve_peer(user_id),
                 title=title,
                 short_name=short_name,
-                stickers=[raw.types.InputStickerSetItem(document=media, emoji=emoji)],
-                masks=masks,
+                stickers=[
+                    raw.types.InputStickerSetItem(
+                        document=media,
+                        emoji=emoji
+                    )
+                ],
+                masks=masks
             )
         )
 

@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 import typing
 from datetime import datetime
 from enum import Enum
@@ -42,7 +61,9 @@ class Object:
         if isinstance(obj, datetime):
             return str(obj)
 
-        attributes_to_hide = ["raw"]
+        attributes_to_hide = [
+            "raw"
+        ]
 
         filtered_attributes = {
             attr: ("*" * 9 if attr == "phone_number" else getattr(obj, attr))
@@ -53,7 +74,10 @@ class Object:
             if getattr(obj, attr) is not None
         }
 
-        return {"_": obj.__class__.__name__, **filtered_attributes}
+        return {
+            "_": obj.__class__.__name__,
+            **filtered_attributes
+        }
 
     def __str__(self) -> str:
         return dumps(self, indent=4, default=Object.default, ensure_ascii=False)
@@ -65,7 +89,7 @@ class Object:
                 f"{attr}={repr(getattr(self, attr))}"
                 for attr in filter(lambda x: not x.startswith("_"), self.__dict__)
                 if getattr(self, attr) is not None
-            ),
+            )
         )
 
     def __eq__(self, other: "Object") -> bool:

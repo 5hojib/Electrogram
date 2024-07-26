@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from datetime import datetime
 from typing import Union, List, Optional
 
@@ -11,15 +30,15 @@ class SendPoll:
         self: "pyrogram.Client",
         chat_id: Union[int, str],
         question: str,
-        options: list["types.PollOption"],
-        question_entities: list["types.MessageEntity"] = None,
+        options: List["types.PollOption"],
+        question_entities: List["types.MessageEntity"] = None,
         is_anonymous: bool = True,
         type: "enums.PollType" = enums.PollType.REGULAR,
         allows_multiple_answers: bool = None,
         correct_option_id: int = None,
         explanation: str = None,
         explanation_parse_mode: "enums.ParseMode" = None,
-        explanation_entities: list["types.MessageEntity"] = None,
+        explanation_entities: List["types.MessageEntity"] = None,
         open_period: int = None,
         close_date: datetime = None,
         is_closed: bool = None,
@@ -30,7 +49,7 @@ class SendPoll:
         reply_to_message_id: int = None,
         reply_to_chat_id: Union[int, str] = None,
         quote_text: str = None,
-        quote_entities: list["types.MessageEntity"] = None,
+        quote_entities: List["types.MessageEntity"] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
         schedule_date: datetime = None,
         message_effect_id: int = None,
@@ -38,8 +57,8 @@ class SendPoll:
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = None,
+            "types.ForceReply"
+        ] = None
     ) -> "types.Message":
         """Send a new poll.
 
@@ -174,32 +193,22 @@ class SendPoll:
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
-            parse_mode=parse_mode,
+            parse_mode=parse_mode
         )
 
-        solution, solution_entities = (
-            await utils.parse_text_entities(
-                self, explanation, explanation_parse_mode, explanation_entities
-            )
-        ).values()
-        q, q_entities = (
-            await pyrogram.utils.parse_text_entities(
-                self, question, None, question_entities
-            )
-        ).values()
+        solution, solution_entities = (await utils.parse_text_entities(
+            self, explanation, explanation_parse_mode, explanation_entities
+        )).values()
+        q, q_entities = (await pyrogram.utils.parse_text_entities(self, question, None, question_entities)).values()
 
         rpc = raw.functions.messages.SendMedia(
             peer=await self.resolve_peer(chat_id),
             media=raw.types.InputMediaPoll(
                 poll=raw.types.Poll(
                     id=self.rnd_id(),
-                    question=raw.types.TextWithEntities(
-                        text=q, entities=q_entities or []
-                    ),
+                    question=raw.types.TextWithEntities(text=q, entities=q_entities or []),
                     answers=[
-                        await types.PollOption(
-                            text=option.text, entities=option.entities
-                        ).write(self, i)
+                        await types.PollOption(text=option.text,entities=option.entities).write(self,i)
                         for i, option in enumerate(options)
                     ],
                     closed=is_closed,
@@ -207,13 +216,11 @@ class SendPoll:
                     multiple_choice=allows_multiple_answers,
                     quiz=type == enums.PollType.QUIZ or False,
                     close_period=open_period,
-                    close_date=utils.datetime_to_timestamp(close_date),
+                    close_date=utils.datetime_to_timestamp(close_date)
                 ),
-                correct_answers=[bytes([correct_option_id])]
-                if correct_option_id is not None
-                else None,
+                correct_answers=[bytes([correct_option_id])] if correct_option_id is not None else None,
                 solution=solution,
-                solution_entities=solution_entities or [],
+                solution_entities=solution_entities or []
             ),
             message="",
             silent=disable_notification,
@@ -222,32 +229,27 @@ class SendPoll:
             schedule_date=utils.datetime_to_timestamp(schedule_date),
             noforwards=protect_content,
             reply_markup=await reply_markup.write(self) if reply_markup else None,
-            effect=message_effect_id,
+            effect=message_effect_id
         )
         if business_connection_id is not None:
             r = await self.invoke(
                 raw.functions.InvokeWithBusinessConnection(
-                    connection_id=business_connection_id, query=rpc
+                    connection_id=business_connection_id,
+                    query=rpc
                 )
             )
         else:
             r = await self.invoke(rpc)
 
         for i in r.updates:
-            if isinstance(
-                i,
-                (
-                    raw.types.UpdateNewMessage,
-                    raw.types.UpdateNewChannelMessage,
-                    raw.types.UpdateNewScheduledMessage,
-                    raw.types.UpdateBotNewBusinessMessage,
-                ),
-            ):
+            if isinstance(i, (raw.types.UpdateNewMessage,
+                              raw.types.UpdateNewChannelMessage,
+                              raw.types.UpdateNewScheduledMessage,
+                              raw.types.UpdateBotNewBusinessMessage)):
                 return await types.Message._parse(
-                    self,
-                    i.message,
+                    self, i.message,
                     {i.id: i for i in r.users},
                     {i.id: i for i in r.chats},
                     is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
-                    business_connection_id=business_connection_id,
+                    business_connection_id=business_connection_id
                 )

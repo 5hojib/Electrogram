@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 import html
 import logging
 import re
@@ -133,7 +152,7 @@ class HTML:
 
         return {
             "message": utils.remove_surrogates(parser.text),
-            "entities": sorted(entities, key=lambda e: e.offset) or None,
+            "entities": sorted(entities, key=lambda e: e.offset) or None
         }
 
     @staticmethod
@@ -158,9 +177,7 @@ class HTML:
             elif entity_type == MessageEntityType.PRE:
                 name = entity_type.name.lower()
                 language = getattr(entity, "language", "") or ""
-                start_tag = (
-                    f'<{name} language="{language}">' if language else f"<{name}>"
-                )
+                start_tag = f'<{name} language="{language}">' if language else f"<{name}>"
                 end_tag = f"</{name}>"
             elif entity_type == MessageEntityType.EXPANDABLE_BLOCKQUOTE:
                 name = "blockquote"
@@ -226,12 +243,7 @@ class HTML:
             last_offset = entities_offsets[-1][1]
             # no need to sort, but still add entities starting from the end
             for entity, offset in reversed(entities_offsets):
-                text = (
-                    text[:offset]
-                    + entity
-                    + html.escape(text[offset:last_offset])
-                    + text[last_offset:]
-                )
+                text = text[:offset] + entity + html.escape(text[offset:last_offset]) + text[last_offset:]
                 last_offset = offset
 
         return utils.remove_surrogates(text)

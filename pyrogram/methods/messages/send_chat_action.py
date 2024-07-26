@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from json import dumps
 from random import randint
 from typing import Union
@@ -15,7 +34,7 @@ class SendChatAction:
         business_connection_id: str = None,
         emoji: str = None,
         emoji_message_id: int = None,
-        emoji_message_interaction: "raw.types.DataJSON" = None,
+        emoji_message_interaction: "raw.types.DataJSON" = None
     ) -> bool:
         """Tell the other party that something is happening on your side.
 
@@ -78,36 +97,55 @@ class SendChatAction:
             action = action.value(progress=0)
         elif "watch_emoji" in action_name:
             if emoji is None:
-                raise ValueError("Invalid Argument Provided")
+                raise ValueError(
+                    "Invalid Argument Provided"
+                )
             action = action.value(emoticon=emoji)
         elif "trigger_emoji" in action_name:
-            if emoji is None or emoji_message_id is None:
-                raise ValueError("Invalid Argument Provided")
+            if (
+                emoji is None or
+                emoji_message_id is None
+            ):
+                raise ValueError(
+                    "Invalid Argument Provided"
+                )
             if emoji_message_interaction is None:
                 _, sticker_set = await self._get_raw_stickers(
                     raw.types.InputStickerSetAnimatedEmojiAnimations()
                 )
                 emoji_message_interaction = raw.types.DataJSON(
                     data=dumps(
-                        {"v": 1, "a": [{"t": 0, "i": randint(1, sticker_set.count)}]}
+                        {
+                            "v": 1,
+                            "a":[
+                                {
+                                    "t": 0,
+                                    "i": randint(
+                                        1,
+                                        sticker_set.count
+                                    )
+                                }
+                            ]
+                        }
                     )
                 )
             action = action.value(
                 emoticon=emoji,
                 msg_id=emoji_message_id,
-                interaction=emoji_message_interaction,
+                interaction=emoji_message_interaction
             )
         else:
             action = action.value()
         rpc = raw.functions.messages.SetTyping(
             peer=await self.resolve_peer(chat_id),
             action=action,
-            top_msg_id=message_thread_id,
+            top_msg_id=message_thread_id
         )
         if business_connection_id:
             return await self.invoke(
                 raw.functions.InvokeWithBusinessConnection(
-                    connection_id=business_connection_id, query=rpc
+                    connection_id=business_connection_id,
+                    query=rpc
                 )
             )
         return await self.invoke(rpc)

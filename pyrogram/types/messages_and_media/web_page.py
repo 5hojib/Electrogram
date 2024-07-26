@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 import pyrogram
 from pyrogram import raw
 from pyrogram import types
@@ -87,7 +106,7 @@ class WebPage(Object):
         embed_width: int = None,
         embed_height: int = None,
         duration: int = None,
-        author: str = None,
+        author: str = None
     ):
         super().__init__(client)
 
@@ -127,9 +146,9 @@ class WebPage(Object):
             attributes = {type(i): i for i in doc.attributes}
 
             file_name = getattr(
-                attributes.get(raw.types.DocumentAttributeFilename, None),
-                "file_name",
-                None,
+                attributes.get(
+                    raw.types.DocumentAttributeFilename, None
+                ), "file_name", None
             )
 
             if raw.types.DocumentAttributeAudio in attributes:
@@ -137,12 +156,8 @@ class WebPage(Object):
                 audio = types.Audio._parse(client, doc, audio_attributes, file_name)
 
             elif raw.types.DocumentAttributeAnimated in attributes:
-                video_attributes = attributes.get(
-                    raw.types.DocumentAttributeVideo, None
-                )
-                animation = types.Animation._parse(
-                    client, doc, video_attributes, file_name
-                )
+                video_attributes = attributes.get(raw.types.DocumentAttributeVideo, None)
+                animation = types.Animation._parse(client, doc, video_attributes, file_name)
 
             elif raw.types.DocumentAttributeVideo in attributes:
                 video_attributes = attributes[raw.types.DocumentAttributeVideo]
@@ -169,5 +184,5 @@ class WebPage(Object):
             embed_width=webpage.embed_width,
             embed_height=webpage.embed_height,
             duration=webpage.duration,
-            author=webpage.author,
+            author=webpage.author
         )

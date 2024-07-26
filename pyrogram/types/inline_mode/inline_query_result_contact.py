@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 import pyrogram
 from pyrogram import raw, types
 from .inline_query_result import InlineQueryResult
@@ -5,11 +24,11 @@ from .inline_query_result import InlineQueryResult
 
 class InlineQueryResultContact(InlineQueryResult):
     """Contact with a phone number
-
+    
     By default, this contact will be sent by the user.
     Alternatively, you can use *input_message_content* to send a message with the specified content instead of the
     contact.
-
+    
     Parameters:
         phone_number (``str``):
             Contact's phone number.
@@ -29,7 +48,7 @@ class InlineQueryResultContact(InlineQueryResult):
 
         reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup`, *optional*):
             Inline keyboard attached to the message.
-
+            
         input_message_content (:obj:`~pyrogram.types.InputMessageContent`, *optional*):
             Content of the message to be sent instead of the contact.
 
@@ -54,7 +73,7 @@ class InlineQueryResultContact(InlineQueryResult):
         input_message_content: "types.InputMessageContent" = None,
         thumb_url: str = None,
         thumb_width: int = 0,
-        thumb_height: int = 0,
+        thumb_height: int = 0
     ):
         super().__init__("contact", id, input_message_content, reply_markup)
 
@@ -79,9 +98,7 @@ class InlineQueryResultContact(InlineQueryResult):
                     first_name=self.first_name,
                     last_name=self.last_name,
                     vcard=self.vcard,
-                    reply_markup=await self.reply_markup.write(client)
-                    if self.reply_markup
-                    else None,
+                    reply_markup=await self.reply_markup.write(client) if self.reply_markup else None,
                 )
             ),
             thumb=raw.types.InputWebDocument(
@@ -90,10 +107,9 @@ class InlineQueryResultContact(InlineQueryResult):
                 mime_type="image/jpg",
                 attributes=[
                     raw.types.DocumentAttributeImageSize(
-                        w=self.thumb_width, h=self.thumb_height
+                        w=self.thumb_width,
+                        h=self.thumb_height
                     )
-                ],
-            )
-            if self.thumb_url
-            else None,
+                ]
+            ) if self.thumb_url else None
         )

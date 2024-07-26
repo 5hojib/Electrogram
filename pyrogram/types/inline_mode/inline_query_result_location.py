@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 import pyrogram
 from pyrogram import raw, types
 from .inline_query_result import InlineQueryResult
@@ -67,7 +86,7 @@ class InlineQueryResultLocation(InlineQueryResult):
         input_message_content: "types.InputMessageContent" = None,
         thumb_url: str = None,
         thumb_width: int = 0,
-        thumb_height: int = 0,
+        thumb_height: int = 0
     ):
         super().__init__("location", id, input_message_content, reply_markup)
 
@@ -92,14 +111,13 @@ class InlineQueryResultLocation(InlineQueryResult):
                 if self.input_message_content
                 else raw.types.InputBotInlineMessageMediaGeo(
                     geo_point=raw.types.InputGeoPoint(
-                        lat=self.latitude, long=self.longitude
+                        lat=self.latitude,
+                        long=self.longitude
                     ),
                     heading=self.heading,
                     period=self.live_period,
                     proximity_notification_radius=self.proximity_alert_radius,
-                    reply_markup=await self.reply_markup.write(client)
-                    if self.reply_markup
-                    else None,
+                    reply_markup=await self.reply_markup.write(client) if self.reply_markup else None
                 )
-            ),
+            )
         )

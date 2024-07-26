@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from io import BytesIO
 from json import dumps
 from typing import cast, List, Any, Union, Dict
@@ -6,15 +25,13 @@ from ..all import objects
 
 
 class TLObject:
-    __slots__: list[str] = []
+    __slots__: List[str] = []
 
     QUALNAME = "Base"
 
     @classmethod
     def read(cls, b: BytesIO, *args: Any) -> Any:
-        return cast(TLObject, objects[int.from_bytes(b.read(4), "little")]).read(
-            b, *args
-        )
+        return cast(TLObject, objects[int.from_bytes(b.read(4), "little")]).read(b, *args)
 
     def write(self, *args: Any) -> bytes:
         pass
@@ -30,7 +47,7 @@ class TLObject:
                 attr: getattr(obj, attr)
                 for attr in obj.__slots__
                 if getattr(obj, attr) is not None
-            },
+            }
         }
 
     def __str__(self) -> str:
@@ -46,7 +63,7 @@ class TLObject:
                 f"{attr}={repr(getattr(self, attr))}"
                 for attr in self.__slots__
                 if getattr(self, attr) is not None
-            ),
+            )
         )
 
     def __eq__(self, other: Any) -> bool:

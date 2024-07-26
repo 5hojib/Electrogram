@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from typing import Optional, List
 
 import pyrogram
@@ -73,9 +92,9 @@ class InlineQueryResultVideo(InlineQueryResult):
         description: str = None,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] = None,
+        caption_entities: List["types.MessageEntity"] = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        input_message_content: "types.InputMessageContent" = None,
+        input_message_content: "types.InputMessageContent" = None
     ):
         super().__init__("video", id, input_message_content, reply_markup)
 
@@ -96,24 +115,23 @@ class InlineQueryResultVideo(InlineQueryResult):
             url=self.video_url,
             size=0,
             mime_type=self.mime_type,
-            attributes=[
-                raw.types.DocumentAttributeVideo(
-                    duration=self.video_duration,
-                    w=self.video_width,
-                    h=self.video_height,
-                )
-            ],
+            attributes=[raw.types.DocumentAttributeVideo(
+                duration=self.video_duration,
+                w=self.video_width,
+                h=self.video_height
+            )]
         )
 
         thumb = raw.types.InputWebDocument(
-            url=self.thumb_url, size=0, mime_type="image/jpeg", attributes=[]
+            url=self.thumb_url,
+            size=0,
+            mime_type="image/jpeg",
+            attributes=[]
         )
 
-        message, entities = (
-            await utils.parse_text_entities(
-                client, self.caption, self.parse_mode, self.caption_entities
-            )
-        ).values()
+        message, entities = (await utils.parse_text_entities(
+            client, self.caption, self.parse_mode, self.caption_entities
+        )).values()
 
         return raw.types.InputBotInlineResult(
             id=self.id,
@@ -126,11 +144,9 @@ class InlineQueryResultVideo(InlineQueryResult):
                 await self.input_message_content.write(client, self.reply_markup)
                 if self.input_message_content
                 else raw.types.InputBotInlineMessageMediaAuto(
-                    reply_markup=await self.reply_markup.write(client)
-                    if self.reply_markup
-                    else None,
+                    reply_markup=await self.reply_markup.write(client) if self.reply_markup else None,
                     message=message,
-                    entities=entities,
+                    entities=entities
                 )
-            ),
+            )
         )

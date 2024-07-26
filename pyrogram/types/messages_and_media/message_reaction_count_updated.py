@@ -1,3 +1,21 @@
+#  PyroFork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of PyroFork.
+#
+#  PyroFork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  PyroFork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with PyroFork.  If not, see <http://www.gnu.org/licenses/>.
+
 from datetime import datetime
 from typing import Dict, List
 
@@ -33,7 +51,7 @@ class MessageReactionCountUpdated(Object, Update):
         chat: "types.Chat",
         message_id: int,
         date: datetime,
-        reactions: list["types.ReactionCount"],
+        reactions: List["types.ReactionCount"]
     ):
         super().__init__(client)
 
@@ -47,8 +65,8 @@ class MessageReactionCountUpdated(Object, Update):
         client: "pyrogram.Client",
         update: "raw.types.UpdateBotMessageReactions",
         users: Dict[int, "raw.types.User"],
-        chats: Dict[int, "raw.types.Chat"],
-    ) -> "MessageReactionCountUpdated":
+        chats: Dict[int, "raw.types.Chat"]
+    ) -> "MessageReactionUpdated":
         chat = None
         peer_id = utils.get_peer_id(update.peer)
         raw_peer_id = utils.get_raw_peer_id(update.peer)
@@ -62,5 +80,9 @@ class MessageReactionCountUpdated(Object, Update):
             chat=chat,
             message_id=update.msg_id,
             date=utils.timestamp_to_datetime(update.date),
-            reactions=[types.ReactionCount._parse(rt) for rt in update.reactions],
+            reactions=[
+                types.ReactionCount._parse(
+                    rt
+                ) for rt in update.reactions
+            ]
         )

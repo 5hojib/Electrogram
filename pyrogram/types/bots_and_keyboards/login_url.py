@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from pyrogram import raw
 
 from ..object import Object
@@ -39,13 +58,12 @@ class LoginUrl(Object):
     """
 
     def __init__(
-        self,
-        *,
+        self, *,
         url: str,
         forward_text: str = None,
         bot_username: str = None,
         request_write_access: str = None,
-        button_id: int = None,
+        button_id: int = None
     ):
         super().__init__()
 
@@ -57,7 +75,11 @@ class LoginUrl(Object):
 
     @staticmethod
     def read(b: "raw.types.KeyboardButtonUrlAuth") -> "LoginUrl":
-        return LoginUrl(url=b.url, forward_text=b.fwd_text, button_id=b.button_id)
+        return LoginUrl(
+            url=b.url,
+            forward_text=b.fwd_text,
+            button_id=b.button_id
+        )
 
     def write(self, text: str, bot: "raw.types.InputUser"):
         return raw.types.InputKeyboardButtonUrlAuth(
@@ -65,5 +87,5 @@ class LoginUrl(Object):
             url=self.url,
             bot=bot,
             fwd_text=self.forward_text,
-            request_write_access=self.request_write_access,
+            request_write_access=self.request_write_access
         )

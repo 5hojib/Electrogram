@@ -1,11 +1,28 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from .bot_allowed import BotAllowed
 from .bot_app import BotApp
 from .bot_business_connection import BotBusinessConnection
 from .bot_command import BotCommand
 from .bot_command_scope import BotCommandScope
-from .bot_command_scope_all_chat_administrators import (
-    BotCommandScopeAllChatAdministrators,
-)
+from .bot_command_scope_all_chat_administrators import BotCommandScopeAllChatAdministrators
 from .bot_command_scope_all_group_chats import BotCommandScopeAllGroupChats
 from .bot_command_scope_all_private_chats import BotCommandScopeAllPrivateChats
 from .bot_command_scope_chat import BotCommandScopeChat
@@ -83,5 +100,5 @@ __all__ = [
     "PaymentInfo",
     "PaymentRefunded",
     "PreCheckoutQuery",
-    "SuccessfulPayment",
+    "SuccessfulPayment"
 ]

@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 import pyrogram
 from pyrogram import raw
 from ..object import Object
@@ -31,7 +50,7 @@ class Contact(Object):
         first_name: str,
         last_name: str = None,
         user_id: int = None,
-        vcard: str = None,
+        vcard: str = None
     ):
         super().__init__(client)
 
@@ -42,14 +61,12 @@ class Contact(Object):
         self.vcard = vcard
 
     @staticmethod
-    def _parse(
-        client: "pyrogram.Client", contact: "raw.types.MessageMediaContact"
-    ) -> "Contact":
+    def _parse(client: "pyrogram.Client", contact: "raw.types.MessageMediaContact") -> "Contact":
         return Contact(
             phone_number=contact.phone_number,
             first_name=contact.first_name,
             last_name=contact.last_name or None,
             vcard=contact.vcard or None,
             user_id=contact.user_id or None,
-            client=client,
+            client=client
         )

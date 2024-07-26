@@ -1,3 +1,22 @@
+#  PyroFork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of PyroFork.
+#
+#  PyroFork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  PyroFork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with PyroFork.  If not, see <http://www.gnu.org/licenses/>.
+
 from .animation import Animation
 from .audio import Audio
 from .available_effect import AvailableEffect
@@ -50,54 +69,7 @@ from .story_views import StoryViews
 from .exported_story_link import ExportedStoryLink
 
 __all__ = [
-    "Animation",
-    "Audio",
-    "AvailableEffect",
-    "Contact",
-    "Document",
-    "ExtendedMediaPreview",
-    "Game",
-    "GiftedPremium",
-    "Giveaway",
-    "GiveawayLaunched",
-    "GiveawayResult",
-    "LabeledPrice",
-    "Location",
-    "MediaArea",
-    "MediaAreaChannelPost",
-    "MediaAreaCoordinates",
-    "Message",
-    "MessageEntity",
-    "PaidMedia",
-    "Photo",
-    "Thumbnail",
-    "StrippedThumbnail",
-    "Poll",
-    "PollOption",
-    "Sticker",
-    "StickerSet",
-    "Venue",
-    "Video",
-    "VideoNote",
-    "Voice",
-    "WebPage",
-    "WebPageEmpty",
-    "WebPagePreview",
-    "Dice",
-    "Reaction",
-    "WebAppData",
-    "MessageInvoice",
-    "MessageReactions",
-    "ReactionCount",
-    "ReactionType",
-    "MessageReactionUpdated",
-    "MessageReactionCountUpdated",
-    "MessageStory",
-    "Story",
-    "StoryDeleted",
-    "StorySkipped",
-    "StoryViews",
-    "StoryForwardHeader",
-    "StoriesPrivacyRules",
-    "ExportedStoryLink",
+    "Animation", "Audio", "AvailableEffect", "Contact", "Document", "ExtendedMediaPreview", "Game", "GiftedPremium", "Giveaway", "GiveawayLaunched", "GiveawayResult", "LabeledPrice", "Location", "MediaArea", "MediaAreaChannelPost", "MediaAreaCoordinates", "Message", "MessageEntity", "PaidMedia", "Photo", "Thumbnail",
+    "StrippedThumbnail", "Poll", "PollOption", "Sticker", "StickerSet", "Venue", "Video", "VideoNote", "Voice", "WebPage", "WebPageEmpty", "WebPagePreview", "Dice",
+    "Reaction", "WebAppData", "MessageInvoice", "MessageReactions", "ReactionCount", "ReactionType", "MessageReactionUpdated", "MessageReactionCountUpdated", "MessageStory", "Story", "StoryDeleted", "StorySkipped", "StoryViews", "StoryForwardHeader", "StoriesPrivacyRules", "ExportedStoryLink"
 ]

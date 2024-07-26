@@ -1,8 +1,25 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from typing import List, Union
 
 import pyrogram
 from pyrogram import enums, types
-
 
 class ForwardStory:
     def _split(self, message, entities, *args, **kwargs):
@@ -14,16 +31,16 @@ class ForwardStory:
         from_story_id: int,
         chat_id: Union[int, str] = None,
         privacy: "enums.StoriesPrivacyRules" = None,
-        allowed_users: list[int] = None,
-        denied_users: list[int] = None,
-        # allowed_chats: list[int] = None,
-        # denied_chats: list[int] = None,
+        allowed_users: List[int] = None,
+        denied_users: List[int] = None,
+        #allowed_chats: List[int] = None,
+        #denied_chats: List[int] = None,
         pinned: bool = None,
         protect_content: bool = None,
         caption: str = None,
         parse_mode: "enums.ParseMode" = None,
-        caption_entities: list["types.MessageEntity"] = None,
-        period: int = None,
+        caption_entities: List["types.MessageEntity"] = None,
+        period: int = None
     ) -> "types.Story":
         """Forward a story.
 
@@ -88,7 +105,7 @@ class ForwardStory:
         Raises:
             ValueError: In case of invalid arguments.
         """
-
+        
         return await self.send_story(
             chat_id=chat_id,
             privacy=privacy,
@@ -101,5 +118,5 @@ class ForwardStory:
             parse_mode=parse_mode,
             period=period,
             forward_from_chat_id=from_chat_id,
-            forward_from_story_id=from_story_id,
+            forward_from_story_id=from_story_id
         )

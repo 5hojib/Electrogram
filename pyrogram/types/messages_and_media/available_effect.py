@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 from typing import Optional
 
 from pyrogram import raw, types
@@ -39,7 +58,7 @@ class AvailableEffect(Object):
         sticker: Optional["types.Sticker"] = None,
         is_premium: Optional[bool] = None,
         static_icon_id: Optional[int] = None,
-        effect_animation_id: Optional[int] = None,
+        effect_animation_id: Optional[int] = None
     ):
         super().__init__()
 
@@ -52,11 +71,7 @@ class AvailableEffect(Object):
         self.effect_animation_id = effect_animation_id
 
     @staticmethod
-    async def _parse(
-        client,
-        effect: "raw.types.AvailableEffect",
-        document: "raw.types.Document" = None,
-    ) -> "AvailableEffect":
+    async def _parse(client, effect: "raw.types.AvailableEffect", document: "raw.types.Document" = None) -> "AvailableEffect":
         sticker = None
 
         if document:
@@ -70,5 +85,5 @@ class AvailableEffect(Object):
             sticker=sticker,
             is_premium=getattr(effect, "premium_required", None),
             static_icon_id=getattr(effect, "static_icon_id", None),
-            effect_animation_id=getattr(effect, "effect_animation_id", None),
+            effect_animation_id=getattr(effect, "effect_animation_id", None)
         )

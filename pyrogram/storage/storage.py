@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 import base64
 import struct
 from abc import abstractmethod
@@ -27,18 +46,18 @@ class Storage:
     async def delete(self):
         raise NotImplementedError
 
-    async def update_peers(self, peers: list[tuple[int, int, str, str, str]]):
+    async def update_peers(self, peers: List[Tuple[int, int, str, str, str]]):
         raise NotImplementedError
 
-    async def update_usernames(self, usernames: list[tuple[int, str]]):
+    async def update_usernames(self, usernames: List[Tuple[int, str]]):
         raise NotImplementedError
 
     @abstractmethod
-    async def update_state(self, update_state: tuple[int, int, int, int, int] = object):
+    async def update_state(self, update_state: Tuple[int, int, int, int, int] = object):
         """Get or set the update state of the current session.
 
         Parameters:
-            update_state (``tuple[int, int, int, int, int]``): A tuple containing the update state to set.
+            update_state (``Tuple[int, int, int, int, int]``): A tuple containing the update state to set.
                 Tuple must contain the following information:
                 - ``int``: The id of the entity.
                 - ``int``: The pts.
@@ -86,7 +105,7 @@ class Storage:
             await self.test_mode(),
             await self.auth_key(),
             await self.user_id(),
-            await self.is_bot(),
+            await self.is_bot()
         )
 
         return base64.urlsafe_b64encode(packed).decode().rstrip("=")

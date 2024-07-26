@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 import math
 from typing import Union, Optional, BinaryIO
 
@@ -11,7 +30,7 @@ class StreamMedia:
         self: "pyrogram.Client",
         message: Union["types.Message", str],
         limit: int = 0,
-        offset: int = 0,
+        offset: int = 0
     ) -> Optional[Union[str, BinaryIO]]:
         """Stream the media from a message chunk by chunk.
 
@@ -55,17 +74,8 @@ class StreamMedia:
                 async for chunk in app.stream_media(message, offset=-3):
                     print(len(chunk))
         """
-        available_media = (
-            "audio",
-            "document",
-            "photo",
-            "sticker",
-            "animation",
-            "video",
-            "voice",
-            "video_note",
-            "new_chat_photo",
-        )
+        available_media = ("audio", "document", "photo", "sticker", "animation", "video", "voice", "video_note",
+                           "new_chat_photo")
 
         if isinstance(message, types.Message):
             for kind in available_media:
@@ -88,9 +98,7 @@ class StreamMedia:
 
         if offset < 0:
             if file_size == 0:
-                raise ValueError(
-                    "Negative offsets are not supported for file ids, pass a Message object instead"
-                )
+                raise ValueError("Negative offsets are not supported for file ids, pass a Message object instead")
 
             chunks = math.ceil(file_size / 1024 / 1024)
             offset += chunks

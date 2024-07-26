@@ -1,3 +1,22 @@
+#  Pyrofork - Telegram MTProto API Client Library for Python
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
+#  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#
+#  This file is part of Pyrofork.
+#
+#  Pyrofork is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Pyrofork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+
 import logging
 from typing import Union, Optional, AsyncGenerator
 
@@ -15,11 +34,9 @@ async def get_chunk(
     limit: int,
     query: str,
 ):
-    is_queryable = filter in [
-        enums.ChatMembersFilter.SEARCH,
-        enums.ChatMembersFilter.BANNED,
-        enums.ChatMembersFilter.RESTRICTED,
-    ]
+    is_queryable = filter in [enums.ChatMembersFilter.SEARCH,
+                              enums.ChatMembersFilter.BANNED,
+                              enums.ChatMembersFilter.RESTRICTED]
 
     filter = filter.value(q=query) if is_queryable else filter.value()
 
@@ -29,9 +46,9 @@ async def get_chunk(
             filter=filter,
             offset=offset,
             limit=limit,
-            hash=0,
+            hash=0
         ),
-        sleep_threshold=60,
+        sleep_threshold=60
     )
 
     members = r.participants
@@ -47,7 +64,7 @@ class GetChatMembers:
         chat_id: Union[int, str],
         query: str = "",
         limit: int = 0,
-        filter: "enums.ChatMembersFilter" = enums.ChatMembersFilter.SEARCH,
+        filter: "enums.ChatMembersFilter" = enums.ChatMembersFilter.SEARCH
     ) -> Optional[AsyncGenerator["types.ChatMember", None]]:
         """Get the members list of a chat.
 
@@ -101,7 +118,9 @@ class GetChatMembers:
 
         if isinstance(peer, raw.types.InputPeerChat):
             r = await self.invoke(
-                raw.functions.messages.GetFullChat(chat_id=peer.chat_id)
+                raw.functions.messages.GetFullChat(
+                    chat_id=peer.chat_id
+                )
             )
 
             members = getattr(r.full_chat.participants, "participants", [])
@@ -124,7 +143,7 @@ class GetChatMembers:
                 offset=offset,
                 filter=filter,
                 limit=limit,
-                query=query,
+                query=query
             )
 
             if not members:
