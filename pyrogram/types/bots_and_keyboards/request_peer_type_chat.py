@@ -34,15 +34,15 @@ class RequestPeerTypeChat(Object):
 
         is_forum (``bool``, *optional*):
             If True, show only Chat which is a forum.
-    """ # TODO user_admin_rights, bot_admin_rights
+    """  # TODO user_admin_rights, bot_admin_rights
 
     def __init__(
         self,
-        is_creator: bool=None,
-        is_bot_participant: bool=None,
-        is_username: bool=None,
-        is_forum: bool=None,
-        max: int=1
+        is_creator: bool = None,
+        is_bot_participant: bool = None,
+        is_username: bool = None,
+        is_forum: bool = None,
+        max: int = 1,
     ):
         super().__init__()
 

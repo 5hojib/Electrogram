@@ -27,6 +27,7 @@ from typing import List, Optional, Union
 from pyrogram.types import Identifier, Listener
 from pyrogram.utils import PyromodConfig
 
+
 class Listen:
     async def listen(
         self: "pyrogram.Client",

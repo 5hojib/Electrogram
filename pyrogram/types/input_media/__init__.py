@@ -28,6 +28,13 @@ from .input_media_area import InputMediaArea
 from .input_media_area_channel_post import InputMediaAreaChannelPost
 
 __all__ = [
-    "InputMedia", "InputMediaAnimation", "InputMediaAudio", "InputMediaDocument", "InputMediaPhoto", "InputMediaVideo",
-    "InputPhoneContact", "InputMediaArea", "InputMediaAreaChannelPost"
+    "InputMedia",
+    "InputMediaAnimation",
+    "InputMediaAudio",
+    "InputMediaDocument",
+    "InputMediaPhoto",
+    "InputMediaVideo",
+    "InputPhoneContact",
+    "InputMediaArea",
+    "InputMediaAreaChannelPost",
 ]

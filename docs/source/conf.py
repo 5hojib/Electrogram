@@ -40,12 +40,10 @@ extensions = [
     "sphinx.ext.autosummary",
     "sphinx.ext.intersphinx",
     "sphinx_copybutton",
-    "sphinx_immaterial"
+    "sphinx_immaterial",
 ]
 
-intersphinx_mapping = {
-    "python": ("https://docs.python.org/3", None)
-}
+intersphinx_mapping = {"python": ("https://docs.python.org/3", None)}
 
 master_doc = "index"
 source_suffix = ".rst"
@@ -65,7 +63,7 @@ suppress_warnings = ["image.not_readable"]
 
 html_title = "Pyrofork Documentation"
 html_theme = "sphinx_immaterial"
-html_static_path = ["../resources/static","_static"]
+html_static_path = ["../resources/static", "_static"]
 html_show_sourcelink = True
 html_show_copyright = False
 html_theme_options = {
@@ -88,12 +86,7 @@ html_theme_options = {
         "content.tabs.link",
         "announce.dismiss",
     ],
-    "palette": [
-        {
-            "media": "(prefers-color-scheme: dark)",
-            "scheme": "slate"
-        }
-    ],
+    "palette": [{"media": "(prefers-color-scheme: dark)", "scheme": "slate"}],
     "toc_title_is_page_title": True,
     "version_dropdown": True,
     "version_info": [
@@ -114,7 +107,7 @@ latex_elements = {
         \setmainfont{Open Sans}
         \setsansfont{Bitter}
         \setmonofont{Ubuntu Mono}
-        """
+        """,
 }
 
 html_css_files = [

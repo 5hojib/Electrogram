@@ -67,6 +67,6 @@ class Users(
     UpdateProfile,
     GetDefaultEmojiStatuses,
     SetEmojiStatus,
-    SendStory
+    SendStory,
 ):
     pass

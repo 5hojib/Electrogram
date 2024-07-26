@@ -28,14 +28,9 @@ class RequestPeerTypeChannel(Object):
 
         is_username (``bool``, *optional*):
             If True, show only Channel which has username.
-    """ # TODO user_admin_rights, bot_admin_rights
+    """  # TODO user_admin_rights, bot_admin_rights
 
-    def __init__(
-        self,
-        is_creator: bool=None,
-        is_username: bool=None,
-        max: int=1
-    ):
+    def __init__(self, is_creator: bool = None, is_username: bool = None, max: int = 1):
         super().__init__()
 
         self.is_creator = is_creator

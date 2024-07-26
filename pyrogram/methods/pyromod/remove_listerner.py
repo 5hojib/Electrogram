@@ -20,11 +20,9 @@
 import pyrogram
 from pyrogram.types import Listener
 
+
 class RemoveListener:
-    def remove_listener(
-        self: "pyrogram.Client",
-        listener: Listener
-    ):
+    def remove_listener(self: "pyrogram.Client", listener: Listener):
         """Removes a listener from the :meth:`~pyrogram.Client.listeners` dictionary.
 
         .. include:: /_includes/usable-by/users-bots.rst

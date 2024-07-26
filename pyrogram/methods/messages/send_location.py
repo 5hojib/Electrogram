@@ -48,8 +48,8 @@ class SendLocation:
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply"
-        ] = None
+            "types.ForceReply",
+        ] = None,
     ) -> "types.Message":
         """Send points on the map.
 
@@ -134,16 +134,14 @@ class SendLocation:
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
-            parse_mode=parse_mode
+            parse_mode=parse_mode,
         )
 
         rpc = raw.functions.messages.SendMedia(
             peer=await self.resolve_peer(chat_id),
             media=raw.types.InputMediaGeoPoint(
                 geo_point=raw.types.InputGeoPoint(
-                    lat=latitude,
-                    long=longitude,
-                    accuracy_radius=horizontal_accuracy
+                    lat=latitude, long=longitude, accuracy_radius=horizontal_accuracy
                 )
             ),
             message="",
@@ -153,27 +151,32 @@ class SendLocation:
             schedule_date=utils.datetime_to_timestamp(schedule_date),
             noforwards=protect_content,
             reply_markup=await reply_markup.write(self) if reply_markup else None,
-            effect=message_effect_id
+            effect=message_effect_id,
         )
         if business_connection_id is not None:
             r = await self.invoke(
                 raw.functions.InvokeWithBusinessConnection(
-                    connection_id=business_connection_id,
-                    query=rpc
+                    connection_id=business_connection_id, query=rpc
                 )
             )
         else:
             r = await self.invoke(rpc)
 
         for i in r.updates:
-            if isinstance(i, (raw.types.UpdateNewMessage,
-                              raw.types.UpdateNewChannelMessage,
-                              raw.types.UpdateNewScheduledMessage,
-                              raw.types.UpdateBotNewBusinessMessage)):
+            if isinstance(
+                i,
+                (
+                    raw.types.UpdateNewMessage,
+                    raw.types.UpdateNewChannelMessage,
+                    raw.types.UpdateNewScheduledMessage,
+                    raw.types.UpdateBotNewBusinessMessage,
+                ),
+            ):
                 return await types.Message._parse(
-                    self, i.message,
+                    self,
+                    i.message,
                     {i.id: i for i in r.users},
                     {i.id: i for i in r.chats},
                     is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
-                    business_connection_id=business_connection_id
+                    business_connection_id=business_connection_id,
                 )

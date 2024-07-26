@@ -23,6 +23,7 @@ from pyrogram.filters import Filter
 from typing import Callable, List, Optional, Union
 from pyrogram.types import Identifier, Listener
 
+
 class RegisterNextStepHandler:
     def register_next_step_handler(
         self: "pyrogram.Client",

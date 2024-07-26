@@ -24,6 +24,7 @@ from typing import BinaryIO, Callable, List, Optional, Union
 from ..object import Object
 from ..update import Update
 
+
 class Story(Object, Update):
     """A story.
 
@@ -138,9 +139,9 @@ class Story(Object, Update):
         allowed_users: List[int] = None,
         denied_users: List[int] = None,
         media_areas: List["types.MediaArea"] = None,
-        raw: "raw.types.StoryItem" = None
-        #allowed_chats: List[int] = None,
-        #denied_chats: List[int] = None
+        raw: "raw.types.StoryItem" = None,
+        # allowed_chats: List[int] = None,
+        # denied_chats: List[int] = None
     ):
         super().__init__(client)
 
@@ -170,8 +171,8 @@ class Story(Object, Update):
         self.denied_users = denied_users
         self.media_areas = media_areas
         self.raw = raw
-        #self.allowed_chats = allowed_chats
-        #self.denied_chats = denied_chats
+        # self.allowed_chats = allowed_chats
+        # self.denied_chats = denied_chats
 
     @staticmethod
     async def _parse(
@@ -181,14 +182,17 @@ class Story(Object, Update):
             "raw.types.PeerChannel",
             "raw.types.PeerUser",
             "raw.types.InputPeerChannel",
-            "raw.types.InputPeerUser"
-        ]
+            "raw.types.InputPeerUser",
+        ],
     ) -> "Story":
         if isinstance(stories, raw.types.StoryItemSkipped):
             return await types.StorySkipped._parse(client, stories, peer)
         if isinstance(stories, raw.types.StoryItemDeleted):
             return await types.StoryDeleted._parse(client, stories, peer)
-        entities = [types.MessageEntity._parse(client, entity, {}) for entity in stories.entities]
+        entities = [
+            types.MessageEntity._parse(client, entity, {})
+            for entity in stories.entities
+        ]
         entities = types.List(filter(lambda x: x is not None, entities))
         animation = None
         photo = None
@@ -198,13 +202,15 @@ class Story(Object, Update):
         sender_chat = None
         privacy = None
         forward_from = None
-        #allowed_chats = None
+        # allowed_chats = None
         allowed_users = None
-        #denied_chats = None
+        # denied_chats = None
         denied_users = None
         if stories.media:
             if isinstance(stories.media, raw.types.MessageMediaPhoto):
-                photo = types.Photo._parse(client, stories.media.photo, stories.media.ttl_seconds)
+                photo = types.Photo._parse(
+                    client, stories.media.photo, stories.media.ttl_seconds
+                )
                 media_type = enums.MessageMediaType.PHOTO
             elif isinstance(stories.media, raw.types.MessageMediaDocument):
                 doc = stories.media.document
@@ -213,18 +219,32 @@ class Story(Object, Update):
                     attributes = {type(i): i for i in doc.attributes}
 
                     if raw.types.DocumentAttributeAnimated in attributes:
-                        video_attributes = attributes.get(raw.types.DocumentAttributeVideo, None)
-                        animation = types.Animation._parse(client, doc, video_attributes, None)
+                        video_attributes = attributes.get(
+                            raw.types.DocumentAttributeVideo, None
+                        )
+                        animation = types.Animation._parse(
+                            client, doc, video_attributes, None
+                        )
                         media_type = enums.MessageMediaType.ANIMATION
                     elif raw.types.DocumentAttributeVideo in attributes:
-                        video_attributes = attributes.get(raw.types.DocumentAttributeVideo, None)
-                        video = types.Video._parse(client, doc, video_attributes, None, stories.media.ttl_seconds)
+                        video_attributes = attributes.get(
+                            raw.types.DocumentAttributeVideo, None
+                        )
+                        video = types.Video._parse(
+                            client,
+                            doc,
+                            video_attributes,
+                            None,
+                            stories.media.ttl_seconds,
+                        )
                         media_type = enums.MessageMediaType.VIDEO
                     else:
                         media_type = None
             else:
                 media_type = None
-        if isinstance(peer, raw.types.PeerChannel) or isinstance(peer, raw.types.InputPeerChannel):
+        if isinstance(peer, raw.types.PeerChannel) or isinstance(
+            peer, raw.types.InputPeerChannel
+        ):
             chat_id = utils.get_channel_id(peer.channel_id)
             chat = await client.invoke(
                 raw.functions.channels.GetChannels(
@@ -236,7 +256,7 @@ class Story(Object, Update):
             from_user = client.me
         else:
             from_user = await client.get_users(peer.user_id)
-        
+
         from_id = getattr(stories, "from_id", None)
         if from_id is not None:
             if getattr(from_id, "user_id", None) is not None:
@@ -244,14 +264,22 @@ class Story(Object, Update):
             elif getattr(from_id, "channel_id", None) is not None:
                 chat = await client.invoke(
                     raw.functions.channels.GetChannels(
-                        id=[await client.resolve_peer(utils.get_channel_id(getattr(from_id, "channel_id")))]
+                        id=[
+                            await client.resolve_peer(
+                                utils.get_channel_id(getattr(from_id, "channel_id"))
+                            )
+                        ]
                     )
                 )
                 sender_chat = types.Chat._parse_chat(client, chat.chats[0])
             elif getattr(from_id, "chat_id", None) is not None:
                 chat = await client.invoke(
                     raw.functions.channels.GetChannels(
-                        id=[await client.resolve_peer(utils.get_channel_id(getattr(from_id, "chat_id")))]
+                        id=[
+                            await client.resolve_peer(
+                                utils.get_channel_id(getattr(from_id, "chat_id"))
+                            )
+                        ]
                     )
                 )
                 sender_chat = types.Chat._parse_chat(client, chat.chats[0])
@@ -268,21 +296,23 @@ class Story(Object, Update):
             elif isinstance(priv, raw.types.PrivacyValueDisallowContacts):
                 privacy = enums.StoryPrivacy.NO_CONTACTS
 
-            '''
+            """
             if allowed_chats and len(allowed_chats) > 0:
                 chats = [int(str(chat_id)[3:]) if str(chat_id).startswith("-100") else chat_id for chat_id in allowed_chats]
                 privacy_rules.append(raw.types.InputPrivacyValueAllowChatParticipants(chats=chats))
             if denied_chats and len(denied_chats) > 0:
                 chats = [int(str(chat_id)[3:]) if str(chat_id).startswith("-100") else chat_id for chat_id in denied_chats]
                 privacy_rules.append(raw.types.InputPrivacyValueDisallowChatParticipants(chats=chats))
-            '''
+            """
             if isinstance(priv, raw.types.PrivacyValueAllowUsers):
                 allowed_users = priv.users
             if isinstance(priv, raw.types.PrivacyValueDisallowUsers):
                 denied_users = priv.users
 
         if stories.fwd_from is not None:
-            forward_from = await types.StoryForwardHeader._parse(client, stories.fwd_from)
+            forward_from = await types.StoryForwardHeader._parse(
+                client, stories.fwd_from
+            )
 
         media_areas = None
         if stories.media_areas is not None and len(stories.media_areas) > 0:
@@ -313,13 +343,13 @@ class Story(Object, Update):
             views=types.StoryViews._parse(stories.views),
             privacy=privacy,
             forward_from=forward_from,
-            #allowed_chats=allowed_chats,
-            #denied_chats=denied_chats,
+            # allowed_chats=allowed_chats,
+            # denied_chats=denied_chats,
             allowed_users=allowed_users,
             denied_users=denied_users,
             media_areas=media_areas,
             raw=stories,
-            client=client
+            client=client,
         )
 
     async def reply_text(
@@ -332,7 +362,7 @@ class Story(Object, Update):
         reply_to_story_id: int = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
-        reply_markup=None
+        reply_markup=None,
     ) -> "types.Message":
         """Bound method *reply_text* of :obj:`~pyrogram.types.Story`.
 
@@ -404,7 +434,7 @@ class Story(Object, Update):
             reply_to_story_id=reply_to_story_id,
             schedule_date=schedule_date,
             protect_content=protect_content,
-            reply_markup=reply_markup
+            reply_markup=reply_markup,
         )
 
     reply = reply_text
@@ -426,11 +456,11 @@ class Story(Object, Update):
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply"
+            "types.ForceReply",
         ] = None,
         reply_to_story_id: int = None,
         progress: Callable = None,
-        progress_args: tuple = ()
+        progress_args: tuple = (),
     ) -> "types.Message":
         """Bound method *reply_animation* :obj:`~pyrogram.types.Story`.
 
@@ -549,7 +579,7 @@ class Story(Object, Update):
             reply_to_story_id=reply_to_story_id,
             reply_markup=reply_markup,
             progress=progress,
-            progress_args=progress_args
+            progress_args=progress_args,
         )
 
     async def reply_audio(
@@ -569,10 +599,10 @@ class Story(Object, Update):
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply"
+            "types.ForceReply",
         ] = None,
         progress: Callable = None,
-        progress_args: tuple = ()
+        progress_args: tuple = (),
     ) -> "types.Message":
         """Bound method *reply_audio* of :obj:`~pyrogram.types.Story`.
 
@@ -687,7 +717,7 @@ class Story(Object, Update):
             reply_to_story_id=reply_to_story_id,
             reply_markup=reply_markup,
             progress=progress,
-            progress_args=progress_args
+            progress_args=progress_args,
         )
 
     async def reply_cached_media(
@@ -702,8 +732,8 @@ class Story(Object, Update):
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply"
-        ] = None
+            "types.ForceReply",
+        ] = None,
     ) -> "types.Message":
         """Bound method *reply_cached_media* of :obj:`~pyrogram.types.Story`.
 
@@ -765,19 +795,21 @@ class Story(Object, Update):
             caption_entities=caption_entities,
             disable_notification=disable_notification,
             reply_to_story_id=reply_to_story_id,
-            reply_markup=reply_markup
+            reply_markup=reply_markup,
         )
 
     async def reply_media_group(
         self,
-        media: List[Union[
-            "types.InputMediaPhoto",
-            "types.InputMediaVideo",
-            "types.InputMediaAudio",
-            "types.InputMediaDocument"
-        ]],
+        media: List[
+            Union[
+                "types.InputMediaPhoto",
+                "types.InputMediaVideo",
+                "types.InputMediaAudio",
+                "types.InputMediaDocument",
+            ]
+        ],
         disable_notification: bool = None,
-        reply_to_story_id: int = None
+        reply_to_story_id: int = None,
     ) -> List["types.Message"]:
         """Bound method *reply_media_group* of :obj:`~pyrogram.types.Story`.
 
@@ -823,7 +855,7 @@ class Story(Object, Update):
             chat_id=self.from_user.id if self.from_user else self.sender_chat.id,
             media=media,
             disable_notification=disable_notification,
-            reply_to_story_id=reply_to_story_id
+            reply_to_story_id=reply_to_story_id,
         )
 
     async def reply_photo(
@@ -841,10 +873,10 @@ class Story(Object, Update):
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply"
+            "types.ForceReply",
         ] = None,
         progress: Callable = None,
-        progress_args: tuple = ()
+        progress_args: tuple = (),
     ) -> "types.Message":
         """Bound method *reply_photo* of :obj:`~pyrogram.types.Story`.
 
@@ -949,7 +981,7 @@ class Story(Object, Update):
             reply_to_story_id=reply_to_story_id,
             reply_markup=reply_markup,
             progress=progress,
-            progress_args=progress_args
+            progress_args=progress_args,
         )
 
     async def reply_sticker(
@@ -961,10 +993,10 @@ class Story(Object, Update):
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply"
+            "types.ForceReply",
         ] = None,
         progress: Callable = None,
-        progress_args: tuple = ()
+        progress_args: tuple = (),
     ) -> "types.Message":
         """Bound method *reply_sticker* of :obj:`~pyrogram.types.Story`.
 
@@ -1042,7 +1074,7 @@ class Story(Object, Update):
             reply_to_story_id=reply_to_story_id,
             reply_markup=reply_markup,
             progress=progress,
-            progress_args=progress_args
+            progress_args=progress_args,
         )
 
     async def reply_video(
@@ -1065,10 +1097,10 @@ class Story(Object, Update):
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply"
+            "types.ForceReply",
         ] = None,
         progress: Callable = None,
-        progress_args: tuple = ()
+        progress_args: tuple = (),
     ) -> "types.Message":
         """Bound method *reply_video* of :obj:`~pyrogram.types.Story`.
 
@@ -1196,7 +1228,7 @@ class Story(Object, Update):
             reply_to_story_id=reply_to_story_id,
             reply_markup=reply_markup,
             progress=progress,
-            progress_args=progress_args
+            progress_args=progress_args,
         )
 
     async def reply_video_note(
@@ -1211,10 +1243,10 @@ class Story(Object, Update):
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply"
+            "types.ForceReply",
         ] = None,
         progress: Callable = None,
-        progress_args: tuple = ()
+        progress_args: tuple = (),
     ) -> "types.Message":
         """Bound method *reply_video_note* of :obj:`~pyrogram.types.Story`.
 
@@ -1306,7 +1338,7 @@ class Story(Object, Update):
             reply_to_story_id=reply_to_story_id,
             reply_markup=reply_markup,
             progress=progress,
-            progress_args=progress_args
+            progress_args=progress_args,
         )
 
     async def reply_voice(
@@ -1322,10 +1354,10 @@ class Story(Object, Update):
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply"
+            "types.ForceReply",
         ] = None,
         progress: Callable = None,
-        progress_args: tuple = ()
+        progress_args: tuple = (),
     ) -> "types.Message":
         """Bound method *reply_voice* of :obj:`~pyrogram.types.Story`.
 
@@ -1419,7 +1451,7 @@ class Story(Object, Update):
             reply_to_story_id=reply_to_story_id,
             reply_markup=reply_markup,
             progress=progress,
-            progress_args=progress_args
+            progress_args=progress_args,
         )
 
     async def delete(self):
@@ -1445,14 +1477,10 @@ class Story(Object, Update):
             RPCError: In case of a Telegram RPC error.
         """
         return await self._client.delete_stories(
-            chat_id=self.sender_chat.id if self.sender_chat else None,
-            story_ids=self.id
+            chat_id=self.sender_chat.id if self.sender_chat else None, story_ids=self.id
         )
 
-    async def edit_animation(
-        self,
-        animation: Union[str, BinaryIO]
-    ) -> "types.Story":
+    async def edit_animation(self, animation: Union[str, BinaryIO]) -> "types.Story":
         """Bound method *edit_animation* of :obj:`~pyrogram.types.Story`.
 
         Use as a shortcut for:
@@ -1482,7 +1510,7 @@ class Story(Object, Update):
         return await self._client.edit_story(
             chat_id=self.sender_chat.id if self.sender_chat else None,
             story_id=self.id,
-            animation=animation
+            animation=animation,
         )
 
     async def edit(
@@ -1490,15 +1518,15 @@ class Story(Object, Update):
         privacy: "enums.StoriesPrivacyRules" = None,
         allowed_users: List[int] = None,
         denied_users: List[int] = None,
-        #allowed_chats: List[int] = None,
-        #denied_chats: List[int] = None,
+        # allowed_chats: List[int] = None,
+        # denied_chats: List[int] = None,
         animation: str = None,
         photo: str = None,
         video: str = None,
         caption: str = None,
         parse_mode: "enums.ParseMode" = None,
         caption_entities: List["types.MessageEntity"] = None,
-        media_areas: List["types.InputMediaArea"] = None
+        media_areas: List["types.InputMediaArea"] = None,
     ) -> "types.Story":
         """Bound method *edit* of :obj:`~pyrogram.types.Story`.
 
@@ -1573,8 +1601,8 @@ class Story(Object, Update):
             chat_id=self.sender_chat.id if self.sender_chat else None,
             story_id=self.id,
             privacy=privacy,
-            #allowed_chats=allowed_chats,
-            #denied_chats=denied_chats,
+            # allowed_chats=allowed_chats,
+            # denied_chats=denied_chats,
             allowed_users=allowed_users,
             denied_users=denied_users,
             animation=animation,
@@ -1583,14 +1611,14 @@ class Story(Object, Update):
             caption=caption,
             parse_mode=parse_mode,
             caption_entities=caption_entities,
-            media_areas=media_areas
+            media_areas=media_areas,
         )
 
     async def edit_caption(
         self,
         caption: str,
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List["types.MessageEntity"] = None
+        caption_entities: List["types.MessageEntity"] = None,
     ) -> "types.Story":
         """Bound method *edit_caption* of :obj:`~pyrogram.types.Story`.
 
@@ -1630,13 +1658,10 @@ class Story(Object, Update):
             story_id=self.id,
             caption=caption,
             parse_mode=parse_mode,
-            caption_entities=caption_entities
+            caption_entities=caption_entities,
         )
 
-    async def edit_photo(
-        self,
-        photo: Union[str, BinaryIO]
-    ) -> "types.Story":
+    async def edit_photo(self, photo: Union[str, BinaryIO]) -> "types.Story":
         """Bound method *edit_photo* of :obj:`~pyrogram.types.Story`.
 
         Use as a shortcut for:
@@ -1666,7 +1691,7 @@ class Story(Object, Update):
         return await self._client.edit_story(
             chat_id=self.sender_chat.id if self.sender_chat else None,
             story_id=self.id,
-            photo=photo
+            photo=photo,
         )
 
     async def edit_privacy(
@@ -1674,8 +1699,8 @@ class Story(Object, Update):
         privacy: "enums.StoriesPrivacyRules" = None,
         allowed_users: List[int] = None,
         denied_users: List[int] = None,
-        #allowed_chats: List[int] = None,
-        #denied_chats: List[int] = None
+        # allowed_chats: List[int] = None,
+        # denied_chats: List[int] = None
     ) -> "types.Story":
         """Bound method *edit_privacy* of :obj:`~pyrogram.types.Story`.
 
@@ -1713,16 +1738,13 @@ class Story(Object, Update):
             chat_id=self.sender_chat.id if self.sender_chat else None,
             story_id=self.id,
             privacy=privacy,
-            #allowed_chats=allowed_chats,
-            #denied_chats=denied_chats,
+            # allowed_chats=allowed_chats,
+            # denied_chats=denied_chats,
             allowed_users=allowed_users,
-            denied_users=denied_users
+            denied_users=denied_users,
         )
 
-    async def edit_video(
-        self,
-        video: Union[str, BinaryIO]
-    ) -> "types.Story":
+    async def edit_video(self, video: Union[str, BinaryIO]) -> "types.Story":
         """Bound method *edit_video* of :obj:`~pyrogram.types.Story`.
 
         Use as a shortcut for:
@@ -1752,7 +1774,7 @@ class Story(Object, Update):
         return await self._client.edit_story(
             chat_id=self.sender_chat.id if self.sender_chat else None,
             story_id=self.id,
-            video=video
+            video=video,
         )
 
     async def export_link(self) -> "types.ExportedStoryLink":
@@ -1778,7 +1800,10 @@ class Story(Object, Update):
         Raises:
             RPCError: In case of a Telegram RPC error.
         """
-        return await self._client.export_story_link(chat_id=self.from_user.id if self.from_user else self.sender_chat.id, story_id=self.id)
+        return await self._client.export_story_link(
+            chat_id=self.from_user.id if self.from_user else self.sender_chat.id,
+            story_id=self.id,
+        )
 
     async def forward(
         self,
@@ -1786,14 +1811,14 @@ class Story(Object, Update):
         privacy: "enums.StoriesPrivacyRules" = None,
         allowed_users: List[int] = None,
         denied_users: List[int] = None,
-        #allowed_chats: List[int] = None,
-        #denied_chats: List[int] = None,
+        # allowed_chats: List[int] = None,
+        # denied_chats: List[int] = None,
         pinned: bool = None,
         protect_content: bool = None,
         caption: str = None,
         parse_mode: "enums.ParseMode" = None,
         caption_entities: List["types.MessageEntity"] = None,
-        period: int = None
+        period: int = None,
     ):
         """Bound method *forward* of :obj:`~pyrogram.types.Message`.
 
@@ -1861,8 +1886,10 @@ class Story(Object, Update):
             caption_entities=caption_entities,
             parse_mode=parse_mode,
             period=period,
-            forward_from_chat_id=self.from_user.id if self.from_user is not None else self.sender_chat.id,
-            forward_from_story_id=self.id
+            forward_from_chat_id=self.from_user.id
+            if self.from_user is not None
+            else self.sender_chat.id,
+            forward_from_story_id=self.id,
         )
 
     async def download(
@@ -1871,7 +1898,7 @@ class Story(Object, Update):
         in_memory: bool = False,
         block: bool = True,
         progress: Callable = None,
-        progress_args: tuple = ()
+        progress_args: tuple = (),
     ) -> str:
         """Bound method *download* of :obj:`~pyrogram.types.Story`.
 

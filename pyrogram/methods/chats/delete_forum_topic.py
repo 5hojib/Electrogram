@@ -23,9 +23,7 @@ from typing import Union
 
 class DeleteForumTopic:
     async def delete_forum_topic(
-        self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        topic_id: int
+        self: "pyrogram.Client", chat_id: Union[int, str], topic_id: int
     ) -> bool:
         """Delete a forum topic.
 
@@ -50,8 +48,7 @@ class DeleteForumTopic:
         try:
             await self.invoke(
                 raw.functions.channels.DeleteTopicHistory(
-                    channel=await self.resolve_peer(chat_id),
-                    top_msg_id=topic_id
+                    channel=await self.resolve_peer(chat_id), top_msg_id=topic_id
                 )
             )
         except Exception as e:

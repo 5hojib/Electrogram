@@ -44,13 +44,14 @@ class ShippingAddress(Object):
     """
 
     def __init__(
-        self, *,
+        self,
+        *,
         street_line1: str,
         street_line2: str,
         city: str,
         state: str,
         post_code: str,
-        country_code: str
+        country_code: str,
     ):
         super().__init__()
 

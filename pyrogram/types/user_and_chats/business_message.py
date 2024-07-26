@@ -67,7 +67,6 @@ class BusinessMessage(Object):
         schedule: "enums.BusinessSchedule" = None,
         start_date: datetime = None,
         end_date: datetime = None,
-
     ):
         self.shortcut_id = shortcut_id
         self.is_greeting = is_greeting
@@ -82,8 +81,10 @@ class BusinessMessage(Object):
     @staticmethod
     def _parse(
         client,
-        message: Union["raw.types.BusinessGreetingMessage", "raw.types.BusinessAwayMessage"] = None,
-        users: dict = None
+        message: Union[
+            "raw.types.BusinessGreetingMessage", "raw.types.BusinessAwayMessage"
+        ] = None,
+        users: dict = None,
     ) -> Optional["BusinessMessage"]:
         if not message:
             return None
@@ -91,11 +92,17 @@ class BusinessMessage(Object):
         schedule = None
 
         if isinstance(message, raw.types.BusinessAwayMessage):
-            if isinstance(message.schedule, raw.types.BusinessAwayMessageScheduleAlways):
+            if isinstance(
+                message.schedule, raw.types.BusinessAwayMessageScheduleAlways
+            ):
                 schedule = enums.BusinessSchedule.ALWAYS
-            elif isinstance(message.schedule, raw.types.BusinessAwayMessageScheduleOutsideWorkHours):
+            elif isinstance(
+                message.schedule, raw.types.BusinessAwayMessageScheduleOutsideWorkHours
+            ):
                 schedule = enums.BusinessSchedule.OUTSIDE_WORK_HOURS
-            elif isinstance(message.schedule, raw.types.BusinessAwayMessageScheduleCustom):
+            elif isinstance(
+                message.schedule, raw.types.BusinessAwayMessageScheduleCustom
+            ):
                 schedule = enums.BusinessSchedule.CUSTOM
 
         return BusinessMessage(
@@ -104,8 +111,14 @@ class BusinessMessage(Object):
             is_away=isinstance(message, raw.types.BusinessAwayMessage),
             no_activity_days=getattr(message, "no_activity_days", None),
             offline_only=getattr(message, "offline_only", None),
-            recipients=types.BusinessRecipients._parse(client, message.recipients, users),
+            recipients=types.BusinessRecipients._parse(
+                client, message.recipients, users
+            ),
             schedule=schedule,
-            start_date=utils.timestamp_to_datetime(message.schedule.start_date) if schedule == enums.BusinessSchedule.CUSTOM else None,
-            end_date=utils.timestamp_to_datetime(message.schedule.end_date) if schedule == enums.BusinessSchedule.CUSTOM else None
+            start_date=utils.timestamp_to_datetime(message.schedule.start_date)
+            if schedule == enums.BusinessSchedule.CUSTOM
+            else None,
+            end_date=utils.timestamp_to_datetime(message.schedule.end_date)
+            if schedule == enums.BusinessSchedule.CUSTOM
+            else None,
         )

@@ -25,9 +25,7 @@ from pyrogram import raw
 
 class ApproveAllChatJoinRequests:
     async def approve_all_chat_join_requests(
-        self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        invite_link: str = None
+        self: "pyrogram.Client", chat_id: Union[int, str], invite_link: str = None
     ) -> bool:
         """Approve all pending join requests in a chat.
 
@@ -48,9 +46,7 @@ class ApproveAllChatJoinRequests:
         """
         await self.invoke(
             raw.functions.messages.HideAllChatJoinRequests(
-                peer=await self.resolve_peer(chat_id),
-                approved=True,
-                link=invite_link
+                peer=await self.resolve_peer(chat_id), approved=True, link=invite_link
             )
         )
 

@@ -33,7 +33,7 @@ class EditMessageCaption:
         caption_entities: List["types.MessageEntity"] = None,
         invert_media: bool = False,
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        business_connection_id: str = None
+        business_connection_id: str = None,
     ) -> "types.Message":
         """Edit the caption of media messages.
 
@@ -85,5 +85,5 @@ class EditMessageCaption:
             entities=caption_entities,
             invert_media=invert_media,
             reply_markup=reply_markup,
-            business_connection_id=business_connection_id
+            business_connection_id=business_connection_id,
         )

@@ -27,8 +27,7 @@ from pyrogram import utils
 
 class GetChat:
     async def get_chat(
-        self: "pyrogram.Client",
-        chat_id: Union[int, str]
+        self: "pyrogram.Client", chat_id: Union[int, str]
     ) -> Union["types.Chat", "types.ChatPreview"]:
         """Get up to date information about a chat.
 
@@ -61,9 +60,7 @@ class GetChat:
 
         if match:
             r = await self.invoke(
-                raw.functions.messages.CheckChatInvite(
-                    hash=match.group(1)
-                )
+                raw.functions.messages.CheckChatInvite(hash=match.group(1))
             )
 
             if isinstance(r, raw.types.ChatInvite):
@@ -84,6 +81,8 @@ class GetChat:
         elif isinstance(peer, (raw.types.InputPeerUser, raw.types.InputPeerSelf)):
             r = await self.invoke(raw.functions.users.GetFullUser(id=peer))
         else:
-            r = await self.invoke(raw.functions.messages.GetFullChat(chat_id=peer.chat_id))
+            r = await self.invoke(
+                raw.functions.messages.GetFullChat(chat_id=peer.chat_id)
+            )
 
         return await types.Chat._parse_full(self, r)

@@ -22,6 +22,7 @@ import pyrogram
 from typing import List, Union
 from pyrogram.types import Identifier
 
+
 class StopListening:
     async def stop_listening(
         self: "pyrogram.Client",

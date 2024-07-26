@@ -57,7 +57,7 @@ class Game(Object):
         short_name: str,
         description: str,
         photo: "types.Photo",
-        animation: "types.Animation" = None
+        animation: "types.Animation" = None,
     ):
         super().__init__(client)
 
@@ -70,23 +70,23 @@ class Game(Object):
 
     @staticmethod
     def _parse(client, message: "raw.types.Message") -> "Game":
-        game: "raw.types.Game" = message.media.game
+        game: raw.types.Game = message.media.game
         animation = None
 
         if game.document:
             attributes = {type(i): i for i in game.document.attributes}
 
             file_name = getattr(
-                attributes.get(
-                    raw.types.DocumentAttributeFilename, None
-                ), "file_name", None
+                attributes.get(raw.types.DocumentAttributeFilename, None),
+                "file_name",
+                None,
             )
 
             animation = types.Animation._parse(
                 client,
                 game.document,
                 attributes.get(raw.types.DocumentAttributeVideo, None),
-                file_name
+                file_name,
             )
 
         return Game(
@@ -96,5 +96,5 @@ class Game(Object):
             description=game.description,
             photo=types.Photo._parse(client, game.photo),
             animation=animation,
-            client=client
+            client=client,
         )

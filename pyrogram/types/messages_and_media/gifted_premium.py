@@ -54,7 +54,7 @@ class GiftedPremium(Object):
         amount: int = None,
         cryptocurrency: str = None,
         cryptocurrency_amount: int = None,
-        month_count: int = None
+        month_count: int = None,
     ):
         super().__init__()
 
@@ -69,7 +69,7 @@ class GiftedPremium(Object):
     async def _parse(
         client,
         gifted_premium: "raw.types.MessageActionGiftPremium",
-        gifter_user_id: int
+        gifter_user_id: int,
     ) -> "GiftedPremium":
         return GiftedPremium(
             gifter_user_id=gifter_user_id,
@@ -77,5 +77,5 @@ class GiftedPremium(Object):
             amount=gifted_premium.amount,
             cryptocurrency=getattr(gifted_premium, "crypto_currency", None),
             cryptocurrency_amount=getattr(gifted_premium, "crypto_amount", None),
-            month_count=gifted_premium.months
+            month_count=gifted_premium.months,
         )

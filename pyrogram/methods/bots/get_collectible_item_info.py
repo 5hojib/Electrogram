@@ -23,9 +23,7 @@ from pyrogram import raw, types
 
 class GetCollectibleItemInfo:
     async def get_collectible_item_info(
-        self: "pyrogram.Client",
-        username: str = None,
-        phone_number: str = None
+        self: "pyrogram.Client", username: str = None, phone_number: str = None
     ) -> "types.CollectibleInfo":
         """Returns information about a given collectible item that was purchased at https://fragment.com
         .. include:: /_includes/usable-by/users.rst
@@ -55,9 +53,7 @@ class GetCollectibleItemInfo:
             )
 
         r = await self.invoke(
-            raw.functions.fragment.GetCollectibleInfo(
-                collectible=input_collectible
-            )
+            raw.functions.fragment.GetCollectibleInfo(collectible=input_collectible)
         )
 
         return types.CollectibleItemInfo._parse(r)

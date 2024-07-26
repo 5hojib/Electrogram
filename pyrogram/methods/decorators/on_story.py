@@ -24,11 +24,7 @@ from pyrogram.filters import Filter
 
 
 class OnStory:
-    def on_story(
-        self=None,
-        filters=None,
-        group: int = 0
-    ) -> Callable:
+    def on_story(self=None, filters=None, group: int = 0) -> Callable:
         """Decorator for handling new stories.
 
         This does the same thing as :meth:`~pyrogram.Client.add_handler` using the
@@ -53,7 +49,7 @@ class OnStory:
                 func.handlers.append(
                     (
                         pyrogram.handlers.StoryHandler(func, self),
-                        group if filters is None else filters
+                        group if filters is None else filters,
                     )
                 )
 

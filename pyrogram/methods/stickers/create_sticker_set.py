@@ -34,7 +34,7 @@ class CreateStickerSet:
         short_name: str,
         sticker: str,
         emoji: str = "🤔",
-        masks: bool = None
+        masks: bool = None,
     ) -> Optional["types.Message"]:
         """Create a new stickerset.
 
@@ -84,7 +84,7 @@ class CreateStickerSet:
                 media = raw.types.InputDocument(
                     id=decoded.media_id,
                     access_hash=decoded.access_hash,
-                    file_reference=decoded.file_reference
+                    file_reference=decoded.file_reference,
                 )
         else:
             raise ValueError(f"file_id is invalid!")
@@ -94,13 +94,8 @@ class CreateStickerSet:
                 user_id=await self.resolve_peer(user_id),
                 title=title,
                 short_name=short_name,
-                stickers=[
-                    raw.types.InputStickerSetItem(
-                        document=media,
-                        emoji=emoji
-                    )
-                ],
-                masks=masks
+                stickers=[raw.types.InputStickerSetItem(document=media, emoji=emoji)],
+                masks=masks,
             )
         )
 

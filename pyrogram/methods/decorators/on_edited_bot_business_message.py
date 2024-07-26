@@ -25,9 +25,7 @@ from pyrogram.filters import Filter
 
 class OnEditedBotBusinessMessage:
     def on_edited_bot_business_message(
-        self=None,
-        filters=None,
-        group: int = 0
+        self=None, filters=None, group: int = 0
     ) -> Callable:
         """Decorator for handling edited messages.
 
@@ -45,7 +43,10 @@ class OnEditedBotBusinessMessage:
 
         def decorator(func: Callable) -> Callable:
             if isinstance(self, pyrogram.Client):
-                self.add_handler(pyrogram.handlers.EditedBotBusinessMessageHandler(func, filters), group)
+                self.add_handler(
+                    pyrogram.handlers.EditedBotBusinessMessageHandler(func, filters),
+                    group,
+                )
             elif isinstance(self, Filter) or self is None:
                 if not hasattr(func, "handlers"):
                     func.handlers = []
@@ -53,7 +54,7 @@ class OnEditedBotBusinessMessage:
                 func.handlers.append(
                     (
                         pyrogram.handlers.EditedBotBusinessMessageHandler(func, self),
-                        group if filters is None else filters
+                        group if filters is None else filters,
                     )
                 )
 

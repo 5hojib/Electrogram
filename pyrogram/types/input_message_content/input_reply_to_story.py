@@ -32,11 +32,7 @@ class InputReplyToStory(Object):
             Unique identifier for the target story.
     """
 
-    def __init__(
-        self, *,
-        peer: "raw.types.InputPeer" = None,
-        story_id: int = None
-    ):
+    def __init__(self, *, peer: "raw.types.InputPeer" = None, story_id: int = None):
         super().__init__()
 
         self.peer = peer
@@ -44,6 +40,5 @@ class InputReplyToStory(Object):
 
     def write(self):
         return raw.types.InputReplyToStory(
-            peer=self.peer,
-            story_id=self.story_id
+            peer=self.peer, story_id=self.story_id
         ).write()

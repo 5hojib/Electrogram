@@ -22,10 +22,7 @@ from pyrogram import raw
 
 
 class ExportFolderLink:
-    async def export_folder_link(
-        self: "pyrogram.Client",
-        folder_id: int
-    ) -> str:
+    async def export_folder_link(self: "pyrogram.Client", folder_id: int) -> str:
         """Export link to a user's folder.
 
         .. include:: /_includes/usable-by/users.rst

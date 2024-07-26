@@ -25,11 +25,11 @@ from pyrogram import raw, types, errors
 
 class PromoteChatMember:
     async def promote_chat_member(
-            self: "pyrogram.Client",
-            chat_id: Union[int, str],
-            user_id: Union[int, str],
-            privileges: "types.ChatPrivileges" = None,
-            title: Optional[str] = "",
+        self: "pyrogram.Client",
+        chat_id: Union[int, str],
+        user_id: Union[int, str],
+        privileges: "types.ChatPrivileges" = None,
+        title: Optional[str] = "",
     ) -> bool:
         """Promote or demote a user in a supergroup or a channel.
 
@@ -73,12 +73,13 @@ class PromoteChatMember:
             privileges = types.ChatPrivileges()
 
         try:
-            raw_chat_member = (await self.invoke(
-                raw.functions.channels.GetParticipant(
-                    channel=chat_id,
-                    participant=user_id
+            raw_chat_member = (
+                await self.invoke(
+                    raw.functions.channels.GetParticipant(
+                        channel=chat_id, participant=user_id
+                    )
                 )
-            )).participant
+            ).participant
         except errors.RPCError:
             raw_chat_member = None
 
@@ -106,9 +107,9 @@ class PromoteChatMember:
                     post_stories=privileges.can_post_stories,
                     edit_stories=privileges.can_edit_stories,
                     delete_stories=privileges.can_delete_stories,
-                    other=privileges.can_manage_chat
+                    other=privileges.can_manage_chat,
                 ),
-                rank=rank
+                rank=rank,
             )
         )
 

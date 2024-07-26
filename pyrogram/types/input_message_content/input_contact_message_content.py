@@ -49,7 +49,7 @@ class InputContactMessageContent(InputMessageContent):
         phone_number: str,
         first_name: str,
         last_name: Optional[str] = None,
-        vcard: Optional[str] = None
+        vcard: Optional[str] = None,
     ):
         super().__init__()
 
@@ -64,5 +64,5 @@ class InputContactMessageContent(InputMessageContent):
             first_name=self.first_name,
             last_name=self.last_name,
             vcard=self.vcard,
-            reply_markup=await reply_markup.write(client) if reply_markup else None
+            reply_markup=await reply_markup.write(client) if reply_markup else None,
         )

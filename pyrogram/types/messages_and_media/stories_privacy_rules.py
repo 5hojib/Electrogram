@@ -19,6 +19,7 @@
 from pyrogram import enums, raw
 from ..object import Object
 
+
 class StoriesPrivacyRules(Object):
     """A story privacy.
 
@@ -27,10 +28,7 @@ class StoriesPrivacyRules(Object):
             Story privacy type.
     """
 
-    def __init__(
-        self, *,
-        type: "enums.StoriesPrivacyRules"
-    ):
+    def __init__(self, *, type: "enums.StoriesPrivacyRules"):
         super().__init__()
         self.type = type
 

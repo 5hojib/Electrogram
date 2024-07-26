@@ -20,7 +20,13 @@ from typing import List, Optional, Union
 
 import pyrogram
 from pyrogram import raw
-from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType, ThumbnailSource
+from pyrogram.file_id import (
+    FileId,
+    FileType,
+    FileUniqueId,
+    FileUniqueType,
+    ThumbnailSource,
+)
 from ..object import Object
 
 
@@ -63,7 +69,7 @@ class StickerSet(Object):
         masks: bool = None,
         animated: bool = None,
         videos: bool = None,
-        emojis: bool = None
+        emojis: bool = None,
     ):
         self.id = id
         self.title = title
@@ -76,14 +82,13 @@ class StickerSet(Object):
 
     @staticmethod
     def _parse(stickerset: "raw.types.StickerSet") -> "StickerSet":
-
         return StickerSet(
-            id=getattr(stickerset,"id", None),
-            title=getattr(stickerset,"title", None),
-            short_name=getattr(stickerset,"short_name", None),
-            count=getattr(stickerset,"count", None),
-            masks=getattr(stickerset,"masks", None),
-            animated=getattr(stickerset,"animated", None),
-            videos=getattr(stickerset,"videos", None),
-            emojis=getattr(stickerset,"emojis", None)
+            id=getattr(stickerset, "id", None),
+            title=getattr(stickerset, "title", None),
+            short_name=getattr(stickerset, "short_name", None),
+            count=getattr(stickerset, "count", None),
+            masks=getattr(stickerset, "masks", None),
+            animated=getattr(stickerset, "animated", None),
+            videos=getattr(stickerset, "videos", None),
+            emojis=getattr(stickerset, "emojis", None),
         )

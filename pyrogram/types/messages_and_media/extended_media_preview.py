@@ -37,13 +37,14 @@ class ExtendedMediaPreview(Object):
         video_duration (``int``, *optional*):
             Video duration.
     """
+
     def __init__(
-            self,
-            *,
-            width: int = None,
-            height: int = None,
-            thumb: "types.Thumbnail" = None,
-            video_duration: int = None
+        self,
+        *,
+        width: int = None,
+        height: int = None,
+        thumb: "types.Thumbnail" = None,
+        video_duration: int = None,
     ):
         super().__init__()
 
@@ -53,7 +54,9 @@ class ExtendedMediaPreview(Object):
         self.video_duration = video_duration
 
     @staticmethod
-    def _parse(client, media: "raw.types.MessageExtendedMediaPreview") -> "ExtendedMediaPreview":
+    def _parse(
+        client, media: "raw.types.MessageExtendedMediaPreview"
+    ) -> "ExtendedMediaPreview":
         thumb = None
         if media.thumb:
             thumb = types.StrippedThumbnail._parse(client, media.thumb)
@@ -62,5 +65,5 @@ class ExtendedMediaPreview(Object):
             width=media.w,
             height=media.h,
             thumb=thumb,
-            video_duration=media.video_duration
+            video_duration=media.video_duration,
         )

@@ -24,10 +24,7 @@ from pyrogram import raw
 
 
 class DeleteChannel:
-    async def delete_channel(
-        self: "pyrogram.Client",
-        chat_id: Union[int, str]
-    ) -> bool:
+    async def delete_channel(self: "pyrogram.Client", chat_id: Union[int, str]) -> bool:
         """Delete a channel.
 
         .. include:: /_includes/usable-by/users.rst

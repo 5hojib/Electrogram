@@ -22,11 +22,12 @@ import pyrogram
 from typing import Optional
 from pyrogram.types import Identifier, Listener
 
+
 class GetListenerMatchingWithData:
     def get_listener_matching_with_data(
         self: "pyrogram.Client",
         data: Identifier,
-        listener_type: "pyrogram.enums.ListenerTypes"
+        listener_type: "pyrogram.enums.ListenerTypes",
     ) -> Optional[Listener]:
         """Gets a listener that matches the given data.
 

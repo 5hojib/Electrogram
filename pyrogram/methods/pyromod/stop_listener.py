@@ -24,11 +24,9 @@ from pyrogram.errors import ListenerStopped
 from pyrogram.types import Listener
 from pyrogram.utils import PyromodConfig
 
+
 class StopListener:
-    async def stop_listener(
-        self: "pyrogram.Client",
-        listener: Listener
-    ):
+    async def stop_listener(self: "pyrogram.Client", listener: Listener):
         """Stops a listener, calling stopped_handler if applicable or raising ListenerStopped if throw_exceptions is True.
 
         .. include:: /_includes/usable-by/users-bots.rst

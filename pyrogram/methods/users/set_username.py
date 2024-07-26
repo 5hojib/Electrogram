@@ -24,10 +24,7 @@ from pyrogram import raw
 
 
 class SetUsername:
-    async def set_username(
-        self: "pyrogram.Client",
-        username: Optional[str]
-    ) -> bool:
+    async def set_username(self: "pyrogram.Client", username: Optional[str]) -> bool:
         """Set your own username.
 
         This method only works for users, not bots. Bot usernames must be changed via Bot Support or by recreating
@@ -51,8 +48,6 @@ class SetUsername:
 
         return bool(
             await self.invoke(
-                raw.functions.account.UpdateUsername(
-                    username=username or ""
-                )
+                raw.functions.account.UpdateUsername(username=username or "")
             )
         )

@@ -34,7 +34,7 @@ class SendInlineBotResult:
         reply_to_message_id: int = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
-        parse_mode: Optional["enums.ParseMode"] = None
+        parse_mode: Optional["enums.ParseMode"] = None,
     ) -> "raw.base.Updates":
         """Send an inline bot result.
         Bot results can be retrieved using :meth:`~pyrogram.Client.get_inline_bot_results`
@@ -86,7 +86,7 @@ class SendInlineBotResult:
 
                 await app.send_inline_bot_result(chat_id, query_id, result_id)
         """
-    
+
         reply_to = await utils.get_reply_to(
             client=self,
             chat_id=chat_id,
@@ -94,7 +94,7 @@ class SendInlineBotResult:
             message_thread_id=message_thread_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
-            parse_mode=parse_mode
+            parse_mode=parse_mode,
         )
 
         return await self.invoke(
@@ -104,6 +104,6 @@ class SendInlineBotResult:
                 id=result_id,
                 random_id=self.rnd_id(),
                 silent=disable_notification or None,
-                reply_to=reply_to
+                reply_to=reply_to,
             )
         )

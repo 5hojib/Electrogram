@@ -27,7 +27,7 @@ class BotInfo(Object):
     Parameters:
         name (``str``):
             The bot name.
-        
+
         about (``str``):
             The bot bio.
 
@@ -42,11 +42,10 @@ class BotInfo(Object):
         self.about = about
         self.description = description
 
-    
     @staticmethod
     def _parse(bot_info: "raw.types.bots.BotInfo") -> "BotInfo":
         return BotInfo(
-            name=getattr(bot_info,"name", None),
-            about=getattr(bot_info,"about", None),
-            description=getattr(bot_info,"description", None)
+            name=getattr(bot_info, "name", None),
+            about=getattr(bot_info, "about", None),
+            description=getattr(bot_info, "description", None),
         )

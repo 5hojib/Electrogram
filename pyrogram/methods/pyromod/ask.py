@@ -22,6 +22,7 @@ import pyrogram
 from pyrogram.filters import Filter
 from typing import List, Optional, Union
 
+
 class Ask:
     async def ask(
         self: "pyrogram.Client",

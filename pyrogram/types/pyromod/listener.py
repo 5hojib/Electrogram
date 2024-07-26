@@ -25,6 +25,7 @@ import pyrogram
 
 from .identifier import Identifier
 
+
 @dataclass
 class Listener:
     """Designed to manage and handle different types of listeners used in pyromod.
@@ -53,6 +54,7 @@ class Listener:
         callback (``Callable``, *optional*):
             The callback to call when the listener is fulfilled.
     """
+
     listener_type: pyrogram.enums.ListenerTypes
     filters: "pyrogram.filters.Filter"
     unallowed_click_alert: bool

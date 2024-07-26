@@ -41,7 +41,7 @@ class UpdateFolder:
         exclude_read: bool = None,
         exclude_archived: bool = None,
         color: "enums.FolderColor" = None,
-        emoji: str = None
+        emoji: str = None,
     ) -> bool:
         """Create or update a user's folder.
 
@@ -121,16 +121,13 @@ class UpdateFolder:
                     id=folder_id,
                     title=title,
                     pinned_peers=[
-                        await self.resolve_peer(user_id)
-                        for user_id in pinned_chats
+                        await self.resolve_peer(user_id) for user_id in pinned_chats
                     ],
                     include_peers=[
-                        await self.resolve_peer(user_id)
-                        for user_id in included_chats
+                        await self.resolve_peer(user_id) for user_id in included_chats
                     ],
                     exclude_peers=[
-                        await self.resolve_peer(user_id)
-                        for user_id in excluded_chats
+                        await self.resolve_peer(user_id) for user_id in excluded_chats
                     ],
                     contacts=contacts,
                     non_contacts=non_contacts,
@@ -141,8 +138,8 @@ class UpdateFolder:
                     exclude_read=exclude_read,
                     exclude_archived=exclude_archived,
                     emoticon=emoji,
-                    color=color.value if color else None
-                )
+                    color=color.value if color else None,
+                ),
             )
         )
 

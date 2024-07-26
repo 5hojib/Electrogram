@@ -96,11 +96,11 @@ class ChatPrivileges(Object):
         can_edit_messages: bool = False,  # Channels only
         can_invite_users: bool = False,
         can_pin_messages: bool = False,  # Groups and supergroups only
-        can_manage_topics: bool = False, # supergroups only.
-        can_post_stories: bool = False, # Channels only
-        can_edit_stories: bool = False, # Channels only
-        can_delete_stories: bool = False, # Channels only
-        is_anonymous: bool = False
+        can_manage_topics: bool = False,  # supergroups only.
+        can_post_stories: bool = False,  # Channels only
+        can_edit_stories: bool = False,  # Channels only
+        can_delete_stories: bool = False,  # Channels only
+        is_anonymous: bool = False,
     ):
         super().__init__(None)
 
@@ -137,5 +137,5 @@ class ChatPrivileges(Object):
             can_post_stories=admin_rights.post_stories,
             can_edit_stories=admin_rights.edit_stories,
             can_delete_stories=admin_rights.delete_stories,
-            is_anonymous=admin_rights.anonymous
+            is_anonymous=admin_rights.anonymous,
         )

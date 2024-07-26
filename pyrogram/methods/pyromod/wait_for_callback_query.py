@@ -31,7 +31,7 @@ class WaitForCallbackQuery:
         self: "pyrogram.Client",
         chat_id: Union[int, str],
         filters: Filter = None,
-        timeout: int = None
+        timeout: int = None,
     ) -> "types.CallbackQuery":
         """Wait for callback query.
 
@@ -73,12 +73,7 @@ class WaitForCallbackQuery:
 
         conversation_handler = self.dispatcher.conversation_handler
         future = self.loop.create_future()
-        future.add_done_callback(
-            partial(
-                conversation_handler.delete_waiter,
-                chat_id
-            )
-        )
+        future.add_done_callback(partial(conversation_handler.delete_waiter, chat_id))
         waiter = dict(future=future, filters=filters, update_type=types.CallbackQuery)
         conversation_handler.waiters[chat_id] = waiter
         return await asyncio.wait_for(future, timeout=timeout)

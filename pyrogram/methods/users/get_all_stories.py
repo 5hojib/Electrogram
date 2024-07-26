@@ -25,9 +25,10 @@ from pyrogram import types
 
 log = logging.getLogger(__name__)
 
+
 class GetAllStories:
     async def get_all_stories(
-        self: "pyrogram.Client"
+        self: "pyrogram.Client",
     ) -> Optional[AsyncGenerator["types.Story", None]]:
         """Get all active stories.
 

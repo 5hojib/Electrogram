@@ -53,7 +53,9 @@ class MessageHandler(Handler):
         self.original_callback = callback
         super().__init__(self.resolve_future_or_callback, filters)
 
-    async def check_if_has_matching_listener(self, client: "pyrogram.Client", message: Message):
+    async def check_if_has_matching_listener(
+        self, client: "pyrogram.Client", message: Message
+    ):
         """
         Checks if the message has a matching listener.
 
@@ -77,7 +79,9 @@ class MessageHandler(Handler):
             from_user_id=[from_user_id, from_user_username],
         )
 
-        listener = client.get_listener_matching_with_data(data, pyrogram.enums.ListenerTypes.MESSAGE)
+        listener = client.get_listener_matching_with_data(
+            data, pyrogram.enums.ListenerTypes.MESSAGE
+        )
 
         listener_does_match = False
 
@@ -121,7 +125,9 @@ class MessageHandler(Handler):
         # exists but its filters doesn't match
         return listener_does_match or handler_does_match
 
-    async def resolve_future_or_callback(self, client: "pyrogram.Client", message: Message, *args):
+    async def resolve_future_or_callback(
+        self, client: "pyrogram.Client", message: Message, *args
+    ):
         """
         Resolves the future or calls the callback of the listener if the message has a matching listener.
 

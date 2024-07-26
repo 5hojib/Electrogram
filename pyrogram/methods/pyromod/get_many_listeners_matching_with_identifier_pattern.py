@@ -22,6 +22,7 @@ import pyrogram
 from typing import List
 from pyrogram.types import Identifier, Listener
 
+
 class GetManyListenersMatchingWithIdentifierPattern:
     def get_many_listeners_matching_with_identifier_pattern(
         self: "pyrogram.Client",

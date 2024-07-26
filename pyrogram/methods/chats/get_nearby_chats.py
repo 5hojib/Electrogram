@@ -27,9 +27,7 @@ from pyrogram import utils
 
 class GetNearbyChats:
     async def get_nearby_chats(
-        self: "pyrogram.Client",
-        latitude: float,
-        longitude: float
+        self: "pyrogram.Client", latitude: float, longitude: float
     ) -> List["types.Chat"]:
         """Get nearby chats.
 
@@ -54,10 +52,7 @@ class GetNearbyChats:
 
         r = await self.invoke(
             raw.functions.contacts.GetLocated(
-                geo_point=raw.types.InputGeoPoint(
-                    lat=latitude,
-                    long=longitude
-                )
+                geo_point=raw.types.InputGeoPoint(lat=latitude, long=longitude)
             )
         )
 

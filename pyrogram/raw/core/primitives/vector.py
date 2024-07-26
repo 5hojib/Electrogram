@@ -35,10 +35,7 @@ class Vector(bytes, TLObject):
     def read_bare(b: BytesIO, size: int) -> Union[int, Any]:
         if size == 4:
             # cek
-            e = int.from_bytes(
-                b.read(4),
-                "little"
-            )
+            e = int.from_bytes(b.read(4), "little")
             # bak
             b.seek(-4, 1)
             # cond
@@ -64,9 +61,7 @@ class Vector(bytes, TLObject):
         data.seek(-left, 1)
 
         return List(
-            t.read(data) if t
-            else Vector.read_bare(data, size)
-            for _ in range(count)
+            t.read(data) if t else Vector.read_bare(data, size) for _ in range(count)
         )
 
     def __new__(cls, value: list, t: Any = None) -> bytes:  # type: ignore

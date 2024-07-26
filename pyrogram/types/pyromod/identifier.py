@@ -20,6 +20,7 @@
 from dataclasses import dataclass
 from typing import Optional, Union, List
 
+
 @dataclass
 class Identifier:
     """A dataclass that serves as a utility for matching listeners to the data of updates.
@@ -37,6 +38,7 @@ class Identifier:
         from_user_id (``int`` | ``str`` | Iterable of ``int`` | Iterable of ``str``, *optional*):
             The user ID to match. If None, it is not considered for matching.
     """
+
     inline_message_id: Optional[Union[str, List[str]]] = None
     chat_id: Optional[Union[Union[int, str], List[Union[int, str]]]] = None
     message_id: Optional[Union[int, List[int]]] = None

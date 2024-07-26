@@ -34,5 +34,5 @@ __all__ = [
     "InputLocationMessageContent",
     "InputVenueMessageContent",
     "InputContactMessageContent",
-    "InputInvoiceMessageContent"
+    "InputInvoiceMessageContent",
 ]

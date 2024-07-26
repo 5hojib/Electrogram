@@ -30,12 +30,7 @@ class RequestPeerTypeUser(Object):
             If True, show only Premium Users.
     """
 
-    def __init__(
-        self,
-        is_bot: bool=None,
-        is_premium: bool=None,
-        max: int=1
-    ):
+    def __init__(self, is_bot: bool = None, is_premium: bool = None, max: int = 1):
         super().__init__()
 
         self.is_bot = is_bot

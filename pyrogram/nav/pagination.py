@@ -20,6 +20,7 @@
 import math
 from pyrogram.helpers import array_chunk
 
+
 class Pagination:
     def __init__(self, objects, page_data=None, item_data=None, item_title=None):
         def default_page_callback(x):

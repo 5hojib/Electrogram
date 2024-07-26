@@ -26,9 +26,7 @@ from pyrogram import types
 
 class RetractVote:
     async def retract_vote(
-        self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        message_id: int
+        self: "pyrogram.Client", chat_id: Union[int, str], message_id: int
     ) -> "types.Poll":
         """Retract your vote in a poll.
 
@@ -54,9 +52,7 @@ class RetractVote:
         """
         r = await self.invoke(
             raw.functions.messages.SendVote(
-                peer=await self.resolve_peer(chat_id),
-                msg_id=message_id,
-                options=[]
+                peer=await self.resolve_peer(chat_id), msg_id=message_id, options=[]
             )
         )
 

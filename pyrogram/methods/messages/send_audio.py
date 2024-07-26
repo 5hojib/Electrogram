@@ -59,10 +59,10 @@ class SendAudio:
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply"
+            "types.ForceReply",
         ] = None,
         progress: Callable = None,
-        progress_args: tuple = ()
+        progress_args: tuple = (),
     ) -> Optional["types.Message"]:
         """Send audio files.
 
@@ -127,7 +127,7 @@ class SendAudio:
 
             reply_to_message_id (``int``, *optional*):
                 If the message is a reply, ID of the original message.
-            
+
             reply_to_story_id (``int``, *optional*):
                 Unique identifier for the target story.
 
@@ -214,48 +214,51 @@ class SendAudio:
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
-            parse_mode=parse_mode
+            parse_mode=parse_mode,
         )
 
         try:
             if isinstance(audio, str):
                 if os.path.isfile(audio):
                     thumb = await self.save_file(thumb)
-                    file = await self.save_file(audio, progress=progress, progress_args=progress_args)
+                    file = await self.save_file(
+                        audio, progress=progress, progress_args=progress_args
+                    )
                     media = raw.types.InputMediaUploadedDocument(
                         mime_type=self.guess_mime_type(audio) or "audio/mpeg",
                         file=file,
                         thumb=thumb,
                         attributes=[
                             raw.types.DocumentAttributeAudio(
-                                duration=duration,
-                                performer=performer,
-                                title=title
+                                duration=duration, performer=performer, title=title
                             ),
-                            raw.types.DocumentAttributeFilename(file_name=file_name or os.path.basename(audio))
-                        ]
+                            raw.types.DocumentAttributeFilename(
+                                file_name=file_name or os.path.basename(audio)
+                            ),
+                        ],
                     )
                 elif re.match("^https?://", audio):
-                    media = raw.types.InputMediaDocumentExternal(
-                        url=audio
-                    )
+                    media = raw.types.InputMediaDocumentExternal(url=audio)
                 else:
                     media = utils.get_input_media_from_file_id(audio, FileType.AUDIO)
             else:
                 thumb = await self.save_file(thumb)
-                file = await self.save_file(audio, progress=progress, progress_args=progress_args)
+                file = await self.save_file(
+                    audio, progress=progress, progress_args=progress_args
+                )
                 media = raw.types.InputMediaUploadedDocument(
-                    mime_type=self.guess_mime_type(file_name or audio.name) or "audio/mpeg",
+                    mime_type=self.guess_mime_type(file_name or audio.name)
+                    or "audio/mpeg",
                     file=file,
                     thumb=thumb,
                     attributes=[
                         raw.types.DocumentAttributeAudio(
-                            duration=duration,
-                            performer=performer,
-                            title=title
+                            duration=duration, performer=performer, title=title
                         ),
-                        raw.types.DocumentAttributeFilename(file_name=file_name or audio.name)
-                    ]
+                        raw.types.DocumentAttributeFilename(
+                            file_name=file_name or audio.name
+                        ),
+                    ],
                 )
 
             while True:
@@ -269,14 +272,17 @@ class SendAudio:
                         schedule_date=utils.datetime_to_timestamp(schedule_date),
                         noforwards=protect_content,
                         effect=message_effect_id,
-                        reply_markup=await reply_markup.write(self) if reply_markup else None,
-                        **await utils.parse_text_entities(self, caption, parse_mode, caption_entities)
+                        reply_markup=await reply_markup.write(self)
+                        if reply_markup
+                        else None,
+                        **await utils.parse_text_entities(
+                            self, caption, parse_mode, caption_entities
+                        ),
                     )
                     if business_connection_id is not None:
                         r = await self.invoke(
                             raw.functions.InvokeWithBusinessConnection(
-                                connection_id=business_connection_id,
-                                query=rpc
+                                connection_id=business_connection_id, query=rpc
                             )
                         )
                     else:
@@ -285,16 +291,24 @@ class SendAudio:
                     await self.save_file(audio, file_id=file.id, file_part=e.value)
                 else:
                     for i in r.updates:
-                        if isinstance(i, (raw.types.UpdateNewMessage,
-                                          raw.types.UpdateNewChannelMessage,
-                                          raw.types.UpdateNewScheduledMessage,
-                                          raw.types.UpdateBotNewBusinessMessage)):
+                        if isinstance(
+                            i,
+                            (
+                                raw.types.UpdateNewMessage,
+                                raw.types.UpdateNewChannelMessage,
+                                raw.types.UpdateNewScheduledMessage,
+                                raw.types.UpdateBotNewBusinessMessage,
+                            ),
+                        ):
                             return await types.Message._parse(
-                                self, i.message,
+                                self,
+                                i.message,
                                 {i.id: i for i in r.users},
                                 {i.id: i for i in r.chats},
-                                is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
-                                business_connection_id=business_connection_id
+                                is_scheduled=isinstance(
+                                    i, raw.types.UpdateNewScheduledMessage
+                                ),
+                                business_connection_id=business_connection_id,
                             )
         except StopTransmission:
             return None
