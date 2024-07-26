@@ -20,12 +20,6 @@ jobs:
     - name: Install dependencies
       run: rye sync
 
-    - name: Delete comments from Python files
-      run: |
-        find . -name "*.py" -exec sed -i '/^\s*#/d' {} +
-        find . -name "*.py" -exec sed -i '/^\s*"""/,/^\s*"""/d' {} +
-        git add -u
-
     - name: Run ruff to update type hints and format code
       run: |
         rye run ruff check . --select UP --fix --exit-zero
