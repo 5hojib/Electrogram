@@ -20,6 +20,9 @@ jobs:
     - name: Install dependencies
       run: rye sync
 
+    - name: Remove comments from Python files
+      run: python remove.py
+
     - name: Run ruff to update type hints and format code
       run: |
         rye run ruff check . --select UP --fix --exit-zero
@@ -33,7 +36,7 @@ jobs:
         if git diff-index --quiet HEAD --; then
           echo "No changes to commit."
         else
-          git commit -m "Auto-format code using ruff [skip actions]"
+          git commit -m "Auto-format code and delete comments [skip actions]"
           git push origin ${{ github.ref }}
         fi
       env:
