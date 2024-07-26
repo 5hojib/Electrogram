@@ -17,6 +17,7 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyrogram import raw
+
 from ..object import Object
 
 
@@ -35,9 +36,7 @@ class ForumTopicEdited(Object):
             Unique identifier of the custom emoji shown as the topic icon
     """
 
-    def __init__(
-        self, *, title: str = None, icon_color: int = None, icon_emoji_id: str = None
-    ):
+    def __init__(self, *, title: str = None, icon_color: int = None, icon_emoji_id: str = None):
         super().__init__()
 
         self.title = title

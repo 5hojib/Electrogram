@@ -20,8 +20,7 @@
 from typing import List, Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import enums
+from pyrogram import enums, raw
 
 
 class UpdateFolder:
@@ -120,15 +119,9 @@ class UpdateFolder:
                 filter=raw.types.DialogFilter(
                     id=folder_id,
                     title=title,
-                    pinned_peers=[
-                        await self.resolve_peer(user_id) for user_id in pinned_chats
-                    ],
-                    include_peers=[
-                        await self.resolve_peer(user_id) for user_id in included_chats
-                    ],
-                    exclude_peers=[
-                        await self.resolve_peer(user_id) for user_id in excluded_chats
-                    ],
+                    pinned_peers=[await self.resolve_peer(user_id) for user_id in pinned_chats],
+                    include_peers=[await self.resolve_peer(user_id) for user_id in included_chats],
+                    exclude_peers=[await self.resolve_peer(user_id) for user_id in excluded_chats],
                     contacts=contacts,
                     non_contacts=non_contacts,
                     groups=groups,

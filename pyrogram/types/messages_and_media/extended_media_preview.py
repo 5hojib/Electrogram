@@ -16,8 +16,8 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
+
 from ..object import Object
 
 
@@ -54,9 +54,7 @@ class ExtendedMediaPreview(Object):
         self.video_duration = video_duration
 
     @staticmethod
-    def _parse(
-        client, media: "raw.types.MessageExtendedMediaPreview"
-    ) -> "ExtendedMediaPreview":
+    def _parse(client, media: "raw.types.MessageExtendedMediaPreview") -> "ExtendedMediaPreview":
         thumb = None
         if media.thumb:
             thumb = types.StrippedThumbnail._parse(client, media.thumb)

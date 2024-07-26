@@ -17,10 +17,11 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional, List
+from typing import List, Optional
 
 import pyrogram
-from pyrogram import raw, types, utils, enums
+from pyrogram import enums, raw, types, utils
+
 from .inline_query_result import InlineQueryResult
 
 
@@ -114,9 +115,7 @@ class InlineQueryResultDocument(InlineQueryResult):
                 size=0,
                 mime_type="image/jpeg",
                 attributes=[
-                    raw.types.DocumentAttributeImageSize(
-                        w=self.thumb_width, h=self.thumb_height
-                    )
+                    raw.types.DocumentAttributeImageSize(w=self.thumb_width, h=self.thumb_height)
                 ],
             )
             if self.thumb_url

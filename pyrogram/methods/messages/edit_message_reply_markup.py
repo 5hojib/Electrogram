@@ -20,8 +20,7 @@
 from typing import Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class EditMessageReplyMarkup:
@@ -82,9 +81,7 @@ class EditMessageReplyMarkup:
             r = await self.invoke(rpc)
 
         for i in r.updates:
-            if isinstance(
-                i, (raw.types.UpdateEditMessage, raw.types.UpdateEditChannelMessage)
-            ):
+            if isinstance(i, (raw.types.UpdateEditMessage, raw.types.UpdateEditChannelMessage)):
                 return await types.Message._parse(
                     self,
                     i.message,

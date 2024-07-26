@@ -20,8 +20,7 @@
 from typing import Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types, utils
+from pyrogram import raw, types, utils
 
 
 class SendGame:

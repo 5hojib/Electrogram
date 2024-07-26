@@ -17,10 +17,11 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-from typing import Optional, List, Union
+from typing import List, Optional, Union
 
 import pyrogram
 from pyrogram import raw, types
+
 from .input_message_content import InputMessageContent
 
 log = logging.getLogger(__name__)
@@ -147,9 +148,7 @@ class InputInvoiceMessageContent(InputMessageContent):
                 mime_type="image/jpg",
                 size=self.photo_size,
                 attributes=[
-                    raw.types.DocumentAttributeImageSize(
-                        w=self.photo_width, h=self.photo_height
-                    )
+                    raw.types.DocumentAttributeImageSize(w=self.photo_width, h=self.photo_height)
                 ],
             )
             if self.photo_url
@@ -166,9 +165,7 @@ class InputInvoiceMessageContent(InputMessageContent):
                 phone_to_provider=self.send_phone_number_to_provider,
                 email_to_provider=self.send_email_to_provider,
             ),
-            payload=self.payload.encode()
-            if isinstance(self.payload, str)
-            else self.payload,
+            payload=self.payload.encode() if isinstance(self.payload, str) else self.payload,
             provider=self.provider_token,
             provider_data=raw.types.DataJSON(
                 data=self.provider_data if self.provider_data else "{}"

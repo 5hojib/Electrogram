@@ -18,12 +18,10 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Union, List, Optional
+from typing import List, Optional, Union
 
 import pyrogram
-from pyrogram import raw, enums
-from pyrogram import types
-from pyrogram import utils
+from pyrogram import enums, raw, types, utils
 
 
 class SendCachedMedia:
@@ -162,9 +160,7 @@ class SendCachedMedia:
                 noforwards=protect_content,
                 invert_media=invert_media,
                 reply_markup=await reply_markup.write(self) if reply_markup else None,
-                **await utils.parse_text_entities(
-                    self, caption, parse_mode, caption_entities
-                ),
+                **await utils.parse_text_entities(self, caption, parse_mode, caption_entities),
             )
         )
 

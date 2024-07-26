@@ -20,8 +20,7 @@
 from typing import List, Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class GetCustomEmojiStickers:

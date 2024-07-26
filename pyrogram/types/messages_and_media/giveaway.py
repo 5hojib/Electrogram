@@ -17,13 +17,14 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 import asyncio
-import pyrogram
-
 from datetime import datetime
+from typing import List
+
+import pyrogram
 from pyrogram import raw, types, utils
 from pyrogram.errors import FloodWait
+
 from ..object import Object
-from typing import List
 
 
 class Giveaway(Object):
@@ -83,9 +84,7 @@ class Giveaway(Object):
             chat_id = utils.get_channel_id(raw_chat_id)
             try:
                 chat = await client.invoke(
-                    raw.functions.channels.GetChannels(
-                        id=[await client.resolve_peer(chat_id)]
-                    )
+                    raw.functions.channels.GetChannels(id=[await client.resolve_peer(chat_id)])
                 )
             except FloodWait as e:
                 await asyncio.sleep(e.value)

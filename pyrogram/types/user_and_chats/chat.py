@@ -17,13 +17,13 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
+from collections.abc import AsyncGenerator
 from datetime import datetime
-from typing import Union, List, Optional, AsyncGenerator, BinaryIO
+from typing import BinaryIO, List, Optional, Union
 
 import pyrogram
-from pyrogram import raw, enums
-from pyrogram import types
-from pyrogram import utils
+from pyrogram import enums, raw, types, utils
+
 from ..object import Object
 
 
@@ -295,11 +295,7 @@ class Chat(Object):
 
     @property
     def full_name(self) -> str:
-        return (
-            " ".join(filter(None, [self.first_name, self.last_name]))
-            or self.title
-            or None
-        )
+        return " ".join(filter(None, [self.first_name, self.last_name])) or self.title or None
 
     @staticmethod
     def _parse_user_chat(client, user: raw.types.User) -> "Chat":
@@ -317,9 +313,7 @@ class Chat(Object):
             first_name=user.first_name,
             last_name=user.last_name,
             photo=types.ChatPhoto._parse(client, user.photo, peer_id, user.access_hash),
-            restrictions=types.List(
-                [types.Restriction._parse(r) for r in user.restriction_reason]
-            )
+            restrictions=types.List([types.Restriction._parse(r) for r in user.restriction_reason])
             or None,
             dc_id=getattr(getattr(user, "photo", None), "dc_id", None),
             reply_color=types.ChatColor._parse(getattr(user, "color", None)),
@@ -344,12 +338,8 @@ class Chat(Object):
             type=enums.ChatType.GROUP,
             title=chat.title,
             is_creator=getattr(chat, "creator", None),
-            photo=types.ChatPhoto._parse(
-                client, getattr(chat, "photo", None), peer_id, 0
-            ),
-            permissions=types.ChatPermissions._parse(
-                getattr(chat, "default_banned_rights", None)
-            ),
+            photo=types.ChatPhoto._parse(client, getattr(chat, "photo", None), peer_id, 0),
+            permissions=types.ChatPermissions._parse(getattr(chat, "default_banned_rights", None)),
             members_count=getattr(chat, "participants_count", None),
             dc_id=getattr(getattr(chat, "photo", None), "dc_id", None),
             has_protected_content=getattr(chat, "noforwards", None),
@@ -398,9 +388,7 @@ class Chat(Object):
                 peer_id,
                 getattr(channel, "access_hash", 0),
             ),
-            restrictions=types.List(
-                [types.Restriction._parse(r) for r in restriction_reason]
-            )
+            restrictions=types.List([types.Restriction._parse(r) for r in restriction_reason])
             or None,
             permissions=types.ChatPermissions._parse(
                 getattr(channel, "default_banned_rights", None)
@@ -454,9 +442,7 @@ class Chat(Object):
             parsed_chat = Chat._parse_user_chat(client, users[full_user.id])
             parsed_chat.bio = full_user.about
             parsed_chat.folder_id = getattr(full_user, "folder_id", None)
-            parsed_chat.business_info = types.BusinessInfo._parse(
-                client, full_user, users
-            )
+            parsed_chat.business_info = types.BusinessInfo._parse(client, full_user, users)
             birthday = getattr(full_user, "birthday", None)
             parsed_chat.birthday = (
                 types.Birthday._parse(birthday) if birthday is not None else None
@@ -465,16 +451,10 @@ class Chat(Object):
             if personal_chat_id is not None:
                 personal_chat = await client.invoke(
                     raw.functions.channels.GetChannels(
-                        id=[
-                            await client.resolve_peer(
-                                utils.get_channel_id(personal_chat_id)
-                            )
-                        ]
+                        id=[await client.resolve_peer(utils.get_channel_id(personal_chat_id))]
                     )
                 )
-                parsed_chat.personal_chat = Chat._parse_chat(
-                    client, personal_chat.chats[0]
-                )
+                parsed_chat.personal_chat = Chat._parse_chat(client, personal_chat.chats[0])
 
             if full_user.pinned_msg_id:
                 parsed_chat.pinned_message = await client.get_messages(
@@ -512,15 +492,11 @@ class Chat(Object):
             else:
                 parsed_chat = Chat._parse_channel_chat(client, chat_raw)
                 parsed_chat.members_count = full_chat.participants_count
-                parsed_chat.slow_mode_delay = getattr(
-                    full_chat, "slowmode_seconds", None
-                )
+                parsed_chat.slow_mode_delay = getattr(full_chat, "slowmode_seconds", None)
                 parsed_chat.description = full_chat.about or None
                 # TODO: Add StickerSet type
                 parsed_chat.can_set_sticker_set = full_chat.can_set_stickers
-                parsed_chat.sticker_set_name = getattr(
-                    full_chat.stickerset, "short_name", None
-                )
+                parsed_chat.sticker_set_name = getattr(full_chat.stickerset, "short_name", None)
                 parsed_chat.is_participants_hidden = full_chat.participants_hidden
                 parsed_chat.is_antispam = full_chat.antispam
                 parsed_chat.folder_id = getattr(full_chat, "folder_id", None)
@@ -528,9 +504,7 @@ class Chat(Object):
                 linked_chat_raw = chats.get(full_chat.linked_chat_id, None)
 
                 if linked_chat_raw:
-                    parsed_chat.linked_chat = Chat._parse_channel_chat(
-                        client, linked_chat_raw
-                    )
+                    parsed_chat.linked_chat = Chat._parse_channel_chat(client, linked_chat_raw)
 
                 default_send_as = full_chat.default_send_as
 
@@ -547,9 +521,7 @@ class Chat(Object):
                     parsed_chat.stories = (
                         types.List(
                             [
-                                await types.Story._parse(
-                                    client, story, peer_stories.peer
-                                )
+                                await types.Story._parse(client, story, peer_stories.peer)
                                 for story in peer_stories.stories
                             ]
                         )
@@ -787,9 +759,7 @@ class Chat(Object):
             ValueError: If a chat_id doesn't belong to a supergroup or a channel.
         """
 
-        return await self._client.set_chat_description(
-            chat_id=self.id, description=description
-        )
+        return await self._client.set_chat_description(chat_id=self.id, description=description)
 
     async def set_photo(
         self,
@@ -1176,9 +1146,7 @@ class Chat(Object):
             ``Generator``: On success, a generator yielding :obj:`~pyrogram.types.ChatMember` objects is returned.
         """
 
-        return self._client.get_chat_members(
-            self.id, query=query, limit=limit, filter=filter
-        )
+        return self._client.get_chat_members(self.id, query=query, limit=limit, filter=filter)
 
     async def add_members(
         self,

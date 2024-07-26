@@ -20,10 +20,9 @@
 import logging
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 from pyrogram.errors import UserMigrate
-from pyrogram.session import Session, Auth
+from pyrogram.session import Auth, Session
 
 log = logging.getLogger(__name__)
 

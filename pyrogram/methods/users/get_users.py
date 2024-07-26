@@ -18,11 +18,11 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 import asyncio
-from typing import Union, List, Iterable
+from collections.abc import Iterable
+from typing import List, Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class GetUsers:

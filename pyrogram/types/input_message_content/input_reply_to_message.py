@@ -16,9 +16,11 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from pyrogram import raw
-from ..object import Object
 from typing import List, Union
+
+from pyrogram import raw
+
+from ..object import Object
 
 
 class InputReplyToMessage(Object):
@@ -51,9 +53,7 @@ class InputReplyToMessage(Object):
         *,
         reply_to_message_id: int = None,
         message_thread_id: int = None,
-        reply_to_chat: Union[
-            "raw.types.InputPeerChannel", "raw.types.InputPeerUser"
-        ] = None,
+        reply_to_chat: Union["raw.types.InputPeerChannel", "raw.types.InputPeerUser"] = None,
         quote_text: str = None,
         quote_entities: List["raw.base.MessageEntity"] = None,
     ):

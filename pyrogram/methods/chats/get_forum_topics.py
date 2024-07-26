@@ -18,12 +18,11 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-from typing import Union, Optional, AsyncGenerator
+from collections.abc import AsyncGenerator
+from typing import Optional, Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
-from pyrogram import utils
+from pyrogram import raw, types
 
 log = logging.getLogger(__name__)
 

@@ -17,12 +17,10 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, List, Optional
+from typing import List, Optional, Union
 
 import pyrogram
-from pyrogram import raw, enums
-from pyrogram import types
-from pyrogram import utils
+from pyrogram import enums, raw, types, utils
 
 
 class EditMessageText:
@@ -108,9 +106,7 @@ class EditMessageText:
             r = await self.invoke(rpc)
 
         for i in r.updates:
-            if isinstance(
-                i, (raw.types.UpdateEditMessage, raw.types.UpdateEditChannelMessage)
-            ):
+            if isinstance(i, (raw.types.UpdateEditMessage, raw.types.UpdateEditChannelMessage)):
                 return await types.Message._parse(
                     self,
                     i.message,

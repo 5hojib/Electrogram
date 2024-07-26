@@ -21,8 +21,7 @@ from datetime import datetime
 from typing import Union
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types
+from pyrogram import raw, types, utils
 
 
 class BanChatMember:
@@ -111,14 +110,11 @@ class BanChatMember:
             )
 
         for i in r.updates:
-            if isinstance(
-                i, (raw.types.UpdateNewMessage, raw.types.UpdateNewChannelMessage)
-            ):
+            if isinstance(i, (raw.types.UpdateNewMessage, raw.types.UpdateNewChannelMessage)):
                 return await types.Message._parse(
                     self,
                     i.message,
                     {i.id: i for i in r.users},
                     {i.id: i for i in r.chats},
                 )
-        else:
-            return True
+        return True

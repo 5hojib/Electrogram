@@ -18,12 +18,11 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Dict
-from typing import Optional
+from typing import Dict, Optional
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types
+from pyrogram import raw, types, utils
+
 from ..object import Object
 
 
@@ -110,11 +109,7 @@ class ChatInviteLink(Object):
         if not isinstance(invite, raw.types.ChatInviteExported):
             return None
 
-        creator = (
-            types.User._parse(client, users[invite.admin_id])
-            if users is not None
-            else None
-        )
+        creator = types.User._parse(client, users[invite.admin_id]) if users is not None else None
 
         return ChatInviteLink(
             invite_link=invite.link,

@@ -18,8 +18,8 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
+
 from ..object import Object
 
 
@@ -156,12 +156,8 @@ class WebPage(Object):
                 audio = types.Audio._parse(client, doc, audio_attributes, file_name)
 
             elif raw.types.DocumentAttributeAnimated in attributes:
-                video_attributes = attributes.get(
-                    raw.types.DocumentAttributeVideo, None
-                )
-                animation = types.Animation._parse(
-                    client, doc, video_attributes, file_name
-                )
+                video_attributes = attributes.get(raw.types.DocumentAttributeVideo, None)
+                animation = types.Animation._parse(client, doc, video_attributes, file_name)
 
             elif raw.types.DocumentAttributeVideo in attributes:
                 video_attributes = attributes[raw.types.DocumentAttributeVideo]

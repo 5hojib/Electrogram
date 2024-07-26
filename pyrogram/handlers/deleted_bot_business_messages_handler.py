@@ -17,11 +17,12 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import List, Callable
+from typing import Callable, List
 
 import pyrogram
 from pyrogram.filters import Filter
 from pyrogram.types import Message
+
 from .handler import Handler
 
 
@@ -58,5 +59,4 @@ class DeletedBotBusinessMessagesHandler(Handler):
         for message in messages:
             if await super().check(client, message):
                 return True
-        else:
-            return False
+        return False

@@ -17,7 +17,6 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 import pyrogram
-
 from pyrogram import raw, types, utils
 
 from .media_area import MediaArea
@@ -57,9 +56,7 @@ class MediaAreaChannelPost(MediaArea):
             client,
             (
                 await client.invoke(
-                    raw.functions.channels.GetChannels(
-                        id=[await client.resolve_peer(channel_id)]
-                    )
+                    raw.functions.channels.GetChannels(id=[await client.resolve_peer(channel_id)])
                 )
             ).chats[0],
         )

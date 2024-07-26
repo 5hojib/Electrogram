@@ -17,6 +17,7 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from enum import auto
+
 from .auto_name import AutoName
 
 

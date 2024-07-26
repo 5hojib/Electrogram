@@ -18,8 +18,8 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 import inspect
-import pyrogram
 
+import pyrogram
 from pyrogram.errors import ListenerStopped
 from pyrogram.types import Listener
 from pyrogram.utils import PyromodConfig

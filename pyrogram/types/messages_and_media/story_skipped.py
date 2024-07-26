@@ -16,11 +16,12 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-import pyrogram
-
 from datetime import datetime
-from pyrogram import raw, types, utils
 from typing import Union
+
+import pyrogram
+from pyrogram import raw, types, utils
+
 from ..object import Object
 from ..update import Update
 

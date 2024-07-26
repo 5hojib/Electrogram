@@ -26,27 +26,25 @@ import platform
 import re
 import shutil
 import sys
+from collections.abc import AsyncGenerator
 from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime, timedelta
 from hashlib import sha256
 from importlib import import_module
-from io import StringIO, BytesIO
+from io import BytesIO, StringIO
 from mimetypes import MimeTypes
 from pathlib import Path
-from typing import Union, List, Optional, Callable, AsyncGenerator, Type
+from typing import Callable, List, Optional, Union
 
 import pyrogram
-from pyrogram import __version__, __license__
-from pyrogram import enums
-from pyrogram import raw
-from pyrogram import utils
+from pyrogram import __license__, __version__, enums, raw, utils
 from pyrogram.crypto import aes
-from pyrogram.errors import CDNFileHashMismatch
 from pyrogram.errors import (
+    BadRequest,
+    CDNFileHashMismatch,
+    ChannelPrivate,
     SessionPasswordNeeded,
     VolumeLocNotFound,
-    ChannelPrivate,
-    BadRequest,
 )
 from pyrogram.handlers.handler import Handler
 from pyrogram.methods import Methods
@@ -54,18 +52,18 @@ from pyrogram.session import Auth, Session
 from pyrogram.storage import FileStorage, MemoryStorage, Storage
 
 try:
-    import pymongo
+    pass
 except Exception:
     pass
 else:
     from pyrogram.storage import MongoStorage
-from pyrogram.types import User, TermsOfService
+from pyrogram.types import TermsOfService, User
 from pyrogram.utils import ainput
+
 from .connection import Connection
-from .connection.transport import TCP, TCPAbridged
+from .connection.transport import TCPAbridged
 from .dispatcher import Dispatcher
 from .file_id import FileId, FileType, ThumbnailSource
-from .filters import Filter
 from .mime_types import mime_types
 from .parser import Parser
 from .session.internals import MsgId
@@ -309,9 +307,7 @@ class Client(Methods):
         self.client_platform = client_platform
         self.max_message_cache_size = max_message_cache_size
         self.max_message_cache_size = max_message_cache_size
-        self.max_business_user_connection_cache_size = (
-            max_business_user_connection_cache_size
-        )
+        self.max_business_user_connection_cache_size = max_business_user_connection_cache_size
 
         self.executor = ThreadPoolExecutor(self.workers, thread_name_prefix="Handler")
 
@@ -323,11 +319,9 @@ class Client(Methods):
             self.storage = MemoryStorage(self.name)
         elif self.mongodb:
             try:
-                import pymongo
+                pass
             except Exception:
-                log.warning(
-                    "pymongo is missing! " "Using MemoryStorage as session storage"
-                )
+                log.warning("pymongo is missing! " "Using MemoryStorage as session storage")
                 self.storage = MemoryStorage(self.name)
             else:
                 self.storage = MongoStorage(self.name, **self.mongodb)
@@ -361,9 +355,7 @@ class Client(Methods):
         self.me: Optional[User] = None
 
         self.message_cache = Cache(self.max_message_cache_size)
-        self.business_user_connection_cache = Cache(
-            self.max_business_user_connection_cache_size
-        )
+        self.business_user_connection_cache = Cache(self.max_business_user_connection_cache_size)
 
         # Sometimes, for some reason, the server will stop sending updates and will only respond to pings.
         # This watchdog will invoke updates.GetState in order to wake up the server and enable it sending updates again
@@ -371,9 +363,7 @@ class Client(Methods):
         self.updates_watchdog_task = None
         self.updates_watchdog_event = asyncio.Event()
         self.last_update_time = datetime.now()
-        self.listeners = {
-            listener_type: [] for listener_type in pyrogram.enums.ListenerTypes
-        }
+        self.listeners = {listener_type: [] for listener_type in pyrogram.enums.ListenerTypes}
         self.loop = asyncio.get_event_loop()
 
     def __enter__(self):
@@ -429,9 +419,7 @@ class Client(Methods):
                         if not value:
                             continue
 
-                        confirm = (
-                            await ainput(f'Is "{value}" correct? (y/N): ')
-                        ).lower()
+                        confirm = (await ainput(f'Is "{value}" correct? (y/N): ')).lower()
 
                         if confirm == "y":
                             break
@@ -459,9 +447,7 @@ class Client(Methods):
             enums.SentCodeType.EMAIL_CODE: "email code",
         }
 
-        print(
-            f"The confirmation code has been sent via {sent_code_descriptions[sent_code.type]}"
-        )
+        print(f"The confirmation code has been sent via {sent_code_descriptions[sent_code.type]}")
 
         while True:
             if not self.phone_code:
@@ -492,19 +478,13 @@ class Client(Methods):
 
                             if confirm == "y":
                                 email_pattern = await self.send_recovery_code()
-                                print(
-                                    f"The recovery code has been sent to {email_pattern}"
-                                )
+                                print(f"The recovery code has been sent to {email_pattern}")
 
                                 while True:
-                                    recovery_code = await ainput(
-                                        "Enter recovery code: "
-                                    )
+                                    recovery_code = await ainput("Enter recovery code: ")
 
                                     try:
-                                        return await self.recover_password(
-                                            recovery_code
-                                        )
+                                        return await self.recover_password(recovery_code)
                                     except BadRequest as e:
                                         print(e.MESSAGE)
                                     except Exception as e:
@@ -635,9 +615,7 @@ class Client(Methods):
             else:
                 continue
 
-            parsed_peers.append(
-                (peer_id, access_hash, peer_type, username, phone_number)
-            )
+            parsed_peers.append((peer_id, access_hash, peer_type, username, phone_number))
 
         await self.storage.update_peers(parsed_peers)
         await self.storage.update_usernames(usernames)
@@ -707,16 +685,12 @@ class Client(Methods):
                         except ChannelPrivate:
                             pass
                         else:
-                            if not isinstance(
-                                diff, raw.types.updates.ChannelDifferenceEmpty
-                            ):
+                            if not isinstance(diff, raw.types.updates.ChannelDifferenceEmpty):
                                 users.update({u.id: u for u in diff.users})
                                 chats.update({c.id: c for c in diff.chats})
 
                 self.dispatcher.updates_queue.put_nowait((update, users, chats))
-        elif isinstance(
-            updates, (raw.types.UpdateShortMessage, raw.types.UpdateShortChatMessage)
-        ):
+        elif isinstance(updates, (raw.types.UpdateShortMessage, raw.types.UpdateShortChatMessage)):
             await self.storage.update_state((0, updates.pts, None, updates.date, None))
 
             diff = await self.invoke(
@@ -737,11 +711,8 @@ class Client(Methods):
                         {c.id: c for c in diff.chats},
                     )
                 )
-            else:
-                if diff.other_updates:  # The other_updates list can be empty
-                    self.dispatcher.updates_queue.put_nowait(
-                        (diff.other_updates[0], {}, {})
-                    )
+            elif diff.other_updates:  # The other_updates list can be empty
+                self.dispatcher.updates_queue.put_nowait((diff.other_updates[0], {}, {}))
         elif isinstance(updates, raw.types.UpdateShort):
             self.dispatcher.updates_queue.put_nowait((updates.update, {}, {}))
         elif isinstance(updates, raw.types.UpdatesTooLong):
@@ -779,31 +750,25 @@ class Client(Methods):
             )
             await self.storage.user_id(None)
             await self.storage.is_bot(None)
-        else:
-            # Needed for migration from storage v2 to v3
-            if not await self.storage.api_id():
-                if self.api_id:
-                    await self.storage.api_id(self.api_id)
-                else:
-                    while True:
-                        try:
-                            value = int(
-                                await ainput("Enter the api_id part of the API key: ")
-                            )
+        elif not await self.storage.api_id():
+            if self.api_id:
+                await self.storage.api_id(self.api_id)
+            else:
+                while True:
+                    try:
+                        value = int(await ainput("Enter the api_id part of the API key: "))
 
-                            if value <= 0:
-                                print("Invalid value")
-                                continue
+                        if value <= 0:
+                            print("Invalid value")
+                            continue
 
-                            confirm = (
-                                await ainput(f'Is "{value}" correct? (y/N): ')
-                            ).lower()
+                        confirm = (await ainput(f'Is "{value}" correct? (y/N): ')).lower()
 
-                            if confirm == "y":
-                                await self.storage.api_id(value)
-                                break
-                        except Exception as e:
-                            print(e)
+                        if confirm == "y":
+                            await self.storage.api_id(value)
+                            break
+                    except Exception as e:
+                        print(e)
 
     def load_plugins(self):
         if self.plugins:
@@ -812,8 +777,7 @@ class Client(Methods):
             for option in ["include", "exclude"]:
                 if plugins.get(option, []):
                     plugins[option] = [
-                        (i.split()[0], i.split()[1:] or None)
-                        for i in self.plugins[option]
+                        (i.split()[0], i.split()[1:] or None) for i in self.plugins[option]
                     ]
         else:
             return
@@ -834,9 +798,7 @@ class Client(Methods):
                         # noinspection PyBroadException
                         try:
                             for handler, group in getattr(module, name).handlers:
-                                if isinstance(handler, Handler) and isinstance(
-                                    group, int
-                                ):
+                                if isinstance(handler, Handler) and isinstance(group, int):
                                     self.add_handler(handler, group)
 
                                     log.info(
@@ -877,9 +839,7 @@ class Client(Methods):
                         # noinspection PyBroadException
                         try:
                             for handler, group in getattr(module, name).handlers:
-                                if isinstance(handler, Handler) and isinstance(
-                                    group, int
-                                ):
+                                if isinstance(handler, Handler) and isinstance(group, int):
                                     self.add_handler(handler, group)
 
                                     log.info(
@@ -924,9 +884,7 @@ class Client(Methods):
                         # noinspection PyBroadException
                         try:
                             for handler, group in getattr(module, name).handlers:
-                                if isinstance(handler, Handler) and isinstance(
-                                    group, int
-                                ):
+                                if isinstance(handler, Handler) and isinstance(group, int):
                                     self.remove_handler(handler, group)
 
                                     log.info(
@@ -950,21 +908,16 @@ class Client(Methods):
                 log.warning('[%s] No plugin loaded from "%s"', self.name, root)
 
     async def handle_download(self, packet):
-        file_id, directory, file_name, in_memory, file_size, progress, progress_args = (
-            packet
-        )
+        file_id, directory, file_name, in_memory, file_size, progress, progress_args = packet
 
         os.makedirs(directory, exist_ok=True) if not in_memory else None
         temp_file_path = (
-            os.path.abspath(re.sub("\\\\", "/", os.path.join(directory, file_name)))
-            + ".temp"
+            os.path.abspath(re.sub("\\\\", "/", os.path.join(directory, file_name))) + ".temp"
         )
         file = BytesIO() if in_memory else open(temp_file_path, "wb")
 
         try:
-            async for chunk in self.get_file(
-                file_id, file_size, 0, 0, progress, progress_args
-            ):
+            async for chunk in self.get_file(file_id, file_size, 0, 0, progress, progress_args):
                 file.write(chunk)
         except BaseException as e:
             if not in_memory:
@@ -1005,14 +958,13 @@ class Client(Methods):
                     peer = raw.types.InputPeerUser(
                         user_id=file_id.chat_id, access_hash=file_id.chat_access_hash
                     )
+                elif file_id.chat_access_hash == 0:
+                    peer = raw.types.InputPeerChat(chat_id=-file_id.chat_id)
                 else:
-                    if file_id.chat_access_hash == 0:
-                        peer = raw.types.InputPeerChat(chat_id=-file_id.chat_id)
-                    else:
-                        peer = raw.types.InputPeerChannel(
-                            channel_id=utils.get_channel_id(file_id.chat_id),
-                            access_hash=file_id.chat_access_hash,
-                        )
+                    peer = raw.types.InputPeerChannel(
+                        channel_id=utils.get_channel_id(file_id.chat_id),
+                        access_hash=file_id.chat_access_hash,
+                    )
 
                 location = raw.types.InputPeerPhotoFileLocation(
                     peer=peer,
@@ -1084,9 +1036,7 @@ class Client(Methods):
                         if progress:
                             func = functools.partial(
                                 progress,
-                                min(offset_bytes, file_size)
-                                if file_size != 0
-                                else offset_bytes,
+                                min(offset_bytes, file_size) if file_size != 0 else offset_bytes,
                                 file_size,
                                 *progress_args,
                             )
@@ -1110,9 +1060,7 @@ class Client(Methods):
                     cdn_session = Session(
                         self,
                         r.dc_id,
-                        await Auth(
-                            self, r.dc_id, await self.storage.test_mode()
-                        ).create(),
+                        await Auth(self, r.dc_id, await self.storage.test_mode()).create(),
                         await self.storage.test_mode(),
                         is_media=True,
                         is_cdn=True,
@@ -1150,8 +1098,7 @@ class Client(Methods):
                                 chunk,
                                 r.encryption_key,
                                 bytearray(
-                                    r.encryption_iv[:-4]
-                                    + (offset_bytes // 16).to_bytes(4, "big")
+                                    r.encryption_iv[:-4] + (offset_bytes // 16).to_bytes(4, "big")
                                 ),
                             )
 
@@ -1163,9 +1110,7 @@ class Client(Methods):
 
                             # https://core.telegram.org/cdn#verifying-files
                             for i, h in enumerate(hashes):
-                                cdn_chunk = decrypted_chunk[
-                                    h.limit * i : h.limit * (i + 1)
-                                ]
+                                cdn_chunk = decrypted_chunk[h.limit * i : h.limit * (i + 1)]
                                 CDNFileHashMismatch.check(
                                     h.hash == sha256(cdn_chunk).digest(),
                                     "h.hash == sha256(cdn_chunk).digest()",

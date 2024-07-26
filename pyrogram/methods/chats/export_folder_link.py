@@ -43,7 +43,7 @@ class ExportFolderLink:
         folder = await self.get_folders(folder_id)
 
         if not folder:
-            return
+            return None
 
         peers = []
 

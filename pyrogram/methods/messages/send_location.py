@@ -18,11 +18,10 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import List, Union, Optional
+from typing import List, Optional, Union
 
 import pyrogram
-from pyrogram import enums, raw, utils
-from pyrogram import types
+from pyrogram import enums, raw, types, utils
 
 
 class SendLocation:

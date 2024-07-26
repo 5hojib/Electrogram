@@ -20,11 +20,11 @@
 import asyncio
 import os
 from datetime import datetime
-from typing import Union, Optional, Callable, BinaryIO
+from typing import BinaryIO, Callable, Optional, Union
 
 import pyrogram
 from pyrogram import types
-from pyrogram.file_id import FileId, FileType, PHOTO_TYPES
+from pyrogram.file_id import PHOTO_TYPES, FileId, FileType
 
 DEFAULT_DOWNLOAD_DIR = "downloads/"
 

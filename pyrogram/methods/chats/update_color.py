@@ -19,8 +19,7 @@
 from typing import Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import enums
+from pyrogram import enums, raw
 
 
 class UpdateColor:

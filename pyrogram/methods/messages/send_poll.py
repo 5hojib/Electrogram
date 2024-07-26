@@ -18,11 +18,10 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Union, List, Optional
+from typing import List, Optional, Union
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types, enums
+from pyrogram import enums, raw, types, utils
 
 
 class SendPoll:
@@ -202,9 +201,7 @@ class SendPoll:
             )
         ).values()
         q, q_entities = (
-            await pyrogram.utils.parse_text_entities(
-                self, question, None, question_entities
-            )
+            await pyrogram.utils.parse_text_entities(self, question, None, question_entities)
         ).values()
 
         rpc = raw.functions.messages.SendMedia(
@@ -212,13 +209,11 @@ class SendPoll:
             media=raw.types.InputMediaPoll(
                 poll=raw.types.Poll(
                     id=self.rnd_id(),
-                    question=raw.types.TextWithEntities(
-                        text=q, entities=q_entities or []
-                    ),
+                    question=raw.types.TextWithEntities(text=q, entities=q_entities or []),
                     answers=[
-                        await types.PollOption(
-                            text=option.text, entities=option.entities
-                        ).write(self, i)
+                        await types.PollOption(text=option.text, entities=option.entities).write(
+                            self, i
+                        )
                         for i, option in enumerate(options)
                     ],
                     closed=is_closed,

@@ -21,10 +21,10 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Union, List
+from typing import List, Union
 
 import pyrogram
-from pyrogram import types, utils, raw
+from pyrogram import raw, types, utils
 
 
 class CopyMediaGroup:
@@ -130,15 +130,13 @@ class CopyMediaGroup:
                     random_id=self.rnd_id(),
                     **await self.parser.parse(
                         captions[i]
-                        if isinstance(captions, list)
-                        and i < len(captions)
-                        and captions[i]
+                        if isinstance(captions, list) and i < len(captions) and captions[i]
                         else captions
                         if isinstance(captions, str) and i == 0
                         else message.caption
                         if message.caption
                         and message.caption != "None"
-                        and not type(captions) is str
+                        and type(captions) is not str
                         else ""
                     ),
                 )

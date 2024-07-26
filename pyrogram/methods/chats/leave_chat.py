@@ -24,9 +24,7 @@ from pyrogram import raw
 
 
 class LeaveChat:
-    async def leave_chat(
-        self: "pyrogram.Client", chat_id: Union[int, str], delete: bool = False
-    ):
+    async def leave_chat(self: "pyrogram.Client", chat_id: Union[int, str], delete: bool = False):
         """Leave a group chat or channel.
 
         .. include:: /_includes/usable-by/users-bots.rst
@@ -56,9 +54,7 @@ class LeaveChat:
 
         if isinstance(peer, raw.types.InputPeerChannel):
             return await self.invoke(
-                raw.functions.channels.LeaveChannel(
-                    channel=await self.resolve_peer(chat_id)
-                )
+                raw.functions.channels.LeaveChannel(channel=await self.resolve_peer(chat_id))
             )
         elif isinstance(peer, raw.types.InputPeerChat):
             r = await self.invoke(
@@ -68,8 +64,6 @@ class LeaveChat:
             )
 
             if delete:
-                await self.invoke(
-                    raw.functions.messages.DeleteHistory(peer=peer, max_id=0)
-                )
+                await self.invoke(raw.functions.messages.DeleteHistory(peer=peer, max_id=0))
 
             return r

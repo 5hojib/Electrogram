@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, Optional
+from typing import Optional, Union
 
 import pyrogram
 from pyrogram import raw, utils
@@ -73,11 +73,7 @@ class RequestCallbackAnswer:
         """
 
         # Telegram only wants bytes, but we are allowed to pass strings too.
-        data = (
-            bytes(callback_data, "utf-8")
-            if isinstance(callback_data, str)
-            else callback_data
-        )
+        data = bytes(callback_data, "utf-8") if isinstance(callback_data, str) else callback_data
 
         if password:
             r = await self.invoke(raw.functions.account.GetPassword())

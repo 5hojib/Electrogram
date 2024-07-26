@@ -20,7 +20,7 @@
 from typing import Union
 
 import pyrogram
-from pyrogram import raw, enums
+from pyrogram import enums, raw
 
 
 class SearchMessagesCount:

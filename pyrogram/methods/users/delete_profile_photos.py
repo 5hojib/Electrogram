@@ -20,8 +20,7 @@
 from typing import List, Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import utils
+from pyrogram import raw, utils
 from pyrogram.file_id import FileType
 
 
@@ -58,6 +57,4 @@ class DeleteProfilePhotos:
             utils.get_input_media_from_file_id(i, FileType.PHOTO).id for i in photo_ids
         ]
 
-        return bool(
-            await self.invoke(raw.functions.photos.DeletePhotos(id=input_photos))
-        )
+        return bool(await self.invoke(raw.functions.photos.DeletePhotos(id=input_photos)))

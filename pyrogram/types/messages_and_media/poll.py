@@ -18,11 +18,11 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import List, Union, Optional
+from typing import List, Optional, Union
 
 import pyrogram
-from pyrogram import raw, enums, utils
-from pyrogram import types
+from pyrogram import enums, raw, types, utils
+
 from ..object import Object
 from ..update import Update
 
@@ -151,10 +151,7 @@ class Poll(Object, Update):
                     correct_option_id = i
 
             o_entities = (
-                [
-                    types.MessageEntity._parse(client, entity, {})
-                    for entity in answer.text.entities
-                ]
+                [types.MessageEntity._parse(client, entity, {}) for entity in answer.text.entities]
                 if answer.text.entities
                 else []
             )
@@ -171,10 +168,7 @@ class Poll(Object, Update):
             )
 
         q_entities = (
-            [
-                types.MessageEntity._parse(client, entity, {})
-                for entity in poll.question.entities
-            ]
+            [types.MessageEntity._parse(client, entity, {}) for entity in poll.question.entities]
             if poll.question.entities
             else []
         )
@@ -194,16 +188,14 @@ class Poll(Object, Update):
             correct_option_id=correct_option_id,
             explanation=poll_results.solution,
             explanation_entities=[
-                types.MessageEntity._parse(client, i, {})
-                for i in poll_results.solution_entities
+                types.MessageEntity._parse(client, i, {}) for i in poll_results.solution_entities
             ]
             if poll_results.solution_entities
             else None,
             open_period=poll.close_period,
             close_date=utils.timestamp_to_datetime(poll.close_date),
             recent_voters=[
-                await client.get_users(user.user_id)
-                for user in poll_results.recent_voters
+                await client.get_users(user.user_id) for user in poll_results.recent_voters
             ]
             if poll_results.recent_voters
             else None,

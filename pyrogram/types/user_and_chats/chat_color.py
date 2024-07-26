@@ -18,8 +18,8 @@
 
 from typing import Optional, Union
 
-from pyrogram import raw
-from pyrogram import enums
+from pyrogram import enums, raw
+
 from ..object import Object
 
 
@@ -49,9 +49,7 @@ class ChatColor(Object):
             return None
 
         return ChatColor(
-            color=enums.ReplyColor(color.color)
-            if getattr(color, "color", None)
-            else None,
+            color=enums.ReplyColor(color.color) if getattr(color, "color", None) else None,
             background_emoji_id=getattr(color, "background_emoji_id", None),
         )
 
@@ -63,8 +61,6 @@ class ChatColor(Object):
             return None
 
         return ChatColor(
-            color=enums.ProfileColor(color.color)
-            if getattr(color, "color", None)
-            else None,
+            color=enums.ProfileColor(color.color) if getattr(color, "color", None) else None,
             background_emoji_id=getattr(color, "background_emoji_id", None),
         )

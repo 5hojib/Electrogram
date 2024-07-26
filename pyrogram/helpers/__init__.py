@@ -14,4 +14,4 @@ You should have received a copy of the GNU General Public License
 along with pyromod.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from .helpers import ikb, bki, ntb, btn, kb, kbtn, array_chunk, force_reply
+from .helpers import array_chunk, bki, btn, force_reply, ikb, kb, kbtn, ntb

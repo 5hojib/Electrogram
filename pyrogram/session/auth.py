@@ -28,9 +28,10 @@ from typing import Optional
 import pyrogram
 from pyrogram import raw
 from pyrogram.connection import Connection
-from pyrogram.crypto import aes, rsa, prime
+from pyrogram.crypto import aes, prime, rsa
 from pyrogram.errors import SecurityCheckMismatch
-from pyrogram.raw.core import TLObject, Long, Int
+from pyrogram.raw.core import Int, Long, TLObject
+
 from .internals import MsgId
 
 log = logging.getLogger(__name__)
@@ -175,9 +176,7 @@ class Auth:
 
                 server_nonce = int.from_bytes(server_nonce, "little", signed=True)
 
-                answer_with_hash = aes.ige256_decrypt(
-                    encrypted_answer, tmp_aes_key, tmp_aes_iv
-                )
+                answer_with_hash = aes.ige256_decrypt(encrypted_answer, tmp_aes_key, tmp_aes_iv)
                 answer = answer_with_hash[20:]
 
                 server_dh_inner_data = TLObject.read(BytesIO(answer))
@@ -203,9 +202,7 @@ class Auth:
                 sha = sha1(data).digest()
                 padding = urandom(-(len(data) + len(sha)) % 16)
                 data_with_hash = sha + data + padding
-                encrypted_data = aes.ige256_encrypt(
-                    data_with_hash, tmp_aes_key, tmp_aes_iv
-                )
+                encrypted_data = aes.ige256_encrypt(data_with_hash, tmp_aes_key, tmp_aes_iv)
 
                 log.debug("Send set_client_DH_params")
                 set_client_dh_params_answer = await self.invoke(
@@ -237,15 +234,9 @@ class Auth:
 
                 # https://core.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
                 g_b = int.from_bytes(g_b, "big")
-                SecurityCheckMismatch.check(
-                    1 < g < dh_prime - 1, "1 < g < dh_prime - 1"
-                )
-                SecurityCheckMismatch.check(
-                    1 < g_a < dh_prime - 1, "1 < g_a < dh_prime - 1"
-                )
-                SecurityCheckMismatch.check(
-                    1 < g_b < dh_prime - 1, "1 < g_b < dh_prime - 1"
-                )
+                SecurityCheckMismatch.check(1 < g < dh_prime - 1, "1 < g < dh_prime - 1")
+                SecurityCheckMismatch.check(1 < g_a < dh_prime - 1, "1 < g_a < dh_prime - 1")
+                SecurityCheckMismatch.check(1 < g_b < dh_prime - 1, "1 < g_b < dh_prime - 1")
                 SecurityCheckMismatch.check(
                     2 ** (2048 - 64) < g_a < dh_prime - 2 ** (2048 - 64),
                     "2 ** (2048 - 64) < g_a < dh_prime - 2 ** (2048 - 64)",
@@ -266,9 +257,7 @@ class Auth:
 
                 # https://core.telegram.org/mtproto/security_guidelines#checking-nonce-server-nonce-and-new-nonce-fields
                 # 1st message
-                SecurityCheckMismatch.check(
-                    nonce == res_pq.nonce, "nonce == res_pq.nonce"
-                )
+                SecurityCheckMismatch.check(nonce == res_pq.nonce, "nonce == res_pq.nonce")
                 # 2nd message
                 server_nonce = int.from_bytes(server_nonce, "little", signed=True)
                 SecurityCheckMismatch.check(

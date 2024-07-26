@@ -18,14 +18,13 @@
 
 import os
 import re
-
 from datetime import datetime
+from typing import List, Optional, Union
+
 from pymediainfo import MediaInfo
-from typing import Union, List, Optional
 
 import pyrogram
-from pyrogram import raw, utils, enums
-from pyrogram import types
+from pyrogram import enums, raw, types, utils
 from pyrogram.file_id import FileType
 
 
@@ -141,9 +140,7 @@ class SendPaidMedia:
                             spoiler=i.has_spoiler,
                         )
                     else:
-                        media = utils.get_input_media_from_file_id(
-                            i.media, FileType.PHOTO
-                        )
+                        media = utils.get_input_media_from_file_id(i.media, FileType.PHOTO)
                 else:
                     media = await self.invoke(
                         raw.functions.messages.UploadMedia(
@@ -163,9 +160,7 @@ class SendPaidMedia:
                         ),
                         spoiler=i.has_spoiler,
                     )
-            elif isinstance(i, types.InputMediaVideo) or isinstance(
-                i, types.InputMediaAnimation
-            ):
+            elif isinstance(i, types.InputMediaVideo) or isinstance(i, types.InputMediaAnimation):
                 if isinstance(i.media, str):
                     is_animation = False
                     if os.path.isfile(i.media):
@@ -173,16 +168,11 @@ class SendPaidMedia:
                             videoInfo = MediaInfo.parse(i.media)
                         except OSError:
                             is_animation = (
-                                True
-                                if isinstance(i, types.InputMediaAnimation)
-                                else False
+                                True if isinstance(i, types.InputMediaAnimation) else False
                             )
                         else:
                             if not any(
-                                [
-                                    track.track_type == "Audio"
-                                    for track in videoInfo.tracks
-                                ]
+                                [track.track_type == "Audio" for track in videoInfo.tracks]
                             ):
                                 is_animation = True
                         attributes = [
@@ -207,8 +197,7 @@ class SendPaidMedia:
                                     file=await self.save_file(i.media),
                                     thumb=await self.save_file(i.thumb),
                                     spoiler=i.has_spoiler,
-                                    mime_type=self.guess_mime_type(i.media)
-                                    or "video/mp4",
+                                    mime_type=self.guess_mime_type(i.media) or "video/mp4",
                                     nosound_video=is_animation,
                                     attributes=attributes,
                                 ),
@@ -242,9 +231,7 @@ class SendPaidMedia:
                             spoiler=i.has_spoiler,
                         )
                     else:
-                        media = utils.get_input_media_from_file_id(
-                            i.media, FileType.VIDEO
-                        )
+                        media = utils.get_input_media_from_file_id(i.media, FileType.VIDEO)
                 else:
                     media = await self.invoke(
                         raw.functions.messages.UploadMedia(
@@ -296,9 +283,7 @@ class SendPaidMedia:
             schedule_date=utils.datetime_to_timestamp(schedule_date),
             noforwards=protect_content,
             invert_media=invert_media,
-            **await utils.parse_text_entities(
-                self, caption, parse_mode, caption_entities
-            ),
+            **await utils.parse_text_entities(self, caption, parse_mode, caption_entities),
         )
         r = await self.invoke(rpc, sleep_threshold=60)
 

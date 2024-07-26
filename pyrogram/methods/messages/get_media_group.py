@@ -18,7 +18,7 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-from typing import Union, List
+from typing import List, Union
 
 import pyrogram
 from pyrogram import types
@@ -74,6 +74,4 @@ class GetMediaGroup:
         if media_group_id is None:
             raise ValueError("The message doesn't belong to a media group")
 
-        return types.List(
-            msg for msg in messages if msg.media_group_id == media_group_id
-        )
+        return types.List(msg for msg in messages if msg.media_group_id == media_group_id)

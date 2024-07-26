@@ -18,7 +18,8 @@
 
 from typing import List
 
-from pyrogram import types, raw
+from pyrogram import raw, types
+
 from ..object import Object
 
 
@@ -72,10 +73,7 @@ class BusinessRecipients(Object):
             contacts=getattr(recipients, "contacts", None),
             non_contacts=getattr(recipients, "non_contacts", None),
             exclude_selected=getattr(recipients, "exclude_selected", None),
-            users=types.List(
-                types.User._parse(client, users[i]) for i in recipients.users
-            )
-            or None
+            users=types.List(types.User._parse(client, users[i]) for i in recipients.users) or None
             if getattr(recipients, "users", None)
             else None,
         )

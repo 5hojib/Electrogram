@@ -20,8 +20,7 @@
 from typing import Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class SetChatPermissions:
@@ -192,9 +191,7 @@ class SetChatPermissions:
                 else:
                     send_plain = True
                 if permissions.can_send_media_messages is None:
-                    permissions.can_send_media_messages = (
-                        old_permissions.can_send_media_messages
-                    )
+                    permissions.can_send_media_messages = old_permissions.can_send_media_messages
             if permissions.can_send_media_messages is not None:
                 if permissions.can_send_media_messages:
                     embed_links = False

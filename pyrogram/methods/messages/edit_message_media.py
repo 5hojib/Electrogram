@@ -23,9 +23,7 @@ import re
 from typing import Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
-from pyrogram import utils
+from pyrogram import raw, types, utils
 from pyrogram.file_id import FileType
 
 
@@ -240,17 +238,14 @@ class EditMessageMedia:
                     url=media.media, spoiler=media.has_spoiler
                 )
             else:
-                media = utils.get_input_media_from_file_id(
-                    media.media, FileType.ANIMATION
-                )
+                media = utils.get_input_media_from_file_id(media.media, FileType.ANIMATION)
         elif isinstance(media, types.InputMediaDocument):
             if isinstance(media.media, io.BytesIO) or os.path.isfile(media.media):
                 media = await self.invoke(
                     raw.functions.messages.UploadMedia(
                         peer=await self.resolve_peer(chat_id),
                         media=raw.types.InputMediaUploadedDocument(
-                            mime_type=self.guess_mime_type(media.media)
-                            or "application/zip",
+                            mime_type=self.guess_mime_type(media.media) or "application/zip",
                             thumb=await self.save_file(media.thumb),
                             file=await self.save_file(media.media),
                             attributes=[
@@ -272,9 +267,7 @@ class EditMessageMedia:
             elif re.match("^https?://", media.media):
                 media = raw.types.InputMediaDocumentExternal(url=media.media)
             else:
-                media = utils.get_input_media_from_file_id(
-                    media.media, FileType.DOCUMENT
-                )
+                media = utils.get_input_media_from_file_id(media.media, FileType.DOCUMENT)
 
         rpc = raw.functions.messages.EditMessage(
             peer=await self.resolve_peer(chat_id),
@@ -295,9 +288,7 @@ class EditMessageMedia:
             r = await self.invoke(rpc)
 
         for i in r.updates:
-            if isinstance(
-                i, (raw.types.UpdateEditMessage, raw.types.UpdateEditChannelMessage)
-            ):
+            if isinstance(i, (raw.types.UpdateEditMessage, raw.types.UpdateEditChannelMessage)):
                 return await types.Message._parse(
                     self,
                     i.message,

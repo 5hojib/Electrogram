@@ -17,11 +17,11 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, Optional
+from typing import Optional, Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
+
 from ..object import Object
 
 
@@ -129,9 +129,7 @@ class InlineKeyboardButton(Object):
 
         if isinstance(b, raw.types.KeyboardButtonSwitchInline):
             if b.same_peer:
-                return InlineKeyboardButton(
-                    text=b.text, switch_inline_query_current_chat=b.query
-                )
+                return InlineKeyboardButton(text=b.text, switch_inline_query_current_chat=b.query)
             else:
                 return InlineKeyboardButton(text=b.text, switch_inline_query=b.query)
 
@@ -139,9 +137,7 @@ class InlineKeyboardButton(Object):
             return InlineKeyboardButton(text=b.text, callback_game=types.CallbackGame())
 
         if isinstance(b, raw.types.KeyboardButtonWebView):
-            return InlineKeyboardButton(
-                text=b.text, web_app=types.WebAppInfo(url=b.url)
-            )
+            return InlineKeyboardButton(text=b.text, web_app=types.WebAppInfo(url=b.url))
 
         if isinstance(b, raw.types.KeyboardButtonBuy):
             return types.InlineKeyboardButtonBuy.read(b)

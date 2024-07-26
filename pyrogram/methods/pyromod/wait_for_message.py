@@ -18,10 +18,10 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 import asyncio
-import pyrogram
-from typing import Union
 from functools import partial
+from typing import Union
 
+import pyrogram
 from pyrogram import types
 from pyrogram.filters import Filter
 

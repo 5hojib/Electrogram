@@ -17,7 +17,8 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, Iterable
+from collections.abc import Iterable
+from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -66,9 +67,7 @@ class DeleteMessages:
                 await app.delete_messages(chat_id, message_id, revoke=False)
         """
         peer = await self.resolve_peer(chat_id)
-        message_ids = (
-            list(message_ids) if not isinstance(message_ids, int) else [message_ids]
-        )
+        message_ids = list(message_ids) if not isinstance(message_ids, int) else [message_ids]
 
         if isinstance(peer, raw.types.InputPeerChannel):
             r = await self.invoke(

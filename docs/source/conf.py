@@ -22,14 +22,14 @@ import sys
 
 sys.path.insert(0, os.path.abspath("../.."))
 
-from pyrogram import __version__
-
 from pygments.styles.friendly import FriendlyStyle
+
+from pyrogram import __version__
 
 FriendlyStyle.background_color = "#f3f2f1"
 
 project = "Pyrofork"
-copyright = f"2022-present, Mayuri-Chan"
+copyright = "2022-present, Mayuri-Chan"
 author = "Mayuri-Chan"
 
 version = ".".join(__version__.split(".")[:-1])

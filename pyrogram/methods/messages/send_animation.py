@@ -20,13 +20,10 @@
 import os
 import re
 from datetime import datetime
-from typing import Union, BinaryIO, List, Optional, Callable
+from typing import BinaryIO, Callable, List, Optional, Union
 
 import pyrogram
-from pyrogram import StopTransmission, enums
-from pyrogram import raw
-from pyrogram import types
-from pyrogram import utils
+from pyrogram import StopTransmission, enums, raw, types, utils
 from pyrogram.errors import FilePartMissing
 from pyrogram.file_id import FileType
 
@@ -257,9 +254,7 @@ class SendAnimation:
                         url=animation, spoiler=has_spoiler
                     )
                 else:
-                    media = utils.get_input_media_from_file_id(
-                        animation, FileType.ANIMATION
-                    )
+                    media = utils.get_input_media_from_file_id(animation, FileType.ANIMATION)
                     media.spoiler = has_spoiler
             else:
                 thumb = await self.save_file(thumb)
@@ -267,8 +262,7 @@ class SendAnimation:
                     animation, progress=progress, progress_args=progress_args
                 )
                 media = raw.types.InputMediaUploadedDocument(
-                    mime_type=self.guess_mime_type(file_name or animation.name)
-                    or "video/mp4",
+                    mime_type=self.guess_mime_type(file_name or animation.name) or "video/mp4",
                     file=file,
                     thumb=thumb,
                     spoiler=has_spoiler,
@@ -279,9 +273,7 @@ class SendAnimation:
                             w=width,
                             h=height,
                         ),
-                        raw.types.DocumentAttributeFilename(
-                            file_name=file_name or animation.name
-                        ),
+                        raw.types.DocumentAttributeFilename(file_name=file_name or animation.name),
                         raw.types.DocumentAttributeAnimated(),
                     ],
                 )
@@ -298,9 +290,7 @@ class SendAnimation:
                         noforwards=protect_content,
                         effect=message_effect_id,
                         invert_media=invert_media,
-                        reply_markup=await reply_markup.write(self)
-                        if reply_markup
-                        else None,
+                        reply_markup=await reply_markup.write(self) if reply_markup else None,
                         **await utils.parse_text_entities(
                             self, caption, parse_mode, caption_entities
                         ),
@@ -331,9 +321,7 @@ class SendAnimation:
                                 i.message,
                                 {i.id: i for i in r.users},
                                 {i.id: i for i in r.chats},
-                                is_scheduled=isinstance(
-                                    i, raw.types.UpdateNewScheduledMessage
-                                ),
+                                is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
                                 business_connection_id=business_connection_id,
                             )
 
@@ -344,9 +332,7 @@ class SendAnimation:
                                 ).id
 
                                 await self.invoke(
-                                    raw.functions.messages.SaveGif(
-                                        id=document_id, unsave=True
-                                    )
+                                    raw.functions.messages.SaveGif(id=document_id, unsave=True)
                                 )
 
                             return message

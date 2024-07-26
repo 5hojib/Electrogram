@@ -30,19 +30,20 @@ from pyrogram import raw
 from pyrogram.connection import Connection
 from pyrogram.crypto import mtproto
 from pyrogram.errors import (
-    RPCError,
-    InternalServerError,
     AuthKeyDuplicated,
-    FloodWait,
-    FloodPremiumWait,
-    ServiceUnavailable,
     BadMsgNotification,
+    FloodPremiumWait,
+    FloodWait,
+    InternalServerError,
+    RPCError,
     SecurityCheckMismatch,
+    ServiceUnavailable,
     Unauthorized,
 )
 from pyrogram.raw.all import layer
-from pyrogram.raw.core import TLObject, MsgContainer, Int, FutureSalts
-from .internals import MsgId, MsgFactory
+from pyrogram.raw.core import FutureSalts, Int, MsgContainer, TLObject
+
+from .internals import MsgFactory, MsgId
 
 log = logging.getLogger(__name__)
 
@@ -125,9 +126,7 @@ class Session:
 
                 self.recv_task = self.loop.create_task(self.recv_worker())
 
-                await self.send(
-                    raw.functions.Ping(ping_id=0), timeout=self.START_TIMEOUT
-                )
+                await self.send(raw.functions.Ping(ping_id=0), timeout=self.START_TIMEOUT)
 
                 if not self.is_cdn:
                     await self.send(
@@ -150,12 +149,8 @@ class Session:
                 self.ping_task = self.loop.create_task(self.ping_worker())
 
                 log.info("Session initialized: Layer %s", layer)
-                log.info(
-                    "Device: %s - %s", self.client.device_model, self.client.app_version
-                )
-                log.info(
-                    "System: %s (%s)", self.client.system_version, self.client.lang_code
-                )
+                log.info("Device: %s - %s", self.client.device_model, self.client.app_version)
+                log.info("System: %s (%s)", self.client.system_version, self.client.lang_code)
             except AuthKeyDuplicated as e:
                 await self.stop()
                 raise e
@@ -256,9 +251,7 @@ class Session:
             else:
                 bisect.insort(self.stored_msg_ids, msg.msg_id)
 
-            if isinstance(
-                msg.body, (raw.types.MsgDetailedInfo, raw.types.MsgNewDetailedInfo)
-            ):
+            if isinstance(msg.body, (raw.types.MsgDetailedInfo, raw.types.MsgNewDetailedInfo)):
                 self.pending_acks.add(msg.body.answer_msg_id)
                 continue
 
@@ -267,17 +260,14 @@ class Session:
 
             msg_id = None
 
-            if isinstance(
-                msg.body, (raw.types.BadMsgNotification, raw.types.BadServerSalt)
-            ):
+            if isinstance(msg.body, (raw.types.BadMsgNotification, raw.types.BadServerSalt)):
                 msg_id = msg.body.bad_msg_id
             elif isinstance(msg.body, (FutureSalts, raw.types.RpcResult)):
                 msg_id = msg.body.req_msg_id
             elif isinstance(msg.body, raw.types.Pong):
                 msg_id = msg.body.msg_id
-            else:
-                if self.client is not None:
-                    self.loop.create_task(self.client.handle_updates(msg.body))
+            elif self.client is not None:
+                self.loop.create_task(self.client.handle_updates(msg.body))
 
             if msg_id in self.results:
                 self.results[msg_id].value = getattr(msg.body, "result", msg.body)
@@ -287,9 +277,7 @@ class Session:
             log.debug("Sending %s acks", len(self.pending_acks))
 
             try:
-                await self.send(
-                    raw.types.MsgsAck(msg_ids=list(self.pending_acks)), False
-                )
+                await self.send(raw.types.MsgsAck(msg_ids=list(self.pending_acks)), False)
             except OSError:
                 pass
             else:

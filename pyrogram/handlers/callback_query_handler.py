@@ -21,9 +21,8 @@ from asyncio import iscoroutinefunction
 from typing import Callable, Tuple
 
 import pyrogram
-
-from pyrogram.utils import PyromodConfig
 from pyrogram.types import CallbackQuery, Identifier, Listener
+from pyrogram.utils import PyromodConfig
 
 from .handler import Handler
 
@@ -71,9 +70,7 @@ class CallbackQueryHandler(Handler):
         message_id = None
 
         if query.message:
-            message_id = getattr(
-                query.message, "id", getattr(query.message, "message_id", None)
-            )
+            message_id = getattr(query.message, "id", getattr(query.message, "message_id", None))
 
             if query.message.chat:
                 chat_id = [query.message.chat.id, query.message.chat.username]
@@ -128,9 +125,7 @@ class CallbackQueryHandler(Handler):
         :return: A boolean indicating whether the CallbackQuery object has a matching listener or the handler
         filter matches.
         """
-        listener_does_match, listener = await self.check_if_has_matching_listener(
-            client, query
-        )
+        listener_does_match, listener = await self.check_if_has_matching_listener(client, query)
 
         if callable(self.filters):
             if iscoroutinefunction(self.filters.__call__):
@@ -183,9 +178,7 @@ class CallbackQueryHandler(Handler):
         :param args: The arguments to call the callback with.
         :return: None
         """
-        listener_does_match, listener = await self.check_if_has_matching_listener(
-            client, query
-        )
+        listener_does_match, listener = await self.check_if_has_matching_listener(client, query)
 
         if listener and listener_does_match:
             client.remove_listener(listener)

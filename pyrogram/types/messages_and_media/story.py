@@ -16,11 +16,12 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-import pyrogram
-
 from datetime import datetime
-from pyrogram import enums, raw, types, utils
 from typing import BinaryIO, Callable, List, Optional, Union
+
+import pyrogram
+from pyrogram import enums, raw, types, utils
+
 from ..object import Object
 from ..update import Update
 
@@ -189,10 +190,7 @@ class Story(Object, Update):
             return await types.StorySkipped._parse(client, stories, peer)
         if isinstance(stories, raw.types.StoryItemDeleted):
             return await types.StoryDeleted._parse(client, stories, peer)
-        entities = [
-            types.MessageEntity._parse(client, entity, {})
-            for entity in stories.entities
-        ]
+        entities = [types.MessageEntity._parse(client, entity, {}) for entity in stories.entities]
         entities = types.List(filter(lambda x: x is not None, entities))
         animation = None
         photo = None
@@ -208,9 +206,7 @@ class Story(Object, Update):
         denied_users = None
         if stories.media:
             if isinstance(stories.media, raw.types.MessageMediaPhoto):
-                photo = types.Photo._parse(
-                    client, stories.media.photo, stories.media.ttl_seconds
-                )
+                photo = types.Photo._parse(client, stories.media.photo, stories.media.ttl_seconds)
                 media_type = enums.MessageMediaType.PHOTO
             elif isinstance(stories.media, raw.types.MessageMediaDocument):
                 doc = stories.media.document
@@ -219,17 +215,11 @@ class Story(Object, Update):
                     attributes = {type(i): i for i in doc.attributes}
 
                     if raw.types.DocumentAttributeAnimated in attributes:
-                        video_attributes = attributes.get(
-                            raw.types.DocumentAttributeVideo, None
-                        )
-                        animation = types.Animation._parse(
-                            client, doc, video_attributes, None
-                        )
+                        video_attributes = attributes.get(raw.types.DocumentAttributeVideo, None)
+                        animation = types.Animation._parse(client, doc, video_attributes, None)
                         media_type = enums.MessageMediaType.ANIMATION
                     elif raw.types.DocumentAttributeVideo in attributes:
-                        video_attributes = attributes.get(
-                            raw.types.DocumentAttributeVideo, None
-                        )
+                        video_attributes = attributes.get(raw.types.DocumentAttributeVideo, None)
                         video = types.Video._parse(
                             client,
                             doc,
@@ -242,14 +232,10 @@ class Story(Object, Update):
                         media_type = None
             else:
                 media_type = None
-        if isinstance(peer, raw.types.PeerChannel) or isinstance(
-            peer, raw.types.InputPeerChannel
-        ):
+        if isinstance(peer, raw.types.PeerChannel) or isinstance(peer, raw.types.InputPeerChannel):
             chat_id = utils.get_channel_id(peer.channel_id)
             chat = await client.invoke(
-                raw.functions.channels.GetChannels(
-                    id=[await client.resolve_peer(chat_id)]
-                )
+                raw.functions.channels.GetChannels(id=[await client.resolve_peer(chat_id)])
             )
             sender_chat = types.Chat._parse_chat(client, chat.chats[0])
         elif isinstance(peer, raw.types.InputPeerSelf):
@@ -310,9 +296,7 @@ class Story(Object, Update):
                 denied_users = priv.users
 
         if stories.fwd_from is not None:
-            forward_from = await types.StoryForwardHeader._parse(
-                client, stories.fwd_from
-            )
+            forward_from = await types.StoryForwardHeader._parse(client, stories.fwd_from)
 
         media_areas = None
         if stories.media_areas is not None and len(stories.media_areas) > 0:

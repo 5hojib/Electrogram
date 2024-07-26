@@ -18,6 +18,7 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 import math
+
 from pyrogram.helpers import array_chunk
 
 
@@ -42,9 +43,7 @@ class Pagination:
         cutted = self.objects[offset:stop]
 
         total = len(self.objects)
-        pages_range = [
-            *range(1, math.ceil(total / quant_per_page) + 1)
-        ]  # each item is a page
+        pages_range = [*range(1, math.ceil(total / quant_per_page) + 1)]  # each item is a page
         last_page = len(pages_range)
 
         nav = []

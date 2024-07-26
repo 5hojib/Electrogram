@@ -16,16 +16,14 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
+from typing import Union
+
 import pyrogram
 from pyrogram import raw
 
-from typing import Union
-
 
 class UpdatePersonalChat:
-    async def update_personal_chat(
-        self: "pyrogram.Client", chat_id: Union[int, str]
-    ) -> bool:
+    async def update_personal_chat(self: "pyrogram.Client", chat_id: Union[int, str]) -> bool:
         """Update your birthday details.
 
         .. include:: /_includes/usable-by/users.rst

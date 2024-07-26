@@ -18,13 +18,13 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 import inspect
-import sqlite3
 import time
-from typing import List, Tuple, Any
+from typing import Any, List, Tuple
 
 from pyrogram import raw
-from .storage import Storage
+
 from .. import utils
+from .storage import Storage
 
 # language=SQLite
 SCHEMA = """
@@ -157,15 +157,11 @@ class SQLiteStorage(Storage):
         self.conn.executescript(UNAME_SCHEMA)
         for user in usernames:
             self.conn.execute("DELETE FROM usernames WHERE peer_id=?", (user[0],))
-        self.conn.executemany(
-            "REPLACE INTO usernames (peer_id, id)" "VALUES (?, ?)", usernames
-        )
+        self.conn.executemany("REPLACE INTO usernames (peer_id, id)" "VALUES (?, ?)", usernames)
 
     async def update_state(self, value: Tuple[int, int, int, int, int] = object):
         if value == object:
-            return self.conn.execute(
-                "SELECT id, pts, qts, date, seq FROM update_state"
-            ).fetchall()
+            return self.conn.execute("SELECT id, pts, qts, date, seq FROM update_state").fetchall()
         else:
             with self.conn:
                 if isinstance(value, int):

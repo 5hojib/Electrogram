@@ -19,6 +19,7 @@
 from typing import Optional
 
 from pyrogram import enums, raw
+
 from ..object import Object
 
 

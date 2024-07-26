@@ -57,15 +57,11 @@ class SecurityCheckMismatch(SecurityError):
     """Raised when a security check mismatch occurs."""
 
     def __init__(self, msg: str = None):
-        super().__init__(
-            "A security check mismatch has occurred." if msg is None else msg
-        )
+        super().__init__("A security check mismatch has occurred." if msg is None else msg)
 
 
 class CDNFileHashMismatch(SecurityError):
     """Raised when a CDN file hash mismatch occurs."""
 
     def __init__(self, msg: str = None):
-        super().__init__(
-            "A CDN file hash mismatch has occurred." if msg is None else msg
-        )
+        super().__init__("A CDN file hash mismatch has occurred." if msg is None else msg)

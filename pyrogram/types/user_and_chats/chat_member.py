@@ -18,10 +18,11 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Union, Dict
+from typing import Dict, Union
 
 import pyrogram
-from pyrogram import raw, types, utils, enums
+from pyrogram import enums, raw, types, utils
+
 from ..object import Object
 
 

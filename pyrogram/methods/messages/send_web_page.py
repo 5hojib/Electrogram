@@ -16,13 +16,11 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-import re
 from datetime import datetime
-from typing import Union, List, Optional
+from typing import List, Optional, Union
 
 import pyrogram
-from pyrogram import raw, utils, enums
-from pyrogram import types
+from pyrogram import enums, raw, types, utils
 
 
 class SendWebPage:
@@ -177,11 +175,7 @@ class SendWebPage:
         if isinstance(r, raw.types.UpdateShortSentMessage):
             peer = await self.resolve_peer(chat_id)
 
-            peer_id = (
-                peer.user_id
-                if isinstance(peer, raw.types.InputPeerUser)
-                else -peer.chat_id
-            )
+            peer_id = peer.user_id if isinstance(peer, raw.types.InputPeerUser) else -peer.chat_id
             return types.Message(
                 id=r.id,
                 chat=types.Chat(id=peer_id, type=enums.ChatType.PRIVATE, client=self),
@@ -189,9 +183,7 @@ class SendWebPage:
                 date=utils.timestamp_to_datetime(r.date),
                 outgoing=r.out,
                 reply_markup=reply_markup,
-                entities=[
-                    types.MessageEntity._parse(None, entity, {}) for entity in entities
-                ]
+                entities=[types.MessageEntity._parse(None, entity, {}) for entity in entities]
                 if entities
                 else None,
                 client=self,

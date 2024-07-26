@@ -17,10 +17,11 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, List, Iterable
+from collections.abc import Iterable
+from typing import List, Union
 
 import pyrogram
-from pyrogram import types, raw, utils
+from pyrogram import raw, types, utils
 
 
 class GetFolders:
@@ -68,9 +69,7 @@ class GetFolders:
         raw_peers = {}
         for folder in raw_folders:
             for peer in (
-                folder.pinned_peers
-                + folder.include_peers
-                + getattr(folder, "exclude_peers", [])
+                folder.pinned_peers + folder.include_peers + getattr(folder, "exclude_peers", [])
             ):
                 raw_peers[utils.get_peer_id(peer)] = peer
 

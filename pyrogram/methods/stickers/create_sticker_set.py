@@ -18,11 +18,10 @@
 
 import os
 import re
-from typing import Union, Optional
+from typing import Optional, Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 from pyrogram.file_id import FileId
 
 
@@ -78,7 +77,7 @@ class CreateStickerSet:
 
         if isinstance(sticker, str):
             if os.path.isfile(sticker) or re.match("^https?://", sticker):
-                raise ValueError(f"file_id is invalid!")
+                raise ValueError("file_id is invalid!")
             else:
                 decoded = FileId.decode(sticker)
                 media = raw.types.InputDocument(
@@ -87,7 +86,7 @@ class CreateStickerSet:
                     file_reference=decoded.file_reference,
                 )
         else:
-            raise ValueError(f"file_id is invalid!")
+            raise ValueError("file_id is invalid!")
 
         r = await self.invoke(
             raw.functions.stickers.CreateStickerSet(

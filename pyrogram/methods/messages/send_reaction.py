@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with PyroFork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, List
+from typing import List, Union
 
 import pyrogram
 from pyrogram import raw, types
@@ -94,11 +94,10 @@ class SendReaction:
                 if emoji
                 else None
             )
+        elif isinstance(emoji, int):
+            reaction = [raw.types.ReactionCustomEmoji(document_id=emoji)]
         else:
-            if isinstance(emoji, int):
-                reaction = [raw.types.ReactionCustomEmoji(document_id=emoji)]
-            else:
-                reaction = [raw.types.ReactionEmoji(emoticon=emoji)] if emoji else None
+            reaction = [raw.types.ReactionEmoji(emoticon=emoji)] if emoji else None
         if message_id is not None:
             r = await self.invoke(
                 raw.functions.messages.SendReaction(

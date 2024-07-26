@@ -19,8 +19,9 @@
 from typing import Optional
 
 from pyrogram import raw
-from .reaction_type import ReactionType
+
 from ..object import Object
+from .reaction_type import ReactionType
 
 
 class ReactionCount(Object):

@@ -19,6 +19,7 @@
 
 import pyrogram
 from pyrogram import raw, types
+
 from .inline_query_result import InlineQueryResult
 
 
@@ -108,9 +109,7 @@ class InlineQueryResultContact(InlineQueryResult):
                 size=0,
                 mime_type="image/jpg",
                 attributes=[
-                    raw.types.DocumentAttributeImageSize(
-                        w=self.thumb_width, h=self.thumb_height
-                    )
+                    raw.types.DocumentAttributeImageSize(w=self.thumb_width, h=self.thumb_height)
                 ],
             )
             if self.thumb_url

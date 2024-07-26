@@ -256,9 +256,7 @@ class FileId:
 
         if file_type in PHOTO_TYPES:
             (volume_id,) = struct.unpack("<q", buffer.read(8))
-            (thumbnail_source,) = (
-                (0,) if major < 4 else struct.unpack("<i", buffer.read(4))
-            )
+            (thumbnail_source,) = (0,) if major < 4 else struct.unpack("<i", buffer.read(4))
 
             try:
                 thumbnail_source = ThumbnailSource(thumbnail_source)
@@ -309,9 +307,7 @@ class FileId:
                 ThumbnailSource.CHAT_PHOTO_SMALL,
                 ThumbnailSource.CHAT_PHOTO_BIG,
             ):
-                chat_id, chat_access_hash, local_id = struct.unpack(
-                    "<qqi", buffer.read(20)
-                )
+                chat_id, chat_access_hash, local_id = struct.unpack("<qqi", buffer.read(20))
 
                 return FileId(
                     major=major,
@@ -405,9 +401,7 @@ class FileId:
                 ThumbnailSource.CHAT_PHOTO_BIG,
             ):
                 buffer.write(
-                    struct.pack(
-                        "<qqi", self.chat_id, self.chat_access_hash, self.local_id
-                    )
+                    struct.pack("<qqi", self.chat_id, self.chat_access_hash, self.local_id)
                 )
             elif self.thumbnail_source == ThumbnailSource.STICKER_SET_THUMBNAIL:
                 buffer.write(
@@ -496,16 +490,12 @@ class FileUniqueId:
         if self.file_unique_type == FileUniqueType.WEB:
             string = struct.pack("<is", self.file_unique_type, String(self.url))
         elif self.file_unique_type == FileUniqueType.PHOTO:
-            string = struct.pack(
-                "<iqi", self.file_unique_type, self.volume_id, self.local_id
-            )
+            string = struct.pack("<iqi", self.file_unique_type, self.volume_id, self.local_id)
         elif self.file_unique_type == FileUniqueType.DOCUMENT:
             string = struct.pack("<iq", self.file_unique_type, self.media_id)
         else:
             # TODO: Missing encoder for SECURE, ENCRYPTED and TEMP
-            raise ValueError(
-                f"Unknown encoder for file_unique_type {self.file_unique_type}"
-            )
+            raise ValueError(f"Unknown encoder for file_unique_type {self.file_unique_type}")
 
         return b64_encode(rle_encode(string))
 

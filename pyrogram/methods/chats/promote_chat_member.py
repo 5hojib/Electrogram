@@ -17,10 +17,10 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, Optional
+from typing import Optional, Union
 
 import pyrogram
-from pyrogram import raw, types, errors
+from pyrogram import errors, raw, types
 
 
 class PromoteChatMember:
@@ -75,9 +75,7 @@ class PromoteChatMember:
         try:
             raw_chat_member = (
                 await self.invoke(
-                    raw.functions.channels.GetParticipant(
-                        channel=chat_id, participant=user_id
-                    )
+                    raw.functions.channels.GetParticipant(channel=chat_id, participant=user_id)
                 )
             ).participant
         except errors.RPCError:

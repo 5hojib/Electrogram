@@ -19,7 +19,6 @@
 import pyrogram
 from pyrogram.parser.html import HTML
 
-
 # expected: the expected unparsed HTML
 # text: original text without entities
 # entities: message entities coming from the server

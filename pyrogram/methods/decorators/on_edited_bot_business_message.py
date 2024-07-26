@@ -24,9 +24,7 @@ from pyrogram.filters import Filter
 
 
 class OnEditedBotBusinessMessage:
-    def on_edited_bot_business_message(
-        self=None, filters=None, group: int = 0
-    ) -> Callable:
+    def on_edited_bot_business_message(self=None, filters=None, group: int = 0) -> Callable:
         """Decorator for handling edited messages.
 
         This does the same thing as :meth:`~pyrogram.Client.add_handler` using the

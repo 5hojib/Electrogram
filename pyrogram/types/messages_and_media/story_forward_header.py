@@ -18,6 +18,7 @@
 
 import pyrogram
 from pyrogram import raw, types, utils
+
 from ..object import Object
 
 
@@ -66,9 +67,7 @@ class StoryForwardHeader(Object):
         chat = None
         if fwd_header.from_peer is not None:
             if isinstance(fwd_header.from_peer, raw.types.PeerChannel):
-                chat = await client.get_chat(
-                    utils.get_channel_id(fwd_header.from_peer.channel_id)
-                )
+                chat = await client.get_chat(utils.get_channel_id(fwd_header.from_peer.channel_id))
             elif isinstance(fwd_header.from_peer, raw.types.InputPeerSelf):
                 user = client.me
             else:

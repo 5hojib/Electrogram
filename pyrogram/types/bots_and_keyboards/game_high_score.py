@@ -18,8 +18,8 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types
+from pyrogram import raw, types, utils
+
 from ..object import Object
 
 
@@ -52,9 +52,7 @@ class GameHighScore(Object):
         self.position = position
 
     @staticmethod
-    def _parse(
-        client, game_high_score: raw.types.HighScore, users: dict
-    ) -> "GameHighScore":
+    def _parse(client, game_high_score: raw.types.HighScore, users: dict) -> "GameHighScore":
         users = {i.id: i for i in users}
 
         return GameHighScore(

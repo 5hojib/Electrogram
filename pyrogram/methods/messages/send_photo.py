@@ -20,12 +20,10 @@
 import os
 import re
 from datetime import datetime
-from typing import Union, BinaryIO, List, Optional, Callable
+from typing import BinaryIO, Callable, List, Optional, Union
 
 import pyrogram
-from pyrogram import raw, enums
-from pyrogram import types
-from pyrogram import utils
+from pyrogram import enums, raw, types, utils
 from pyrogram.errors import FilePartMissing
 from pyrogram.file_id import FileType
 
@@ -229,9 +227,7 @@ class SendPhoto:
                     )
                     media.spoiler = has_spoiler
             else:
-                file = await self.save_file(
-                    photo, progress=progress, progress_args=progress_args
-                )
+                file = await self.save_file(photo, progress=progress, progress_args=progress_args)
                 media = raw.types.InputMediaUploadedPhoto(
                     file=file,
                     ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds,
@@ -250,9 +246,7 @@ class SendPhoto:
                         noforwards=protect_content,
                         effect=message_effect_id,
                         invert_media=invert_media,
-                        reply_markup=await reply_markup.write(self)
-                        if reply_markup
-                        else None,
+                        reply_markup=await reply_markup.write(self) if reply_markup else None,
                         **await utils.parse_text_entities(
                             self, caption, parse_mode, caption_entities
                         ),
@@ -283,9 +277,7 @@ class SendPhoto:
                                 i.message,
                                 {i.id: i for i in r.users},
                                 {i.id: i for i in r.chats},
-                                is_scheduled=isinstance(
-                                    i, raw.types.UpdateNewScheduledMessage
-                                ),
+                                is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
                                 business_connection_id=business_connection_id,
                             )
         except pyrogram.StopTransmission:

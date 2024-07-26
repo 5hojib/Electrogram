@@ -17,9 +17,11 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from pyrogram import raw, types
-from ..object import Object
 from typing import Union
+
+from pyrogram import raw, types
+
+from ..object import Object
 
 
 class KeyboardButton(Object):
@@ -60,9 +62,7 @@ class KeyboardButton(Object):
         text: str,
         request_contact: bool = None,
         request_location: bool = None,
-        request_chat: Union[
-            "types.RequestPeerTypeChat", "types.RequestPeerTypeChannel"
-        ] = None,
+        request_chat: Union["types.RequestPeerTypeChat", "types.RequestPeerTypeChannel"] = None,
         request_user: "types.RequestPeerTypeUser" = None,
         web_app: "types.WebAppInfo" = None,
     ):
@@ -158,8 +158,6 @@ class KeyboardButton(Object):
                 max_quantity=self.request_user.max,
             )
         elif self.web_app:
-            return raw.types.KeyboardButtonSimpleWebView(
-                text=self.text, url=self.web_app.url
-            )
+            return raw.types.KeyboardButtonSimpleWebView(text=self.text, url=self.web_app.url)
         else:
             return raw.types.KeyboardButton(text=self.text)

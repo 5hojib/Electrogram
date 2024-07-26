@@ -20,8 +20,8 @@
 from typing import List, Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
+
 from ..object import Object
 
 
@@ -102,9 +102,7 @@ class ReplyKeyboardMarkup(Object):
             rows=[
                 raw.types.KeyboardButtonRow(
                     buttons=[
-                        types.KeyboardButton(j).write()
-                        if isinstance(j, str)
-                        else j.write()
+                        types.KeyboardButton(j).write() if isinstance(j, str) else j.write()
                         for j in i
                     ]
                 )

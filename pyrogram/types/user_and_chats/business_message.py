@@ -17,9 +17,10 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Optional, Union, List
+from typing import List, Optional, Union
 
-from pyrogram import types, enums, raw, utils
+from pyrogram import enums, raw, types, utils
+
 from ..object import Object
 
 
@@ -92,17 +93,13 @@ class BusinessMessage(Object):
         schedule = None
 
         if isinstance(message, raw.types.BusinessAwayMessage):
-            if isinstance(
-                message.schedule, raw.types.BusinessAwayMessageScheduleAlways
-            ):
+            if isinstance(message.schedule, raw.types.BusinessAwayMessageScheduleAlways):
                 schedule = enums.BusinessSchedule.ALWAYS
             elif isinstance(
                 message.schedule, raw.types.BusinessAwayMessageScheduleOutsideWorkHours
             ):
                 schedule = enums.BusinessSchedule.OUTSIDE_WORK_HOURS
-            elif isinstance(
-                message.schedule, raw.types.BusinessAwayMessageScheduleCustom
-            ):
+            elif isinstance(message.schedule, raw.types.BusinessAwayMessageScheduleCustom):
                 schedule = enums.BusinessSchedule.CUSTOM
 
         return BusinessMessage(
@@ -111,9 +108,7 @@ class BusinessMessage(Object):
             is_away=isinstance(message, raw.types.BusinessAwayMessage),
             no_activity_days=getattr(message, "no_activity_days", None),
             offline_only=getattr(message, "offline_only", None),
-            recipients=types.BusinessRecipients._parse(
-                client, message.recipients, users
-            ),
+            recipients=types.BusinessRecipients._parse(client, message.recipients, users),
             schedule=schedule,
             start_date=utils.timestamp_to_datetime(message.schedule.start_date)
             if schedule == enums.BusinessSchedule.CUSTOM

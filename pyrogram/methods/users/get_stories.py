@@ -17,11 +17,11 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-from typing import Union, List, Iterable
+from collections.abc import Iterable
+from typing import List, Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 log = logging.getLogger(__name__)
 
@@ -74,9 +74,7 @@ class GetStories:
         r = await self.invoke(rpc, sleep_threshold=-1)
 
         if is_iterable:
-            return types.List(
-                [await types.Story._parse(self, story, peer) for story in r.stories]
-            )
+            return types.List([await types.Story._parse(self, story, peer) for story in r.stories])
         return (
             await types.Story._parse(self, r.stories[0], peer)
             if r.stories and len(r.stories) > 0

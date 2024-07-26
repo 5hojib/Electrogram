@@ -20,9 +20,7 @@
 __fork_name__ = "PyroFork"
 __version__ = "2.3.37"
 __license__ = "GNU Lesser General Public License v3.0 (LGPL-3.0)"
-__copyright__ = (
-    "Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>"
-)
+__copyright__ = "Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>"
 
 from concurrent.futures.thread import ThreadPoolExecutor
 
@@ -39,8 +37,8 @@ class ContinuePropagation(StopAsyncIteration):
     pass
 
 
-from . import raw, types, filters, handlers, emoji, enums
+from . import emoji, enums, filters, handlers, raw, types
 from .client import Client
-from .sync import idle, compose
+from .sync import compose, idle
 
 crypto_executor = ThreadPoolExecutor(1, thread_name_prefix="CryptoWorker")

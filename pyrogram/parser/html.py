@@ -27,6 +27,7 @@ import pyrogram
 from pyrogram import raw
 from pyrogram.enums import MessageEntityType
 from pyrogram.errors import PeerIdInvalid
+
 from . import utils
 
 log = logging.getLogger(__name__)
@@ -177,9 +178,7 @@ class HTML:
             elif entity_type == MessageEntityType.PRE:
                 name = entity_type.name.lower()
                 language = getattr(entity, "language", "") or ""
-                start_tag = (
-                    f'<{name} language="{language}">' if language else f"<{name}>"
-                )
+                start_tag = f'<{name} language="{language}">' if language else f"<{name}>"
                 end_tag = f"</{name}>"
             elif entity_type == MessageEntityType.EXPANDABLE_BLOCKQUOTE:
                 name = "blockquote"
@@ -206,7 +205,7 @@ class HTML:
                 start_tag = f'<emoji id="{custom_emoji_id}">'
                 end_tag = "</emoji>"
             else:
-                return
+                return None
 
             return (start_tag, start), (end_tag, end)
 

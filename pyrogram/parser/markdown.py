@@ -18,12 +18,12 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 import html
-import logging
 import re
 from typing import Optional
 
 import pyrogram
 from pyrogram.enums import MessageEntityType
+
 from . import utils
 from .html import HTML
 
@@ -88,12 +88,8 @@ class Markdown:
                     result.append(line[1:].strip())
             elif line.startswith(BLOCKQUOTE_EXPANDABLE_DELIM):
                 if not in_blockquote:
-                    line = re.sub(
-                        r"^\*\*> ", OPENING_TAG.format("blockquote expandable"), line
-                    )
-                    line = re.sub(
-                        r"^\*\*>", OPENING_TAG.format("blockquote expandable"), line
-                    )
+                    line = re.sub(r"^\*\*> ", OPENING_TAG.format("blockquote expandable"), line)
+                    line = re.sub(r"^\*\*>", OPENING_TAG.format("blockquote expandable"), line)
                     in_blockquote = True
                     result.append(line.strip())
                 else:
@@ -137,9 +133,7 @@ class Markdown:
                 continue
 
             if text_url:
-                text = utils.replace_once(
-                    text, full, URL_MARKUP.format(url, text_url), start
-                )
+                text = utils.replace_once(text, full, URL_MARKUP.format(url, text_url), start)
                 continue
 
             if delim == BOLD_DELIM:
@@ -263,9 +257,7 @@ class Markdown:
 
         entities_offsets = map(
             lambda x: x[1],
-            sorted(
-                enumerate(entities_offsets), key=lambda x: (x[1][1], x[0]), reverse=True
-            ),
+            sorted(enumerate(entities_offsets), key=lambda x: (x[1][1], x[0]), reverse=True),
         )
 
         for entity, offset in entities_offsets:

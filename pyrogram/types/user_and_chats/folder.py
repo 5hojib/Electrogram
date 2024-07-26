@@ -20,10 +20,8 @@
 from typing import List, Union
 
 import pyrogram
-from pyrogram import enums
-from pyrogram import raw
-from pyrogram import types
-from pyrogram import utils
+from pyrogram import enums, raw, types, utils
+
 from ..object import Object
 
 
@@ -125,26 +123,20 @@ class Folder(Object):
 
         for peer in folder.include_peers:
             try:
-                included_chats.append(
-                    types.Chat._parse_dialog(client, peer, users, chats)
-                )
+                included_chats.append(types.Chat._parse_dialog(client, peer, users, chats))
             except KeyError:
                 pass
 
         if getattr(folder, "exclude_peers", None):
             for peer in folder.exclude_peers:
                 try:
-                    excluded_chats.append(
-                        types.Chat._parse_dialog(client, peer, users, chats)
-                    )
+                    excluded_chats.append(types.Chat._parse_dialog(client, peer, users, chats))
                 except KeyError:
                     pass
 
         for peer in folder.pinned_peers:
             try:
-                pinned_chats.append(
-                    types.Chat._parse_dialog(client, peer, users, chats)
-                )
+                pinned_chats.append(types.Chat._parse_dialog(client, peer, users, chats))
             except KeyError:
                 pass
 

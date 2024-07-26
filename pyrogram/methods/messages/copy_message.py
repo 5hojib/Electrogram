@@ -19,10 +19,10 @@
 
 import logging
 from datetime import datetime
-from typing import Union, List, Optional
+from typing import List, Optional, Union
 
 import pyrogram
-from pyrogram import types, enums
+from pyrogram import enums, types
 
 log = logging.getLogger(__name__)
 

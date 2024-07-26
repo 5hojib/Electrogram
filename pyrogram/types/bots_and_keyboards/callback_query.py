@@ -17,14 +17,15 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, List, Match, Optional
+from re import Match
+from typing import List, Optional, Union
 
 import pyrogram
-from pyrogram import raw, enums
-from pyrogram import types
+from pyrogram import enums, raw, types
+
+from ... import utils
 from ..object import Object
 from ..update import Update
-from ... import utils
 
 
 class CallbackQuery(Object, Update):
@@ -88,9 +89,7 @@ class CallbackQuery(Object, Update):
         self.matches = matches
 
     @staticmethod
-    async def _parse(
-        client: "pyrogram.Client", callback_query, users
-    ) -> "CallbackQuery":
+    async def _parse(client: "pyrogram.Client", callback_query, users) -> "CallbackQuery":
         message = None
         inline_message_id = None
 
@@ -229,9 +228,7 @@ class CallbackQuery(Object, Update):
                 parse_mode=parse_mode,
                 disable_web_page_preview=disable_web_page_preview,
                 reply_markup=reply_markup,
-                business_connection_id=getattr(
-                    self.message, "business_connection_id", None
-                ),
+                business_connection_id=getattr(self.message, "business_connection_id", None),
             )
         else:
             return await self._client.edit_inline_text(
@@ -318,9 +315,7 @@ class CallbackQuery(Object, Update):
                 message_id=self.message.id,
                 media=media,
                 reply_markup=reply_markup,
-                business_connection_id=getattr(
-                    self.message, "business_connection_id", None
-                )
+                business_connection_id=getattr(self.message, "business_connection_id", None)
                 if business_connection_id is None
                 else business_connection_id,
             )
@@ -360,9 +355,7 @@ class CallbackQuery(Object, Update):
                 chat_id=self.message.chat.id,
                 message_id=self.message.id,
                 reply_markup=reply_markup,
-                business_connection_id=getattr(
-                    self.message, "business_connection_id", None
-                )
+                business_connection_id=getattr(self.message, "business_connection_id", None)
                 if business_connection_id is None
                 else business_connection_id,
             )

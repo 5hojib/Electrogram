@@ -18,9 +18,9 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 from inspect import iscoroutinefunction
 from typing import Callable
-import pyrogram
 
-from pyrogram.types import Message, Identifier
+import pyrogram
+from pyrogram.types import Identifier, Message
 
 from .handler import Handler
 
@@ -53,9 +53,7 @@ class BotBusinessMessageHandler(Handler):
         self.original_callback = callback
         super().__init__(self.resolve_future_or_callback, filters)
 
-    async def check_if_has_matching_listener(
-        self, client: "pyrogram.Client", message: Message
-    ):
+    async def check_if_has_matching_listener(self, client: "pyrogram.Client", message: Message):
         """
         Checks if the message has a matching listener.
 
@@ -104,9 +102,7 @@ class BotBusinessMessageHandler(Handler):
         :param message: Message object to check with.
         :return: Whether the message has a matching listener or handler and its filters does match with the Message.
         """
-        listener_does_match = (
-            await self.check_if_has_matching_listener(client, message)
-        )[0]
+        listener_does_match = (await self.check_if_has_matching_listener(client, message))[0]
 
         if callable(self.filters):
             if iscoroutinefunction(self.filters.__call__):
@@ -122,9 +118,7 @@ class BotBusinessMessageHandler(Handler):
         # exists but its filters doesn't match
         return listener_does_match or handler_does_match
 
-    async def resolve_future_or_callback(
-        self, client: "pyrogram.Client", message: Message, *args
-    ):
+    async def resolve_future_or_callback(self, client: "pyrogram.Client", message: Message, *args):
         """
         Resolves the future or calls the callback of the listener if the message has a matching listener.
 
@@ -133,9 +127,7 @@ class BotBusinessMessageHandler(Handler):
         :param args: Arguments to call the callback with.
         :return: None
         """
-        listener_does_match, listener = await self.check_if_has_matching_listener(
-            client, message
-        )
+        listener_does_match, listener = await self.check_if_has_matching_listener(client, message)
 
         if listener and listener_does_match:
             client.remove_listener(listener)

@@ -21,9 +21,9 @@ from datetime import datetime
 from typing import List
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types
+from pyrogram import raw, types, utils
 from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType
+
 from ..object import Object
 
 
@@ -124,7 +124,7 @@ class Animation(Object):
     def _parse_chat_animation(client, video: "raw.types.Photo") -> "Animation":
         if isinstance(video, raw.types.Photo):
             if not video.video_sizes:
-                return
+                return None
             video_sizes: List[raw.types.VideoSize] = []
             for p in video.video_sizes:
                 if isinstance(p, raw.types.VideoSize):

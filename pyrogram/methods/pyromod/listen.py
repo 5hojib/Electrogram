@@ -19,11 +19,11 @@
 
 import asyncio
 import inspect
-import pyrogram
+from typing import List, Optional, Union
 
+import pyrogram
 from pyrogram.errors import ListenerTimeout
 from pyrogram.filters import Filter
-from typing import List, Optional, Union
 from pyrogram.types import Identifier, Listener
 from pyrogram.utils import PyromodConfig
 

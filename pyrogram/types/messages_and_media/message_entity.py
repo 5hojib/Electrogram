@@ -20,8 +20,8 @@
 from typing import Optional
 
 import pyrogram
-from pyrogram import raw, enums
-from pyrogram import types
+from pyrogram import enums, raw, types
+
 from ..object import Object
 
 
@@ -82,9 +82,7 @@ class MessageEntity(Object):
         self.collapsed = collapsed
 
     @staticmethod
-    def _parse(
-        client, entity: "raw.base.MessageEntity", users: dict
-    ) -> Optional["MessageEntity"]:
+    def _parse(client, entity: "raw.base.MessageEntity", users: dict) -> Optional["MessageEntity"]:
         # Special case for InputMessageEntityMentionName -> MessageEntityType.TEXT_MENTION
         # This happens in case of UpdateShortSentMessage inside send_message() where entities are parsed from the input
         if isinstance(entity, raw.types.InputMessageEntityMentionName):
@@ -99,7 +97,7 @@ class MessageEntity(Object):
             offset=entity.offset,
             length=entity.length,
             url=getattr(entity, "url", None),
-            user=types.User._parse(client, users.get(user_id, None)),
+            user=types.User._parse(client, users.get(user_id)),
             language=getattr(entity, "language", None),
             custom_emoji_id=getattr(entity, "document_id", None),
             collapsed=getattr(entity, "collapsed", None),

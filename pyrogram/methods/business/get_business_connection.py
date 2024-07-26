@@ -16,11 +16,9 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from datetime import datetime
-from typing import Union, List
 
 import pyrogram
-from pyrogram import types, utils, raw
+from pyrogram import raw, types
 
 
 class GetBusinessConnection:
@@ -40,9 +38,7 @@ class GetBusinessConnection:
         """
 
         r = await self.invoke(
-            raw.functions.account.GetBotBusinessConnection(
-                connection_id=business_connection_id
-            )
+            raw.functions.account.GetBotBusinessConnection(connection_id=business_connection_id)
         )
         for i in r.updates:
             if isinstance(i, (raw.types.UpdateBotBusinessConnect)):

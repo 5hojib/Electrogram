@@ -22,6 +22,7 @@ from typing import Dict, Union
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
+
 from ..object import Object
 from ..update import Update
 
@@ -124,9 +125,7 @@ class ChatMemberUpdated(Object, Update):
             )
 
         if update.new_participant:
-            new_chat_member = types.ChatMember._parse(
-                client, update.new_participant, users, chats
-            )
+            new_chat_member = types.ChatMember._parse(client, update.new_participant, users, chats)
 
         if update.invite:
             invite_link = types.ChatInviteLink._parse(client, update.invite, users)

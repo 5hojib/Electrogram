@@ -17,7 +17,8 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from pyrogram import raw, enums
+from pyrogram import enums, raw
+
 from ..object import Object
 
 

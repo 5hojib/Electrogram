@@ -18,8 +18,8 @@
 
 from typing import List, Union
 
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
+
 from ..object import Object
 
 
@@ -70,9 +70,7 @@ class PaidMedia(Object):
                     None,
                 )
                 if raw.types.DocumentAttributeAnimated in attributes:
-                    video_attributes = attributes.get(
-                        raw.types.DocumentAttributeVideo, None
-                    )
+                    video_attributes = attributes.get(raw.types.DocumentAttributeVideo, None)
                     extended_media.append(
                         types.Animation._parse(
                             client, m.media.document, video_attributes, file_name

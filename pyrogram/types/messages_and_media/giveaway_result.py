@@ -16,12 +16,13 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-import pyrogram
-
 from datetime import datetime
-from pyrogram import raw, types, utils
-from ..object import Object
 from typing import List, Union
+
+import pyrogram
+from pyrogram import raw, types, utils
+
+from ..object import Object
 
 
 class GiveawayResult(Object):
@@ -103,14 +104,10 @@ class GiveawayResult(Object):
         if not hide_winners:
             chat_id = utils.get_channel_id(giveaway_result.channel_id)
             chat = await client.invoke(
-                raw.functions.channels.GetChannels(
-                    id=[await client.resolve_peer(chat_id)]
-                )
+                raw.functions.channels.GetChannels(id=[await client.resolve_peer(chat_id)])
             )
             chat = types.Chat._parse_chat(client, chat.chats[0])
-            giveaway_message = await client.get_messages(
-                chat_id, giveaway_result.launch_msg_id
-            )
+            giveaway_message = await client.get_messages(chat_id, giveaway_result.launch_msg_id)
             expired_date = utils.timestamp_to_datetime(giveaway_result.until_date)
             winners = []
             for winner in giveaway_result.winners:

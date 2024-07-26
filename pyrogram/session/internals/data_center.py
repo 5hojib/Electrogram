@@ -74,9 +74,8 @@ class DataCenter:
                     ip = cls.PROD_IPV6_MEDIA.get(dc_id, cls.PROD_IPV6[dc_id])
                 else:
                     ip = cls.PROD_IPV6[dc_id]
+            elif media:
+                ip = cls.PROD_MEDIA.get(dc_id, cls.PROD[dc_id])
             else:
-                if media:
-                    ip = cls.PROD_MEDIA.get(dc_id, cls.PROD[dc_id])
-                else:
-                    ip = cls.PROD[dc_id]
+                ip = cls.PROD[dc_id]
             return ip, 5222 if alt_port else 443

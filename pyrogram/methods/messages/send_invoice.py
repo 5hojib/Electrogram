@@ -15,10 +15,10 @@
 #
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
-import pyrogram
+from typing import List, Union
 
-from pyrogram import types, raw, utils
-from typing import Union, List
+import pyrogram
+from pyrogram import raw, types, utils
 
 
 class SendInvoice:
@@ -146,9 +146,7 @@ class SendInvoice:
                     for price in prices:
                         prices_total += price.amount
                     text = f"Pay ⭐️{prices_total}"
-                reply_markup.inline_keyboard.insert(
-                    0, [types.InlineKeyboardButtonBuy(text=text)]
-                )
+                reply_markup.inline_keyboard.insert(0, [types.InlineKeyboardButtonBuy(text=text)])
 
         reply_to = await utils.get_reply_to(
             client=self,
@@ -191,16 +189,12 @@ class SendInvoice:
                 random_id=self.rnd_id(),
                 reply_to=reply_to,
                 message="",
-                reply_markup=await reply_markup.write(self)
-                if reply_markup is not None
-                else None,
+                reply_markup=await reply_markup.write(self) if reply_markup is not None else None,
             )
         )
 
         for i in r.updates:
-            if isinstance(
-                i, (raw.types.UpdateNewMessage, raw.types.UpdateNewChannelMessage)
-            ):
+            if isinstance(i, (raw.types.UpdateNewMessage, raw.types.UpdateNewChannelMessage)):
                 return await types.Message._parse(
                     self,
                     i.message,

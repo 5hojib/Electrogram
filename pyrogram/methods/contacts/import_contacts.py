@@ -20,14 +20,11 @@
 from typing import List
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class ImportContacts:
-    async def import_contacts(
-        self: "pyrogram.Client", contacts: List["types.InputPhoneContact"]
-    ):
+    async def import_contacts(self: "pyrogram.Client", contacts: List["types.InputPhoneContact"]):
         """Import contacts to your Telegram address book.
 
         .. include:: /_includes/usable-by/users.rst

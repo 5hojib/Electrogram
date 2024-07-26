@@ -19,14 +19,10 @@
 
 import os
 from datetime import datetime
-from typing import List, Union, BinaryIO, Optional, Callable
+from typing import BinaryIO, Callable, List, Optional, Union
 
 import pyrogram
-from pyrogram import StopTransmission
-from pyrogram import enums
-from pyrogram import raw
-from pyrogram import types
-from pyrogram import utils
+from pyrogram import StopTransmission, enums, raw, types, utils
 from pyrogram.errors import FilePartMissing
 from pyrogram.file_id import FileType
 
@@ -220,9 +216,7 @@ class SendVideoNote:
                         ttl_seconds=ttl_seconds,
                     )
                 else:
-                    media = utils.get_input_media_from_file_id(
-                        video_note, FileType.VIDEO_NOTE
-                    )
+                    media = utils.get_input_media_from_file_id(video_note, FileType.VIDEO_NOTE)
             else:
                 thumb = await self.save_file(thumb)
                 file = await self.save_file(
@@ -250,9 +244,7 @@ class SendVideoNote:
                         schedule_date=utils.datetime_to_timestamp(schedule_date),
                         noforwards=protect_content,
                         effect=message_effect_id,
-                        reply_markup=await reply_markup.write(self)
-                        if reply_markup
-                        else None,
+                        reply_markup=await reply_markup.write(self) if reply_markup else None,
                         message="",
                     )
                     if business_connection_id is not None:
@@ -281,9 +273,7 @@ class SendVideoNote:
                                 i.message,
                                 {i.id: i for i in r.users},
                                 {i.id: i for i in r.chats},
-                                is_scheduled=isinstance(
-                                    i, raw.types.UpdateNewScheduledMessage
-                                ),
+                                is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
                                 business_connection_id=business_connection_id,
                             )
         except StopTransmission:

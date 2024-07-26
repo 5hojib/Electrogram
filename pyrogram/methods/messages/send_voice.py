@@ -20,13 +20,10 @@
 import os
 import re
 from datetime import datetime
-from typing import Union, BinaryIO, List, Optional, Callable
+from typing import BinaryIO, Callable, List, Optional, Union
 
 import pyrogram
-from pyrogram import StopTransmission, enums
-from pyrogram import raw
-from pyrogram import types
-from pyrogram import utils
+from pyrogram import StopTransmission, enums, raw, types, utils
 from pyrogram.errors import FilePartMissing
 from pyrogram.file_id import FileType
 
@@ -200,9 +197,7 @@ class SendVoice:
                         mime_type=self.guess_mime_type(voice) or "audio/mpeg",
                         file=file,
                         attributes=[
-                            raw.types.DocumentAttributeAudio(
-                                voice=True, duration=duration
-                            )
+                            raw.types.DocumentAttributeAudio(voice=True, duration=duration)
                         ],
                     )
                 elif re.match("^https?://", voice):
@@ -210,15 +205,11 @@ class SendVoice:
                 else:
                     media = utils.get_input_media_from_file_id(voice, FileType.VOICE)
             else:
-                file = await self.save_file(
-                    voice, progress=progress, progress_args=progress_args
-                )
+                file = await self.save_file(voice, progress=progress, progress_args=progress_args)
                 media = raw.types.InputMediaUploadedDocument(
                     mime_type=self.guess_mime_type(voice.name) or "audio/mpeg",
                     file=file,
-                    attributes=[
-                        raw.types.DocumentAttributeAudio(voice=True, duration=duration)
-                    ],
+                    attributes=[raw.types.DocumentAttributeAudio(voice=True, duration=duration)],
                 )
 
             while True:
@@ -232,9 +223,7 @@ class SendVoice:
                         schedule_date=utils.datetime_to_timestamp(schedule_date),
                         noforwards=protect_content,
                         effect=message_effect_id,
-                        reply_markup=await reply_markup.write(self)
-                        if reply_markup
-                        else None,
+                        reply_markup=await reply_markup.write(self) if reply_markup else None,
                         **await utils.parse_text_entities(
                             self, caption, parse_mode, caption_entities
                         ),
@@ -265,9 +254,7 @@ class SendVoice:
                                 i.message,
                                 {i.id: i for i in r.users},
                                 {i.id: i for i in r.chats},
-                                is_scheduled=isinstance(
-                                    i, raw.types.UpdateNewScheduledMessage
-                                ),
+                                is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
                                 business_connection_id=business_connection_id,
                             )
         except StopTransmission:

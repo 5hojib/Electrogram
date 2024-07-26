@@ -18,11 +18,10 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from typing import Union, BinaryIO
+from typing import BinaryIO, Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import utils
+from pyrogram import raw, utils
 from pyrogram.file_id import FileType
 
 
@@ -111,9 +110,7 @@ class SetChatPhoto:
                 )
             )
         elif isinstance(peer, raw.types.InputPeerChannel):
-            await self.invoke(
-                raw.functions.channels.EditPhoto(channel=peer, photo=photo)
-            )
+            await self.invoke(raw.functions.channels.EditPhoto(channel=peer, photo=photo))
         else:
             raise ValueError(f'The chat_id "{chat_id}" belongs to a user')
 

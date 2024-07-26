@@ -24,9 +24,7 @@ from pyrogram.filters import Filter
 
 
 class OnMessageReactionCountUpdated:
-    def on_message_reaction_count_updated(
-        self=None, filters=None, group: int = 0
-    ) -> Callable:
+    def on_message_reaction_count_updated(self=None, filters=None, group: int = 0) -> Callable:
         """Decorator for handling anonymous reaction changes on messages.
 
         This does the same thing as :meth:`~pyrogram.Client.add_handler` using the
@@ -52,9 +50,7 @@ class OnMessageReactionCountUpdated:
 
                 func.handlers.append(
                     (
-                        pyrogram.handlers.MessageReactionCountUpdatedHandler(
-                            func, self
-                        ),
+                        pyrogram.handlers.MessageReactionCountUpdatedHandler(func, self),
                         group if filters is None else filters,
                     )
                 )

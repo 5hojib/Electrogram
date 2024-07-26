@@ -17,14 +17,12 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, List, Match, Optional
 
 import pyrogram
-from pyrogram import raw, enums
 from pyrogram import types
+
 from ..object import Object
 from ..update import Update
-from ... import utils
 
 
 class PreCheckoutQuery(Object, Update):
@@ -76,9 +74,7 @@ class PreCheckoutQuery(Object, Update):
         self.payment_info = payment_info
 
     @staticmethod
-    async def _parse(
-        client: "pyrogram.Client", pre_checkout_query, users
-    ) -> "PreCheckoutQuery":
+    async def _parse(client: "pyrogram.Client", pre_checkout_query, users) -> "PreCheckoutQuery":
         # Try to decode pre-checkout query payload into string. If that fails, fallback to bytes instead of decoding by
         # ignoring/replacing errors, this way, button clicks will still work.
         try:

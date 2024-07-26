@@ -24,9 +24,7 @@ from pyrogram.filters import Filter
 
 
 class OnMessageReactionUpdated:
-    def on_message_reaction_updated(
-        self=None, filters=None, group: int = 0
-    ) -> Callable:
+    def on_message_reaction_updated(self=None, filters=None, group: int = 0) -> Callable:
         """Decorator for handling reaction changes on messages.
 
         This does the same thing as :meth:`~pyrogram.Client.add_handler` using the

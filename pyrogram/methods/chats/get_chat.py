@@ -20,9 +20,7 @@
 from typing import Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
-from pyrogram import utils
+from pyrogram import raw, types, utils
 
 
 class GetChat:
@@ -59,9 +57,7 @@ class GetChat:
         match = self.INVITE_LINK_RE.match(str(chat_id))
 
         if match:
-            r = await self.invoke(
-                raw.functions.messages.CheckChatInvite(hash=match.group(1))
-            )
+            r = await self.invoke(raw.functions.messages.CheckChatInvite(hash=match.group(1)))
 
             if isinstance(r, raw.types.ChatInvite):
                 return types.ChatPreview._parse(self, r)
@@ -81,8 +77,6 @@ class GetChat:
         elif isinstance(peer, (raw.types.InputPeerUser, raw.types.InputPeerSelf)):
             r = await self.invoke(raw.functions.users.GetFullUser(id=peer))
         else:
-            r = await self.invoke(
-                raw.functions.messages.GetFullChat(chat_id=peer.chat_id)
-            )
+            r = await self.invoke(raw.functions.messages.GetFullChat(chat_id=peer.chat_id))
 
         return await types.Chat._parse_full(self, r)

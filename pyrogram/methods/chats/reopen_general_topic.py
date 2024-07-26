@@ -15,16 +15,14 @@
 #
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+from typing import Union
+
 import pyrogram
 from pyrogram import raw
-from pyrogram import types
-from typing import Union
 
 
 class ReopenGeneralTopic:
-    async def reopen_general_topic(
-        self: "pyrogram.Client", chat_id: Union[int, str]
-    ) -> bool:
+    async def reopen_general_topic(self: "pyrogram.Client", chat_id: Union[int, str]) -> bool:
         """Reopen a general forum topic.
 
         .. include:: /_includes/usable-by/users-bots.rst

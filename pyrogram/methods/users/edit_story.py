@@ -143,9 +143,7 @@ class EditStory:
                 elif re.match("^https?://", animation):
                     media = raw.types.InputMediaDocumentExternal(url=animation)
                 else:
-                    media = utils.get_input_media_from_file_id(
-                        animation, FileType.ANIMATION
-                    )
+                    media = utils.get_input_media_from_file_id(animation, FileType.ANIMATION)
             else:
                 file = await self.save_file(animation)
                 media = raw.types.InputMediaUploadedDocument(
@@ -202,9 +200,7 @@ class EditStory:
         entities = None
         if caption:
             text, entities = self._split(
-                **await utils.parse_text_entities(
-                    self, caption, parse_mode, caption_entities
-                )
+                **await utils.parse_text_entities(self, caption, parse_mode, caption_entities)
             )
 
         """
@@ -230,9 +226,7 @@ class EditStory:
                 privacy_rules=privacy_rules,
                 caption=text,
                 entities=entities,
-                media_areas=[
-                    await media_area.write(self) for media_area in media_areas
-                ],
+                media_areas=[await media_area.write(self) for media_area in media_areas],
             )
         )
         return await types.Story._parse(self, r.updates[0].story, r.updates[0].peer)

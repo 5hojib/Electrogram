@@ -17,10 +17,11 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional, List
+from typing import List, Optional
 
 import pyrogram
 from pyrogram import raw, types
+
 from ..object import Object
 
 
@@ -52,9 +53,7 @@ class ChatReactions(Object):
         self.reactions = reactions
 
     @staticmethod
-    def _parse(
-        client, chat_reactions: "raw.base.ChatReactions"
-    ) -> Optional["ChatReactions"]:
+    def _parse(client, chat_reactions: "raw.base.ChatReactions") -> Optional["ChatReactions"]:
         if isinstance(chat_reactions, raw.types.ChatReactionsAll):
             return ChatReactions(
                 client=client,
@@ -66,8 +65,7 @@ class ChatReactions(Object):
             return ChatReactions(
                 client=client,
                 reactions=[
-                    types.ReactionType._parse(reaction)
-                    for reaction in chat_reactions.reactions
+                    types.ReactionType._parse(reaction) for reaction in chat_reactions.reactions
                 ],
             )
         if isinstance(chat_reactions, raw.types.ChatReactionsNone):

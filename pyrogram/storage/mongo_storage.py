@@ -20,12 +20,14 @@
 import asyncio
 import inspect
 import time
-from typing import List, Tuple, Any
+from typing import Any, List, Tuple
+
+from pymongo import DeleteMany, MongoClient, UpdateOne
+
+from pyrogram.storage.sqlite_storage import get_input_peer
+from pyrogram.storage.storage import Storage
 
 from .dummy_client import DummyMongoClient
-from pymongo import MongoClient, UpdateOne, DeleteMany
-from pyrogram.storage.storage import Storage
-from pyrogram.storage.sqlite_storage import get_input_peer
 
 
 class MongoStorage(Storage):
@@ -56,9 +58,7 @@ class MongoStorage(Storage):
     lock: asyncio.Lock
     USERNAME_TTL = 8 * 60 * 60
 
-    def __init__(
-        self, name: str, connection: DummyMongoClient, remove_peers: bool = False
-    ):
+    def __init__(self, name: str, connection: DummyMongoClient, remove_peers: bool = False):
         super().__init__(name=name)
         database = None
 
@@ -167,31 +167,28 @@ class MongoStorage(Storage):
                 async for state in self._states.find()
             ]
             return states if len(states) > 0 else None
+        elif isinstance(value, int):
+            await self._states.delete_one({"_id": value})
         else:
-            if isinstance(value, int):
-                await self._states.delete_one({"_id": value})
-            else:
-                await self._states.update_one(
-                    {"_id": value[0]},
-                    {
-                        "$set": {
-                            "pts": value[1],
-                            "qts": value[2],
-                            "date": value[3],
-                            "seq": value[4],
-                        }
-                    },
-                    upsert=True,
-                )
+            await self._states.update_one(
+                {"_id": value[0]},
+                {
+                    "$set": {
+                        "pts": value[1],
+                        "qts": value[2],
+                        "date": value[3],
+                        "seq": value[4],
+                    }
+                },
+                upsert=True,
+            )
 
     async def remove_state(self, chat_id):
         await self._states.delete_one({"_id": chat_id})
 
     async def get_peer_by_id(self, peer_id: int):
         # id, access_hash, type
-        r = await self._peer.find_one(
-            {"_id": peer_id}, {"_id": 1, "access_hash": 1, "type": 1}
-        )
+        r = await self._peer.find_one({"_id": peer_id}, {"_id": 1, "access_hash": 1, "type": 1})
         if not r:
             raise KeyError(f"ID not found: {peer_id}")
         return get_input_peer(r["_id"], r["access_hash"], r["type"])
@@ -238,7 +235,7 @@ class MongoStorage(Storage):
         attr = inspect.stack()[2].function
         d = await self._session.find_one({"_id": 0}, {attr: 1})
         if not d:
-            return
+            return None
         return d[attr]
 
     async def _set(self, value: Any):

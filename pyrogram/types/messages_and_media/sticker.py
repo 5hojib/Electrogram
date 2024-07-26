@@ -18,13 +18,13 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import List, Dict, Type
+from typing import Dict, List, Type
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types
+from pyrogram import raw, types, utils
 from pyrogram.errors import StickersetInvalid
 from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType
+
 from ..object import Object
 
 
@@ -167,25 +167,19 @@ class Sticker(Object):
             else document_attributes[raw.types.DocumentAttributeCustomEmoji]
         )
 
-        image_size_attributes = document_attributes.get(
-            raw.types.DocumentAttributeImageSize, None
-        )
+        image_size_attributes = document_attributes.get(raw.types.DocumentAttributeImageSize, None)
         file_name = getattr(
             document_attributes.get(raw.types.DocumentAttributeFilename, None),
             "file_name",
             None,
         )
-        video_attributes = document_attributes.get(
-            raw.types.DocumentAttributeVideo, None
-        )
+        video_attributes = document_attributes.get(raw.types.DocumentAttributeVideo, None)
 
         sticker_set = sticker_attributes.stickerset
 
         if isinstance(sticker_set, raw.types.InputStickerSetID):
             input_sticker_set_id = (sticker_set.id, sticker_set.access_hash)
-            set_name = await Sticker._get_sticker_set_name(
-                client.invoke, input_sticker_set_id
-            )
+            set_name = await Sticker._get_sticker_set_name(client.invoke, input_sticker_set_id)
         else:
             set_name = None
 

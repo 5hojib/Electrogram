@@ -16,8 +16,10 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from pymongo.client_session import TransactionOptions
+from typing import Any, Optional, Union
+
 from bson.codec_options import CodecOptions
+from pymongo.client_session import TransactionOptions
 from pymongo.read_concern import ReadConcern
 from pymongo.read_preferences import (
     Nearest,
@@ -27,16 +29,13 @@ from pymongo.read_preferences import (
     SecondaryPreferred,
 )
 from pymongo.write_concern import WriteConcern
-from typing import Any, Optional, Union
 
 try:
     from typing import Protocol, runtime_checkable
 except ImportError:
     from typing_extensions import Protocol, runtime_checkable
 
-ReadPreferences = Union[
-    Primary, PrimaryPreferred, Secondary, SecondaryPreferred, Nearest
-]
+ReadPreferences = Union[Primary, PrimaryPreferred, Secondary, SecondaryPreferred, Nearest]
 
 
 @runtime_checkable

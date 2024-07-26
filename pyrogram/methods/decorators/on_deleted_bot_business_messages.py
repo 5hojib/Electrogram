@@ -24,9 +24,7 @@ from pyrogram.filters import Filter
 
 
 class OnDeletedBotBusinessMessages:
-    def on_deleted_bot_business_messages(
-        self=None, filters=None, group: int = 0
-    ) -> Callable:
+    def on_deleted_bot_business_messages(self=None, filters=None, group: int = 0) -> Callable:
         """Decorator for handling deleted bot business messages.
 
         This does the same thing as :meth:`~pyrogram.Client.add_handler` using the

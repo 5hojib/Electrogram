@@ -18,7 +18,8 @@
 
 from typing import Optional
 
-from pyrogram import types, raw
+from pyrogram import raw, types
+
 from ..object import Object
 
 
@@ -71,12 +72,8 @@ class BusinessInfo(Object):
 
         return BusinessInfo(
             address=getattr(location, "address", None),
-            location=types.Location._parse(
-                client, getattr(location, "geo_point", None)
-            ),
-            greeting_message=types.BusinessMessage._parse(
-                client, greeting_message, users
-            ),
+            location=types.Location._parse(client, getattr(location, "geo_point", None)),
+            greeting_message=types.BusinessMessage._parse(client, greeting_message, users),
             away_message=types.BusinessMessage._parse(client, away_message, users),
             working_hours=types.BusinessWorkingHours._parse(working_hours),
         )

@@ -17,11 +17,11 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-from typing import AsyncGenerator, Optional
+from collections.abc import AsyncGenerator
+from typing import Optional
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 log = logging.getLogger(__name__)
 
@@ -65,9 +65,7 @@ class GetUserStoriesHistory:
         else:
             peer = await self.resolve_peer("me")
 
-        rpc = raw.functions.stories.GetStoriesArchive(
-            peer=peer, offset_id=offset_id, limit=limit
-        )
+        rpc = raw.functions.stories.GetStoriesArchive(peer=peer, offset_id=offset_id, limit=limit)
 
         r = await self.invoke(rpc, sleep_threshold=-1)
 

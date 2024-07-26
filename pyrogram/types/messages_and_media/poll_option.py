@@ -17,9 +17,11 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-import pyrogram
-from ..object import Object
 from typing import List, Optional
+
+import pyrogram
+
+from ..object import Object
 
 
 class PollOption(Object):
@@ -58,13 +60,9 @@ class PollOption(Object):
 
     async def write(self, client, i):
         option, entities = (
-            await pyrogram.utils.parse_text_entities(
-                client, self.text, None, self.entities
-            )
+            await pyrogram.utils.parse_text_entities(client, self.text, None, self.entities)
         ).values()
         return pyrogram.raw.types.PollAnswer(
-            text=pyrogram.raw.types.TextWithEntities(
-                text=option, entities=entities or []
-            ),
+            text=pyrogram.raw.types.TextWithEntities(text=option, entities=entities or []),
             option=bytes([i]),
         )

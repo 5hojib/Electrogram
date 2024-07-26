@@ -22,6 +22,7 @@ from typing import Dict
 
 import pyrogram
 from pyrogram import raw, types, utils
+
 from ..object import Object
 
 

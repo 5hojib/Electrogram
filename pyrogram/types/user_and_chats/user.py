@@ -22,9 +22,8 @@ from datetime import datetime
 from typing import List, Optional
 
 import pyrogram
-from pyrogram import enums, utils
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import enums, raw, types, utils
+
 from ..object import Object
 from ..update import Update
 
@@ -288,9 +287,7 @@ class User(Object, Update):
             dc_id=getattr(user.photo, "dc_id", None),
             phone_number=user.phone,
             photo=types.ChatPhoto._parse(client, user.photo, user.id, user.access_hash),
-            restrictions=types.List(
-                [types.Restriction._parse(r) for r in user.restriction_reason]
-            )
+            restrictions=types.List([types.Restriction._parse(r) for r in user.restriction_reason])
             or None,
             reply_color=types.ChatColor._parse(getattr(user, "color", None)),
             profile_color=types.ChatColor._parse_profile_color(

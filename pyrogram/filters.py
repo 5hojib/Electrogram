@@ -19,7 +19,8 @@
 
 import inspect
 import re
-from typing import Callable, List, Pattern, Union
+from re import Pattern
+from typing import Callable, List, Union
 
 import pyrogram
 from pyrogram import enums
@@ -57,9 +58,7 @@ class InvertFilter(Filter):
         if inspect.iscoroutinefunction(self.base.__call__):
             x = await self.base(client, update)
         else:
-            x = await client.loop.run_in_executor(
-                client.executor, self.base, client, update
-            )
+            x = await client.loop.run_in_executor(client.executor, self.base, client, update)
 
         return not x
 
@@ -73,9 +72,7 @@ class AndFilter(Filter):
         if inspect.iscoroutinefunction(self.base.__call__):
             x = await self.base(client, update)
         else:
-            x = await client.loop.run_in_executor(
-                client.executor, self.base, client, update
-            )
+            x = await client.loop.run_in_executor(client.executor, self.base, client, update)
 
         # short circuit
         if not x:
@@ -84,9 +81,7 @@ class AndFilter(Filter):
         if inspect.iscoroutinefunction(self.other.__call__):
             y = await self.other(client, update)
         else:
-            y = await client.loop.run_in_executor(
-                client.executor, self.other, client, update
-            )
+            y = await client.loop.run_in_executor(client.executor, self.other, client, update)
 
         return x and y
 
@@ -100,9 +95,7 @@ class OrFilter(Filter):
         if inspect.iscoroutinefunction(self.base.__call__):
             x = await self.base(client, update)
         else:
-            x = await client.loop.run_in_executor(
-                client.executor, self.base, client, update
-            )
+            x = await client.loop.run_in_executor(client.executor, self.base, client, update)
 
         # short circuit
         if x:
@@ -111,9 +104,7 @@ class OrFilter(Filter):
         if inspect.iscoroutinefunction(self.other.__call__):
             y = await self.other(client, update)
         else:
-            y = await client.loop.run_in_executor(
-                client.executor, self.other, client, update
-            )
+            y = await client.loop.run_in_executor(client.executor, self.other, client, update)
 
         return x or y
 
@@ -488,9 +479,7 @@ private = create(private_filter)
 
 # region group_filter
 async def group_filter(_, __, m: Message):
-    return bool(
-        m.chat and m.chat.type in {enums.ChatType.GROUP, enums.ChatType.SUPERGROUP}
-    )
+    return bool(m.chat and m.chat.type in {enums.ChatType.GROUP, enums.ChatType.SUPERGROUP})
 
 
 group = create(group_filter)
@@ -1046,21 +1035,14 @@ class user(Filter, set):
         users = [] if users is None else users if isinstance(users, list) else [users]
 
         super().__init__(
-            "me"
-            if u in ["me", "self"]
-            else u.lower().strip("@")
-            if isinstance(u, str)
-            else u
+            "me" if u in ["me", "self"] else u.lower().strip("@") if isinstance(u, str) else u
             for u in users
         )
 
     async def __call__(self, _, message: Message):
         return message.from_user and (
             message.from_user.id in self
-            or (
-                message.from_user.username
-                and message.from_user.username.lower() in self
-            )
+            or (message.from_user.username and message.from_user.username.lower() in self)
             or ("me" in self and message.from_user.is_self)
         )
 
@@ -1083,11 +1065,7 @@ class chat(Filter, set):
         chats = [] if chats is None else chats if isinstance(chats, list) else [chats]
 
         super().__init__(
-            "me"
-            if c in ["me", "self"]
-            else c.lower().strip("@")
-            if isinstance(c, str)
-            else c
+            "me" if c in ["me", "self"] else c.lower().strip("@") if isinstance(c, str) else c
             for c in chats
         )
 
@@ -1106,10 +1084,7 @@ class chat(Filter, set):
                 message.from_user
                 and (
                     message.from_user.id in self
-                    or (
-                        message.from_user.username
-                        and message.from_user.username.lower() in self
-                    )
+                    or (message.from_user.username and message.from_user.username.lower() in self)
                 )
             )
         else:
@@ -1137,9 +1112,7 @@ class topic(Filter, set):
     """
 
     def __init__(self, topics: Union[int, List[int]] = None):
-        topics = (
-            [] if topics is None else topics if isinstance(topics, list) else [topics]
-        )
+        topics = [] if topics is None else topics if isinstance(topics, list) else [topics]
 
         super().__init__(t for t in topics)
 

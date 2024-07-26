@@ -21,8 +21,8 @@ import asyncio
 import logging
 from typing import Optional, Type
 
-from .transport import TCP, TCPAbridged
 from ..session.internals import DataCenter
+from .transport import TCP, TCPAbridged
 
 log = logging.getLogger(__name__)
 

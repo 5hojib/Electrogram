@@ -17,8 +17,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class CreateSupergroup:
@@ -49,9 +48,7 @@ class CreateSupergroup:
                 await app.create_supergroup("Supergroup Title", "Supergroup Description")
         """
         r = await self.invoke(
-            raw.functions.channels.CreateChannel(
-                title=title, about=description, megagroup=True
-            )
+            raw.functions.channels.CreateChannel(title=title, about=description, megagroup=True)
         )
 
         return types.Chat._parse_chat(self, r.chats[0])

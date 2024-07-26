@@ -26,14 +26,12 @@ import struct
 from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime, timezone
 from getpass import getpass
-from typing import Union, List, Dict, Optional, Any, Callable, TypeVar
 from types import SimpleNamespace
+from typing import Any, Callable, Dict, List, Optional, TypeVar, Union
 
 import pyrogram
-from pyrogram import raw, enums
-from pyrogram import types
-from pyrogram.file_id import FileId, FileType, PHOTO_TYPES, DOCUMENT_TYPES
-
+from pyrogram import enums, raw, types
+from pyrogram.file_id import DOCUMENT_TYPES, PHOTO_TYPES, FileId, FileType
 
 PyromodConfig = SimpleNamespace(
     timeout_handler=None,
@@ -172,9 +170,7 @@ async def parse_messages(
                     to_be_added_msg = None
                     the_chat_id = chat_id
                     if target_reply_to.reply_to_peer_id:
-                        the_chat_id = get_channel_id(
-                            target_reply_to.reply_to_peer_id.channel_id
-                        )
+                        the_chat_id = get_channel_id(target_reply_to.reply_to_peer_id.channel_id)
                     to_be_added_msg = await client.get_messages(
                         chat_id=the_chat_id,
                         message_ids=target_reply_to.reply_to_msg_id,
@@ -251,9 +247,7 @@ def parse_deleted_messages(
 
 def pack_inline_message_id(msg_id: "raw.base.InputBotInlineMessageID"):
     if isinstance(msg_id, raw.types.InputBotInlineMessageID):
-        inline_message_id_packed = struct.pack(
-            "<iqq", msg_id.dc_id, msg_id.id, msg_id.access_hash
-        )
+        inline_message_id_packed = struct.pack("<iqq", msg_id.dc_id, msg_id.id, msg_id.access_hash)
     else:
         inline_message_id_packed = struct.pack(
             "<iqiq", msg_id.dc_id, msg_id.owner_id, msg_id.id, msg_id.access_hash
@@ -297,19 +291,13 @@ def get_raw_peer_id(
     peer: Union[raw.base.Peer, raw.base.RequestedPeer],
 ) -> Optional[int]:
     """Get the raw peer id from a Peer object"""
-    if isinstance(peer, raw.types.PeerUser) or isinstance(
-        peer, raw.types.RequestedPeerUser
-    ):
+    if isinstance(peer, raw.types.PeerUser) or isinstance(peer, raw.types.RequestedPeerUser):
         return peer.user_id
 
-    if isinstance(peer, raw.types.PeerChat) or isinstance(
-        peer, raw.types.RequestedPeerChat
-    ):
+    if isinstance(peer, raw.types.PeerChat) or isinstance(peer, raw.types.RequestedPeerChat):
         return peer.chat_id
 
-    if isinstance(peer, raw.types.PeerChannel) or isinstance(
-        peer, raw.types.RequestedPeerChannel
-    ):
+    if isinstance(peer, raw.types.PeerChannel) or isinstance(peer, raw.types.RequestedPeerChannel):
         return peer.channel_id
 
     return None
@@ -331,7 +319,7 @@ def get_peer_id(peer: raw.base.Peer) -> int:
 
 def get_peer_type(peer_id: int) -> str:
     if peer_id < 0:
-        if MIN_CHAT_ID <= peer_id:
+        if peer_id >= MIN_CHAT_ID:
             return "chat"
 
         if MIN_CHANNEL_ID <= peer_id < MAX_CHANNEL_ID:
@@ -463,9 +451,9 @@ def datetime_to_timestamp(dt: Optional[datetime]) -> Optional[int]:
     return int(dt.timestamp()) if dt else None
 
 
-async def run_sync(
-    func: Callable[..., TypeVar("Result")], *args: Any, **kwargs: Any
-) -> TypeVar("Result"):
+async def run_sync(func: Callable[..., TypeVar("Result")], *args: Any, **kwargs: Any) -> TypeVar(
+    "Result"
+):
     loop = asyncio.get_event_loop()
     return await loop.run_in_executor(None, functools.partial(func, *args, **kwargs))
 

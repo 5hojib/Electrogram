@@ -21,8 +21,7 @@ from datetime import datetime
 from typing import List
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types
+from pyrogram import raw, types, utils
 from pyrogram.file_id import (
     FileId,
     FileType,
@@ -30,6 +29,7 @@ from pyrogram.file_id import (
     FileUniqueType,
     ThumbnailSource,
 )
+
 from ..object import Object
 
 
@@ -98,9 +98,7 @@ class Photo(Object):
 
                 if isinstance(p, raw.types.PhotoSizeProgressive):
                     photos.append(
-                        raw.types.PhotoSize(
-                            type=p.type, w=p.w, h=p.h, size=max(p.sizes)
-                        )
+                        raw.types.PhotoSize(type=p.type, w=p.w, h=p.h, size=max(p.sizes))
                     )
 
             photos.sort(key=lambda p: p.size)

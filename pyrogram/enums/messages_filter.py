@@ -18,6 +18,7 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyrogram import raw
+
 from .auto_name import AutoName
 
 

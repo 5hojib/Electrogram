@@ -21,8 +21,7 @@ import asyncio
 import ipaddress
 import logging
 import socket
-from concurrent.futures import ThreadPoolExecutor
-from typing import Tuple, Dict, TypedDict, Optional
+from typing import Dict, Optional, Tuple, TypedDict
 
 import socks
 
@@ -118,7 +117,7 @@ class TCP:
 
     async def close(self) -> None:
         if self.writer is None:
-            return None
+            return
 
         try:
             self.writer.close()
@@ -128,7 +127,7 @@ class TCP:
 
     async def send(self, data: bytes) -> None:
         if self.writer is None:
-            return None
+            return
 
         async with self.lock:
             try:
@@ -143,9 +142,7 @@ class TCP:
 
         while len(data) < length:
             try:
-                chunk = await asyncio.wait_for(
-                    self.reader.read(length - len(data)), TCP.TIMEOUT
-                )
+                chunk = await asyncio.wait_for(self.reader.read(length - len(data)), TCP.TIMEOUT)
             except (OSError, asyncio.TimeoutError):
                 return None
             else:

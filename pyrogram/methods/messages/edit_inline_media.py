@@ -23,11 +23,10 @@ import os
 import re
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
-from pyrogram import utils
-from pyrogram.errors import RPCError, MediaEmpty
+from pyrogram import raw, types, utils
+from pyrogram.errors import MediaEmpty, RPCError
 from pyrogram.file_id import FileType
+
 from .inline_session import get_session
 
 
@@ -91,9 +90,7 @@ class EditInlineMedia:
         if is_uploaded_file:
             filename_attribute = [
                 raw.types.DocumentAttributeFilename(
-                    file_name=media.media.name
-                    if is_bytes_io
-                    else os.path.basename(media.media)
+                    file_name=media.media.name if is_bytes_io else os.path.basename(media.media)
                 )
             ]
         else:
@@ -113,9 +110,7 @@ class EditInlineMedia:
         elif isinstance(media, types.InputMediaVideo):
             if is_uploaded_file:
                 media = raw.types.InputMediaUploadedDocument(
-                    mime_type=(
-                        None if is_bytes_io else self.guess_mime_type(media.media)
-                    )
+                    mime_type=(None if is_bytes_io else self.guess_mime_type(media.media))
                     or "video/mp4",
                     thumb=await self.save_file(media.thumb),
                     file=await self.save_file(media.media),
@@ -139,9 +134,7 @@ class EditInlineMedia:
         elif isinstance(media, types.InputMediaAudio):
             if is_uploaded_file:
                 media = raw.types.InputMediaUploadedDocument(
-                    mime_type=(
-                        None if is_bytes_io else self.guess_mime_type(media.media)
-                    )
+                    mime_type=(None if is_bytes_io else self.guess_mime_type(media.media))
                     or "audio/mpeg",
                     thumb=await self.save_file(media.thumb),
                     file=await self.save_file(media.media),
@@ -161,9 +154,7 @@ class EditInlineMedia:
         elif isinstance(media, types.InputMediaAnimation):
             if is_uploaded_file:
                 media = raw.types.InputMediaUploadedDocument(
-                    mime_type=(
-                        None if is_bytes_io else self.guess_mime_type(media.media)
-                    )
+                    mime_type=(None if is_bytes_io else self.guess_mime_type(media.media))
                     or "video/mp4",
                     thumb=await self.save_file(media.thumb),
                     file=await self.save_file(media.media),
@@ -185,15 +176,11 @@ class EditInlineMedia:
                     url=media.media, spoiler=media.has_spoiler
                 )
             else:
-                media = utils.get_input_media_from_file_id(
-                    media.media, FileType.ANIMATION
-                )
+                media = utils.get_input_media_from_file_id(media.media, FileType.ANIMATION)
         elif isinstance(media, types.InputMediaDocument):
             if is_uploaded_file:
                 media = raw.types.InputMediaUploadedDocument(
-                    mime_type=(
-                        None if is_bytes_io else self.guess_mime_type(media.media)
-                    )
+                    mime_type=(None if is_bytes_io else self.guess_mime_type(media.media))
                     or "application/zip",
                     thumb=await self.save_file(media.thumb),
                     file=await self.save_file(media.media),
@@ -203,9 +190,7 @@ class EditInlineMedia:
             elif is_external_url:
                 media = raw.types.InputMediaDocumentExternal(url=media.media)
             else:
-                media = utils.get_input_media_from_file_id(
-                    media.media, FileType.DOCUMENT
-                )
+                media = utils.get_input_media_from_file_id(media.media, FileType.DOCUMENT)
 
         unpacked = utils.unpack_inline_message_id(inline_message_id)
         dc_id = unpacked.dc_id
@@ -214,9 +199,7 @@ class EditInlineMedia:
 
         if is_uploaded_file:
             uploaded_media = await self.invoke(
-                raw.functions.messages.UploadMedia(
-                    peer=raw.types.InputPeerSelf(), media=media
-                )
+                raw.functions.messages.UploadMedia(peer=raw.types.InputPeerSelf(), media=media)
             )
 
             actual_media = (
@@ -247,9 +230,7 @@ class EditInlineMedia:
                     raw.functions.messages.EditInlineBotMessage(
                         id=unpacked,
                         media=actual_media,
-                        reply_markup=await reply_markup.write(self)
-                        if reply_markup
-                        else None,
+                        reply_markup=await reply_markup.write(self) if reply_markup else None,
                         **await self.parser.parse(caption, parse_mode),
                     ),
                     sleep_threshold=self.sleep_threshold,

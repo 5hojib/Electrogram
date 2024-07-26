@@ -19,6 +19,7 @@
 
 import pyrogram
 from pyrogram import raw, types
+
 from .inline_query_result import InlineQueryResult
 
 
@@ -113,9 +114,7 @@ class InlineQueryResultVenue(InlineQueryResult):
                 await self.input_message_content.write(client, self.reply_markup)
                 if self.input_message_content
                 else raw.types.InputBotInlineMessageMediaVenue(
-                    geo_point=raw.types.InputGeoPoint(
-                        lat=self.latitude, long=self.longitude
-                    ),
+                    geo_point=raw.types.InputGeoPoint(lat=self.latitude, long=self.longitude),
                     title=self.title,
                     address=self.address,
                     provider=(

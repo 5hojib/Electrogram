@@ -61,9 +61,7 @@ def generate(source_path, base):
                 else:
                     continue
 
-                full_path = (
-                    os.path.basename(path) + "/" + snek(name).replace("_", "-") + ".rst"
-                )
+                full_path = os.path.basename(path) + "/" + snek(name).replace("_", "-") + ".rst"
 
                 if level:
                     full_path = base + "/" + full_path
@@ -74,9 +72,7 @@ def generate(source_path, base):
 
                 full_name = f"{(namespace + '.') if namespace else ''}{name}"
 
-                os.makedirs(
-                    os.path.dirname(DESTINATION + "/" + full_path), exist_ok=True
-                )
+                os.makedirs(os.path.dirname(DESTINATION + "/" + full_path), exist_ok=True)
 
                 with open(DESTINATION + "/" + full_path, "w", encoding="utf-8") as f:
                     f.write(
@@ -825,11 +821,7 @@ def pyrogram_api():
             name, *bound_methods = get_title_list(v)
 
             fmt_keys.update(
-                {
-                    f"{k}_hlist": "\n    ".join(
-                        f"- :meth:`~{bm}`" for bm in bound_methods
-                    )
-                }
+                {f"{k}_hlist": "\n    ".join(f"- :meth:`~{bm}`" for bm in bound_methods)}
             )
 
             fmt_keys.update(
@@ -869,7 +861,7 @@ def start():
     pyrogram_api()
 
 
-if "__main__" == __name__:
+if __name__ == "__main__":
     FUNCTIONS_PATH = "../../pyrogram/raw/functions"
     TYPES_PATH = "../../pyrogram/raw/types"
     BASE_PATH = "../../pyrogram/raw/base"

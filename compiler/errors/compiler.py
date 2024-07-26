@@ -73,17 +73,15 @@ def start():
             with open(init, "a", encoding="utf-8") as f_init:
                 f_init.write(f"from .{name.lower()}_{code} import *\n")
 
-            with open(f"{HOME}/source/{i}", encoding="utf-8") as f_csv, open(
-                f"{DEST}/{name.lower()}_{code}.py", "w", encoding="utf-8"
-            ) as f_class:
+            with (
+                open(f"{HOME}/source/{i}", encoding="utf-8") as f_csv,
+                open(f"{DEST}/{name.lower()}_{code}.py", "w", encoding="utf-8") as f_class,
+            ):
                 reader = csv.reader(f_csv, delimiter="\t")
 
                 super_class = caml(name)
                 name = " ".join(
-                    [
-                        str(i.capitalize())
-                        for i in re.sub(r"_", " ", name).lower().split(" ")
-                    ]
+                    [str(i.capitalize()) for i in re.sub(r"_", " ", name).lower().split(" ")]
                 )
 
                 sub_classes = []
@@ -109,9 +107,7 @@ def start():
 
                     sub_classes.append((sub_class, error_id, error_message))
 
-                with open(
-                    f"{HOME}/template/class.txt", encoding="utf-8"
-                ) as f_class_template:
+                with open(f"{HOME}/template/class.txt", encoding="utf-8") as f_class_template:
                     class_template = f_class_template.read()
 
                     with open(
@@ -150,7 +146,7 @@ def start():
         f.write(re.sub("{count}", str(count), content))
 
 
-if "__main__" == __name__:
+if __name__ == "__main__":
     HOME = "."
     DEST = "../../pyrogram/errors/exceptions"
     NOTICE_PATH = "../../NOTICE"

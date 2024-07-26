@@ -18,8 +18,7 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 from .inline_query_result import InlineQueryResult
 
@@ -82,9 +81,7 @@ class InlineQueryResultArticle(InlineQueryResult):
         return raw.types.InputBotInlineResult(
             id=self.id,
             type=self.type,
-            send_message=await self.input_message_content.write(
-                client, self.reply_markup
-            ),
+            send_message=await self.input_message_content.write(client, self.reply_markup),
             title=self.title,
             description=self.description,
             url=self.url,
@@ -93,9 +90,7 @@ class InlineQueryResultArticle(InlineQueryResult):
                 size=0,
                 mime_type="image/jpeg",
                 attributes=[
-                    raw.types.DocumentAttributeImageSize(
-                        w=self.thumb_width, h=self.thumb_height
-                    )
+                    raw.types.DocumentAttributeImageSize(w=self.thumb_width, h=self.thumb_height)
                 ],
             )
             if self.thumb_url

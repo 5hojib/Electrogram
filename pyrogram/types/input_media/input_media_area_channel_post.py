@@ -16,13 +16,12 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-import pyrogram
+from typing import Union
 
+import pyrogram
 from pyrogram import raw, types
 
 from .input_media_area import InputMediaArea
-
-from typing import Union
 
 
 class InputMediaAreaChannelPost(InputMediaArea):

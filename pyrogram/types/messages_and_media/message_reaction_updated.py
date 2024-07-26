@@ -21,6 +21,7 @@ from typing import Dict, List
 
 import pyrogram
 from pyrogram import raw, types, utils
+
 from ..object import Object
 from ..update import Update
 
@@ -102,9 +103,7 @@ class MessageReactionUpdated(Object, Update):
         if actor_peer_id > 0:
             from_user = types.User._parse(client, users[raw_actor_peer_id])
         else:
-            actor_chat = types.Chat._parse_channel_chat(
-                client, chats[raw_actor_peer_id]
-            )
+            actor_chat = types.Chat._parse_channel_chat(client, chats[raw_actor_peer_id])
 
         return MessageReactionUpdated(
             client=client,

@@ -23,6 +23,7 @@ from typing import Optional, Tuple
 
 import pyrogram
 from pyrogram.crypto import aes
+
 from .tcp import TCP, Proxy
 
 log = logging.getLogger(__name__)

@@ -16,11 +16,12 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-import pyrogram
-
-from pyrogram import raw, types, utils
-from ..object import Object
 from typing import Union
+
+import pyrogram
+from pyrogram import raw, types, utils
+
+from ..object import Object
 
 
 class MessageStory(Object):
@@ -61,9 +62,7 @@ class MessageStory(Object):
         if isinstance(message_story.peer, raw.types.PeerChannel):
             chat_id = utils.get_channel_id(message_story.peer.channel_id)
             chat = await client.invoke(
-                raw.functions.channels.GetChannels(
-                    id=[await client.resolve_peer(chat_id)]
-                )
+                raw.functions.channels.GetChannels(id=[await client.resolve_peer(chat_id)])
             )
             sender_chat = types.Chat._parse_chat(client, chat.chats[0])
         else:

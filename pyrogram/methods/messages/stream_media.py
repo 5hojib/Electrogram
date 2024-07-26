@@ -18,7 +18,7 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 import math
-from typing import Union, Optional, BinaryIO
+from typing import BinaryIO, Optional, Union
 
 import pyrogram
 from pyrogram import types

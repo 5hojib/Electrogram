@@ -21,8 +21,8 @@ from base64 import b64encode
 from struct import pack
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
+
 from ..object import Object
 from ..update import Update
 

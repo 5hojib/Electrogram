@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, Optional
+from typing import Optional, Union
 
 import pyrogram
 from pyrogram import raw
@@ -58,9 +58,7 @@ class SetChatUsername:
         if isinstance(peer, raw.types.InputPeerChannel):
             return bool(
                 await self.invoke(
-                    raw.functions.channels.UpdateUsername(
-                        channel=peer, username=username or ""
-                    )
+                    raw.functions.channels.UpdateUsername(channel=peer, username=username or "")
                 )
             )
         else:

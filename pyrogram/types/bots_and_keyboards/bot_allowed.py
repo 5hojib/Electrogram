@@ -16,11 +16,11 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-import pyrogram
-
 from typing import Optional
 
+import pyrogram
 from pyrogram import raw, types
+
 from ..object import Object
 
 
@@ -57,9 +57,7 @@ class BotAllowed(Object):
         self.app = app
 
     @staticmethod
-    def _parse(
-        client: "pyrogram.Client", bot_allowed: "raw.types.BotAllowed"
-    ) -> "BotAllowed":
+    def _parse(client: "pyrogram.Client", bot_allowed: "raw.types.BotAllowed") -> "BotAllowed":
         bot_app = getattr(bot_allowed, "app", None)
         return BotAllowed(
             attach_menu=getattr(bot_allowed, "attach_menu", None),
