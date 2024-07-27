@@ -543,11 +543,6 @@ def pyrogram_api():
             InputMediaArea
             InputMediaAreaChannelPost
         """,
-        pyromod="""
-        Pyromod
-            Identifier
-            Listener
-        """,
         bot="""
         Bot
             BotAllowed

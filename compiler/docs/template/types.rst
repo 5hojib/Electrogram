@@ -60,19 +60,6 @@ Stories
 
     {stories}
 
-Pyromod
--------
-
-.. autosummary::
-    :nosignatures:
-
-    {pyromod}
-
-.. toctree::
-    :hidden:
-
-    {pyromod}
-
 Bot
 ---
 

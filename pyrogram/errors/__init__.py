@@ -18,7 +18,6 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from .exceptions import *
-from .pyromod import *
 from .rpc_error import UnknownError
 
 

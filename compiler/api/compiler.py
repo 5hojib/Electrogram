@@ -21,6 +21,7 @@ import json
 import os
 import re
 import shutil
+from contextlib import suppress
 from functools import partial
 from pathlib import Path
 from typing import NamedTuple
@@ -134,11 +135,10 @@ def get_type_hint(type: str) -> str:
 
     if is_core:
         return f"Optional[{type}] = None" if is_flag else type
-    else:
-        ns, name = type.split(".") if "." in type else ("", type)
-        type = '"raw.base.' + ".".join([ns, name]).strip(".") + '"'
+    ns, name = type.split(".") if "." in type else ("", type)
+    type = '"raw.base.' + ".".join([ns, name]).strip(".") + '"'
 
-        return f'{type}{" = None" if is_flag else ""}'
+    return f'{type}{" = None" if is_flag else ""}'
 
 
 def sort_args(args):
@@ -180,16 +180,14 @@ def get_docstring_arg_type(t: str):
             return "``str``"
         elif t == "true":
             return "``bool``"
-        else:
-            return f"``{t.lower()}``"
+        return f"``{t.lower()}``"
     elif t == "TLObject" or t == "X":
         return "Any object from :obj:`~pyrogram.raw.types`"
     elif t == "!X":
         return "Any function from :obj:`~pyrogram.raw.functions`"
     elif t.lower().startswith("vector"):
         return "List of " + get_docstring_arg_type(t.split("<", 1)[1][:-1])
-    else:
-        return f":obj:`{t} <pyrogram.raw.base.{t}>`"
+    return f":obj:`{t} <pyrogram.raw.base.{t}>`"
 
 
 def get_references(t: str, kind: str):
@@ -316,10 +314,8 @@ def start(format: bool = False):
 
     for k, v in types_to_constructors.items():
         for i in v:
-            try:
+            with suppress(KeyError):
                 constructors_to_functions[i] = types_to_functions[k]
-            except KeyError:
-                pass
 
     # import json
     # print(json.dumps(namespaces_to_types, indent=2))
