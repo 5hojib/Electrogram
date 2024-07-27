@@ -156,7 +156,7 @@ async def parse_messages(
             is_all_within_chat = not any(
                 value.reply_to_peer_id for value in messages_with_replies.values()
             )
-            reply_messages: List[pyrogram.types.Message] = []
+            reply_messages: list[pyrogram.types.Message] = []
             if is_all_within_chat:
                 # fast path: fetch all messages within the same chat
                 reply_messages = await client.get_messages(
@@ -426,7 +426,7 @@ async def parse_text_entities(
     text: str,
     parse_mode: enums.ParseMode,
     entities: List["types.MessageEntity"],
-) -> Dict[str, Union[str, List[raw.base.MessageEntity]]]:
+) -> Dict[str, Union[str, list[raw.base.MessageEntity]]]:
     if entities:
         # Inject the client instance because parsing user mentions requires it
         for entity in entities:

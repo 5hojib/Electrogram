@@ -59,7 +59,7 @@ class ReplyKeyboardMarkup(Object):
 
     def __init__(
         self,
-        keyboard: List[List[Union["types.KeyboardButton", str]]],
+        keyboard: list[list[Union["types.KeyboardButton", str]]],
         is_persistent: bool = None,
         resize_keyboard: bool = None,
         one_time_keyboard: bool = None,

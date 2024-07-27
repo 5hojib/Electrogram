@@ -131,7 +131,7 @@ class Poll(Object, Update):
     ) -> "Poll":
         poll: raw.types.Poll = media_poll.poll
         poll_results: raw.types.PollResults = media_poll.results
-        results: List[raw.types.PollAnswerVoters] = poll_results.results
+        results: list[raw.types.PollAnswerVoters] = poll_results.results
 
         chosen_option_id = None
         correct_option_id = None

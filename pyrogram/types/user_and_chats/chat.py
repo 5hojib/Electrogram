@@ -1150,7 +1150,7 @@ class Chat(Object):
 
     async def add_members(
         self,
-        user_ids: Union[Union[int, str], List[Union[int, str]]],
+        user_ids: Union[Union[int, str], list[Union[int, str]]],
         forward_limit: int = 100,
     ) -> bool:
         """Bound method *add_members* of :obj:`~pyrogram.types.Chat`.

@@ -28,7 +28,7 @@ class GetManyListenersMatchingWithIdentifierPattern:
         self: "pyrogram.Client",
         pattern: Identifier,
         listener_type: "pyrogram.enums.ListenerTypes",
-    ) -> List[Listener]:
+    ) -> list[Listener]:
         """Gets multiple listener that matches the given identifier pattern.
 
         .. include:: /_includes/usable-by/users-bots.rst

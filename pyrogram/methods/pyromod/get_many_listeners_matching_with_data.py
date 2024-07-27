@@ -28,7 +28,7 @@ class GetManyListenersMatchingWithData:
         self: "pyrogram.Client",
         data: Identifier,
         listener_type: "pyrogram.enums.ListenerTypes",
-    ) -> List[Listener]:
+    ) -> list[Listener]:
         """Gets multiple listener that matches the given data.
 
         .. include:: /_includes/usable-by/users-bots.rst

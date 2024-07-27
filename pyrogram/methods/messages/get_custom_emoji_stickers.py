@@ -26,14 +26,14 @@ from pyrogram import raw, types
 class GetCustomEmojiStickers:
     async def get_custom_emoji_stickers(
         self: "pyrogram.Client",
-        custom_emoji_ids: Union[int, List[int]],
+        custom_emoji_ids: Union[int, list[int]],
     ) -> Union["types.Sticker", List["types.Sticker"]]:
         """Get information about custom emoji stickers by their identifiers.
 
         .. include:: /_includes/usable-by/users-bots.rst
 
         Parameters:
-            custom_emoji_ids (:obj:`int` | :obj:`List[int]`):
+            custom_emoji_ids (:obj:`int` | :obj:`list[int]`):
                 Custom emoji ID.
                 At most 200 custom emoji identifiers can be specified.
 

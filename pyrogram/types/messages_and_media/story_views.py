@@ -35,7 +35,7 @@ class StoryViews(Object):
             List of user_id of recent stories viewers.
     """
 
-    def __init__(self, *, view_count: int, recent_viewers: List[int] = None):
+    def __init__(self, *, view_count: int, recent_viewers: list[int] = None):
         super().__init__()
 
         self.view_count = view_count

@@ -46,18 +46,18 @@ class Storage:
     async def delete(self):
         raise NotImplementedError
 
-    async def update_peers(self, peers: List[Tuple[int, int, str, str, str]]):
+    async def update_peers(self, peers: list[tuple[int, int, str, str, str]]):
         raise NotImplementedError
 
-    async def update_usernames(self, usernames: List[Tuple[int, str]]):
+    async def update_usernames(self, usernames: list[tuple[int, str]]):
         raise NotImplementedError
 
     @abstractmethod
-    async def update_state(self, update_state: Tuple[int, int, int, int, int] = object):
+    async def update_state(self, update_state: tuple[int, int, int, int, int] = object):
         """Get or set the update state of the current session.
 
         Parameters:
-            update_state (``Tuple[int, int, int, int, int]``): A tuple containing the update state to set.
+            update_state (``tuple[int, int, int, int, int]``): A tuple containing the update state to set.
                 Tuple must contain the following information:
                 - ``int``: The id of the entity.
                 - ``int``: The pts.

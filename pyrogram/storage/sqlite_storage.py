@@ -146,20 +146,20 @@ class SQLiteStorage(Storage):
     async def delete(self):
         raise NotImplementedError
 
-    async def update_peers(self, peers: List[Tuple[int, int, str, str, str]]):
+    async def update_peers(self, peers: list[tuple[int, int, str, str, str]]):
         self.conn.executemany(
             "REPLACE INTO peers (id, access_hash, type, username, phone_number)"
             "VALUES (?, ?, ?, ?, ?)",
             peers,
         )
 
-    async def update_usernames(self, usernames: List[Tuple[int, str]]):
+    async def update_usernames(self, usernames: list[tuple[int, str]]):
         self.conn.executescript(UNAME_SCHEMA)
         for user in usernames:
             self.conn.execute("DELETE FROM usernames WHERE peer_id=?", (user[0],))
         self.conn.executemany("REPLACE INTO usernames (peer_id, id)" "VALUES (?, ?)", usernames)
 
-    async def update_state(self, value: Tuple[int, int, int, int, int] = object):
+    async def update_state(self, value: tuple[int, int, int, int, int] = object):
         if value == object:
             return self.conn.execute("SELECT id, pts, qts, date, seq FROM update_state").fetchall()
         else:

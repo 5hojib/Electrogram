@@ -25,7 +25,7 @@ from ..all import objects
 
 
 class TLObject:
-    __slots__: List[str] = []
+    __slots__: list[str] = []
 
     QUALNAME = "Base"
 

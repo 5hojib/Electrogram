@@ -182,9 +182,9 @@ class Folder(Object):
 
     async def update(
         self,
-        included_chats: List[Union[int, str]] = None,
-        excluded_chats: List[Union[int, str]] = None,
-        pinned_chats: List[Union[int, str]] = None,
+        included_chats: list[Union[int, str]] = None,
+        excluded_chats: list[Union[int, str]] = None,
+        pinned_chats: list[Union[int, str]] = None,
         title: str = None,
         contacts: bool = None,
         non_contacts: bool = None,

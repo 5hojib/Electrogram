@@ -29,7 +29,7 @@ class SendReaction:
         chat_id: Union[int, str],
         message_id: int = None,
         story_id: int = None,
-        emoji: Union[int, str, List[Union[int, str]]] = None,
+        emoji: Union[int, str, list[Union[int, str]]] = None,
         big: bool = False,
         add_to_recent: bool = False,
     ) -> "types.MessageReactions":

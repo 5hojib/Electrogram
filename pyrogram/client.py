@@ -561,7 +561,7 @@ class Client(Methods):
         self.parse_mode = parse_mode
 
     async def fetch_peers(
-        self, peers: List[Union[raw.types.User, raw.types.Chat, raw.types.Channel]]
+        self, peers: list[Union[raw.types.User, raw.types.Chat, raw.types.Channel]]
     ) -> bool:
         is_min = False
         parsed_peers = []

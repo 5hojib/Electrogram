@@ -137,12 +137,12 @@ class Story(Object, Update):
         views: "types.StoryViews" = None,
         privacy: "enums.StoryPrivacy" = None,
         forward_from: "types.StoryForwardHeader" = None,
-        allowed_users: List[int] = None,
-        denied_users: List[int] = None,
+        allowed_users: list[int] = None,
+        denied_users: list[int] = None,
         media_areas: List["types.MediaArea"] = None,
         raw: "raw.types.StoryItem" = None,
-        # allowed_chats: List[int] = None,
-        # denied_chats: List[int] = None
+        # allowed_chats: list[int] = None,
+        # denied_chats: list[int] = None
     ):
         super().__init__(client)
 
@@ -1500,10 +1500,10 @@ class Story(Object, Update):
     async def edit(
         self,
         privacy: "enums.StoriesPrivacyRules" = None,
-        allowed_users: List[int] = None,
-        denied_users: List[int] = None,
-        # allowed_chats: List[int] = None,
-        # denied_chats: List[int] = None,
+        allowed_users: list[int] = None,
+        denied_users: list[int] = None,
+        # allowed_chats: list[int] = None,
+        # denied_chats: list[int] = None,
         animation: str = None,
         photo: str = None,
         video: str = None,
@@ -1681,10 +1681,10 @@ class Story(Object, Update):
     async def edit_privacy(
         self,
         privacy: "enums.StoriesPrivacyRules" = None,
-        allowed_users: List[int] = None,
-        denied_users: List[int] = None,
-        # allowed_chats: List[int] = None,
-        # denied_chats: List[int] = None
+        allowed_users: list[int] = None,
+        denied_users: list[int] = None,
+        # allowed_chats: list[int] = None,
+        # denied_chats: list[int] = None
     ) -> "types.Story":
         """Bound method *edit_privacy* of :obj:`~pyrogram.types.Story`.
 
@@ -1793,10 +1793,10 @@ class Story(Object, Update):
         self,
         chat_id: int = None,
         privacy: "enums.StoriesPrivacyRules" = None,
-        allowed_users: List[int] = None,
-        denied_users: List[int] = None,
-        # allowed_chats: List[int] = None,
-        # denied_chats: List[int] = None,
+        allowed_users: list[int] = None,
+        denied_users: list[int] = None,
+        # allowed_chats: list[int] = None,
+        # denied_chats: list[int] = None,
         pinned: bool = None,
         protect_content: bool = None,
         caption: str = None,

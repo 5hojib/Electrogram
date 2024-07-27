@@ -125,7 +125,7 @@ class Animation(Object):
         if isinstance(video, raw.types.Photo):
             if not video.video_sizes:
                 return None
-            video_sizes: List[raw.types.VideoSize] = []
+            video_sizes: list[raw.types.VideoSize] = []
             for p in video.video_sizes:
                 if isinstance(p, raw.types.VideoSize):
                     video_sizes.append(p)

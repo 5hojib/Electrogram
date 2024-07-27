@@ -31,10 +31,10 @@ class RegisterNextStepHandler:
         filters: Optional[Filter] = None,
         listener_type: "pyrogram.enums.ListenerTypes" = pyrogram.enums.ListenerTypes.MESSAGE,
         unallowed_click_alert: bool = True,
-        chat_id: Union[Union[int, str], List[Union[int, str]]] = None,
-        user_id: Union[Union[int, str], List[Union[int, str]]] = None,
-        message_id: Union[int, List[int]] = None,
-        inline_message_id: Union[str, List[str]] = None,
+        chat_id: Union[Union[int, str], list[Union[int, str]]] = None,
+        user_id: Union[Union[int, str], list[Union[int, str]]] = None,
+        message_id: Union[int, list[int]] = None,
+        inline_message_id: Union[str, list[str]] = None,
     ):
         """Registers a listener with a callback to be called when the listener is fulfilled.
 

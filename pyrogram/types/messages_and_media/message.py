@@ -515,11 +515,11 @@ class Message(Object, Update):
         forwards: int = None,
         via_bot: "types.User" = None,
         outgoing: bool = None,
-        matches: List[Match] = None,
-        command: List[str] = None,
+        matches: list[Match] = None,
+        command: list[str] = None,
         bot_allowed: "types.BotAllowed" = None,
-        chat_shared: List[int] = None,
-        user_shared: List[int] = None,
+        chat_shared: list[int] = None,
+        user_shared: list[int] = None,
         forum_topic_created: "types.ForumTopicCreated" = None,
         forum_topic_closed: "types.ForumTopicClosed" = None,
         forum_topic_reopened: "types.ForumTopicReopened" = None,
@@ -653,7 +653,7 @@ class Message(Object, Update):
 
     async def wait_for_click(
         self,
-        from_user_id: Optional[Union[Union[int, str], List[Union[int, str]]]] = None,
+        from_user_id: Optional[Union[Union[int, str], list[Union[int, str]]]] = None,
         timeout: Optional[int] = None,
         filters=None,
         alert: Union[str, bool] = True,
@@ -2984,7 +2984,7 @@ class Message(Object, Update):
     async def reply_poll(
         self,
         question: str,
-        options: List[str],
+        options: list[str],
         is_anonymous: bool = True,
         type: "enums.PollType" = enums.PollType.REGULAR,
         allows_multiple_answers: bool = None,

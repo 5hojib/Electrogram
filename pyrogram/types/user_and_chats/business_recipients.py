@@ -54,7 +54,7 @@ class BusinessRecipients(Object):
         contacts: bool = None,
         non_contacts: bool = None,
         exclude_selected: bool = None,
-        users: List[int] = None,
+        users: list[int] = None,
     ):
         self.existing_chats = existing_chats
         self.new_chats = new_chats

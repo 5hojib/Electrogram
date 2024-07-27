@@ -90,7 +90,7 @@ class Photo(Object):
     @staticmethod
     def _parse(client, photo: "raw.types.Photo", ttl_seconds: int = None) -> "Photo":
         if isinstance(photo, raw.types.Photo):
-            photos: List[raw.types.PhotoSize] = []
+            photos: list[raw.types.PhotoSize] = []
 
             for p in photo.sizes:
                 if isinstance(p, raw.types.PhotoSize):

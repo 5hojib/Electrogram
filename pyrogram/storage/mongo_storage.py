@@ -121,7 +121,7 @@ class MongoStorage(Storage):
         except Exception as _:
             return
 
-    async def update_peers(self, peers: List[Tuple[int, int, str, str, str]]):
+    async def update_peers(self, peers: list[tuple[int, int, str, str, str]]):
         """(id, access_hash, type, username, phone_number)"""
         s = int(time.time())
         bulk = [
@@ -144,7 +144,7 @@ class MongoStorage(Storage):
             return
         await self._peer.bulk_write(bulk)
 
-    async def update_usernames(self, usernames: List[Tuple[int, str]]):
+    async def update_usernames(self, usernames: list[tuple[int, str]]):
         s = int(time.time())
         bulk_delete = [DeleteMany({"peer_id": i[0]}) for i in usernames]
         bulk = [
@@ -160,7 +160,7 @@ class MongoStorage(Storage):
         await self._usernames.bulk_write(bulk_delete)
         await self._usernames.bulk_write(bulk)
 
-    async def update_state(self, value: Tuple[int, int, int, int, int] = object):
+    async def update_state(self, value: tuple[int, int, int, int, int] = object):
         if value == object:
             states = [
                 [state["_id"], state["pts"], state["qts"], state["date"], state["seq"]]

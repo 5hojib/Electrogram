@@ -28,7 +28,7 @@ class VotePoll:
         self: "pyrogram.Client",
         chat_id: Union[int, str],
         message_id: id,
-        options: Union[int, List[int]],
+        options: Union[int, list[int]],
     ) -> "types.Poll":
         """Vote a poll.
 
