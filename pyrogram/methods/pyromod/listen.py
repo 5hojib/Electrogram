@@ -19,7 +19,7 @@
 
 import asyncio
 import inspect
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 import pyrogram
 from pyrogram.errors import ListenerTimeout

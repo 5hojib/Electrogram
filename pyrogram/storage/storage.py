@@ -20,7 +20,6 @@
 import base64
 import struct
 from abc import abstractmethod
-from typing import List, Tuple
 
 
 class Storage:

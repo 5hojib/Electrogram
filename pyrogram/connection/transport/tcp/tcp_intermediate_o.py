@@ -20,7 +20,7 @@
 import logging
 import os
 from struct import pack, unpack
-from typing import Optional, Tuple
+from typing import Optional
 
 from pyrogram.crypto import aes
 

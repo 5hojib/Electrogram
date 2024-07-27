@@ -18,7 +18,7 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from asyncio import iscoroutinefunction
-from typing import Callable, Tuple
+from typing import Callable
 
 import pyrogram
 from pyrogram.types import CallbackQuery, Identifier, Listener

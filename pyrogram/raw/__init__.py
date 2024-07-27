@@ -19,7 +19,7 @@
 
 from importlib import import_module
 
-from . import types, functions, base, core # noqa
+from . import base, core, functions, types  # noqa
 from .all import objects
 
 for k, v in objects.items():

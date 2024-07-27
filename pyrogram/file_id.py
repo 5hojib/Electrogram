@@ -22,7 +22,6 @@ import logging
 import struct
 from enum import IntEnum
 from io import BytesIO
-from typing import List
 
 from pyrogram.raw.core import Bytes, String
 

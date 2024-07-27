@@ -20,7 +20,7 @@
 import inspect
 import re
 from re import Pattern
-from typing import Callable, List, Union
+from typing import Callable, Union
 
 import pyrogram
 from pyrogram import enums

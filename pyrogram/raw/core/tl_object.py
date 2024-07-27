@@ -19,7 +19,7 @@
 
 from io import BytesIO
 from json import dumps
-from typing import Any, Dict, List, Union, cast
+from typing import Any, Dict, Union, cast
 
 from ..all import objects
 

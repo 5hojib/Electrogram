@@ -19,7 +19,7 @@
 
 import inspect
 import time
-from typing import Any, List, Tuple
+from typing import Any
 
 from pyrogram import raw
 

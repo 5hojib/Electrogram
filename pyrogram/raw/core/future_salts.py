@@ -18,7 +18,7 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
-from typing import Any, List
+from typing import Any
 
 from .future_salt import FutureSalt
 from .primitives.int import Int, Long

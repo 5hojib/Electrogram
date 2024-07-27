@@ -19,7 +19,7 @@
 
 import logging
 import os
-from typing import Optional, Tuple
+from typing import Optional
 
 import pyrogram
 from pyrogram.crypto import aes

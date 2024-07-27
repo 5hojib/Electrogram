@@ -19,7 +19,7 @@
 
 import logging
 from struct import pack, unpack
-from typing import Optional, Tuple
+from typing import Optional
 
 from .tcp import TCP, Proxy
 

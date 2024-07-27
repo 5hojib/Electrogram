@@ -18,7 +18,7 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-from typing import Optional, Tuple
+from typing import Optional
 
 from .tcp import TCP, Proxy
 

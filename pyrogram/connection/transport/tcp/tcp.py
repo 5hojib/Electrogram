@@ -21,7 +21,7 @@ import asyncio
 import ipaddress
 import logging
 import socket
-from typing import Dict, Optional, Tuple, TypedDict
+from typing import Dict, Optional, TypedDict
 
 import socks
 

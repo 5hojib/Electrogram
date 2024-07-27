@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import BinaryIO, List, Optional, Union
+from typing import BinaryIO, Optional, Union
 
 from ... import enums
 from ..messages_and_media import MessageEntity

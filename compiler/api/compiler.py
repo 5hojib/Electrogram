@@ -23,7 +23,7 @@ import re
 import shutil
 from functools import partial
 from pathlib import Path
-from typing import List, NamedTuple, Tuple
+from typing import NamedTuple
 
 # from autoflake import fix_code
 # from black import format_str, FileMode
