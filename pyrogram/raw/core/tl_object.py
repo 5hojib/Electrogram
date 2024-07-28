@@ -18,12 +18,10 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from json import dumps
-from typing import TYPE_CHECKING, Any, cast
+from io import BytesIO
+from typing import Any, cast
 
 from pyrogram.raw.all import objects
-
-if TYPE_CHECKING:
-    from io import BytesIO
 
 
 class TLObject:
