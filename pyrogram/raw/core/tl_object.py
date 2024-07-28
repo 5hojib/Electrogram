@@ -17,8 +17,8 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from json import dumps
 from io import BytesIO
+from json import dumps
 from typing import Any, cast
 
 from pyrogram.raw.all import objects
