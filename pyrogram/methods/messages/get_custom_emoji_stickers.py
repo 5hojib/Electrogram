@@ -27,7 +27,7 @@ class GetCustomEmojiStickers:
     async def get_custom_emoji_stickers(
         self: "pyrogram.Client",
         custom_emoji_ids: Union[int, list[int]],
-    ) -> Union["types.Sticker", List["types.Sticker"]]:
+    ) -> Union["types.Sticker", list["types.Sticker"]]:
         """Get information about custom emoji stickers by their identifiers.
 
         .. include:: /_includes/usable-by/users-bots.rst

@@ -35,7 +35,7 @@ class CopyMessage:
         message_id: int,
         caption: str = None,
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         has_spoiler: bool = None,
         disable_notification: bool = None,
         message_thread_id: int = None,

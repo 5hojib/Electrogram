@@ -33,7 +33,7 @@ class ArchiveChats:
         .. include:: /_includes/usable-by/users.rst
 
         Parameters:
-            chat_ids (``int`` | ``str`` | List[``int``, ``str``]):
+            chat_ids (``int`` | ``str`` | list[``int``, ``str``]):
                 Unique identifier (int) or username (str) of the target chat.
                 You can also pass a list of ids (int) or usernames (str).
                 You can also use chat public link in form of *t.me/<username>* (str).

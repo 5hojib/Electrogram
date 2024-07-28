@@ -470,10 +470,10 @@ class Message(Object, Update):
         has_protected_content: bool = None,
         has_media_spoiler: bool = None,
         text: Str = None,
-        entities: List["types.MessageEntity"] = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        entities: list["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         effect_id: str = None,
         invert_media: bool = None,
         audio: "types.Audio" = None,
@@ -498,7 +498,7 @@ class Message(Object, Update):
         venue: "types.Venue" = None,
         poll: "types.Poll" = None,
         dice: "types.Dice" = None,
-        new_chat_members: List["types.User"] = None,
+        new_chat_members: list["types.User"] = None,
         chat_joined_by_request: "types.ChatJoinedByRequest" = None,
         left_chat_member: "types.User" = None,
         new_chat_title: str = None,
@@ -541,7 +541,7 @@ class Message(Object, Update):
             "types.ReplyKeyboardRemove",
             "types.ForceReply",
         ] = None,
-        reactions: List["types.Reaction"] = None,
+        reactions: list["types.Reaction"] = None,
         raw: "raw.types.Message" = None,
     ):
         super().__init__(client)
@@ -1136,7 +1136,7 @@ class Message(Object, Update):
                         )
                         media_type = enums.MessageMediaType.WEB_PAGE_PREVIEW
                     else:
-                        media = None
+                        media = None # gonna delete
                 elif isinstance(media, raw.types.MessageMediaPoll):
                     poll = await types.Poll._parse(client, media, users)
                     media_type = enums.MessageMediaType.POLL
@@ -1366,7 +1366,7 @@ class Message(Object, Update):
         else:
             return f"https://t.me/c/{utils.get_channel_id(self.chat.id)}/{self.id}"
 
-    async def get_media_group(self) -> List["types.Message"]:
+    async def get_media_group(self) -> list["types.Message"]:
         """Bound method *get_media_group* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -1397,14 +1397,14 @@ class Message(Object, Update):
         text: str,
         quote: bool = None,
         parse_mode: Optional["enums.ParseMode"] = None,
-        entities: List["types.MessageEntity"] = None,
+        entities: list["types.MessageEntity"] = None,
         disable_web_page_preview: bool = None,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
         business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
         message_effect_id: int = None,
@@ -1543,7 +1543,7 @@ class Message(Object, Update):
         quote: bool = None,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         has_spoiler: bool = None,
         duration: int = 0,
         width: int = 0,
@@ -1562,7 +1562,7 @@ class Message(Object, Update):
         business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         progress: Callable = None,
         progress_args: tuple = (),
     ) -> "Message":
@@ -1737,7 +1737,7 @@ class Message(Object, Update):
         quote: bool = None,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         duration: int = 0,
         performer: str = None,
         title: str = None,
@@ -1748,7 +1748,7 @@ class Message(Object, Update):
         business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -1920,12 +1920,12 @@ class Message(Object, Update):
         quote: bool = None,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -2105,7 +2105,7 @@ class Message(Object, Update):
         business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
@@ -2230,7 +2230,7 @@ class Message(Object, Update):
         thumb: Union[str, BinaryIO] = None,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         file_name: str = None,
         force_document: bool = None,
         disable_notification: bool = None,
@@ -2238,7 +2238,7 @@ class Message(Object, Update):
         business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         schedule_date: datetime = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
@@ -2494,7 +2494,7 @@ class Message(Object, Update):
         disable_notification: bool = None,
         reply_to_message_id: int = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
     ) -> "Message":
         """Bound method *reply_inline_bot_result* of :obj:`~pyrogram.types.Message`.
@@ -2579,7 +2579,7 @@ class Message(Object, Update):
         business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
@@ -2695,7 +2695,7 @@ class Message(Object, Update):
 
     async def reply_media_group(
         self,
-        media: List[
+        media: list[
             Union[
                 "types.InputMediaPhoto",
                 "types.InputMediaVideo",
@@ -2709,10 +2709,10 @@ class Message(Object, Update):
         reply_in_chat_id: Union[int, str] = None,
         business_connection_id: str = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
         invert_media: bool = None,
-    ) -> List["types.Message"]:
+    ) -> list["types.Message"]:
         """Bound method *reply_media_group* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -2810,7 +2810,7 @@ class Message(Object, Update):
         quote: bool = None,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         has_spoiler: bool = None,
         ttl_seconds: int = None,
         disable_notification: bool = None,
@@ -2818,7 +2818,7 @@ class Message(Object, Update):
         business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         view_once: bool = None,
         invert_media: bool = None,
         reply_markup: Union[
@@ -2991,7 +2991,7 @@ class Message(Object, Update):
         correct_option_id: int = None,
         explanation: str = None,
         explanation_parse_mode: "enums.ParseMode" = None,
-        explanation_entities: List["types.MessageEntity"] = None,
+        explanation_entities: list["types.MessageEntity"] = None,
         open_period: int = None,
         close_date: datetime = None,
         is_closed: bool = None,
@@ -3002,7 +3002,7 @@ class Message(Object, Update):
         business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
         schedule_date: datetime = None,
         reply_markup: Union[
@@ -3180,7 +3180,7 @@ class Message(Object, Update):
         business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
@@ -3331,7 +3331,7 @@ class Message(Object, Update):
         business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
@@ -3466,7 +3466,7 @@ class Message(Object, Update):
         quote: bool = None,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         has_spoiler: bool = None,
         ttl_seconds: int = None,
         duration: int = 0,
@@ -3480,7 +3480,7 @@ class Message(Object, Update):
         business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         invert_media: bool = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
@@ -3677,7 +3677,7 @@ class Message(Object, Update):
         business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
         protect_content: bool = None,
         ttl_seconds: int = None,
@@ -3841,14 +3841,14 @@ class Message(Object, Update):
         quote: bool = None,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         duration: int = 0,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
         business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -4000,7 +4000,7 @@ class Message(Object, Update):
         text: str = "",
         quote: bool = None,
         parse_mode: Optional["enums.ParseMode"] = None,
-        entities: List["types.MessageEntity"] = None,
+        entities: list["types.MessageEntity"] = None,
         large_media: bool = None,
         invert_media: bool = None,
         disable_notification: bool = None,
@@ -4008,7 +4008,7 @@ class Message(Object, Update):
         business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
         reply_markup=None,
@@ -4138,7 +4138,7 @@ class Message(Object, Update):
         self,
         text: str,
         parse_mode: Optional["enums.ParseMode"] = None,
-        entities: List["types.MessageEntity"] = None,
+        entities: list["types.MessageEntity"] = None,
         disable_web_page_preview: bool = None,
         invert_media: bool = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
@@ -4213,7 +4213,7 @@ class Message(Object, Update):
         self,
         caption: str,
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         invert_media: bool = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
         business_connection_id: str = None,
@@ -4384,7 +4384,7 @@ class Message(Object, Update):
         schedule_date: datetime = None,
         protect_content: bool = None,
         drop_author: bool = None,
-    ) -> Union["types.Message", List["types.Message"]]:
+    ) -> Union["types.Message", list["types.Message"]]:
         """Bound method *forward* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -4447,12 +4447,12 @@ class Message(Object, Update):
         chat_id: Union[int, str],
         caption: str = None,
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         has_spoiler: bool = None,
         disable_notification: bool = None,
         message_thread_id: int = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         reply_to_message_id: int = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
@@ -4463,7 +4463,7 @@ class Message(Object, Update):
             "types.ReplyKeyboardRemove",
             "types.ForceReply",
         ] = object,
-    ) -> Union["types.Message", List["types.Message"]]:
+    ) -> Union["types.Message", list["types.Message"]]:
         """Bound method *copy* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -5148,7 +5148,7 @@ class Message(Object, Update):
         text: str,
         quote: bool = None,
         parse_mode: Optional["enums.ParseMode"] = None,
-        entities: List["types.MessageEntity"] = None,
+        entities: list["types.MessageEntity"] = None,
         disable_web_page_preview: bool = None,
         disable_notification: bool = None,
         reply_to_message_id: int = None,

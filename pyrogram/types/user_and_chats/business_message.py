@@ -64,7 +64,7 @@ class BusinessMessage(Object):
         is_away: bool = None,
         no_activity_days: int = None,
         offline_only: bool = None,
-        recipients: List["types.User"] = None,
+        recipients: list["types.User"] = None,
         schedule: "enums.BusinessSchedule" = None,
         start_date: datetime = None,
         end_date: datetime = None,

@@ -84,7 +84,6 @@ towncrier-draft = { cmd = "towncrier build --draft" }
 [tool.ruff]
 line-length = 99
 target-version = "py39"
-fix = ["--no-sort-imports"]
 
 [tool.ruff.lint]
 select = [

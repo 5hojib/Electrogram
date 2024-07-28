@@ -90,7 +90,7 @@ async def parse_messages(
     messages: "raw.types.messages.Messages",
     replies: int = 1,
     business_connection_id: str = None,
-) -> List["types.Message"]:
+) -> list["types.Message"]:
     users = {i.id: i for i in messages.users}
     chats = {i.id: i for i in messages.chats}
     if hasattr(messages, "topics"):
@@ -212,7 +212,7 @@ async def parse_messages(
 
 def parse_deleted_messages(
     client, update, business_connection_id: str = None
-) -> List["types.Message"]:
+) -> list["types.Message"]:
     messages = update.messages
     channel_id = getattr(update, "channel_id", None)
 
@@ -417,7 +417,7 @@ async def parse_text_entities(
     client: "pyrogram.Client",
     text: str,
     parse_mode: enums.ParseMode,
-    entities: List["types.MessageEntity"],
+    entities: list["types.MessageEntity"],
 ) -> Dict[str, Union[str, list[raw.base.MessageEntity]]]:
     if entities:
         # Inject the client instance because parsing user mentions requires it
@@ -458,7 +458,7 @@ async def get_reply_to(
     message_thread_id: int = None,
     reply_to_chat_id: Union[int, str] = None,
     quote_text: str = None,
-    quote_entities: List["types.MessageEntity"] = None,
+    quote_entities: list["types.MessageEntity"] = None,
     parse_mode: "enums.ParseMode" = None,
 ):
     reply_to = None

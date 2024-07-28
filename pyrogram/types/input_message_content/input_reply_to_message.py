@@ -55,7 +55,7 @@ class InputReplyToMessage(Object):
         message_thread_id: int = None,
         reply_to_chat: Union["raw.types.InputPeerChannel", "raw.types.InputPeerUser"] = None,
         quote_text: str = None,
-        quote_entities: List["raw.base.MessageEntity"] = None,
+        quote_entities: list["raw.base.MessageEntity"] = None,
     ):
         super().__init__()
 

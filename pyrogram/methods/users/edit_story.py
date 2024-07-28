@@ -43,8 +43,8 @@ class EditStory:
         video: str = None,
         caption: str = None,
         parse_mode: "enums.ParseMode" = None,
-        caption_entities: List["types.MessageEntity"] = None,
-        media_areas: List["types.InputMediaArea"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
+        media_areas: list["types.InputMediaArea"] = None,
     ) -> "types.Story":
         """Edit story.
 

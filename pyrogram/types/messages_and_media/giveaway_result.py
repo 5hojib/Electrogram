@@ -68,7 +68,7 @@ class GiveawayResult(Object):
         giveaway_message: "types.Message" = None,
         quantity: int,
         unclaimed_quantity: int,
-        winners: List["types.User"] = None,
+        winners: list["types.User"] = None,
         months: int = None,
         expire_date: datetime = None,
         new_subscribers: bool = None,

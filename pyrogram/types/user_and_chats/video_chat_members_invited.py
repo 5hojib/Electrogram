@@ -33,7 +33,7 @@ class VideoChatMembersInvited(Object):
             New members that were invited to the voice chat.
     """
 
-    def __init__(self, *, users: List["types.User"]):
+    def __init__(self, *, users: list["types.User"]):
         super().__init__()
 
         self.users = users

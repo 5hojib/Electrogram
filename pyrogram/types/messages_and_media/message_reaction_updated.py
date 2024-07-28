@@ -66,8 +66,8 @@ class MessageReactionUpdated(Object, Update):
         actor_chat: "types.Chat",
         date: datetime,
         chat: "types.Chat",
-        old_reaction: List["types.ReactionType"],
-        new_reaction: List["types.ReactionType"],
+        old_reaction: list["types.ReactionType"],
+        new_reaction: list["types.ReactionType"],
     ):
         super().__init__(client)
 

@@ -99,7 +99,7 @@ class InputInvoiceMessageContent(InputMessageContent):
         description: str,
         payload: Union[str, bytes],
         currency: str,
-        prices: List["types.LabeledPrice"],
+        prices: list["types.LabeledPrice"],
         provider_token: Optional[str] = None,
         max_tip_amount: Optional[int] = None,
         suggested_tip_amounts: list[int] = None,

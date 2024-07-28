@@ -57,7 +57,7 @@ class Giveaway(Object):
         self,
         *,
         client: "pyrogram.Client" = None,
-        chats: List["types.Chat"],
+        chats: list["types.Chat"],
         quantity: int,
         months: int,
         expire_date: datetime,

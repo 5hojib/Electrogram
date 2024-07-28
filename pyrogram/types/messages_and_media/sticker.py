@@ -99,7 +99,7 @@ class Sticker(Object):
         date: datetime = None,
         emoji: str = None,
         set_name: str = None,
-        thumbs: List["types.Thumbnail"] = None,
+        thumbs: list["types.Thumbnail"] = None,
     ):
         super().__init__(client)
 

@@ -26,7 +26,7 @@ from pyrogram import raw, types
 class GetSendAsChats:
     async def get_send_as_chats(
         self: "pyrogram.Client", chat_id: Union[int, str]
-    ) -> List["types.Chat"]:
+    ) -> list["types.Chat"]:
         """Get the list of "send_as" chats available.
 
         .. include:: /_includes/usable-by/users.rst
@@ -37,7 +37,7 @@ class GetSendAsChats:
                 You can also use chat public link in form of *t.me/<username>* (str).
 
         Returns:
-            List[:obj:`~pyrogram.types.Chat`]: The list of chats.
+            list[:obj:`~pyrogram.types.Chat`]: The list of chats.
 
         Example:
             .. code-block:: python

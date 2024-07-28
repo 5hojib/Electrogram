@@ -37,7 +37,7 @@ class InlineKeyboardMarkup(Object):
 
     def __init__(
         self,
-        inline_keyboard: List[
+        inline_keyboard: list[
             list[Union["types.InlineKeyboardButton", "types.InlineKeyboardButtonBuy"]]
         ],
     ):

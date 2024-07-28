@@ -33,7 +33,7 @@ async def get_chunk(
     offset: int = 0,
     limit: int = 100,
     from_user: Union[int, str] = None,
-) -> List["types.Message"]:
+) -> list["types.Message"]:
     r = await client.invoke(
         raw.functions.messages.Search(
             peer=await client.resolve_peer(chat_id),

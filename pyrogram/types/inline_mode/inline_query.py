@@ -112,7 +112,7 @@ class InlineQuery(Object, Update):
 
     async def answer(
         self,
-        results: List["types.InlineQueryResult"],
+        results: list["types.InlineQueryResult"],
         cache_time: int = 300,
         is_gallery: bool = False,
         is_personal: bool = False,

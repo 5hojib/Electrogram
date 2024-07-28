@@ -39,7 +39,7 @@ class CopyMediaGroup:
         reply_to_message_id: int = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
-    ) -> List["types.Message"]:
+    ) -> list["types.Message"]:
         """Copy a media group by providing one of the message ids.
 
         .. include:: /_includes/usable-by/users-bots.rst

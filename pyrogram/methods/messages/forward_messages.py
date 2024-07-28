@@ -36,7 +36,7 @@ class ForwardMessages:
         schedule_date: datetime = None,
         protect_content: bool = None,
         drop_author: bool = None,
-    ) -> Union["types.Message", List["types.Message"]]:
+    ) -> Union["types.Message", list["types.Message"]]:
         """Forward messages of any kind.
 
         .. include:: /_includes/usable-by/users-bots.rst

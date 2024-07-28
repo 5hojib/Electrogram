@@ -38,7 +38,7 @@ class SendContact:
         reply_to_message_id: int = None,
         reply_to_chat_id: Union[int, str] = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
         schedule_date: datetime = None,
         protect_content: bool = None,

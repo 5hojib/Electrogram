@@ -31,7 +31,7 @@ class GetStories:
         self: "pyrogram.Client",
         chat_id: Union[int, str],
         story_ids: Union[int, Iterable[int]],
-    ) -> Union["types.Story", List["types.Story"]]:
+    ) -> Union["types.Story", list["types.Story"]]:
         """Get one or more story from an user by using story identifiers.
 
         .. include:: /_includes/usable-by/users.rst

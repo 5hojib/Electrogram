@@ -40,7 +40,7 @@ class ForwardStory:
         protect_content: bool = None,
         caption: str = None,
         parse_mode: "enums.ParseMode" = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         period: int = None,
     ) -> "types.Story":
         """Forward a story.

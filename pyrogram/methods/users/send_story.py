@@ -54,11 +54,11 @@ class SendStory:
         protect_content: bool = None,
         caption: str = None,
         parse_mode: "enums.ParseMode" = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         period: int = None,
         forward_from_chat_id: Union[int, str] = None,
         forward_from_story_id: int = None,
-        media_areas: List["types.InputMediaArea"] = None,
+        media_areas: list["types.InputMediaArea"] = None,
     ) -> "types.Story":
         """Send new story.
 
