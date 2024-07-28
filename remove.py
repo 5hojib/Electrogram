@@ -19,6 +19,6 @@ def remove_comments_from_repo(repo_path):
                 remove_comments_from_file(file_path)
 
 if __name__ == "__main__":
-    # Path to your Python package repository
-    repo_path = '.'
+    # Path to the specific directory you want to process
+    repo_path = './pyrogram'
     remove_comments_from_repo(repo_path)
