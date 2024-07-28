@@ -39,7 +39,7 @@ class TLObject:
         pass
 
     @staticmethod
-    def default(obj: TLObject) -> str | dict[str, str]:
+    def default(obj: "TLObject") -> str | dict[str, str]:
         if isinstance(obj, bytes):
             return repr(obj)
 
