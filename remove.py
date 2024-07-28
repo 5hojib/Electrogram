@@ -43,8 +43,7 @@ def remove_from_repo(repo_path):
                 file_path = os.path.join(root, file)
                 remove_license(file_path)
 
-
 if __name__ == "__main__":
     # Path to the specific directory you want to process
-    repo_path = "./pyrogram"
+    repo_path = "."
     remove_from_repo(repo_path)
