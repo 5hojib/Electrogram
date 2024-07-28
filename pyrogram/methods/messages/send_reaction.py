@@ -1,6 +1,3 @@
-
-
-
 import pyrogram
 from pyrogram import raw, types
 
