@@ -17,7 +17,7 @@ log = logging.getLogger(__name__)
 class Parser(HTMLParser):
     MENTION_RE = re.compile(r"tg://user\?id=(\d+)")
 
-    def __init__(self, client: "pyrogram.Client"):
+    def __init__(self, client: "pyrogram.Client") -> None:
         super().__init__()
 
         self.client = client
@@ -26,7 +26,7 @@ class Parser(HTMLParser):
         self.entities = []
         self.tag_entities = {}
 
-    def handle_starttag(self, tag, attrs):
+    def handle_starttag(self, tag, attrs) -> None:
         attrs = dict(attrs)
         extra = {}
 
@@ -73,7 +73,7 @@ class Parser(HTMLParser):
             entity(offset=len(self.text), length=0, **extra)
         )
 
-    def handle_data(self, data):
+    def handle_data(self, data) -> None:
         data = html.unescape(data)
 
         for entities in self.tag_entities.values():
@@ -82,7 +82,7 @@ class Parser(HTMLParser):
 
         self.text += data
 
-    def handle_endtag(self, tag):
+    def handle_endtag(self, tag) -> None:
         try:
             self.entities.append(self.tag_entities[tag].pop())
         except (KeyError, IndexError):
@@ -99,12 +99,12 @@ class Parser(HTMLParser):
             if not self.tag_entities[tag]:
                 self.tag_entities.pop(tag)
 
-    def error(self, message):
+    def error(self, message) -> None:
         pass
 
 
 class HTML:
-    def __init__(self, client: Optional["pyrogram.Client"]):
+    def __init__(self, client: Optional["pyrogram.Client"]) -> None:
         self.client = client
 
     async def parse(self, text: str):

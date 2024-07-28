@@ -41,7 +41,7 @@ class PreCheckoutQuery(Object, Update):
         payload: str,
         shipping_option_id: str | None = None,
         payment_info: "types.PaymentInfo" = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.id = id

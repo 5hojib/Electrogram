@@ -46,7 +46,7 @@ class StickerSet(Object):
         animated: bool | None = None,
         videos: bool | None = None,
         emojis: bool | None = None,
-    ):
+    ) -> None:
         self.id = id
         self.title = title
         self.short_name = short_name

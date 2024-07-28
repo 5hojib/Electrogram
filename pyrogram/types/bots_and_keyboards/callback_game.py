@@ -7,5 +7,5 @@ class CallbackGame(Object):
     Use BotFather to set up your game.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()

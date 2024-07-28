@@ -44,7 +44,7 @@ class Giveaway(Object):
         new_subscribers: bool,
         allowed_countries: list[str] | None = None,
         private_channel_ids: list[int] | None = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.chats = chats

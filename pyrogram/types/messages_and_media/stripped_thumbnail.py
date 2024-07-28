@@ -17,7 +17,7 @@ class StrippedThumbnail(Object):
 
     def __init__(
         self, *, client: "pyrogram.Client" = None, data: bytes
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.data = data

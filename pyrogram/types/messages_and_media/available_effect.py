@@ -40,7 +40,7 @@ class AvailableEffect(Object):
         is_premium: bool | None = None,
         static_icon_id: int | None = None,
         effect_animation_id: int | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.id = id

@@ -25,7 +25,7 @@ log = logging.getLogger(__name__)
 
 
 class Str(str):
-    def __init__(self, *args):
+    def __init__(self, *args) -> None:
         super().__init__()
 
         self.entities = None
@@ -532,7 +532,7 @@ class Message(Object, Update):
         | types.ForceReply = None,
         reactions: list[types.Reaction] | None = None,
         raw: raw.types.Message = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.id = id

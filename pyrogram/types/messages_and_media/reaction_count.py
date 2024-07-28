@@ -30,7 +30,7 @@ class ReactionCount(Object):
         type: ReactionType,
         total_count: int,
         chosen_order: int,
-    ):
+    ) -> None:
         super().__init__()
         self.type = type
         self.total_count = total_count

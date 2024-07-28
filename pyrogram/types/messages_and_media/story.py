@@ -125,7 +125,7 @@ class Story(Object, Update):
         raw: "raw.types.StoryItem" = None,
         # allowed_chats: list[int] = None,
         # denied_chats: list[int] = None
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.id = id

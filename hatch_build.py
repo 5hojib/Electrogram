@@ -8,7 +8,7 @@ sys.path.insert(0, ".")
 
 
 class CustomHook(BuildHookInterface):
-    def initialize(self, version, build_data):
+    def initialize(self, version, build_data) -> None:
         if self.target_name not in {"wheel", "install"}:
             return
 

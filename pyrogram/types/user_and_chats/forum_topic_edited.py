@@ -27,7 +27,7 @@ class ForumTopicEdited(Object):
         title: str | None = None,
         icon_color: int | None = None,
         icon_emoji_id: str | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.title = title

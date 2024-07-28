@@ -29,7 +29,7 @@ class Reaction(Object):
         custom_emoji_id: int | None = None,
         count: int | None = None,
         chosen_order: int | None = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.emoji = emoji

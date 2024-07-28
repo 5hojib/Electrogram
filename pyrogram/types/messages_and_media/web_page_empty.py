@@ -18,7 +18,7 @@ class WebPageEmpty(Object):
             Full URL for this webpage.
     """
 
-    def __init__(self, *, id: str, url: str):
+    def __init__(self, *, id: str, url: str) -> None:
         super().__init__()
 
         self.id = id

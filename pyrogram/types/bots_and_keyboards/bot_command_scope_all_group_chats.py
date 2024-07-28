@@ -7,7 +7,7 @@ from .bot_command_scope import BotCommandScope
 class BotCommandScopeAllGroupChats(BotCommandScope):
     """Represents the scope of bot commands, covering all group and supergroup chats."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__("all_group_chats")
 
     async def write(

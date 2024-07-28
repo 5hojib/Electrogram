@@ -8,7 +8,7 @@ from pyrogram.file_id import (
 )
 
 
-def check(file_id: str, expected_file_type: FileType):
+def check(file_id: str, expected_file_type: FileType) -> None:
     decoded = FileId.decode(file_id)
 
     assert decoded.file_type == expected_file_type
@@ -17,14 +17,14 @@ def check(file_id: str, expected_file_type: FileType):
 
 def check_unique(
     file_unique_id: str, expected_file_unique_type: FileUniqueType
-):
+) -> None:
     decoded = FileUniqueId.decode(file_unique_id)
 
     assert decoded.file_unique_type == expected_file_unique_type
     assert decoded.encode() == file_unique_id
 
 
-def test_audio():
+def test_audio() -> None:
     audio = "CQACAgIAAx0CAAGgr9AAAgmQX7b4XPBstC1fFUuJBooHTHFd7HMAAgUAA4GkuUnVOGG5P196yR4E"
     audio_unique = "AgADBQADgaS5SQ"
     audio_thumb = "AAMCAgADHQIAAaCv0AACCZBftvhc8Gy0LV8VS4kGigdMcV3scwACBQADgaS5SdU4Ybk_X3rJIH3qihAAAwEAB20AA_OeAQABHgQ"
@@ -36,7 +36,7 @@ def test_audio():
     check_unique(audio_thumb_unique, FileUniqueType.PHOTO)
 
 
-def test_video():
+def test_video() -> None:
     video = "BAACAgIAAx0CAAGgr9AAAgmRX7b4Xv9f-4BK5VR_5ppIOF6UIp0AAgYAA4GkuUmhnZz2xC37wR4E"
     video_unique = "AgADBgADgaS5SQ"
     video_thumb = "AAMCAgADHQIAAaCv0AACCZFftvhe_1_7gErlVH_mmkg4XpQinQACBgADgaS5SaGdnPbELfvBIH3qihAAAwEAB20AA_WeAQABHgQ"
@@ -48,7 +48,7 @@ def test_video():
     check_unique(video_thumb_unique, FileUniqueType.PHOTO)
 
 
-def test_document():
+def test_document() -> None:
     document = "BQACAgIAAx0CAAGgr9AAAgmPX7b4UxbjNoFEO_L0I4s6wrXNJA8AAgQAA4GkuUm9FFvIaOhXWR4E"
     document_unique = "AgADBAADgaS5SQ"
     document_thumb = "AAMCAgADHQIAAaCv0AACCY9ftvhTFuM2gUQ78vQjizrCtc0kDwACBAADgaS5Sb0UW8ho6FdZIH3qihAAAwEAB3MAA_GeAQABHgQ"
@@ -60,7 +60,7 @@ def test_document():
     check_unique(document_thumb_unique, FileUniqueType.PHOTO)
 
 
-def test_animation():
+def test_animation() -> None:
     animation = "CgACAgIAAx0CAAGgr9AAAgmSX7b4Y2g8_QW2XFd49iUmRnHOyG8AAgcAA4GkuUnry9gWDzF_5R4E"
     animation_unique = "AgADBwADgaS5SQ"
 
@@ -68,7 +68,7 @@ def test_animation():
     check_unique(animation_unique, FileUniqueType.DOCUMENT)
 
 
-def test_voice():
+def test_voice() -> None:
     voice = "AwACAgIAAx0CAAGgr9AAAgmUX7b4c1KQyHVwzffxC2EnSYWsMAQAAgkAA4GkuUlsZUZ4_I97AR4E"
     voice_unique = "AgADCQADgaS5SQ"
 
@@ -76,7 +76,7 @@ def test_voice():
     check_unique(voice_unique, FileUniqueType.DOCUMENT)
 
 
-def test_video_note():
+def test_video_note() -> None:
     video_note = "DQACAgIAAx0CAAGgr9AAAgmVX7b53qrRzCEO13BaLQJaYuFbdlwAAgoAA4GkuUmlqIzDy_PCsx4E"
     video_note_unique = "AgADCgADgaS5SQ"
     video_note_thumb = "AAMCAgADHQIAAaCv0AACCZVftvneqtHMIQ7XcFotAlpi4Vt2XAACCgADgaS5SaWojMPL88KzIH3qihAAAwEAB20AA_meAQABHgQ"
@@ -88,7 +88,7 @@ def test_video_note():
     check_unique(video_note_thumb_unique, FileUniqueType.PHOTO)
 
 
-def test_sticker():
+def test_sticker() -> None:
     sticker = "CAACAgEAAx0CAAGgr9AAAgmWX7b6uFeLlhXEgYrM8pIbGaQKRQ0AAswBAALjeAQAAbeooNv_tb6-HgQ"
     sticker_unique = "AgADzAEAAuN4BAAB"
     sticker_thumb = "AAMCAQADHQIAAaCv0AACCZZftvq4V4uWFcSBiszykhsZpApFDQACzAEAAuN4BAABt6ig2_-1vr5gWNkpAAQBAAdtAAM0BQACHgQ"
@@ -100,7 +100,7 @@ def test_sticker():
     check_unique(sticker_thumb_unique, FileUniqueType.PHOTO)
 
 
-def test_photo():
+def test_photo() -> None:
     photo_small = "AgACAgIAAx0CAAGgr9AAAgmZX7b7IPLRl8NcV3EJkzHwI1gwT-oAAq2nMRuBpLlJPJY-URZfhTkgfeqKEAADAQADAgADbQADAZ8BAAEeBA"
     photo_small_unique = "AQADIH3qihAAAwGfAQAB"
     photo_medium = "AgACAgIAAx0CAAGgr9AAAgmZX7b7IPLRl8NcV3EJkzHwI1gwT-oAAq2nMRuBpLlJPJY-URZfhTkgfeqKEAADAQADAgADeAADAp8BAAEeBA"
@@ -116,7 +116,7 @@ def test_photo():
     check_unique(photo_big_unique, FileUniqueType.PHOTO)
 
 
-def test_chat_photo():
+def test_chat_photo() -> None:
     user_photo_small = (
         "AQADAgADrKcxGylBBQAJIH3qihAAAwIAAylBBQAF7bDHYwABnc983KcAAh4E"
     )
@@ -156,12 +156,12 @@ def test_chat_photo():
     check_unique(channel_photo_big_unique, FileUniqueType.PHOTO)
 
 
-def test_old_file_id():
+def test_old_file_id() -> None:
     old = "BQADBAADQNKSZqjl5DcROGn_eu5JtgAEAgAEAg"
     check(old, FileType.DOCUMENT)
 
 
-def test_unknown_file_type():
+def test_unknown_file_type() -> None:
     unknown = "RQACAgIAAx0CAAGgr9AAAgmPX7b4UxbjNoFEO_L0I4s6wrXNJA8AAgQAA4GkuUm9FFvIaOhXWR4E"
 
     with pytest.raises(
@@ -170,7 +170,7 @@ def test_unknown_file_type():
         check(unknown, FileType.DOCUMENT)
 
 
-def test_unknown_thumbnail_source():
+def test_unknown_thumbnail_source() -> None:
     unknown = "AAMCAgADHQIAAaCv0AACCY9ftvhTFuM2gUQ78vQjizrCtc0kDwACBAADgaS5Sb0UW8ho6FdZIH3qihAAA6QBAAIeBA"
 
     with pytest.raises(
@@ -180,7 +180,7 @@ def test_unknown_thumbnail_source():
         check(unknown, FileType.THUMBNAIL)
 
 
-def test_stringify_file_id():
+def test_stringify_file_id() -> None:
     file_id = "BQACAgIAAx0CAAGgr9AAAgmPX7b4UxbjNoFEO_L0I4s6wrXNJA8AAgQAA4GkuUm9FFvIaOhXWR4E"
     string = (
         "{'major': 4, 'minor': 30, 'file_type': <FileType.DOCUMENT: 5>, 'dc_id': 2, "
@@ -191,7 +191,7 @@ def test_stringify_file_id():
     assert str(FileId.decode(file_id)) == string
 
 
-def test_stringify_file_unique_id():
+def test_stringify_file_unique_id() -> None:
     file_unique_id = "AgADBAADgaS5SQ"
     string = "{'file_unique_type': <FileUniqueType.DOCUMENT: 2>, 'media_id': 5312458109417947140}"
 

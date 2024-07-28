@@ -41,7 +41,7 @@ class BotBusinessConnection(Object):
         date: "datetime.datetime",
         can_reply: bool | None = None,
         is_disabled: bool | None = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.bot_connection_id = bot_connection_id

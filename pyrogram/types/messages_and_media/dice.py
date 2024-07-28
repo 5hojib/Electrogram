@@ -24,7 +24,7 @@ class Dice(Object):
         client: "pyrogram.Client" = None,
         emoji: str,
         value: int,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.emoji = emoji

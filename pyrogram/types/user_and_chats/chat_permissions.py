@@ -98,7 +98,7 @@ class ChatPermissions(Object):
         can_send_stickers: bool | None = None,
         can_send_videos: bool | None = None,
         can_send_voices: bool | None = None,
-    ):
+    ) -> None:
         super().__init__(None)
 
         self.all_perms = all_perms

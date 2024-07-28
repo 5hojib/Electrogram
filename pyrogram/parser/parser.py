@@ -8,7 +8,7 @@ from .markdown import Markdown
 
 
 class Parser:
-    def __init__(self, client: Optional["pyrogram.Client"]):
+    def __init__(self, client: Optional["pyrogram.Client"]) -> None:
         self.client = client
         self.html = HTML(client)
         self.markdown = Markdown(client)

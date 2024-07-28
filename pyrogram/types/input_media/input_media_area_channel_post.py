@@ -23,7 +23,7 @@ class InputMediaAreaChannelPost(InputMediaArea):
         coordinates: "types.MediaAreaCoordinates",
         chat_id: int | str,
         message_id: int,
-    ):
+    ) -> None:
         super().__init__(coordinates=coordinates)
 
         self.coordinates = coordinates

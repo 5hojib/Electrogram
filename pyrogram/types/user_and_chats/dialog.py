@@ -36,7 +36,7 @@ class Dialog(Object):
         unread_mentions_count: int,
         unread_mark: bool,
         is_pinned: bool,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.chat = chat

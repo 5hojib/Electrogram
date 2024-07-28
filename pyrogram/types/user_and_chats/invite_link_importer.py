@@ -15,7 +15,7 @@ class InviteLinkImporter(Object):
             The user that has used the given invite link
     """
 
-    def __init__(self, *, date: datetime, user: "types.User"):
+    def __init__(self, *, date: datetime, user: "types.User") -> None:
         super().__init__(None)
 
         self.date = date

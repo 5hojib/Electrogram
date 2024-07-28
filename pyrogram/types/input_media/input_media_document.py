@@ -44,7 +44,7 @@ class InputMediaDocument(InputMedia):
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
         caption_entities: list[MessageEntity] | None = None,
-    ):
+    ) -> None:
         super().__init__(media, caption, parse_mode, caption_entities)
 
         self.thumb = thumb

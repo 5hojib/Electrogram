@@ -34,7 +34,7 @@ class Venue(Object):
         address: str,
         foursquare_id: str | None = None,
         foursquare_type: str | None = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.location = location

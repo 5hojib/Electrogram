@@ -30,7 +30,7 @@ class InputTextMessageContent(InputMessageContent):
         parse_mode: Optional["enums.ParseMode"] = None,
         entities: list["types.MessageEntity"] | None = None,
         disable_web_page_preview: bool | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.message_text = message_text

@@ -26,7 +26,7 @@ class ForceReply(Object):
         self,
         selective: bool | None = None,
         placeholder: str | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.selective = selective

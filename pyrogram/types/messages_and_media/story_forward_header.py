@@ -32,7 +32,7 @@ class StoryForwardHeader(Object):
         chat: "types.Chat" = None,
         story_id: int | None = None,
         is_modified: bool | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.user = user

@@ -14,7 +14,7 @@ signals = {
 }
 
 
-async def idle():
+async def idle() -> None:
     """Block the main script execution until a signal is received.
 
     This function will run indefinitely in order to block the main script execution and prevent it from
@@ -55,7 +55,7 @@ async def idle():
     """
     task = None
 
-    def signal_handler(signum, __):
+    def signal_handler(signum, __) -> None:
         logging.info(
             f"Stop signal received ({signals[signum]}). Exiting..."
         )

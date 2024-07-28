@@ -10,7 +10,7 @@ class StoriesPrivacyRules(Object):
             Story privacy type.
     """
 
-    def __init__(self, *, type: "enums.StoriesPrivacyRules"):
+    def __init__(self, *, type: "enums.StoriesPrivacyRules") -> None:
         super().__init__()
         self.type = type
 

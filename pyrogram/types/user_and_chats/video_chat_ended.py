@@ -14,7 +14,7 @@ class VideoChatEnded(Object):
             Voice chat duration; in seconds.
     """
 
-    def __init__(self, *, duration: int):
+    def __init__(self, *, duration: int) -> None:
         super().__init__()
 
         self.duration = duration

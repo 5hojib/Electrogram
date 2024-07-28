@@ -17,7 +17,9 @@ class MenuButtonWebApp(MenuButton):
             :meth:`~pyrogram.Client.answer_web_app_query`.
     """
 
-    def __init__(self, text: str, web_app: "types.WebAppInfo"):
+    def __init__(
+        self, text: str, web_app: "types.WebAppInfo"
+    ) -> None:
         super().__init__("web_app")
 
         self.text = text

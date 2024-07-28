@@ -83,7 +83,7 @@ class ForumTopic(Object):
         short: bool | None = None,
         icon_emoji_id: int | None = None,
         # draft: "types.DraftMessage" = None //todo
-    ):
+    ) -> None:
         super().__init__()
 
         self.id = id

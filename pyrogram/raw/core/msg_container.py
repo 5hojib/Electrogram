@@ -13,7 +13,7 @@ class MsgContainer(TLObject):
 
     QUALNAME = "MsgContainer"
 
-    def __init__(self, messages: list[Message]):
+    def __init__(self, messages: list[Message]) -> None:
         self.messages = messages
 
     @staticmethod

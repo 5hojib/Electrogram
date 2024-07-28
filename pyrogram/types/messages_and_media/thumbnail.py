@@ -42,7 +42,7 @@ class Thumbnail(Object):
         width: int,
         height: int,
         file_size: int,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.file_id = file_id

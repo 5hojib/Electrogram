@@ -14,7 +14,7 @@ class WebAppInfo(Object):
         self,
         *,
         url: str,
-    ):
+    ) -> None:
         super().__init__()
 
         self.url = url

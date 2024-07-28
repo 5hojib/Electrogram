@@ -48,7 +48,7 @@ class MessageReactionUpdated(Object, Update):
         chat: "types.Chat",
         old_reaction: list["types.ReactionType"],
         new_reaction: list["types.ReactionType"],
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.id = id

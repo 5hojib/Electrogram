@@ -36,7 +36,7 @@ class BotApp(Object):
         description: str,
         photo: "types.Photo",
         document: Optional["types.Document"] = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.id = id

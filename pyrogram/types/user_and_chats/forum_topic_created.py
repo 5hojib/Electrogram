@@ -31,7 +31,7 @@ class ForumTopicCreated(Object):
         title: str,
         icon_color: int,
         icon_emoji_id: int | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.id = id

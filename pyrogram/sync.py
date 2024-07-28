@@ -9,7 +9,7 @@ from pyrogram.methods.utilities import compose as compose_module
 from pyrogram.methods.utilities import idle as idle_module
 
 
-def async_to_sync(obj, name):
+def async_to_sync(obj, name) -> None:
     function = getattr(obj, name)
     main_loop = asyncio.get_event_loop()
 
@@ -85,7 +85,7 @@ def async_to_sync(obj, name):
     setattr(obj, name, async_to_sync_wrap)
 
 
-def wrap(source):
+def wrap(source) -> None:
     for name in dir(source):
         method = getattr(source, name)
 

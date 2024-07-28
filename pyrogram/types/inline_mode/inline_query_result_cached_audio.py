@@ -47,7 +47,7 @@ class InlineQueryResultCachedAudio(InlineQueryResult):
         caption_entities: list["types.MessageEntity"] | None = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
         input_message_content: "types.InputMessageContent" = None,
-    ):
+    ) -> None:
         super().__init__(
             "audio", id, input_message_content, reply_markup
         )

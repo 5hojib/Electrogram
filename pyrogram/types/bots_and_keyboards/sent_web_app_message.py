@@ -15,7 +15,7 @@ class SentWebAppMessage(Object):
         self,
         *,
         inline_message_id: str,
-    ):
+    ) -> None:
         super().__init__()
 
         self.inline_message_id = inline_message_id

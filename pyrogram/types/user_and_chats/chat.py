@@ -225,7 +225,7 @@ class Chat(Object):
         birthday: "types.Birthday" = None,
         personal_chat: "types.Chat" = None,
         max_reaction_count: int | None = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.id = id

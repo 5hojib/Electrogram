@@ -38,7 +38,7 @@ class GiftedPremium(Object):
         cryptocurrency: str | None = None,
         cryptocurrency_amount: int | None = None,
         month_count: int | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.gifter_user_id = gifter_user_id

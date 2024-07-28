@@ -28,5 +28,5 @@ class ChosenInlineResultHandler(Handler):
             The received chosen inline result.
     """
 
-    def __init__(self, callback: Callable, filters=None):
+    def __init__(self, callback: Callable, filters=None) -> None:
         super().__init__(callback, filters)

@@ -38,7 +38,7 @@ class Game(Object):
         description: str,
         photo: "types.Photo",
         animation: "types.Animation" = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.id = id

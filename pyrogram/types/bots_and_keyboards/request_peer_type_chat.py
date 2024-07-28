@@ -25,7 +25,7 @@ class RequestPeerTypeChat(Object):
         is_username: bool | None = None,
         is_forum: bool | None = None,
         max: int = 1,
-    ):
+    ) -> None:
         super().__init__()
 
         self.is_creator = is_creator

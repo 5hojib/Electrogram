@@ -61,7 +61,7 @@ class Animation(Object):
         file_size: int | None = None,
         date: datetime | None = None,
         thumbs: list["types.Thumbnail"] | None = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.file_id = file_id

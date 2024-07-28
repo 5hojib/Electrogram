@@ -40,7 +40,7 @@ class StorySkipped(Object, Update):
         date: datetime,
         expire_date: datetime,
         close_friends: bool | None = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.id = id

@@ -24,7 +24,7 @@ class ReactionType(Object):
         type: str = "enums.ReactionType",
         emoji: str | None = None,
         custom_emoji_id: str | None = None,
-    ):
+    ) -> None:
         super().__init__()
         self.type = type
         self.emoji = emoji

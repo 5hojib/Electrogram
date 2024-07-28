@@ -26,7 +26,7 @@ class ExtendedMediaPreview(Object):
         height: int | None = None,
         thumb: "types.Thumbnail" = None,
         video_duration: int | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.width = width

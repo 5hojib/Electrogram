@@ -46,7 +46,7 @@ class InlineQuery(Object, Update):
         chat_type: "enums.ChatType",
         location: "types.Location" = None,
         matches: list[Match] | None = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.id = id

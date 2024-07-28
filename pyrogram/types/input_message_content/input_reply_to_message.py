@@ -39,7 +39,7 @@ class InputReplyToMessage(Object):
         ] = None,
         quote_text: str | None = None,
         quote_entities: list["raw.base.MessageEntity"] | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.reply_to_message_id = reply_to_message_id

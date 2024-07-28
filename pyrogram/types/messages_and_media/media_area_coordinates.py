@@ -29,7 +29,7 @@ class MediaAreaCoordinates(Object):
         width: float | None = None,
         height: float | None = None,
         rotation: float | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.x = x

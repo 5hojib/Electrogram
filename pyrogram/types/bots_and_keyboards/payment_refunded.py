@@ -39,7 +39,7 @@ class PaymentRefunded(Object):
         telegram_payment_charge_id: str,
         provider_payment_charge_id: str,
         payload: str | None = None,
-    ):
+    ) -> None:
         self.user = user
         self.currency = currency
         self.total_amount = total_amount

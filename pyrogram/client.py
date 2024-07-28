@@ -9,7 +9,6 @@ import platform
 import re
 import shutil
 import sys
-from collections.abc import AsyncGenerator, Callable
 from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime, timedelta
 from hashlib import sha256
@@ -17,7 +16,7 @@ from importlib import import_module
 from io import BytesIO, StringIO
 from mimetypes import MimeTypes
 from pathlib import Path
-from typing import Optional
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import __license__, __version__, enums, raw, utils
@@ -52,6 +51,9 @@ from .file_id import FileId, FileType, ThumbnailSource
 from .mime_types import mime_types
 from .parser import Parser
 from .session.internals import MsgId
+
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator, Callable
 
 log = logging.getLogger(__name__)
 
@@ -250,17 +252,17 @@ class Client(Methods):
         workers: int = WORKERS,
         workdir: str | Path = WORKDIR,
         plugins: dict | None = None,
-        parse_mode: "enums.ParseMode" = enums.ParseMode.DEFAULT,
+        parse_mode: enums.ParseMode = enums.ParseMode.DEFAULT,
         no_updates: bool | None = None,
         skip_updates: bool = True,
         takeout: bool | None = None,
         sleep_threshold: int = Session.SLEEP_THRESHOLD,
         hide_password: bool | None = False,
         max_concurrent_transmissions: int = MAX_CONCURRENT_TRANSMISSIONS,
-        client_platform: "enums.ClientPlatform" = enums.ClientPlatform.OTHER,
+        client_platform: enums.ClientPlatform = enums.ClientPlatform.OTHER,
         max_message_cache_size: int = MAX_CACHE_SIZE,
         max_business_user_connection_cache_size: int = MAX_CACHE_SIZE,
-    ):
+    ) -> None:
         super().__init__()
 
         self.name = name
@@ -387,7 +389,7 @@ class Client(Methods):
         with contextlib.suppress(ConnectionError):
             await self.stop()
 
-    async def updates_watchdog(self):
+    async def updates_watchdog(self) -> None:
         while True:
             try:
                 await asyncio.wait_for(
@@ -557,7 +559,9 @@ class Client(Methods):
 
         return signed_up
 
-    def set_parse_mode(self, parse_mode: Optional["enums.ParseMode"]):
+    def set_parse_mode(
+        self, parse_mode: enums.ParseMode | None
+    ) -> None:
         """Set the parse mode to be used globally by the client.
 
         When setting the parse mode with this method, all other methods having a *parse_mode* parameter will follow the
@@ -684,7 +688,7 @@ class Client(Methods):
 
         return is_min
 
-    async def handle_updates(self, updates):
+    async def handle_updates(self, updates) -> None:
         self.last_update_time = datetime.now()
 
         if isinstance(
@@ -820,7 +824,7 @@ class Client(Methods):
         elif isinstance(updates, raw.types.UpdatesTooLong):
             log.info(updates)
 
-    async def load_session(self):
+    async def load_session(self) -> None:
         await self.storage.open()
 
         session_empty = any(
@@ -881,7 +885,7 @@ class Client(Methods):
                     except Exception as e:
                         print(e)
 
-    def load_plugins(self):
+    def load_plugins(self) -> None:
         if self.plugins:
             plugins = self.plugins.copy()
 
@@ -1354,14 +1358,14 @@ class Client(Methods):
 
 
 class Cache:
-    def __init__(self, capacity: int):
+    def __init__(self, capacity: int) -> None:
         self.capacity = capacity
         self.store = {}
 
     def __getitem__(self, key):
         return self.store.get(key, None)
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key, value) -> None:
         if key in self.store:
             del self.store[key]
 

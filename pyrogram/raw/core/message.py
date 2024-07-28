@@ -14,7 +14,7 @@ class Message(TLObject):
 
     def __init__(
         self, body: TLObject, msg_id: int, seq_no: int, length: int
-    ):
+    ) -> None:
         self.msg_id = msg_id
         self.seq_no = seq_no
         self.length = length

@@ -13,7 +13,7 @@ class InlineKeyboardButtonBuy(Object):
             the button is pressed.
     """
 
-    def __init__(self, text: str):
+    def __init__(self, text: str) -> None:
         super().__init__()
 
         self.text = str(text)

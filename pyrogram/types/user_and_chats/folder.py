@@ -75,7 +75,7 @@ class Folder(Object):
         emoji: str | None = None,
         color: "enums.FolderColor" = None,
         has_my_invites: bool | None = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.id = id

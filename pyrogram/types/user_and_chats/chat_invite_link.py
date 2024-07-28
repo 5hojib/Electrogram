@@ -64,7 +64,7 @@ class ChatInviteLink(Object):
         member_limit: int | None = None,
         member_count: int | None = None,
         pending_join_request_count: int | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.invite_link = invite_link

@@ -12,7 +12,9 @@ class Link(str):
     HTML = "<a href={url}>{text}</a>"
     MARKDOWN = "[{text}]({url})"
 
-    def __init__(self, url: str, text: str, style: enums.ParseMode):
+    def __init__(
+        self, url: str, text: str, style: enums.ParseMode
+    ) -> None:
         super().__init__()
 
         self.url = url
@@ -39,7 +41,7 @@ class Link(str):
             self.url, other or self.text, style or self.style
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return Link.format(self.url, self.text, self.style)
 
 
@@ -183,7 +185,7 @@ class User(Object, Update):
         restrictions: list["types.Restriction"] | None = None,
         reply_color: "types.ChatColor" = None,
         profile_color: "types.ChatColor" = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.id = id

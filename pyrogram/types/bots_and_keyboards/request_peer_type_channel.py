@@ -17,7 +17,7 @@ class RequestPeerTypeChannel(Object):
         is_creator: bool | None = None,
         is_username: bool | None = None,
         max: int = 1,
-    ):
+    ) -> None:
         super().__init__()
 
         self.is_creator = is_creator

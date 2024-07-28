@@ -54,7 +54,7 @@ class Photo(Object):
         date: datetime,
         ttl_seconds: int | None = None,
         thumbs: list["types.Thumbnail"] | None = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.file_id = file_id

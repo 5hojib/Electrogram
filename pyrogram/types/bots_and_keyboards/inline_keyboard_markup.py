@@ -25,7 +25,7 @@ class InlineKeyboardMarkup(Object):
                 ]
             ]
         ],
-    ):
+    ) -> None:
         super().__init__()
 
         self.inline_keyboard = inline_keyboard

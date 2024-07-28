@@ -15,7 +15,7 @@ class PeerUser(Object):
             Id of the user.
     """
 
-    def __init__(self, *, user_id: int):
+    def __init__(self, *, user_id: int) -> None:
         super().__init__()
 
         self.user_id = user_id

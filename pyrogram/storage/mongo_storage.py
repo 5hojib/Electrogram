@@ -44,7 +44,7 @@ class MongoStorage(Storage):
         name: str,
         connection: DummyMongoClient,
         remove_peers: bool = False,
-    ):
+    ) -> None:
         super().__init__(name=name)
         database = None
 
@@ -67,7 +67,7 @@ class MongoStorage(Storage):
         self._states = database["update_state"]
         self._remove_peers = remove_peers
 
-    async def open(self):
+    async def open(self) -> None:
         """
 
         dc_id     INTEGER PRIMARY KEY,
@@ -93,13 +93,13 @@ class MongoStorage(Storage):
             }
         )
 
-    async def save(self):
+    async def save(self) -> None:
         pass
 
-    async def close(self):
+    async def close(self) -> None:
         pass
 
-    async def delete(self):
+    async def delete(self) -> None:
         try:
             await self._session.delete_one({"_id": 0})
             if self._remove_peers:
@@ -109,7 +109,7 @@ class MongoStorage(Storage):
 
     async def update_peers(
         self, peers: list[tuple[int, int, str, str, str]]
-    ):
+    ) -> None:
         """(id, access_hash, type, username, phone_number)"""
         s = int(time.time())
         bulk = [
@@ -134,7 +134,7 @@ class MongoStorage(Storage):
 
     async def update_usernames(
         self, usernames: list[tuple[int, str]]
-    ):
+    ) -> None:
         s = int(time.time())
         bulk_delete = [
             DeleteMany({"peer_id": i[0]}) for i in usernames
@@ -185,7 +185,7 @@ class MongoStorage(Storage):
             )
             return None
 
-    async def remove_state(self, chat_id):
+    async def remove_state(self, chat_id) -> None:
         await self._states.delete_one({"_id": chat_id})
 
     async def get_peer_by_id(self, peer_id: int):
@@ -256,7 +256,7 @@ class MongoStorage(Storage):
             return None
         return d[attr]
 
-    async def _set(self, value: Any):
+    async def _set(self, value: Any) -> None:
         attr = inspect.stack()[2].function
         await self._session.update_one(
             {"_id": 0}, {"$set": {attr: value}}, upsert=True

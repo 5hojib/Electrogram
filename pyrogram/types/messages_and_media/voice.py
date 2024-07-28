@@ -49,7 +49,7 @@ class Voice(Object):
         mime_type: str | None = None,
         file_size: int | None = None,
         date: datetime | None = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.file_id = file_id

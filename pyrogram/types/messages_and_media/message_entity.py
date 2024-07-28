@@ -49,7 +49,7 @@ class MessageEntity(Object):
         language: str | None = None,
         custom_emoji_id: int | None = None,
         collapsed: bool | None = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.type = type

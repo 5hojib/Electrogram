@@ -23,7 +23,7 @@ class EmojiStatus(Object):
         client: "pyrogram.Client" = None,
         custom_emoji_id: int,
         until_date: datetime | None = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.custom_emoji_id = custom_emoji_id

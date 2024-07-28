@@ -32,7 +32,7 @@ class ChatPreview(Object):
         members_count: int,
         photo: "types.Photo" = None,
         members: list["types.User"] | None = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.title = title

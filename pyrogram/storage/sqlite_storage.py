@@ -1,6 +1,6 @@
 import inspect
 import time
-from typing import Any
+from typing import Any, NoReturn
 
 from pyrogram import raw, utils
 
@@ -99,12 +99,12 @@ class SQLiteStorage(Storage):
     VERSION = 4
     USERNAME_TTL = 8 * 60 * 60
 
-    def __init__(self, name: str):
+    def __init__(self, name: str) -> None:
         super().__init__(name)
 
         self.conn = None  # type: sqlite3.Connection
 
-    def create(self):
+    def create(self) -> None:
         with self.conn:
             self.conn.executescript(SCHEMA)
             self.conn.executescript(UNAME_SCHEMA)
@@ -118,22 +118,22 @@ class SQLiteStorage(Storage):
                 (2, None, None, None, 0, None, None),
             )
 
-    async def open(self):
+    async def open(self) -> NoReturn:
         raise NotImplementedError
 
-    async def save(self):
+    async def save(self) -> None:
         await self.date(int(time.time()))
         self.conn.commit()
 
-    async def close(self):
+    async def close(self) -> None:
         self.conn.close()
 
-    async def delete(self):
+    async def delete(self) -> NoReturn:
         raise NotImplementedError
 
     async def update_peers(
         self, peers: list[tuple[int, int, str, str, str]]
-    ):
+    ) -> None:
         self.conn.executemany(
             "REPLACE INTO peers (id, access_hash, type, username, phone_number)"
             "VALUES (?, ?, ?, ?, ?)",
@@ -142,7 +142,7 @@ class SQLiteStorage(Storage):
 
     async def update_usernames(
         self, usernames: list[tuple[int, str]]
-    ):
+    ) -> None:
         self.conn.executescript(UNAME_SCHEMA)
         for user in usernames:
             self.conn.execute(
@@ -176,7 +176,7 @@ class SQLiteStorage(Storage):
                     )
                     return None
 
-    async def remove_state(self, chat_id):
+    async def remove_state(self, chat_id) -> None:
         self.conn.execute(
             "DELETE FROM update_state WHERE id = ?", (chat_id,)
         )
@@ -240,7 +240,7 @@ class SQLiteStorage(Storage):
             f"SELECT {attr} FROM sessions"
         ).fetchone()[0]
 
-    def _set(self, value: Any):
+    def _set(self, value: Any) -> None:
         attr = inspect.stack()[2].function
 
         with self.conn:

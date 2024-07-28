@@ -20,7 +20,9 @@ class BotInfo(Object):
             Description of the bot;
     """
 
-    def __init__(self, name: str, about: str, description: str):
+    def __init__(
+        self, name: str, about: str, description: str
+    ) -> None:
         super().__init__()
 
         self.name = name

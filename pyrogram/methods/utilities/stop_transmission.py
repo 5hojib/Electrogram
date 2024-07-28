@@ -1,9 +1,11 @@
+from typing import NoReturn
+
 import pyrogram
 
 
 class StopTransmission:
     @staticmethod
-    def stop_transmission():
+    def stop_transmission() -> NoReturn:
         """Stop downloading or uploading a file.
 
         This method must be called inside a progress callback function in order to stop the transmission at the

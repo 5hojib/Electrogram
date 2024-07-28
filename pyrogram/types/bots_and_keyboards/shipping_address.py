@@ -33,7 +33,7 @@ class ShippingAddress(Object):
         state: str,
         post_code: str,
         country_code: str,
-    ):
+    ) -> None:
         super().__init__()
 
         self.street_line1 = street_line1

@@ -17,7 +17,7 @@ class RequestPeerTypeUser(Object):
         is_bot: bool | None = None,
         is_premium: bool | None = None,
         max: int = 1,
-    ):
+    ) -> None:
         super().__init__()
 
         self.is_bot = is_bot

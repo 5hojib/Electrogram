@@ -40,7 +40,7 @@ class InputLocationMessageContent(InputMessageContent):
         live_period: int | None = None,
         heading: int | None = None,
         proximity_alert_radius: int | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.latitude = latitude

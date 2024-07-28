@@ -20,7 +20,7 @@ class InputPhoneContact(Object):
 
     def __init__(
         self, phone: str, first_name: str, last_name: str = ""
-    ):
+    ) -> None:
         super().__init__(None)
 
     def __new__(

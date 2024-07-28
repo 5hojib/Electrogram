@@ -13,14 +13,14 @@ if TYPE_CHECKING:
 class ConversationHandler(MessageHandler, CallbackQueryHandler):
     """The Conversation handler class."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.waiters = {}
 
     async def check(
         self,
         client: "pyrogram.Client",
         update: Message | CallbackQuery,
-    ):
+    ) -> bool:
         if isinstance(update, Message) and update.outgoing:
             return False
 
@@ -56,9 +56,9 @@ class ConversationHandler(MessageHandler, CallbackQueryHandler):
         return True
 
     @staticmethod
-    async def callback(_, __):
+    async def callback(_, __) -> None:
         pass
 
-    def delete_waiter(self, chat_id, future):
+    def delete_waiter(self, chat_id, future) -> None:
         if future == self.waiters[chat_id]["future"]:
             del self.waiters[chat_id]

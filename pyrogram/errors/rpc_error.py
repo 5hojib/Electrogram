@@ -1,6 +1,7 @@
 import re
 from datetime import datetime
 from importlib import import_module
+from typing import NoReturn
 
 from pyrogram import __version__, raw
 from pyrogram.raw.core import TLObject
@@ -20,7 +21,7 @@ class RPCError(Exception):
         rpc_name: str | None = None,
         is_unknown: bool = False,
         is_signed: bool = False,
-    ):
+    ) -> None:
         super().__init__(
             "Telegram says: [{}{} {}] {} Pyrogram {} thinks: {}".format(
                 "-" if is_signed else "",
@@ -46,7 +47,7 @@ class RPCError(Exception):
     @staticmethod
     def raise_it(
         rpc_error: "raw.types.RpcError", rpc_type: type[TLObject]
-    ):
+    ) -> NoReturn:
         error_code = rpc_error.error_code
         is_signed = error_code < 0
         error_message = rpc_error.error_message

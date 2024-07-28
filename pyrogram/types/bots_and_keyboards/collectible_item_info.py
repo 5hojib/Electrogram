@@ -31,7 +31,7 @@ class CollectibleItemInfo(Object):
         cryptocurrency: str,
         cryptocurrency_amount: float,
         url: str,
-    ):
+    ) -> None:
         super().__init__()
 
         self.purchase_date = purchase_date

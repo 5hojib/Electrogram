@@ -22,7 +22,7 @@ class BusinessWeeklyOpen(Object):
         *,
         start_minute: int,
         end_minute: int,
-    ):
+    ) -> None:
         self.start_minute = start_minute
         self.end_minute = end_minute
 

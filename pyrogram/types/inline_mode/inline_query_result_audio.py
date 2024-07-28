@@ -67,7 +67,7 @@ class InlineQueryResultAudio(InlineQueryResult):
         reply_markup: "types.InlineKeyboardMarkup" = None,
         input_message_content: "types.InputMessageContent" = None,
         thumb_url: str | None = None,
-    ):
+    ) -> None:
         super().__init__(
             "audio", id, input_message_content, reply_markup
         )

@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 class Disconnect:
     async def disconnect(
         self: "pyrogram.Client",
-    ):
+    ) -> None:
         """Disconnect the client from Telegram servers.
 
         Raises:

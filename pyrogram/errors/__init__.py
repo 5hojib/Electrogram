@@ -18,7 +18,7 @@ class BadMsgNotification(Exception):
         64: "Invalid container.",
     }
 
-    def __init__(self, code):
+    def __init__(self, code) -> None:
         description = self.descriptions.get(
             code, "Unknown error code"
         )
@@ -29,7 +29,7 @@ class SecurityError(Exception):
     """Generic security error."""
 
     @classmethod
-    def check(cls, cond: bool, msg: str):
+    def check(cls, cond: bool, msg: str) -> None:
         """Raises this exception if the condition is false"""
         if not cond:
             raise cls(f"Check failed: {msg}")
@@ -38,7 +38,7 @@ class SecurityError(Exception):
 class SecurityCheckMismatch(SecurityError):
     """Raised when a security check mismatch occurs."""
 
-    def __init__(self, msg: str | None = None):
+    def __init__(self, msg: str | None = None) -> None:
         super().__init__(
             "A security check mismatch has occurred."
             if msg is None
@@ -49,7 +49,7 @@ class SecurityCheckMismatch(SecurityError):
 class CDNFileHashMismatch(SecurityError):
     """Raised when a CDN file hash mismatch occurs."""
 
-    def __init__(self, msg: str | None = None):
+    def __init__(self, msg: str | None = None) -> None:
         super().__init__(
             "A CDN file hash mismatch has occurred."
             if msg is None

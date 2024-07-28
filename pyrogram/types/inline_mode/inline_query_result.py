@@ -36,7 +36,7 @@ class InlineQueryResult(Object):
         id: str,
         input_message_content: "types.InputMessageContent",
         reply_markup: "types.InlineKeyboardMarkup",
-    ):
+    ) -> None:
         super().__init__()
 
         self.type = type
@@ -44,5 +44,5 @@ class InlineQueryResult(Object):
         self.input_message_content = input_message_content
         self.reply_markup = reply_markup
 
-    async def write(self, client: "pyrogram.Client"):
+    async def write(self, client: "pyrogram.Client") -> None:
         pass

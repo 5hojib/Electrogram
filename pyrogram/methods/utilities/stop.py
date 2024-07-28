@@ -39,7 +39,7 @@ class Stop:
                 app.run(main())
         """
 
-        async def do_it():
+        async def do_it() -> None:
             await self.terminate()
             await self.disconnect()
 

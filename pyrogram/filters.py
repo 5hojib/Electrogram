@@ -34,7 +34,7 @@ class Filter:
 
 
 class InvertFilter(Filter):
-    def __init__(self, base):
+    def __init__(self, base) -> None:
         self.base = base
 
     async def __call__(
@@ -51,7 +51,7 @@ class InvertFilter(Filter):
 
 
 class AndFilter(Filter):
-    def __init__(self, base, other):
+    def __init__(self, base, other) -> None:
         self.base = base
         self.other = other
 
@@ -80,7 +80,7 @@ class AndFilter(Filter):
 
 
 class OrFilter(Filter):
-    def __init__(self, base, other):
+    def __init__(self, base, other) -> None:
         self.base = base
         self.other = other
 
@@ -144,7 +144,7 @@ def create(
 
 
 # region all_filter
-async def all_filter(_, __, ___):
+async def all_filter(_, __, ___) -> bool:
     return True
 
 
@@ -184,7 +184,7 @@ bot = create(bot_filter)
 
 
 # region incoming_filter
-async def incoming_filter(_, __, m: Message):
+async def incoming_filter(_, __, m: Message) -> bool:
     return not m.outgoing
 
 
@@ -923,7 +923,9 @@ def command(
     """
     command_re = re.compile(r"([\"'])(.*?)(?<!\\)\1|(\S+)")
 
-    async def func(flt, client: pyrogram.Client, message: Message):
+    async def func(
+        flt, client: pyrogram.Client, message: Message
+    ) -> bool:
         username = client.me.username or ""
         text = message.text or message.caption
         message.command = None
@@ -1058,7 +1060,7 @@ class user(Filter, set):
 
     def __init__(
         self, users: int | str | list[int | str] | None = None
-    ):
+    ) -> None:
         users = (
             []
             if users is None
@@ -1103,7 +1105,7 @@ class chat(Filter, set):
 
     def __init__(
         self, chats: int | str | list[int | str] | None = None
-    ):
+    ) -> None:
         chats = (
             []
             if chats is None
@@ -1170,7 +1172,7 @@ class topic(Filter, set):
             Defaults to None (no topics).
     """
 
-    def __init__(self, topics: int | list[int] | None = None):
+    def __init__(self, topics: int | list[int] | None = None) -> None:
         topics = (
             []
             if topics is None

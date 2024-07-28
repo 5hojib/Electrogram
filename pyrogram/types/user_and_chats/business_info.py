@@ -32,7 +32,7 @@ class BusinessInfo(Object):
         greeting_message: "types.BusinessMessage" = None,
         away_message: "types.BusinessMessage" = None,
         working_hours: "types.BusinessWorkingHours" = None,
-    ):
+    ) -> None:
         self.address = address
         self.location = location
         self.greeting_message = greeting_message

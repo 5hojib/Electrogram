@@ -58,7 +58,7 @@ class InputMediaAudio(InputMedia):
         duration: int = 0,
         performer: str = "",
         title: str = "",
-    ):
+    ) -> None:
         super().__init__(media, caption, parse_mode, caption_entities)
 
         self.thumb = thumb

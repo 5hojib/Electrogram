@@ -30,7 +30,7 @@ class ShippingQuery(Object, Update):
         from_user: "types.User",
         invoice_payload: str,
         shipping_address: "types.ShippingAddress" = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.id = id

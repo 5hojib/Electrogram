@@ -8,10 +8,10 @@ if typing.TYPE_CHECKING:
 
 
 class Object:
-    def __init__(self, client: "pyrogram.Client" = None):
+    def __init__(self, client: "pyrogram.Client" = None) -> None:
         self._client = client
 
-    def bind(self, client: "pyrogram.Client"):
+    def bind(self, client: "pyrogram.Client") -> None:
         """Bind a Client instance to this and to all nested Pyrogram objects.
 
         Parameters:

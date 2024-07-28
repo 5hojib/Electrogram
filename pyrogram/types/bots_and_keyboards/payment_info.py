@@ -25,7 +25,7 @@ class PaymentInfo(Object):
         phone_number: str | None = None,
         email: str | None = None,
         shipping_address: "types.ShippingAddress" = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.name = name

@@ -9,12 +9,14 @@ log = logging.getLogger(__name__)
 
 
 class MemoryStorage(SQLiteStorage):
-    def __init__(self, name: str, session_string: str | None = None):
+    def __init__(
+        self, name: str, session_string: str | None = None
+    ) -> None:
         super().__init__(name)
 
         self.session_string = session_string
 
-    async def open(self):
+    async def open(self) -> None:
         self.conn = sqlite3.connect(
             ":memory:", check_same_thread=False
         )
@@ -71,5 +73,5 @@ class MemoryStorage(SQLiteStorage):
             await self.is_bot(is_bot)
             await self.date(0)
 
-    async def delete(self):
+    async def delete(self) -> None:
         pass

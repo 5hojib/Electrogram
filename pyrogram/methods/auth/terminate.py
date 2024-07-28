@@ -9,7 +9,7 @@ log = logging.getLogger(__name__)
 class Terminate:
     async def terminate(
         self: "pyrogram.Client",
-    ):
+    ) -> None:
         """Terminate the client by shutting down workers.
 
         This method does the opposite of :meth:`~pyrogram.Client.initialize`.

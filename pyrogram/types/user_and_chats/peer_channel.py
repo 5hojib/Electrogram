@@ -15,7 +15,7 @@ class PeerChannel(Object):
             Id of the channel.
     """
 
-    def __init__(self, *, channel_id: int):
+    def __init__(self, *, channel_id: int) -> None:
         super().__init__()
 
         self.channel_id = channel_id

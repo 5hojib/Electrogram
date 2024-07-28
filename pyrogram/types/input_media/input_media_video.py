@@ -65,7 +65,7 @@ class InputMediaVideo(InputMedia):
         duration: int = 0,
         supports_streaming: bool = True,
         has_spoiler: bool | None = None,
-    ):
+    ) -> None:
         super().__init__(media, caption, parse_mode, caption_entities)
 
         self.thumb = thumb

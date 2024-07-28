@@ -38,7 +38,7 @@ class SuccessfulPayment(Object):
         provider_payment_charge_id: str,
         shipping_option_id: str | None = None,
         payment_info: "types.PaymentInfo" = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.currency = currency

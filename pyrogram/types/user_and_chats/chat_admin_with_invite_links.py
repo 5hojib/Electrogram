@@ -23,7 +23,7 @@ class ChatAdminWithInviteLinks(Object):
         admin: "types.User",
         chat_invite_links_count: int,
         revoked_chat_invite_links_count: int | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.admin = admin

@@ -55,7 +55,7 @@ class GiveawayResult(Object):
         new_subscribers: bool | None = None,
         is_refunded: bool | None = None,
         is_winners_hidden: bool,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.chat = chat

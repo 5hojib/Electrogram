@@ -22,7 +22,7 @@ class InputMedia(Object):
         caption: str = "",
         parse_mode: str | None = None,
         caption_entities: list[MessageEntity] | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.media = media

@@ -42,7 +42,7 @@ class InputVenueMessageContent(InputMessageContent):
         foursquare_type: str | None = None,
         google_place_id: str | None = None,
         google_place_type: str | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.latitude = latitude

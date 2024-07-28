@@ -20,7 +20,9 @@ class Restriction(Object):
             The restriction text.
     """
 
-    def __init__(self, *, platform: str, reason: str, text: str):
+    def __init__(
+        self, *, platform: str, reason: str, text: str
+    ) -> None:
         super().__init__(None)
 
         self.platform = platform

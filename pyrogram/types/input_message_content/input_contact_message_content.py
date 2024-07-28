@@ -32,7 +32,7 @@ class InputContactMessageContent(InputMessageContent):
         first_name: str,
         last_name: str | None = None,
         vcard: str | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.phone_number = phone_number

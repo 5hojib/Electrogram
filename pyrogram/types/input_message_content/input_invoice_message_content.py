@@ -96,7 +96,7 @@ class InputInvoiceMessageContent(InputMessageContent):
         send_phone_number_to_provider: bool | None = None,
         send_email_to_provider: bool | None = None,
         is_flexible: bool | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.title = title

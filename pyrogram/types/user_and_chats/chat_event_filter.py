@@ -67,7 +67,7 @@ class ChatEventFilter(Object):
         pinned_messages: bool = False,
         leaving_members: bool = False,
         video_chats: bool = False,
-    ):
+    ) -> None:
         super().__init__()
 
         self.new_restrictions = new_restrictions

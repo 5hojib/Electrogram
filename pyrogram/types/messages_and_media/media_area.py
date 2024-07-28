@@ -11,7 +11,9 @@ class MediaArea(Object):
     - :obj:`~pyrogram.types.MediaAreaChannelPost`
     """
 
-    def __init__(self, coordinates: "types.MediaAreaCoordinates"):
+    def __init__(
+        self, coordinates: "types.MediaAreaCoordinates"
+    ) -> None:
         super().__init__()
 
         self.coordinates = coordinates

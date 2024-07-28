@@ -23,7 +23,7 @@ class StoryViews(Object):
         *,
         view_count: int,
         recent_viewers: list[int] | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.view_count = view_count

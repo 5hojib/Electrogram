@@ -54,7 +54,7 @@ class ChatPhoto(Object):
         has_animation: bool,
         is_personal: bool,
         minithumbnail: "types.StrippedThumbnail" = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.small_file_id = small_file_id

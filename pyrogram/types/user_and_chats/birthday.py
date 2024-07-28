@@ -16,7 +16,7 @@ class Birthday(Object):
             Year of birth.
     """
 
-    def __init__(self, *, day: int, month: int, year: int):
+    def __init__(self, *, day: int, month: int, year: int) -> None:
         self.day = day
         self.month = month
         self.year = year

@@ -29,7 +29,7 @@ class BotAllowed(Object):
         from_request: bool | None = None,
         domain: str | None = None,
         app: Optional["types.BotApp"] = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.attach_menu = attach_menu

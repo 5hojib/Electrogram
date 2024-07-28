@@ -16,7 +16,7 @@ class LabeledPrice(Object):
             you need to add 2 extra zeros to the amount (except stars), example 100 for 1 usd.
     """
 
-    def __init__(self, label: str, amount: int):
+    def __init__(self, label: str, amount: int) -> None:
         self.label = label
         self.amount = amount
 

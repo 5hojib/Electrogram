@@ -16,7 +16,9 @@ class BotCommandScopeChatMember(BotCommandScope):
             Unique identifier of the target user.
     """
 
-    def __init__(self, chat_id: int | str, user_id: int | str):
+    def __init__(
+        self, chat_id: int | str, user_id: int | str
+    ) -> None:
         super().__init__("chat_member")
 
         self.chat_id = chat_id

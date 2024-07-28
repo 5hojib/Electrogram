@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, NoReturn, Union
 
 from bson.codec_options import CodecOptions
 from pymongo.client_session import TransactionOptions
@@ -35,7 +35,7 @@ class DummyMongoClient(Protocol):
         read_preference: ReadPreferences | None = None,
         write_concern: WriteConcern | None = None,
         read_concern: ReadConcern | None = None,
-    ):
+    ) -> NoReturn:
         raise NotImplementedError
 
     async def start_session(
@@ -44,5 +44,5 @@ class DummyMongoClient(Protocol):
         causal_consistency: bool | None = None,
         default_transaction_options: TransactionOptions | None = None,
         snapshot: bool = False,
-    ):
+    ) -> NoReturn:
         raise NotImplementedError

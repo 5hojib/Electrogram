@@ -9,7 +9,7 @@ not_content_related = (Ping, HttpWait, MsgsAck, MsgContainer)
 
 
 class MsgFactory:
-    def __init__(self):
+    def __init__(self) -> None:
         self.seq_no = SeqNo()
 
     def __call__(self, body: TLObject) -> Message:

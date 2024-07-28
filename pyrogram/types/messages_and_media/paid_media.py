@@ -28,7 +28,7 @@ class PaidMedia(Object):
             ]
         ]
         | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.stars_amount = stars_amount

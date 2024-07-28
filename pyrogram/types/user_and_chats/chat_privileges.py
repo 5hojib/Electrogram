@@ -86,7 +86,7 @@ class ChatPrivileges(Object):
         can_edit_stories: bool = False,  # Channels only
         can_delete_stories: bool = False,  # Channels only
         is_anonymous: bool = False,
-    ):
+    ) -> None:
         super().__init__(None)
 
         self.can_manage_chat: bool = can_manage_chat

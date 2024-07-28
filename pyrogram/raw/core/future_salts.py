@@ -15,7 +15,7 @@ class FutureSalts(TLObject):
 
     def __init__(
         self, req_msg_id: int, now: int, salts: list[FutureSalt]
-    ):
+    ) -> None:
         self.req_msg_id = req_msg_id
         self.now = now
         self.salts = salts

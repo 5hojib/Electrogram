@@ -47,7 +47,7 @@ class MessageInvoice(Object):
         test: bool | None = None,
         receipt_message_id: int | None = None,
         # TODO: Implement photo, extended_media parameters
-    ):
+    ) -> None:
         super().__init__()
 
         self.title = title

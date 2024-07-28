@@ -49,7 +49,7 @@ class BusinessMessage(Object):
         schedule: "enums.BusinessSchedule" = None,
         start_date: datetime | None = None,
         end_date: datetime | None = None,
-    ):
+    ) -> None:
         self.shortcut_id = shortcut_id
         self.is_greeting = is_greeting
         self.is_away = is_away

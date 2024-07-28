@@ -50,7 +50,7 @@ CODE_TAG_RE = re.compile(r"<code>.*?</code>")
 
 
 class Markdown:
-    def __init__(self, client: Optional["pyrogram.Client"]):
+    def __init__(self, client: Optional["pyrogram.Client"]) -> None:
         self.html = HTML(client)
 
     def blockquote_parser(self, text):

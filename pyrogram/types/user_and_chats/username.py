@@ -27,7 +27,7 @@ class Username(Object):
         username: str,
         editable: bool | None = None,
         active: bool | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.username = username

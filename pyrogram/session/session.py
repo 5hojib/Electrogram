@@ -33,7 +33,7 @@ log = logging.getLogger(__name__)
 
 
 class Result:
-    def __init__(self):
+    def __init__(self) -> None:
         self.value = None
         self.event = asyncio.Event()
 
@@ -61,7 +61,7 @@ class Session:
         test_mode: bool,
         is_media: bool = False,
         is_cdn: bool = False,
-    ):
+    ) -> None:
         self.client = client
         self.dc_id = dc_id
         self.auth_key = auth_key
@@ -93,7 +93,7 @@ class Session:
 
         self.loop = asyncio.get_event_loop()
 
-    async def start(self):
+    async def start(self) -> None:
         while True:
             self.connection = self.client.connection_factory(
                 dc_id=self.dc_id,
@@ -165,7 +165,7 @@ class Session:
 
         log.info("Session started")
 
-    async def stop(self):
+    async def stop(self) -> None:
         self.is_started.clear()
 
         self.stored_msg_ids.clear()
@@ -192,11 +192,11 @@ class Session:
 
         log.info("Session stopped")
 
-    async def restart(self):
+    async def restart(self) -> None:
         await self.stop()
         await self.start()
 
-    async def handle_packet(self, packet):
+    async def handle_packet(self, packet) -> None:
         data = await self.loop.run_in_executor(
             pyrogram.crypto_executor,
             mtproto.unpack,
@@ -312,7 +312,7 @@ class Session:
             else:
                 self.pending_acks.clear()
 
-    async def ping_worker(self):
+    async def ping_worker(self) -> None:
         log.info("PingTask started")
 
         while True:
@@ -341,7 +341,7 @@ class Session:
 
         log.info("PingTask stopped")
 
-    async def recv_worker(self):
+    async def recv_worker(self) -> None:
         log.info("NetworkTask started")
 
         while True:
@@ -442,7 +442,7 @@ class Session:
             return result
         return None
 
-    def _handle_bad_notification(self):
+    def _handle_bad_notification(self) -> None:
         new_msg_id = MsgId()
         if (
             self.stored_msg_ids[len(self.stored_msg_ids) - 1]

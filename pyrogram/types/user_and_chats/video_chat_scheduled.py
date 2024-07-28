@@ -12,7 +12,7 @@ class VideoChatScheduled(Object):
             Point in time when the voice chat is supposed to be started by a chat administrator.
     """
 
-    def __init__(self, *, start_date: datetime):
+    def __init__(self, *, start_date: datetime) -> None:
         super().__init__()
 
         self.start_date = start_date

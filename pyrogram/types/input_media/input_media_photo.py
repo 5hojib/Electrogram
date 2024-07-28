@@ -42,7 +42,7 @@ class InputMediaPhoto(InputMedia):
         parse_mode: Optional["enums.ParseMode"] = None,
         caption_entities: list[MessageEntity] | None = None,
         has_spoiler: bool | None = None,
-    ):
+    ) -> None:
         super().__init__(media, caption, parse_mode, caption_entities)
 
         self.has_spoiler = has_spoiler

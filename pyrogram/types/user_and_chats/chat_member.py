@@ -71,7 +71,7 @@ class ChatMember(Object):
         can_be_edited: bool | None = None,
         permissions: "types.ChatPermissions" = None,
         privileges: "types.ChatPrivileges" = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.status = status

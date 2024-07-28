@@ -55,7 +55,7 @@ class CallbackQuery(Object, Update):
         data: str | bytes | None = None,
         game_short_name: str | None = None,
         matches: list[Match] | None = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.id = id

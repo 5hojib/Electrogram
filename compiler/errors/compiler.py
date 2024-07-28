@@ -23,7 +23,7 @@ def camel(s):
     return "".join(str(i.title()) for i in s)
 
 
-def start():
+def start() -> None:
     shutil.rmtree(ERRORS_DEST_PATH, ignore_errors=True)
     ERRORS_DEST_PATH.mkdir(parents=True)
 

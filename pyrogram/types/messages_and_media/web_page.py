@@ -87,7 +87,7 @@ class WebPage(Object):
         embed_height: int | None = None,
         duration: int | None = None,
         author: str | None = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.id = id

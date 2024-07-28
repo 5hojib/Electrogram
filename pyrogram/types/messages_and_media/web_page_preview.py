@@ -29,7 +29,7 @@ class WebPagePreview(Object):
         force_small_media: bool | None = None,
         invert_media: bool | None = None,
         is_safe: bool | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.webpage = webpage

@@ -27,7 +27,7 @@ class StoryDeleted(Object, Update):
         id: int,
         from_user: "types.User" = None,
         sender_chat: "types.Chat" = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.id = id

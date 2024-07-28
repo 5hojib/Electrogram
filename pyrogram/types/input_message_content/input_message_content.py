@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, NoReturn
 
 from pyrogram.types.object import Object
 
@@ -19,8 +19,10 @@ class InputMessageContent(Object):
 
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
-    async def write(self, client: "pyrogram.Client", reply_markup):
+    async def write(
+        self, client: "pyrogram.Client", reply_markup
+    ) -> NoReturn:
         raise NotImplementedError

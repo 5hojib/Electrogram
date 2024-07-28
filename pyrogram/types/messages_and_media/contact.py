@@ -36,7 +36,7 @@ class Contact(Object):
         last_name: str | None = None,
         user_id: int | None = None,
         vcard: str | None = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.phone_number = phone_number

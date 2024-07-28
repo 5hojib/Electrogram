@@ -13,7 +13,7 @@ class BotCommandScopeChatAdministrators(BotCommandScope):
             @supergroupusername).
     """
 
-    def __init__(self, chat_id: int | str):
+    def __init__(self, chat_id: int | str) -> None:
         super().__init__("chat_administrators")
 
         self.chat_id = chat_id

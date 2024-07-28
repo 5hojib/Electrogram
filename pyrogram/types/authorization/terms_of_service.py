@@ -22,7 +22,7 @@ class TermsOfService(Object):
         id: str,
         text: str,
         entities: list["types.MessageEntity"],
-    ):
+    ) -> None:
         super().__init__()
 
         self.id = id
