@@ -4651,6 +4651,7 @@ class Message(Object, Update):
         media: "types.InputMedia",
         invert_media: bool | None = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
+        parse_mode: "enums.ParseMode" | None = None,
         business_connection_id: str | None = None,
     ) -> "Message":
         """Bound method *edit_media* of :obj:`~pyrogram.types.Message`.
@@ -4674,6 +4675,10 @@ class Message(Object, Update):
             media (:obj:`~pyrogram.types.InputMedia`):
                 One of the InputMedia objects describing an animation, audio, document, photo or video.
 
+            parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+                By default, texts are parsed using both Markdown and HTML styles.
+                You can combine both syntaxes together.
+
             invert_media (``bool``, *optional*):
                 Inverts the position of the media and caption.
 
@@ -4696,6 +4701,7 @@ class Message(Object, Update):
             media=media,
             invert_media=invert_media,
             reply_markup=reply_markup,
+            parse_mode=parse_mode,
             business_connection_id=self.business_connection_id
             if business_connection_id is None
             else business_connection_id,
