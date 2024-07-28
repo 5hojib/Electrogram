@@ -1380,22 +1380,6 @@ class Message(Object, Update):
                             media_type = (
                                 enums.MessageMediaType.DOCUMENT
                             )
-                elif isinstance(media, raw.types.MessageMediaWebPage):
-                    if isinstance(
-                        media.webpage, raw.types.WebPage
-                    ) or isinstance(
-                        media.webpage, raw.types.WebPageEmpty
-                    ):
-                        web_page_preview = (
-                            types.WebPagePreview._parse(
-                                client, media, message.invert_media
-                            )
-                        )
-                        media_type = (
-                            enums.MessageMediaType.WEB_PAGE_PREVIEW
-                        )
-                    else:
-                        media = None  # gonna delete
                 elif isinstance(media, raw.types.MessageMediaPoll):
                     poll = await types.Poll._parse(
                         client, media, users
