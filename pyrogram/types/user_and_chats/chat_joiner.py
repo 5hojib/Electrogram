@@ -68,7 +68,7 @@ class ChatJoiner(Object):
     def _parse(
         client: "pyrogram.Client",
         joiner: "raw.base.ChatInviteImporter",
-        users: Dict[int, "raw.base.User"],
+        users: dict[int, "raw.base.User"],
     ) -> "ChatJoiner":
         return ChatJoiner(
             user=types.User._parse(client, users[joiner.user_id]),

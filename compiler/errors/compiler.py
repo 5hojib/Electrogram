@@ -21,39 +21,32 @@ import csv
 import os
 import re
 import shutil
+from pathlib import Path
 
-HOME = "compiler/errors"
-DEST = "pyrogram/errors/exceptions"
-NOTICE_PATH = "NOTICE"
+ERRORS_HOME_PATH = Path(__file__).parent.resolve()
+REPO_HOME_PATH = ERRORS_HOME_PATH.parent.parent
+
+ERRORS_DEST_PATH = REPO_HOME_PATH / "pyrogram" / "errors" / "exceptions"
 
 
-def snek(s):
+def snake(s):
     # https://stackoverflow.com/questions/1175208/elegant-python-function-to-convert-camelcase-to-snake-case
     s = re.sub(r"(.)([A-Z][a-z]+)", r"\1_\2", s)
     return re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", s).lower()
 
 
-def caml(s):
-    s = snek(s).split("_")
-    return "".join([str(i.title()) for i in s])
+def camel(s):
+    s = snake(s).split("_")
+    return "".join(str(i.title()) for i in s)
 
 
 def start():
-    shutil.rmtree(DEST, ignore_errors=True)
-    os.makedirs(DEST)
+    shutil.rmtree(ERRORS_DEST_PATH, ignore_errors=True)
+    ERRORS_DEST_PATH.mkdir(parents=True)
 
-    files = [i for i in os.listdir(f"{HOME}/source")]
+    files = os.listdir(f"{ERRORS_HOME_PATH}/source")
 
-    with open(NOTICE_PATH, encoding="utf-8") as f:
-        notice = []
-
-        for line in f.readlines():
-            notice.append(f"# {line}".strip())
-
-        notice = "\n".join(notice)
-
-    with open(f"{DEST}/all.py", "w", encoding="utf-8") as f_all:
-        f_all.write(notice + "\n\n")
+    with (ERRORS_DEST_PATH / "all.py").open("w", encoding="utf-8") as f_all:
         f_all.write("count = {count}\n\n")
         f_all.write("exceptions = {\n")
 
@@ -64,25 +57,23 @@ def start():
 
             f_all.write(f"    {code}: {{\n")
 
-            init = f"{DEST}/__init__.py"
+            init = ERRORS_DEST_PATH / "__init__.py"
 
-            if not os.path.exists(init):
-                with open(init, "w", encoding="utf-8") as f_init:
-                    f_init.write(notice + "\n\n")
-
-            with open(init, "a", encoding="utf-8") as f_init:
+            with init.open("a", encoding="utf-8") as f_init:
                 f_init.write(f"from .{name.lower()}_{code} import *\n")
 
             with (
-                open(f"{HOME}/source/{i}", encoding="utf-8") as f_csv,
-                open(f"{DEST}/{name.lower()}_{code}.py", "w", encoding="utf-8") as f_class,
+                (ERRORS_HOME_PATH / "source" / i).open(encoding="utf-8") as f_csv,
+                (ERRORS_DEST_PATH / f"{name.lower()}_{code}.py").open(
+                    "w", encoding="utf-8"
+                ) as f_class,
             ):
                 reader = csv.reader(f_csv, delimiter="\t")
 
-                super_class = caml(name)
-                name = " ".join(
-                    [str(i.capitalize()) for i in re.sub(r"_", " ", name).lower().split(" ")]
-                )
+                super_class = camel(name)
+                name = " ".join([
+                    i.capitalize() for i in re.sub(r"_", " ", name).lower().split(" ")
+                ])
 
                 sub_classes = []
 
@@ -99,7 +90,7 @@ def start():
 
                     error_id, error_message = row
 
-                    sub_class = caml(re.sub(r"_X", "_", error_id))
+                    sub_class = camel(re.sub(r"_X", "_", error_id))
                     sub_class = re.sub(r"^2", "Two", sub_class)
                     sub_class = re.sub(r" ", "", sub_class)
 
@@ -107,30 +98,27 @@ def start():
 
                     sub_classes.append((sub_class, error_id, error_message))
 
-                with open(f"{HOME}/template/class.txt", encoding="utf-8") as f_class_template:
+                with (ERRORS_HOME_PATH / "template" / "class.txt").open(
+                    encoding="utf-8"
+                ) as f_class_template:
                     class_template = f_class_template.read()
 
-                    with open(
-                        f"{HOME}/template/sub_class.txt", encoding="utf-8"
+                    with (ERRORS_HOME_PATH / "template" / "sub_class.txt").open(
+                        encoding="utf-8"
                     ) as f_sub_class_template:
                         sub_class_template = f_sub_class_template.read()
 
                     class_template = class_template.format(
-                        notice=notice,
                         super_class=super_class,
                         code=code,
-                        docstring=f'"""{name}"""',
-                        sub_classes="".join(
-                            [
-                                sub_class_template.format(
-                                    sub_class=k[0],
-                                    super_class=super_class,
-                                    id=f'"{k[1]}"',
-                                    docstring=f'"""{k[2]}"""',
-                                )
-                                for k in sub_classes
-                            ]
-                        ),
+                        sub_classes="".join([
+                            sub_class_template.format(
+                                sub_class=k[0],
+                                super_class=super_class,
+                                id=f'"{k[1]}"',
+                            )
+                            for k in sub_classes
+                        ]),
                     )
 
                 f_class.write(class_template)
@@ -139,16 +127,12 @@ def start():
 
         f_all.write("}\n")
 
-    with open(f"{DEST}/all.py", encoding="utf-8") as f:
+    with (ERRORS_DEST_PATH / "all.py").open(encoding="utf-8") as f:
         content = f.read()
 
-    with open(f"{DEST}/all.py", "w", encoding="utf-8") as f:
-        f.write(re.sub("{count}", str(count), content))
+    with (ERRORS_DEST_PATH / "all.py").open("w", encoding="utf-8") as f:
+        f.write(re.sub("{count}", str(count), content))  # noqa: RUF027
 
 
 if __name__ == "__main__":
-    HOME = "."
-    DEST = "../../pyrogram/errors/exceptions"
-    NOTICE_PATH = "../../NOTICE"
-
     start()

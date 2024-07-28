@@ -27,7 +27,7 @@ import socks
 
 log = logging.getLogger(__name__)
 
-proxy_type_by_scheme: Dict[str, int] = {
+proxy_type_by_scheme: dict[str, int] = {
     "SOCKS4": socks.SOCKS4,
     "SOCKS5": socks.SOCKS5,
     "HTTP": socks.HTTP,

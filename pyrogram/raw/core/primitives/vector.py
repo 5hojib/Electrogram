@@ -17,13 +17,18 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from io import BytesIO
-from typing import Any, Union, cast
+from __future__ import annotations
 
-from ..list import List
-from ..tl_object import TLObject
+from typing import TYPE_CHECKING, Any, cast
+
+from pyrogram.raw.core.list import List
+from pyrogram.raw.core.tl_object import TLObject
+
 from .bool import Bool, BoolFalse, BoolTrue
 from .int import Int, Long
+
+if TYPE_CHECKING:
+    from io import BytesIO
 
 
 class Vector(bytes, TLObject):
@@ -32,26 +37,15 @@ class Vector(bytes, TLObject):
     # Method added to handle the special case when a query returns a bare Vector (of Ints);
     # i.e., RpcResult body starts with 0x1cb5c415 (Vector Id) - e.g., messages.GetMessagesViews.
     @staticmethod
-    def read_bare(b: BytesIO, size: int) -> Union[int, Any]:
+    def read_bare(b: BytesIO, size: int) -> int | Any:
         if size == 4:
-            # cek
             e = int.from_bytes(b.read(4), "little")
-            # bak
             b.seek(-4, 1)
-            # cond
-            if e in [
-                BoolFalse.ID,
-                BoolTrue.ID,
-            ]:
+            if e in {BoolFalse.ID, BoolTrue.ID}:
                 return Bool.read(b)
-            # not
-            else:
-                return Int.read(b)
+            return Int.read(b)
 
-        if size == 8:
-            return Long.read(b)
-
-        return TLObject.read(b)
+        return Long.read(b) if size == 8 else TLObject.read(b)
 
     @classmethod
     def read(cls, data: BytesIO, t: Any = None, *args: Any) -> List:

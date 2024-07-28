@@ -83,8 +83,8 @@ class ChatMemberUpdated(Object, Update):
             "raw.types.UpdateChannelParticipant",
             "raw.types.UpdateBotStopped",
         ],
-        users: Dict[int, "raw.types.User"],
-        chats: Dict[int, "raw.types.Chat"],
+        users: dict[int, "raw.types.User"],
+        chats: dict[int, "raw.types.Chat"],
     ) -> "ChatMemberUpdated":
         if isinstance(update, raw.types.UpdateBotStopped):
             from_user = types.User._parse(client, users[update.user_id])

@@ -65,8 +65,8 @@ class MessageReactionCountUpdated(Object, Update):
     def _parse(
         client: "pyrogram.Client",
         update: "raw.types.UpdateBotMessageReactions",
-        users: Dict[int, "raw.types.User"],
-        chats: Dict[int, "raw.types.Chat"],
+        users: dict[int, "raw.types.User"],
+        chats: dict[int, "raw.types.Chat"],
     ) -> "MessageReactionUpdated":
         chat = None
         peer_id = utils.get_peer_id(update.peer)

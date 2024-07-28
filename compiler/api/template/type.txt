@@ -1,7 +1,3 @@
-{notice}
-
-{warning}
-
 from typing import Union
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
@@ -11,13 +7,7 @@ from pyrogram.raw.core import TLObject
 
 # noinspection PyRedeclaration
 class {name}:  # type: ignore
-    """{docstring}
-    """
-
     QUALNAME = "pyrogram.raw.base.{qualname}"
 
     def __init__(self):
-        raise TypeError("Base types can only be used for type checking purposes: "
-                        "you tried to use a base type instance as argument, "
-                        "but you need to instantiate one of its constructors instead. "
-                        "More info: https://pyrofork.mayuri.my.id/telegram/base/{doc_name}")
+        raise TypeError("Base types can only be used for type checking purposes")

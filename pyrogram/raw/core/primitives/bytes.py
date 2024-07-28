@@ -20,7 +20,7 @@
 from io import BytesIO
 from typing import Any
 
-from ..tl_object import TLObject
+from pyrogram.raw.core.tl_object import TLObject
 
 
 class Bytes(bytes, TLObject):
@@ -43,5 +43,4 @@ class Bytes(bytes, TLObject):
 
         if length <= 253:
             return bytes([length]) + value + bytes(-(length + 1) % 4)
-        else:
-            return bytes([254]) + length.to_bytes(3, "little") + value + bytes(-length % 4)
+        return bytes([254]) + length.to_bytes(3, "little") + value + bytes(-length % 4)

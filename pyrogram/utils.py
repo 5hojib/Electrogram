@@ -417,7 +417,7 @@ async def parse_text_entities(
     text: str,
     parse_mode: enums.ParseMode,
     entities: list["types.MessageEntity"],
-) -> Dict[str, Union[str, list[raw.base.MessageEntity]]]:
+) -> dict[str, Union[str, list[raw.base.MessageEntity]]]:
     if entities:
         # Inject the client instance because parsing user mentions requires it
         for entity in entities:
