@@ -1,17 +1,16 @@
 from __future__ import annotations
 
 import asyncio
-import functools
 import contextlib
+import functools
 import inspect
 import logging
 import os
 import platform
+import random
 import re
 import shutil
 import sys
-import random
-
 from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime, timedelta
 from hashlib import sha256
@@ -34,8 +33,12 @@ from pyrogram.errors import (
 from pyrogram.handlers.handler import Handler
 from pyrogram.methods import Methods
 from pyrogram.session import Auth, Session
-from pyrogram.storage import FileStorage, MemoryStorage, Storage
-from pyrogram.storage import MongoStorage
+from pyrogram.storage import (
+    FileStorage,
+    MemoryStorage,
+    MongoStorage,
+    Storage,
+)
 from pyrogram.types import TermsOfService, User
 from pyrogram.utils import ainput
 
@@ -625,7 +628,10 @@ class Client(Methods):
                     peer.usernames is not None
                     and len(peer.usernames) > 1
                 ):
-                    usernames.extend((peer.id, uname.username.lower()) for uname in peer.usernames)
+                    usernames.extend(
+                        (peer.id, uname.username.lower())
+                        for uname in peer.usernames
+                    )
                 phone_number = peer.phone
                 peer_type = "bot" if peer.bot else "user"
             elif isinstance(
@@ -648,7 +654,10 @@ class Client(Methods):
                     peer.usernames is not None
                     and len(peer.usernames) > 1
                 ):
-                    usernames.extend((peer.id, uname.username.lower()) for uname in peer.usernames)
+                    usernames.extend(
+                        (peer.id, uname.username.lower())
+                        for uname in peer.usernames
+                    )
                 peer_type = (
                     "channel" if peer.broadcast else "supergroup"
                 )
@@ -965,7 +974,11 @@ class Client(Methods):
 
                                     log.info(
                                         '[%s] [LOAD] %s("%s") in group %s from "%s"',
-                                        self.name, type(handler).__name__, name, group, module_path
+                                        self.name,
+                                        type(handler).__name__,
+                                        name,
+                                        group,
+                                        module_path,
                                     )
 
                                     count += 1
@@ -973,7 +986,9 @@ class Client(Methods):
                             if warn_non_existent_functions:
                                 log.warning(
                                     '[%s] [LOAD] Ignoring non-existent function "%s" from "%s"',
-                                    self.name, name, module_path
+                                    self.name,
+                                    name,
+                                    module_path,
                                 )
 
             if exclude:
@@ -1018,7 +1033,11 @@ class Client(Methods):
 
                                     log.info(
                                         '[%s] [UNLOAD] %s("%s") from group %s in "%s"',
-                                        self.name, type(handler).__name__, name, group, module_path
+                                        self.name,
+                                        type(handler).__name__,
+                                        name,
+                                        group,
+                                        module_path,
                                     )
 
                                     count -= 1
@@ -1026,7 +1045,9 @@ class Client(Methods):
                             if warn_non_existent_functions:
                                 log.warning(
                                     '[%s] [UNLOAD] Ignoring non-existent function "%s" from "%s"',
-                                    self.name, name, module_path
+                                    self.name,
+                                    name,
+                                    module_path,
                                 )
 
             if count > 0:
@@ -1035,7 +1056,7 @@ class Client(Methods):
                     self.name,
                     count,
                     "s" if count > 1 else "",
-                    root
+                    root,
                 )
             else:
                 log.warning(
@@ -1053,13 +1074,23 @@ class Client(Methods):
             progress_args,
         ) = packet
 
-        None if in_memory else Path(directory).mkdir(parents=True, exist_ok=True)
+        None if in_memory else Path(directory).mkdir(
+            parents=True, exist_ok=True
+        )
         file_path = Path(directory).resolve() / file_name
 
-        random_suffix = "".join(random.choices(string.ascii_letters + string.digits, k=8))
-        temp_file_path = file_path.with_name(file_path.stem + "_" + random_suffix + ".temp")
+        random_suffix = "".join(
+            random.choices(string.ascii_letters + string.digits, k=8)
+        )
+        temp_file_path = file_path.with_name(
+            file_path.stem + "_" + random_suffix + ".temp"
+        )
 
-        file = BytesIO() if in_memory else Path(temp_file_path).open("wb")  # noqa: SIM115 file is closed manually
+        file = (
+            BytesIO()
+            if in_memory
+            else Path(temp_file_path).open("wb")
+        )  # noqa: SIM115 file is closed manually
 
         try:
             async for chunk in self.get_file(
