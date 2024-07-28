@@ -19,7 +19,7 @@
 
 import os
 from datetime import datetime
-from typing import BinaryIO, Callable, List, Optional, Union
+from typing import BinaryIO, Callable, Optional, Union
 
 import pyrogram
 from pyrogram import StopTransmission, enums, raw, types, utils

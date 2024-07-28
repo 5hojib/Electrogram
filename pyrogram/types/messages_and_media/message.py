@@ -21,7 +21,7 @@ import logging
 from datetime import datetime
 from functools import partial
 from re import Match
-from typing import BinaryIO, Callable, List, Optional, Union
+from typing import BinaryIO, Callable, Optional, Union
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
@@ -1136,7 +1136,7 @@ class Message(Object, Update):
                         )
                         media_type = enums.MessageMediaType.WEB_PAGE_PREVIEW
                     else:
-                        media = None # gonna delete
+                        media = None  # gonna delete
                 elif isinstance(media, raw.types.MessageMediaPoll):
                     poll = await types.Poll._parse(client, media, users)
                     media_type = enums.MessageMediaType.POLL

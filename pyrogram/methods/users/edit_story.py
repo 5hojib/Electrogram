@@ -18,7 +18,6 @@
 
 import os
 import re
-from typing import List
 
 import pyrogram
 from pyrogram import enums, raw, types, utils

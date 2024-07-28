@@ -19,7 +19,7 @@
 
 import logging
 from collections.abc import Iterable
-from typing import List, Union
+from typing import Union
 
 import pyrogram
 from pyrogram import raw, types, utils

@@ -18,7 +18,7 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-from typing import List, Union
+from typing import Union
 
 import pyrogram
 from pyrogram import types

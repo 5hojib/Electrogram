@@ -19,7 +19,7 @@
 
 from collections.abc import Iterable
 from datetime import datetime
-from typing import List, Union
+from typing import Union
 
 import pyrogram
 from pyrogram import raw, types, utils

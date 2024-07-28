@@ -18,7 +18,7 @@
 
 import os
 import re
-from typing import BinaryIO, List, Union
+from typing import BinaryIO, Union
 
 import pyrogram
 from pyrogram import enums, raw, types, utils

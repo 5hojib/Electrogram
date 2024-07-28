@@ -19,7 +19,7 @@
 
 from collections.abc import AsyncGenerator
 from datetime import datetime
-from typing import BinaryIO, List, Optional, Union
+from typing import BinaryIO, Optional, Union
 
 import pyrogram
 from pyrogram import enums, raw, types, utils

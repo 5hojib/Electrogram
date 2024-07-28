@@ -19,7 +19,7 @@
 
 import html
 from datetime import datetime
-from typing import List, Optional
+from typing import Optional
 
 import pyrogram
 from pyrogram import enums, raw, types, utils

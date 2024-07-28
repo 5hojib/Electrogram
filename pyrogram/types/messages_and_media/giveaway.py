@@ -18,7 +18,6 @@
 
 import asyncio
 from datetime import datetime
-from typing import List
 
 import pyrogram
 from pyrogram import raw, types, utils

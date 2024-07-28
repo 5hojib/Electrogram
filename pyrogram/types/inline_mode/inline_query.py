@@ -18,7 +18,6 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from re import Match
-from typing import List
 
 import pyrogram
 from pyrogram import enums, raw, types

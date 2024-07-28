@@ -20,7 +20,7 @@
 import os
 import re
 from datetime import datetime
-from typing import BinaryIO, Callable, List, Optional, Union
+from typing import BinaryIO, Callable, Optional, Union
 
 import pyrogram
 from pyrogram import enums, raw, types, utils

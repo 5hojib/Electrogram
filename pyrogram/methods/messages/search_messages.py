@@ -18,7 +18,7 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from collections.abc import AsyncGenerator
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 import pyrogram
 from pyrogram import enums, raw, types, utils

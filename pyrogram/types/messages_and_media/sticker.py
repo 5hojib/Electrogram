@@ -18,7 +18,7 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Dict, List, Type
+from typing import Dict, Type
 
 import pyrogram
 from pyrogram import raw, types, utils

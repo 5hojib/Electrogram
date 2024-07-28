@@ -21,7 +21,7 @@ import logging
 import os
 import re
 from datetime import datetime
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 from pymediainfo import MediaInfo
 
