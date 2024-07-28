@@ -16,7 +16,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class RequestPeerTypeUser(Object):
@@ -32,8 +32,8 @@ class RequestPeerTypeUser(Object):
 
     def __init__(
         self,
-        is_bot: bool = None,
-        is_premium: bool = None,
+        is_bot: bool | None = None,
+        is_premium: bool | None = None,
         max: int = 1,
     ):
         super().__init__()

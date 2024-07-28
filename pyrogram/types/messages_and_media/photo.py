@@ -28,8 +28,7 @@ from pyrogram.file_id import (
     FileUniqueType,
     ThumbnailSource,
 )
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class Photo(Object):
@@ -72,8 +71,8 @@ class Photo(Object):
         height: int,
         file_size: int,
         date: datetime,
-        ttl_seconds: int = None,
-        thumbs: list["types.Thumbnail"] = None,
+        ttl_seconds: int | None = None,
+        thumbs: list["types.Thumbnail"] | None = None,
     ):
         super().__init__(client)
 
@@ -88,7 +87,9 @@ class Photo(Object):
 
     @staticmethod
     def _parse(
-        client, photo: "raw.types.Photo", ttl_seconds: int = None
+        client,
+        photo: "raw.types.Photo",
+        ttl_seconds: int | None = None,
     ) -> "Photo":
         if isinstance(photo, raw.types.Photo):
             photos: list[raw.types.PhotoSize] = []
@@ -136,3 +137,4 @@ class Photo(Object):
                 thumbs=types.Thumbnail._parse(client, photo),
                 client=client,
             )
+        return None

@@ -25,8 +25,8 @@ class CreateForumTopic:
         self: "pyrogram.Client",
         chat_id: int | str,
         title: str,
-        icon_color: int = None,
-        icon_emoji_id: int = None,
+        icon_color: int | None = None,
+        icon_emoji_id: int | None = None,
     ) -> "types.ForumTopicCreated":
         """Create a new forum topic.
 

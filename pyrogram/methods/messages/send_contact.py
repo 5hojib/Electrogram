@@ -30,19 +30,19 @@ class SendContact:
         chat_id: int | str,
         phone_number: str,
         first_name: str,
-        last_name: str = None,
-        vcard: str = None,
-        disable_notification: bool = None,
-        message_thread_id: int = None,
-        business_connection_id: str = None,
-        reply_to_message_id: int = None,
-        reply_to_chat_id: int | str = None,
-        quote_text: str = None,
-        quote_entities: list["types.MessageEntity"] = None,
+        last_name: str | None = None,
+        vcard: str | None = None,
+        disable_notification: bool | None = None,
+        message_thread_id: int | None = None,
+        business_connection_id: str | None = None,
+        reply_to_message_id: int | None = None,
+        reply_to_chat_id: int | str | None = None,
+        quote_text: str | None = None,
+        quote_entities: list["types.MessageEntity"] | None = None,
         parse_mode: Optional["enums.ParseMode"] = None,
-        schedule_date: datetime = None,
-        protect_content: bool = None,
-        message_effect_id: int = None,
+        schedule_date: datetime | None = None,
+        protect_content: bool | None = None,
+        message_effect_id: int | None = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -170,12 +170,10 @@ class SendContact:
         for i in r.updates:
             if isinstance(
                 i,
-                (
-                    raw.types.UpdateNewMessage,
-                    raw.types.UpdateNewChannelMessage,
-                    raw.types.UpdateNewScheduledMessage,
-                    raw.types.UpdateBotNewBusinessMessage,
-                ),
+                raw.types.UpdateNewMessage
+                | raw.types.UpdateNewChannelMessage
+                | raw.types.UpdateNewScheduledMessage
+                | raw.types.UpdateBotNewBusinessMessage,
             ):
                 return await types.Message._parse(
                     self,
@@ -187,3 +185,4 @@ class SendContact:
                     ),
                     business_connection_id=business_connection_id,
                 )
+        return None

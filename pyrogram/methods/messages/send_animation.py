@@ -37,32 +37,32 @@ class SendAnimation:
         caption: str = "",
         unsave: bool = False,
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] = None,
-        has_spoiler: bool = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
+        has_spoiler: bool | None = None,
         duration: int = 0,
         width: int = 0,
         height: int = 0,
-        thumb: str | BinaryIO = None,
-        file_name: str = None,
-        disable_notification: bool = None,
-        message_thread_id: int = None,
-        business_connection_id: str = None,
-        reply_to_message_id: int = None,
-        reply_to_story_id: int = None,
-        reply_to_chat_id: int | str = None,
-        quote_text: str = None,
-        quote_entities: list["types.MessageEntity"] = None,
-        schedule_date: datetime = None,
-        protect_content: bool = None,
-        message_effect_id: int = None,
-        invert_media: bool = None,
+        thumb: str | BinaryIO | None = None,
+        file_name: str | None = None,
+        disable_notification: bool | None = None,
+        message_thread_id: int | None = None,
+        business_connection_id: str | None = None,
+        reply_to_message_id: int | None = None,
+        reply_to_story_id: int | None = None,
+        reply_to_chat_id: int | str | None = None,
+        quote_text: str | None = None,
+        quote_entities: list["types.MessageEntity"] | None = None,
+        schedule_date: datetime | None = None,
+        protect_content: bool | None = None,
+        message_effect_id: int | None = None,
+        invert_media: bool | None = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
             "types.ForceReply",
         ] = None,
-        progress: Callable = None,
+        progress: Callable | None = None,
         progress_args: tuple = (),
     ) -> Optional["types.Message"]:
         """Send animation files (animation or H.264/MPEG-4 AVC video without sound).
@@ -333,12 +333,10 @@ class SendAnimation:
                     for i in r.updates:
                         if isinstance(
                             i,
-                            (
-                                raw.types.UpdateNewMessage,
-                                raw.types.UpdateNewChannelMessage,
-                                raw.types.UpdateNewScheduledMessage,
-                                raw.types.UpdateBotNewBusinessMessage,
-                            ),
+                            raw.types.UpdateNewMessage
+                            | raw.types.UpdateNewChannelMessage
+                            | raw.types.UpdateNewScheduledMessage
+                            | raw.types.UpdateBotNewBusinessMessage,
                         ):
                             message = await types.Message._parse(
                                 self,

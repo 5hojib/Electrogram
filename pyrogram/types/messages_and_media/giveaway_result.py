@@ -21,8 +21,7 @@ from typing import Union
 
 import pyrogram
 from pyrogram import raw, types, utils
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class GiveawayResult(Object):
@@ -68,11 +67,11 @@ class GiveawayResult(Object):
         giveaway_message: "types.Message" = None,
         quantity: int,
         unclaimed_quantity: int,
-        winners: list["types.User"] = None,
-        months: int = None,
-        expire_date: datetime = None,
-        new_subscribers: bool = None,
-        is_refunded: bool = None,
+        winners: list["types.User"] | None = None,
+        months: int | None = None,
+        expire_date: datetime | None = None,
+        new_subscribers: bool | None = None,
+        is_refunded: bool | None = None,
         is_winners_hidden: bool,
     ):
         super().__init__(client)

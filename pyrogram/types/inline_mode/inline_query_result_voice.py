@@ -67,11 +67,11 @@ class InlineQueryResultVoice(InlineQueryResult):
         self,
         voice_url: str,
         title: str,
-        id: str = None,
+        id: str | None = None,
         voice_duration: int = 0,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
         input_message_content: "types.InputMessageContent" = None,
     ):

@@ -18,8 +18,7 @@
 
 import pyrogram
 from pyrogram import raw, types, utils
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class StoryForwardHeader(Object):
@@ -47,10 +46,10 @@ class StoryForwardHeader(Object):
         self,
         *,
         user: "types.User" = None,
-        sender_name: str = None,
+        sender_name: str | None = None,
         chat: "types.Chat" = None,
-        story_id: int = None,
-        is_modified: bool = None,
+        story_id: int | None = None,
+        is_modified: bool | None = None,
     ):
         super().__init__()
 
@@ -61,7 +60,7 @@ class StoryForwardHeader(Object):
         self.is_modified = is_modified
 
     async def _parse(
-        client: "pyrogram.Client",
+        self: "pyrogram.Client",
         fwd_header: "raw.types.StoryFwdHeader",
     ) -> "StoryForwardHeader":
         user = None
@@ -70,7 +69,7 @@ class StoryForwardHeader(Object):
             if isinstance(
                 fwd_header.from_peer, raw.types.PeerChannel
             ):
-                chat = await client.get_chat(
+                chat = await self.get_chat(
                     utils.get_channel_id(
                         fwd_header.from_peer.channel_id
                     )
@@ -78,9 +77,9 @@ class StoryForwardHeader(Object):
             elif isinstance(
                 fwd_header.from_peer, raw.types.InputPeerSelf
             ):
-                user = client.me
+                user = self.me
             else:
-                user = await client.get_users(
+                user = await self.get_users(
                     fwd_header.from_peer.user_id
                 )
 

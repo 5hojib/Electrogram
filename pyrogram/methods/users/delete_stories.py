@@ -29,7 +29,7 @@ class DeleteStories:
     async def delete_stories(
         self: "pyrogram.Client",
         story_ids: int | Iterable[int],
-        chat_id: int | str = None,
+        chat_id: int | str | None = None,
     ) -> bool:
         """Delete one or more story by using story identifiers.
 

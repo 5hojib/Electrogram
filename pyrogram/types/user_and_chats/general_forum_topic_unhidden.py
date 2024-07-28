@@ -16,7 +16,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class GeneralTopicUnhidden(Object):

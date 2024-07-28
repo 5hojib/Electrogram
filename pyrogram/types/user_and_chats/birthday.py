@@ -18,8 +18,7 @@
 
 
 from pyrogram import raw
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class Birthday(Object):

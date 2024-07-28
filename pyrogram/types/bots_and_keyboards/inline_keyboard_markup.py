@@ -21,8 +21,7 @@ from typing import Union
 
 import pyrogram
 from pyrogram import raw, types
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class InlineKeyboardMarkup(Object):

@@ -19,8 +19,7 @@
 
 
 import pyrogram
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class PollOption(Object):
@@ -47,7 +46,7 @@ class PollOption(Object):
         client: "pyrogram.Client" = None,
         text: str,
         voter_count: int = 0,
-        data: bytes = None,
+        data: bytes | None = None,
         entities: list["pyrogram.types.MessageEntity"] | None = None,
     ):
         super().__init__(client)

@@ -46,24 +46,24 @@ class SendStory:
 
     async def send_story(
         self: "pyrogram.Client",
-        chat_id: int | str = None,
+        chat_id: int | str | None = None,
         privacy: "enums.StoriesPrivacyRules" = None,
-        allowed_users: list[int] = None,
-        denied_users: list[int] = None,
+        allowed_users: list[int] | None = None,
+        denied_users: list[int] | None = None,
         # allowed_chats: list[int] = None,
         # denied_chats: list[int] = None,
-        photo: str | BinaryIO = None,
-        video: str | BinaryIO = None,
-        file_name: str = None,
-        pinned: bool = None,
-        protect_content: bool = None,
-        caption: str = None,
+        photo: str | BinaryIO | None = None,
+        video: str | BinaryIO | None = None,
+        file_name: str | None = None,
+        pinned: bool | None = None,
+        protect_content: bool | None = None,
+        caption: str | None = None,
         parse_mode: "enums.ParseMode" = None,
-        caption_entities: list["types.MessageEntity"] = None,
-        period: int = None,
-        forward_from_chat_id: int | str = None,
-        forward_from_story_id: int = None,
-        media_areas: list["types.InputMediaArea"] = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
+        period: int | None = None,
+        forward_from_chat_id: int | str | None = None,
+        forward_from_story_id: int | None = None,
+        media_areas: list["types.InputMediaArea"] | None = None,
     ) -> "types.Story":
         """Send new story.
 
@@ -273,10 +273,10 @@ class SendStory:
                 fwd_from_story=forward_from_story_id
                 if forward_from_chat_id is not None
                 else None,
-                fwd_modified=True
-                if forward_from_chat_id is not None
-                and caption is not None
-                else False,
+                fwd_modified=bool(
+                    forward_from_chat_id is not None
+                    and caption is not None
+                ),
                 media_areas=[
                     await media_area.write(self)
                     for media_area in media_areas

@@ -21,8 +21,8 @@ from typing import Optional
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
+from pyrogram.file_id import FileId
 
-from ...file_id import FileId
 from .inline_query_result import InlineQueryResult
 
 
@@ -64,11 +64,11 @@ class InlineQueryResultCachedAnimation(InlineQueryResult):
     def __init__(
         self,
         animation_file_id: str,
-        id: str = None,
-        title: str = None,
+        id: str | None = None,
+        title: str | None = None,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
         input_message_content: "types.InputMessageContent" = None,
     ):

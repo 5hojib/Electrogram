@@ -20,9 +20,8 @@
 
 import pyrogram
 from pyrogram import types
-
-from ..object import Object
-from ..update import Update
+from pyrogram.types.object import Object
+from pyrogram.types.update import Update
 
 
 class PreCheckoutQuery(Object, Update):
@@ -60,7 +59,7 @@ class PreCheckoutQuery(Object, Update):
         currency: str,
         total_amount: int,
         payload: str,
-        shipping_option_id: str = None,
+        shipping_option_id: str | None = None,
         payment_info: "types.PaymentInfo" = None,
     ):
         super().__init__(client)
@@ -111,7 +110,9 @@ class PreCheckoutQuery(Object, Update):
             client=client,
         )
 
-    async def answer(self, success: bool = None, error: str = None):
+    async def answer(
+        self, success: bool | None = None, error: str | None = None
+    ):
         """Bound method *answer* of :obj:`~pyrogram.types.PreCheckoutQuery`.
 
         Use this method as a shortcut for:

@@ -16,10 +16,14 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-import pyrogram
-from pyrogram import raw, types
 
-from ..object import Object
+from typing import TYPE_CHECKING
+
+from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    import pyrogram
+    from pyrogram import raw, types
 
 
 class PaymentRefunded(Object):
@@ -53,7 +57,7 @@ class PaymentRefunded(Object):
         total_amount: str,
         telegram_payment_charge_id: str,
         provider_payment_charge_id: str,
-        payload: str = None,
+        payload: str | None = None,
     ):
         self.user = user
         self.currency = currency

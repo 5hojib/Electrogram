@@ -130,7 +130,9 @@ class OrFilter(Filter):
 CUSTOM_FILTER_NAME = "CustomFilter"
 
 
-def create(func: Callable, name: str = None, **kwargs) -> Filter:
+def create(
+    func: Callable, name: str | None = None, **kwargs
+) -> Filter:
     """Easily create a custom filter.
 
     Custom filters give you extra control over which updates are allowed or not to be processed by your handlers.
@@ -1073,7 +1075,9 @@ class user(Filter, set):
             Defaults to None (no users).
     """
 
-    def __init__(self, users: int | str | list[int | str] = None):
+    def __init__(
+        self, users: int | str | list[int | str] | None = None
+    ):
         users = (
             []
             if users is None
@@ -1116,7 +1120,9 @@ class chat(Filter, set):
             Defaults to None (no chats).
     """
 
-    def __init__(self, chats: int | str | list[int | str] = None):
+    def __init__(
+        self, chats: int | str | list[int | str] | None = None
+    ):
         chats = (
             []
             if chats is None
@@ -1183,7 +1189,7 @@ class topic(Filter, set):
             Defaults to None (no topics).
     """
 
-    def __init__(self, topics: int | list[int] = None):
+    def __init__(self, topics: int | list[int] | None = None):
         topics = (
             []
             if topics is None

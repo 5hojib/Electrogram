@@ -383,9 +383,9 @@ class Dispatcher:
                             break
 
                         if isinstance(
-                            diff, raw.types.updates.DifferenceEmpty
-                        ) or isinstance(
-                            diff, raw.types.updates.DifferenceTooLong
+                            diff,
+                            raw.types.updates.DifferenceEmpty
+                            | raw.types.updates.DifferenceTooLong,
                         ):
                             break
                         elif isinstance(
@@ -404,10 +404,8 @@ class Dispatcher:
                             prev_pts = local_pts
                         elif isinstance(
                             diff,
-                            raw.types.updates.ChannelDifferenceEmpty,
-                        ) or isinstance(
-                            diff,
-                            raw.types.updates.ChannelDifferenceTooLong,
+                            raw.types.updates.ChannelDifferenceEmpty
+                            | raw.types.updates.ChannelDifferenceTooLong,
                         ):
                             break
                         elif isinstance(
@@ -446,10 +444,8 @@ class Dispatcher:
 
                         if isinstance(
                             diff,
-                            (
-                                raw.types.updates.Difference,
-                                raw.types.updates.ChannelDifference,
-                            ),
+                            raw.types.updates.Difference
+                            | raw.types.updates.ChannelDifference,
                         ):
                             break
 

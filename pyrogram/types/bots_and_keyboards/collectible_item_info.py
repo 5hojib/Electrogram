@@ -20,8 +20,7 @@
 from datetime import datetime
 
 from pyrogram import raw, utils
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class CollectibleItemInfo(Object):

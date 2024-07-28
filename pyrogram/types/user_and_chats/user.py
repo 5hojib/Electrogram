@@ -23,9 +23,8 @@ from typing import Optional
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
-
-from ..object import Object
-from ..update import Update
+from pyrogram.types.object import Object
+from pyrogram.types.update import Update
 
 
 class Link(str):
@@ -52,7 +51,9 @@ class Link(str):
     def __new__(cls, url, text, style):
         return str.__new__(cls, Link.format(url, text, style))
 
-    def __call__(self, other: str = None, *, style: str = None):
+    def __call__(
+        self, other: str | None = None, *, style: str | None = None
+    ):
         return Link.format(
             self.url, other or self.text, style or self.style
         )
@@ -173,32 +174,32 @@ class User(Object, Update):
         *,
         client: "pyrogram.Client" = None,
         id: int,
-        is_self: bool = None,
-        is_contact: bool = None,
-        is_mutual_contact: bool = None,
-        is_deleted: bool = None,
-        is_bot: bool = None,
-        is_verified: bool = None,
-        is_restricted: bool = None,
-        is_scam: bool = None,
-        is_fake: bool = None,
-        is_support: bool = None,
-        is_premium: bool = None,
-        is_contacts_only: bool = None,
-        is_bot_business: bool = None,
-        first_name: str = None,
-        last_name: str = None,
+        is_self: bool | None = None,
+        is_contact: bool | None = None,
+        is_mutual_contact: bool | None = None,
+        is_deleted: bool | None = None,
+        is_bot: bool | None = None,
+        is_verified: bool | None = None,
+        is_restricted: bool | None = None,
+        is_scam: bool | None = None,
+        is_fake: bool | None = None,
+        is_support: bool | None = None,
+        is_premium: bool | None = None,
+        is_contacts_only: bool | None = None,
+        is_bot_business: bool | None = None,
+        first_name: str | None = None,
+        last_name: str | None = None,
         status: "enums.UserStatus" = None,
-        last_online_date: datetime = None,
-        next_offline_date: datetime = None,
-        username: str = None,
-        usernames: list["types.Username"] = None,
-        language_code: str = None,
+        last_online_date: datetime | None = None,
+        next_offline_date: datetime | None = None,
+        username: str | None = None,
+        usernames: list["types.Username"] | None = None,
+        language_code: str | None = None,
         emoji_status: Optional["types.EmojiStatus"] = None,
-        dc_id: int = None,
-        phone_number: str = None,
+        dc_id: int | None = None,
+        phone_number: str | None = None,
         photo: "types.ChatPhoto" = None,
-        restrictions: list["types.Restriction"] = None,
+        restrictions: list["types.Restriction"] | None = None,
         reply_color: "types.ChatColor" = None,
         profile_color: "types.ChatColor" = None,
     ):

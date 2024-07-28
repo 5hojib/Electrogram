@@ -28,7 +28,7 @@ class EditMessageReplyMarkup:
         chat_id: int | str,
         message_id: int,
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        business_connection_id: str = None,
+        business_connection_id: str | None = None,
     ) -> "types.Message":
         """Edit only the reply markup of messages sent by the bot.
 
@@ -84,10 +84,8 @@ class EditMessageReplyMarkup:
         for i in r.updates:
             if isinstance(
                 i,
-                (
-                    raw.types.UpdateEditMessage,
-                    raw.types.UpdateEditChannelMessage,
-                ),
+                raw.types.UpdateEditMessage
+                | raw.types.UpdateEditChannelMessage,
             ):
                 return await types.Message._parse(
                     self,
@@ -95,3 +93,4 @@ class EditMessageReplyMarkup:
                     {i.id: i for i in r.users},
                     {i.id: i for i in r.chats},
                 )
+        return None

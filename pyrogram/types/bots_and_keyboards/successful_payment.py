@@ -18,8 +18,7 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyrogram import raw, types
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class SuccessfulPayment(Object):
@@ -56,7 +55,7 @@ class SuccessfulPayment(Object):
         payload: str,
         telegram_payment_charge_id: str,
         provider_payment_charge_id: str,
-        shipping_option_id: str = None,
+        shipping_option_id: str | None = None,
         payment_info: "types.PaymentInfo" = None,
     ):
         super().__init__()

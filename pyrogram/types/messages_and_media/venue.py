@@ -19,8 +19,7 @@
 
 import pyrogram
 from pyrogram import raw, types
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class Venue(Object):
@@ -52,8 +51,8 @@ class Venue(Object):
         location: "types.Location",
         title: str,
         address: str,
-        foursquare_id: str = None,
-        foursquare_type: str = None,
+        foursquare_id: str | None = None,
+        foursquare_type: str | None = None,
     ):
         super().__init__(client)
 

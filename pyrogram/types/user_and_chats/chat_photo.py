@@ -28,8 +28,7 @@ from pyrogram.file_id import (
     FileUniqueType,
     ThumbnailSource,
 )
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class ChatPhoto(Object):
@@ -96,7 +95,7 @@ class ChatPhoto(Object):
     ):
         if not isinstance(
             chat_photo,
-            (raw.types.UserProfilePhoto, raw.types.ChatPhoto),
+            raw.types.UserProfilePhoto | raw.types.ChatPhoto,
         ):
             return None
 

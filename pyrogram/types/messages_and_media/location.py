@@ -19,8 +19,7 @@
 
 import pyrogram
 from pyrogram import raw
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class Location(Object):
@@ -54,3 +53,4 @@ class Location(Object):
                 latitude=geo_point.lat,
                 client=client,
             )
+        return None

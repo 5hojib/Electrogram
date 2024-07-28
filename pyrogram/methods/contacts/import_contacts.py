@@ -48,8 +48,6 @@ class ImportContacts:
                     InputPhoneContact("+1-456-789-0123", "Bar"),
                     InputPhoneContact("+1-789-012-3456", "Baz")])
         """
-        imported_contacts = await self.invoke(
+        return await self.invoke(
             raw.functions.contacts.ImportContacts(contacts=contacts)
         )
-
-        return imported_contacts

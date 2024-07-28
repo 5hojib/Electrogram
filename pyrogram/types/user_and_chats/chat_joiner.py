@@ -21,8 +21,7 @@ from datetime import datetime
 
 import pyrogram
 from pyrogram import raw, types, utils
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class ChatJoiner(Object):
@@ -50,9 +49,9 @@ class ChatJoiner(Object):
         *,
         client: "pyrogram.Client",
         user: "types.User",
-        date: datetime = None,
-        bio: str = None,
-        pending: bool = None,
+        date: datetime | None = None,
+        bio: str | None = None,
+        pending: bool | None = None,
         approved_by: "types.User" = None,
     ):
         super().__init__(client)

@@ -21,8 +21,7 @@ from typing import Optional
 
 import pyrogram
 from pyrogram import enums, raw, types
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class MessageEntity(Object):
@@ -64,11 +63,11 @@ class MessageEntity(Object):
         type: "enums.MessageEntityType",
         offset: int,
         length: int,
-        url: str = None,
+        url: str | None = None,
         user: "types.User" = None,
-        language: str = None,
-        custom_emoji_id: int = None,
-        collapsed: bool = None,
+        language: str | None = None,
+        custom_emoji_id: int | None = None,
+        collapsed: bool | None = None,
     ):
         super().__init__(client)
 

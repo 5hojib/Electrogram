@@ -21,11 +21,9 @@ from re import Match
 from typing import Optional, Union
 
 import pyrogram
-from pyrogram import enums, raw, types
-
-from ... import utils
-from ..object import Object
-from ..update import Update
+from pyrogram import enums, raw, types, utils
+from pyrogram.types.object import Object
+from pyrogram.types.update import Update
 
 
 class CallbackQuery(Object, Update):
@@ -72,10 +70,10 @@ class CallbackQuery(Object, Update):
         from_user: "types.User",
         chat_instance: str,
         message: "types.Message" = None,
-        inline_message_id: str = None,
-        data: str | bytes = None,
-        game_short_name: str = None,
-        matches: list[Match] = None,
+        inline_message_id: str | None = None,
+        data: str | bytes | None = None,
+        game_short_name: str | None = None,
+        matches: list[Match] | None = None,
     ):
         super().__init__(client)
 
@@ -151,9 +149,9 @@ class CallbackQuery(Object, Update):
 
     async def answer(
         self,
-        text: str = None,
-        show_alert: bool = None,
-        url: str = None,
+        text: str | None = None,
+        show_alert: bool | None = None,
+        url: str | None = None,
         cache_time: int = 0,
     ):
         """Bound method *answer* of :obj:`~pyrogram.types.CallbackQuery`.
@@ -203,7 +201,7 @@ class CallbackQuery(Object, Update):
         self,
         text: str,
         parse_mode: Optional["enums.ParseMode"] = None,
-        disable_web_page_preview: bool = None,
+        disable_web_page_preview: bool | None = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
         business_connection_id: str | None = None,
     ) -> Union["types.Message", bool]:

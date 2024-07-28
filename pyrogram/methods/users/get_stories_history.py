@@ -28,7 +28,7 @@ log = logging.getLogger(__name__)
 class GetUserStoriesHistory:
     async def get_stories_history(
         self: "pyrogram.Client",
-        chat_id: int = None,
+        chat_id: int | None = None,
         limit: int = 0,
         offset_id: int = 0,
     ) -> AsyncGenerator["types.Story", None] | None:

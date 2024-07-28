@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class PaymentInfo(Object):
@@ -40,9 +40,9 @@ class PaymentInfo(Object):
     def __init__(
         self,
         *,
-        name: str = None,
-        phone_number: str = None,
-        email: str = None,
+        name: str | None = None,
+        phone_number: str | None = None,
+        email: str | None = None,
         shipping_address: "types.ShippingAddress" = None,
     ):
         super().__init__()

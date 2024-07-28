@@ -39,9 +39,9 @@ class SaveFile:
     async def save_file(
         self: "pyrogram.Client",
         path: str | BinaryIO,
-        file_id: int = None,
+        file_id: int | None = None,
         file_part: int = 0,
-        progress: Callable = None,
+        progress: Callable | None = None,
         progress_args: tuple = (),
     ):
         """Upload a file onto Telegram servers, without actually sending the message to anyone.
@@ -112,7 +112,7 @@ class SaveFile:
 
             part_size = 512 * 1024
 
-            if isinstance(path, (str, PurePath)):
+            if isinstance(path, str | PurePath):
                 fp = open(path, "rb")
             elif isinstance(path, io.IOBase):
                 fp = path
@@ -240,5 +240,5 @@ class SaveFile:
 
                 await session.stop()
 
-                if isinstance(path, (str, PurePath)):
+                if isinstance(path, str | PurePath):
                     fp.close()

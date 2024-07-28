@@ -29,8 +29,8 @@ class GetInlineBotResults:
         bot: int | str,
         query: str = "",
         offset: str = "",
-        latitude: float = None,
-        longitude: float = None,
+        latitude: float | None = None,
+        longitude: float | None = None,
     ):
         """Get bot results via inline queries.
         You can then send a result using :meth:`~pyrogram.Client.send_inline_bot_result`

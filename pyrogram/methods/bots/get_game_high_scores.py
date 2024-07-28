@@ -27,7 +27,7 @@ class GetGameHighScores:
         self: "pyrogram.Client",
         user_id: int | str,
         chat_id: int | str,
-        message_id: int = None,
+        message_id: int | None = None,
     ) -> list["types.GameHighScore"]:
         """Get data for high score tables.
 

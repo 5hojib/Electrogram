@@ -19,8 +19,8 @@
 
 from typing import BinaryIO
 
-from ..messages_and_media import MessageEntity
-from ..object import Object
+from pyrogram.types.messages_and_media import MessageEntity
+from pyrogram.types.object import Object
 
 
 class InputMedia(Object):
@@ -39,8 +39,8 @@ class InputMedia(Object):
         self,
         media: str | BinaryIO,
         caption: str = "",
-        parse_mode: str = None,
-        caption_entities: list[MessageEntity] = None,
+        parse_mode: str | None = None,
+        caption_entities: list[MessageEntity] | None = None,
     ):
         super().__init__()
 

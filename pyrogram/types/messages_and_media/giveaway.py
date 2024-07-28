@@ -22,8 +22,7 @@ from datetime import datetime
 import pyrogram
 from pyrogram import raw, types, utils
 from pyrogram.errors import FloodWait
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class Giveaway(Object):
@@ -61,8 +60,8 @@ class Giveaway(Object):
         months: int,
         expire_date: datetime,
         new_subscribers: bool,
-        allowed_countries: list[str] = None,
-        private_channel_ids: list[int] = None,
+        allowed_countries: list[str] | None = None,
+        private_channel_ids: list[int] | None = None,
     ):
         super().__init__(client)
 

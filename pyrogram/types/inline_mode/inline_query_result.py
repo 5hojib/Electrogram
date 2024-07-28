@@ -17,12 +17,14 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
+from typing import TYPE_CHECKING
 from uuid import uuid4
 
-import pyrogram
-from pyrogram import types
+from pyrogram.types.object import Object
 
-from ..object import Object
+if TYPE_CHECKING:
+    import pyrogram
+    from pyrogram import types
 
 
 class InlineQueryResult(Object):

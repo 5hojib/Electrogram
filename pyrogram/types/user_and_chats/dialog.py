@@ -18,10 +18,8 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 import pyrogram
-from pyrogram import raw, types
-
-from ... import utils
-from ..object import Object
+from pyrogram import raw, types, utils
+from pyrogram.types.object import Object
 
 
 class Dialog(Object):

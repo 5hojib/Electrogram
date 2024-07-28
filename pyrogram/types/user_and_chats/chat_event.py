@@ -21,8 +21,7 @@ from datetime import datetime
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class ChatEvent(Object):
@@ -151,18 +150,18 @@ class ChatEvent(Object):
         date: datetime,
         user: "types.User",
         action: str,
-        old_description: str = None,
-        new_description: str = None,
-        old_history_ttl: int = None,
-        new_history_ttl: int = None,
+        old_description: str | None = None,
+        new_description: str | None = None,
+        old_history_ttl: int | None = None,
+        new_history_ttl: int | None = None,
         old_linked_chat: "types.Chat" = None,
         new_linked_chat: "types.Chat" = None,
         old_photo: "types.Photo" = None,
         new_photo: "types.Photo" = None,
-        old_title: str = None,
-        new_title: str = None,
-        old_username: str = None,
-        new_username: str = None,
+        old_title: str | None = None,
+        new_title: str | None = None,
+        old_username: str | None = None,
+        new_username: str | None = None,
         old_chat_permissions: "types.ChatPermissions" = None,
         new_chat_permissions: "types.ChatPermissions" = None,
         deleted_message: "types.Message" = None,
@@ -175,10 +174,10 @@ class ChatEvent(Object):
         new_member_permissions: "types.ChatMember" = None,
         stopped_poll: "types.Message" = None,
         invites_enabled: "types.ChatMember" = None,
-        history_hidden: bool = None,
-        signatures_enabled: bool = None,
-        old_slow_mode: int = None,
-        new_slow_mode: int = None,
+        history_hidden: bool | None = None,
+        signatures_enabled: bool | None = None,
+        old_slow_mode: int | None = None,
+        new_slow_mode: int | None = None,
         pinned_message: "types.Message" = None,
         unpinned_message: "types.Message" = None,
         old_invite_link: "types.ChatInviteLink" = None,

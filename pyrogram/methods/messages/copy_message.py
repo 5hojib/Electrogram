@@ -19,10 +19,11 @@
 
 import logging
 from datetime import datetime
-from typing import Optional, Union
+from typing import TYPE_CHECKING, Optional, Union
 
-import pyrogram
-from pyrogram import enums, types
+if TYPE_CHECKING:
+    import pyrogram
+    from pyrogram import enums, types
 
 log = logging.getLogger(__name__)
 
@@ -33,15 +34,15 @@ class CopyMessage:
         chat_id: int | str,
         from_chat_id: int | str,
         message_id: int,
-        caption: str = None,
+        caption: str | None = None,
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] = None,
-        has_spoiler: bool = None,
-        disable_notification: bool = None,
-        message_thread_id: int = None,
-        reply_to_message_id: int = None,
-        schedule_date: datetime = None,
-        protect_content: bool = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
+        has_spoiler: bool | None = None,
+        disable_notification: bool | None = None,
+        message_thread_id: int | None = None,
+        reply_to_message_id: int | None = None,
+        schedule_date: datetime | None = None,
+        protect_content: bool | None = None,
         invert_media: bool = False,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",

@@ -30,20 +30,20 @@ class SendMessage:
         chat_id: int | str,
         text: str,
         parse_mode: Optional["enums.ParseMode"] = None,
-        entities: list["types.MessageEntity"] = None,
-        disable_web_page_preview: bool = None,
-        disable_notification: bool = None,
-        message_thread_id: int = None,
-        business_connection_id: str = None,
-        reply_to_message_id: int = None,
-        reply_to_story_id: int = None,
-        reply_to_chat_id: int = None,
-        quote_text: str = None,
-        quote_entities: list["types.MessageEntity"] = None,
-        schedule_date: datetime = None,
-        protect_content: bool = None,
-        invert_media: bool = None,
-        message_effect_id: int = None,
+        entities: list["types.MessageEntity"] | None = None,
+        disable_web_page_preview: bool | None = None,
+        disable_notification: bool | None = None,
+        message_thread_id: int | None = None,
+        business_connection_id: str | None = None,
+        reply_to_message_id: int | None = None,
+        reply_to_story_id: int | None = None,
+        reply_to_chat_id: int | None = None,
+        quote_text: str | None = None,
+        quote_entities: list["types.MessageEntity"] | None = None,
+        schedule_date: datetime | None = None,
+        protect_content: bool | None = None,
+        invert_media: bool | None = None,
+        message_effect_id: int | None = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -235,12 +235,10 @@ class SendMessage:
         for i in r.updates:
             if isinstance(
                 i,
-                (
-                    raw.types.UpdateNewMessage,
-                    raw.types.UpdateNewChannelMessage,
-                    raw.types.UpdateNewScheduledMessage,
-                    raw.types.UpdateBotNewBusinessMessage,
-                ),
+                raw.types.UpdateNewMessage
+                | raw.types.UpdateNewChannelMessage
+                | raw.types.UpdateNewScheduledMessage
+                | raw.types.UpdateBotNewBusinessMessage,
             ):
                 return await types.Message._parse(
                     self,
@@ -252,3 +250,4 @@ class SendMessage:
                     ),
                     business_connection_id=business_connection_id,
                 )
+        return None

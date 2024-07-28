@@ -20,9 +20,8 @@ from datetime import datetime
 
 import pyrogram
 from pyrogram import raw, types, utils
-
-from ..object import Object
-from ..update import Update
+from pyrogram.types.object import Object
+from pyrogram.types.update import Update
 
 
 class MessageReactionCountUpdated(Object, Update):

@@ -17,10 +17,14 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-import pyrogram
-from pyrogram import raw
 
-from ..object import Object
+from typing import TYPE_CHECKING
+
+from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    import pyrogram
+    from pyrogram import raw
 
 
 class Contact(Object):
@@ -49,9 +53,9 @@ class Contact(Object):
         client: "pyrogram.Client" = None,
         phone_number: str,
         first_name: str,
-        last_name: str = None,
-        user_id: int = None,
-        vcard: str = None,
+        last_name: str | None = None,
+        user_id: int | None = None,
+        vcard: str | None = None,
     ):
         super().__init__(client)
 

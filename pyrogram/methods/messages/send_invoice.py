@@ -28,18 +28,18 @@ class SendInvoice:
         description: str,
         currency: str,
         prices: list["types.LabeledPrice"],
-        provider: str = None,
-        provider_data: str = None,
-        payload: str = None,
-        photo_url: str = None,
-        photo_size: int = None,
-        photo_mime_type: str = None,
-        start_parameter: str = None,
+        provider: str | None = None,
+        provider_data: str | None = None,
+        payload: str | None = None,
+        photo_url: str | None = None,
+        photo_size: int | None = None,
+        photo_mime_type: str | None = None,
+        start_parameter: str | None = None,
         extended_media: "types.InputMedia" = None,
-        reply_to_message_id: int = None,
-        message_thread_id: int = None,
-        quote_text: str = None,
-        quote_entities: list["types.MessageEntity"] = None,
+        reply_to_message_id: int | None = None,
+        message_thread_id: int | None = None,
+        quote_text: str | None = None,
+        quote_entities: list["types.MessageEntity"] | None = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
     ):
         """Use this method to send invoices.
@@ -200,10 +200,8 @@ class SendInvoice:
         for i in r.updates:
             if isinstance(
                 i,
-                (
-                    raw.types.UpdateNewMessage,
-                    raw.types.UpdateNewChannelMessage,
-                ),
+                raw.types.UpdateNewMessage
+                | raw.types.UpdateNewChannelMessage,
             ):
                 return await types.Message._parse(
                     self,
@@ -211,3 +209,4 @@ class SendInvoice:
                     users={i.id: i for i in r.users},
                     chats={i.id: i for i in r.chats},
                 )
+        return None

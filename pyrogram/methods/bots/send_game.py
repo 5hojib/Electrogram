@@ -28,12 +28,12 @@ class SendGame:
         self: "pyrogram.Client",
         chat_id: int | str,
         game_short_name: str,
-        disable_notification: bool = None,
-        message_thread_id: int = None,
-        business_connection_id: str = None,
-        reply_to_message_id: int = None,
-        protect_content: bool = None,
-        message_effect_id: int = None,
+        disable_notification: bool | None = None,
+        message_thread_id: int | None = None,
+        business_connection_id: str | None = None,
+        reply_to_message_id: int | None = None,
+        protect_content: bool | None = None,
+        message_effect_id: int | None = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -125,11 +125,9 @@ class SendGame:
         for i in r.updates:
             if isinstance(
                 i,
-                (
-                    raw.types.UpdateNewMessage,
-                    raw.types.UpdateNewChannelMessage,
-                    raw.types.UpdateBotNewBusinessMessage,
-                ),
+                raw.types.UpdateNewMessage
+                | raw.types.UpdateNewChannelMessage
+                | raw.types.UpdateBotNewBusinessMessage,
             ):
                 return await types.Message._parse(
                     self,
@@ -138,3 +136,4 @@ class SendGame:
                     {i.id: i for i in r.chats},
                     business_connection_id=business_connection_id,
                 )
+        return None

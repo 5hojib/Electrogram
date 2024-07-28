@@ -20,8 +20,7 @@
 from typing import Union
 
 from pyrogram import raw, types
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class WebPagePreview(Object):
@@ -45,10 +44,10 @@ class WebPagePreview(Object):
         self,
         *,
         webpage: Union["types.WebPage", "types.WebPageEmpty"],
-        force_large_media: bool = None,
-        force_small_media: bool = None,
-        invert_media: bool = None,
-        is_safe: bool = None,
+        force_large_media: bool | None = None,
+        force_small_media: bool | None = None,
+        invert_media: bool | None = None,
+        is_safe: bool | None = None,
     ):
         super().__init__()
 
@@ -64,7 +63,7 @@ class WebPagePreview(Object):
         web_page_preview: Union[
             "raw.types.WebPage", "raw.types.WebPageEmpty"
         ],
-        invert_media: bool = None,
+        invert_media: bool | None = None,
     ):
         if isinstance(web_page_preview.webpage, raw.types.WebPage):
             webpage = types.WebPage._parse(

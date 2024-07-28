@@ -19,14 +19,15 @@
 
 import asyncio
 import bisect
+import contextlib
 import logging
 import os
 from hashlib import sha1
 from io import BytesIO
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw
-from pyrogram.connection import Connection
 from pyrogram.crypto import mtproto
 from pyrogram.errors import (
     AuthKeyDuplicated,
@@ -43,6 +44,9 @@ from pyrogram.raw.all import layer
 from pyrogram.raw.core import FutureSalts, Int, MsgContainer, TLObject
 
 from .internals import MsgFactory, MsgId
+
+if TYPE_CHECKING:
+    from pyrogram.connection import Connection
 
 log = logging.getLogger(__name__)
 
@@ -278,10 +282,8 @@ class Session:
 
             if isinstance(
                 msg.body,
-                (
-                    raw.types.MsgDetailedInfo,
-                    raw.types.MsgNewDetailedInfo,
-                ),
+                raw.types.MsgDetailedInfo
+                | raw.types.MsgNewDetailedInfo,
             ):
                 self.pending_acks.add(msg.body.answer_msg_id)
                 continue
@@ -293,14 +295,12 @@ class Session:
 
             if isinstance(
                 msg.body,
-                (
-                    raw.types.BadMsgNotification,
-                    raw.types.BadServerSalt,
-                ),
+                raw.types.BadMsgNotification
+                | raw.types.BadServerSalt,
             ):
                 msg_id = msg.body.bad_msg_id
             elif isinstance(
-                msg.body, (FutureSalts, raw.types.RpcResult)
+                msg.body, FutureSalts | raw.types.RpcResult
             ):
                 msg_id = msg.body.req_msg_id
             elif isinstance(msg.body, raw.types.Pong):
@@ -425,12 +425,10 @@ class Session:
             raise e
 
         if wait_response:
-            try:
+            with contextlib.suppress(asyncio.TimeoutError):
                 await asyncio.wait_for(
                     self.results[msg_id].event.wait(), timeout
                 )
-            except asyncio.TimeoutError:
-                pass
 
             result = self.results.pop(msg_id).value
 
@@ -440,10 +438,8 @@ class Session:
             if isinstance(result, raw.types.RpcError):
                 if isinstance(
                     data,
-                    (
-                        raw.functions.InvokeWithoutUpdates,
-                        raw.functions.InvokeWithTakeout,
-                    ),
+                    raw.functions.InvokeWithoutUpdates
+                    | raw.functions.InvokeWithTakeout,
                 ):
                     data = data.query
 
@@ -463,6 +459,7 @@ class Session:
                 return await self.send(data, wait_response, timeout)
 
             return result
+        return None
 
     def _handle_bad_notification(self):
         new_msg_id = MsgId()
@@ -487,19 +484,15 @@ class Session:
         timeout: float = WAIT_TIMEOUT,
         sleep_threshold: float = SLEEP_THRESHOLD,
     ):
-        try:
+        with contextlib.suppress(asyncio.TimeoutError):
             await asyncio.wait_for(
                 self.is_started.wait(), self.WAIT_TIMEOUT
             )
-        except asyncio.TimeoutError:
-            pass
 
         if isinstance(
             query,
-            (
-                raw.functions.InvokeWithoutUpdates,
-                raw.functions.InvokeWithTakeout,
-            ),
+            raw.functions.InvokeWithoutUpdates
+            | raw.functions.InvokeWithTakeout,
         ):
             inner_query = query.query
         else:

@@ -19,8 +19,7 @@
 from typing import Optional, Union
 
 from pyrogram import enums, raw
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class ChatColor(Object):
@@ -38,7 +37,7 @@ class ChatColor(Object):
         self,
         *,
         color: Union["enums.ReplyColor", "enums.ProfileColor"] = None,
-        background_emoji_id: int = None,
+        background_emoji_id: int | None = None,
     ):
         self.color = color
         self.background_emoji_id = background_emoji_id

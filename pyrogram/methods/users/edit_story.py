@@ -31,19 +31,19 @@ class EditStory:
     async def edit_story(
         self: "pyrogram.Client",
         story_id: int,
-        chat_id: int = None,
+        chat_id: int | None = None,
         privacy: "enums.StoriesPrivacyRules" = None,
-        allowed_users: list[int] = None,
-        denied_users: list[int] = None,
+        allowed_users: list[int] | None = None,
+        denied_users: list[int] | None = None,
         # allowed_chats: list[int] = None,
         # denied_chats: list[int] = None,
-        animation: str = None,
-        photo: str = None,
-        video: str = None,
-        caption: str = None,
+        animation: str | None = None,
+        photo: str | None = None,
+        video: str | None = None,
+        caption: str | None = None,
         parse_mode: "enums.ParseMode" = None,
-        caption_entities: list["types.MessageEntity"] = None,
-        media_areas: list["types.InputMediaArea"] = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
+        media_areas: list["types.InputMediaArea"] | None = None,
     ) -> "types.Story":
         """Edit story.
 

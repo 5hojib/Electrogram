@@ -26,9 +26,9 @@ class SendReaction:
     async def send_reaction(
         self: "pyrogram.Client",
         chat_id: int | str,
-        message_id: int = None,
-        story_id: int = None,
-        emoji: int | str | list[int | str] = None,
+        message_id: int | None = None,
+        story_id: int | None = None,
+        emoji: int | str | list[int | str] | None = None,
         big: bool = False,
         add_to_recent: bool = False,
     ) -> "types.MessageReactions":
@@ -118,6 +118,7 @@ class SendReaction:
                     return types.MessageReactions._parse(
                         self, i.reactions
                     )
+            return None
         elif story_id is not None:
             await self.invoke(
                 raw.functions.stories.SendReaction(

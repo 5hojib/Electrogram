@@ -22,9 +22,8 @@ from typing import Union
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
-
-from ..object import Object
-from ..update import Update
+from pyrogram.types.object import Object
+from pyrogram.types.update import Update
 
 
 class Poll(Object, Update):
@@ -90,12 +89,12 @@ class Poll(Object, Update):
         id: str,
         question: str,
         options: list["types.PollOption"],
-        question_entities: list["types.MessageEntity"] = None,
+        question_entities: list["types.MessageEntity"] | None = None,
         total_voter_count: int,
         is_closed: bool,
-        is_anonymous: bool = None,
+        is_anonymous: bool | None = None,
         type: "enums.PollType" = None,
-        allows_multiple_answers: bool = None,
+        allows_multiple_answers: bool | None = None,
         chosen_option_id: int | None = None,
         correct_option_id: int | None = None,
         explanation: str | None = None,
@@ -103,7 +102,7 @@ class Poll(Object, Update):
         | None = None,
         open_period: int | None = None,
         close_date: datetime | None = None,
-        recent_voters: list["types.User"] = None,
+        recent_voters: list["types.User"] | None = None,
     ):
         super().__init__(client)
 
@@ -274,7 +273,7 @@ class Poll(Object, Update):
     async def stop(
         self,
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        business_connection_id: str = None,
+        business_connection_id: str | None = None,
     ) -> "types.Poll":
         """Bound method *stop* of :obj:`~pyrogram.types.Poll`.
 

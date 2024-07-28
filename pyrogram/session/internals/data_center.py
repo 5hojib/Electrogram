@@ -65,10 +65,7 @@ class DataCenter:
         media: bool,
     ) -> tuple[str, int]:
         if test_mode:
-            if ipv6:
-                ip = cls.TEST_IPV6[dc_id]
-            else:
-                ip = cls.TEST[dc_id]
+            ip = cls.TEST_IPV6[dc_id] if ipv6 else cls.TEST[dc_id]
 
             return ip, 80
         else:

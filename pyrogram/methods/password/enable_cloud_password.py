@@ -29,7 +29,7 @@ class EnableCloudPassword:
         self: "pyrogram.Client",
         password: str,
         hint: str = "",
-        email: str = None,
+        email: str | None = None,
     ) -> bool:
         """Enable the Two-Step Verification security feature (Cloud Password) on your account.
 

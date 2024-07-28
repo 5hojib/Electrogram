@@ -31,7 +31,7 @@ async def get_chunk(
     filter: "enums.MessagesFilter" = enums.MessagesFilter.EMPTY,
     offset: int = 0,
     limit: int = 100,
-    from_user: int | str = None,
+    from_user: int | str | None = None,
 ) -> list["types.Message"]:
     r = await client.invoke(
         raw.functions.messages.Search(
@@ -67,7 +67,7 @@ class SearchMessages:
         offset: int = 0,
         filter: "enums.MessagesFilter" = enums.MessagesFilter.EMPTY,
         limit: int = 0,
-        from_user: int | str = None,
+        from_user: int | str | None = None,
     ) -> AsyncGenerator["types.Message", None] | None:
         """Search for text and media messages inside a specific chat.
 

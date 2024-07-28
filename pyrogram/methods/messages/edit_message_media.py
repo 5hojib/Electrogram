@@ -33,9 +33,9 @@ class EditMessageMedia:
         message_id: int,
         media: types.InputMedia,
         reply_markup: types.InlineKeyboardMarkup = None,
-        file_name: str = None,
+        file_name: str | None = None,
         parse_mode: enums.ParseMode | None = None,
-        business_connection_id: str = None,
+        business_connection_id: str | None = None,
         invert_media: bool = False,
     ) -> "types.Message":
         """Edit animation, audio, document, photo or video messages.
@@ -335,10 +335,8 @@ class EditMessageMedia:
         for i in r.updates:
             if isinstance(
                 i,
-                (
-                    raw.types.UpdateEditMessage,
-                    raw.types.UpdateEditChannelMessage,
-                ),
+                raw.types.UpdateEditMessage
+                | raw.types.UpdateEditChannelMessage,
             ):
                 return await types.Message._parse(
                     self,
@@ -346,3 +344,4 @@ class EditMessageMedia:
                     {i.id: i for i in r.users},
                     {i.id: i for i in r.chats},
                 )
+        return None

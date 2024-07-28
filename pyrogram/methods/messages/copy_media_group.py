@@ -32,12 +32,12 @@ class CopyMediaGroup:
         chat_id: int | str,
         from_chat_id: int | str,
         message_id: int,
-        captions: list[str] | str = None,
-        disable_notification: bool = None,
-        message_thread_id: int = None,
-        reply_to_message_id: int = None,
-        schedule_date: datetime = None,
-        protect_content: bool = None,
+        captions: list[str] | str | None = None,
+        disable_notification: bool | None = None,
+        message_thread_id: int | None = None,
+        reply_to_message_id: int | None = None,
+        schedule_date: datetime | None = None,
+        protect_content: bool | None = None,
     ) -> list["types.Message"]:
         """Copy a media group by providing one of the message ids.
 
@@ -171,11 +171,9 @@ class CopyMediaGroup:
                     for m in filter(
                         lambda u: isinstance(
                             u,
-                            (
-                                raw.types.UpdateNewMessage,
-                                raw.types.UpdateNewChannelMessage,
-                                raw.types.UpdateNewScheduledMessage,
-                            ),
+                            raw.types.UpdateNewMessage
+                            | raw.types.UpdateNewChannelMessage
+                            | raw.types.UpdateNewScheduledMessage,
                         ),
                         r.updates,
                     )

@@ -41,12 +41,12 @@ class SendPaidMedia:
             ]
         ],
         caption: str = "",
-        caption_entities: list["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
         parse_mode: Optional["enums.ParseMode"] = None,
-        disable_notification: bool = None,
-        schedule_date: datetime = None,
-        protect_content: bool = None,
-        invert_media: bool = None,
+        disable_notification: bool | None = None,
+        schedule_date: datetime | None = None,
+        protect_content: bool | None = None,
+        invert_media: bool | None = None,
     ) -> "types.Message":
         """Send paid media.
         Only for channels.
@@ -164,8 +164,8 @@ class SendPaidMedia:
                         ),
                         spoiler=i.has_spoiler,
                     )
-            elif isinstance(i, types.InputMediaVideo) or isinstance(
-                i, types.InputMediaAnimation
+            elif isinstance(
+                i, types.InputMediaVideo | types.InputMediaAnimation
             ):
                 if isinstance(i.media, str):
                     is_animation = False
@@ -173,19 +173,15 @@ class SendPaidMedia:
                         try:
                             videoInfo = MediaInfo.parse(i.media)
                         except OSError:
-                            is_animation = (
-                                True
-                                if isinstance(
+                            is_animation = bool(
+                                isinstance(
                                     i, types.InputMediaAnimation
                                 )
-                                else False
                             )
                         else:
                             if not any(
-                                [
-                                    track.track_type == "Audio"
-                                    for track in videoInfo.tracks
-                                ]
+                                track.track_type == "Audio"
+                                for track in videoInfo.tracks
                             ):
                                 is_animation = True
                         attributes = [
@@ -328,12 +324,10 @@ class SendPaidMedia:
                     for m in filter(
                         lambda u: isinstance(
                             u,
-                            (
-                                raw.types.UpdateNewMessage,
-                                raw.types.UpdateNewChannelMessage,
-                                raw.types.UpdateNewScheduledMessage,
-                                raw.types.UpdateBotNewBusinessMessage,
-                            ),
+                            raw.types.UpdateNewMessage
+                            | raw.types.UpdateNewChannelMessage
+                            | raw.types.UpdateNewScheduledMessage
+                            | raw.types.UpdateBotNewBusinessMessage,
                         ),
                         r.updates,
                     )

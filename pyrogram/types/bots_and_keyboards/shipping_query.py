@@ -19,9 +19,8 @@
 
 import pyrogram
 from pyrogram import raw, types
-
-from ..object import Object
-from ..update import Update
+from pyrogram.types.object import Object
+from pyrogram.types.update import Update
 
 
 class ShippingQuery(Object, Update):
@@ -92,7 +91,7 @@ class ShippingQuery(Object, Update):
         self,
         ok: bool,
         shipping_options: "types.ShippingOptions" = None,
-        error_message: str = None,
+        error_message: str | None = None,
     ):
         """Bound method *answer* of :obj:`~pyrogram.types.ShippingQuery`.
 

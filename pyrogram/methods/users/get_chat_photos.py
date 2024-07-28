@@ -72,7 +72,7 @@ class GetChatPhotos:
                 self, r.full_chat.chat_photo
             )
             if current_animation:
-                current = current + [current_animation]
+                current = [*current, current_animation]
             extra = []
             if not self.me.is_bot:
                 r = await utils.parse_messages(

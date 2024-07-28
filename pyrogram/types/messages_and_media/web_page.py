@@ -19,8 +19,7 @@
 
 import pyrogram
 from pyrogram import raw, types
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class WebPage(Object):
@@ -92,21 +91,21 @@ class WebPage(Object):
         id: str,
         url: str,
         display_url: str,
-        type: str = None,
-        site_name: str = None,
-        title: str = None,
-        description: str = None,
+        type: str | None = None,
+        site_name: str | None = None,
+        title: str | None = None,
+        description: str | None = None,
         audio: "types.Audio" = None,
         document: "types.Document" = None,
         photo: "types.Photo" = None,
         animation: "types.Animation" = None,
         video: "types.Video" = None,
-        embed_url: str = None,
-        embed_type: str = None,
-        embed_width: int = None,
-        embed_height: int = None,
-        duration: int = None,
-        author: str = None,
+        embed_url: str | None = None,
+        embed_type: str | None = None,
+        embed_width: int | None = None,
+        embed_height: int | None = None,
+        duration: int | None = None,
+        author: str | None = None,
     ):
         super().__init__(client)
 

@@ -18,8 +18,7 @@
 
 
 from pyrogram import raw, types
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class ShippingOption(Object):
@@ -59,6 +58,7 @@ class ShippingOption(Object):
                     for price in shipping_option.prices
                 ],
             )
+        return None
 
     def write(self):
         return raw.types.ShippingOption(

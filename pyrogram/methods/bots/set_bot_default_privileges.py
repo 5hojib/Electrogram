@@ -25,7 +25,7 @@ class SetBotDefaultPrivileges:
     async def set_bot_default_privileges(
         self: "pyrogram.Client",
         privileges: "types.ChatPrivileges" = None,
-        for_channels: bool = None,
+        for_channels: bool | None = None,
     ) -> bool:
         """Change the default privileges requested by the bot when it's added as an administrator to groups or channels.
 

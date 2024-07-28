@@ -75,7 +75,7 @@ class GetForumTopicsByID:
 
         is_iterable = not isinstance(ids, int)
         ids = list(ids) if is_iterable else [ids]
-        ids = [i for i in ids]
+        ids = list(ids)
 
         rpc = raw.functions.channels.GetForumTopicsByID(
             channel=peer, topics=ids

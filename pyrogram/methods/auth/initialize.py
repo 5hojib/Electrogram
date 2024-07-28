@@ -19,8 +19,10 @@
 
 import asyncio
 import logging
+from typing import TYPE_CHECKING
 
-import pyrogram
+if TYPE_CHECKING:
+    import pyrogram
 
 log = logging.getLogger(__name__)
 

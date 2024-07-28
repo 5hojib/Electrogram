@@ -18,8 +18,7 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyrogram import raw
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class LoginUrl(Object):
@@ -61,10 +60,10 @@ class LoginUrl(Object):
         self,
         *,
         url: str,
-        forward_text: str = None,
-        bot_username: str = None,
-        request_write_access: str = None,
-        button_id: int = None,
+        forward_text: str | None = None,
+        bot_username: str | None = None,
+        request_write_access: str | None = None,
+        button_id: int | None = None,
     ):
         super().__init__()
 

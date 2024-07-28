@@ -17,8 +17,7 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyrogram import raw
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class InputReplyToStory(Object):
@@ -37,7 +36,7 @@ class InputReplyToStory(Object):
         self,
         *,
         peer: "raw.types.InputPeer" = None,
-        story_id: int = None,
+        story_id: int | None = None,
     ):
         super().__init__()
 

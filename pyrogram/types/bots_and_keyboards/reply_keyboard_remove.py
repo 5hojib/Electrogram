@@ -19,8 +19,7 @@
 
 import pyrogram
 from pyrogram import raw
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class ReplyKeyboardRemove(Object):
@@ -40,7 +39,7 @@ class ReplyKeyboardRemove(Object):
             keyboard for that user, while still showing the keyboard with poll options to users who haven't voted yet.
     """
 
-    def __init__(self, selective: bool = None):
+    def __init__(self, selective: bool | None = None):
         super().__init__()
 
         self.selective = selective

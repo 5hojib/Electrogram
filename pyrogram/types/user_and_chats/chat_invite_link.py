@@ -22,8 +22,7 @@ from typing import Optional
 
 import pyrogram
 from pyrogram import raw, types, utils
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class ChatInviteLink(Object):
@@ -74,16 +73,16 @@ class ChatInviteLink(Object):
         *,
         invite_link: str,
         date: datetime,
-        is_primary: bool = None,
-        is_revoked: bool = None,
+        is_primary: bool | None = None,
+        is_revoked: bool | None = None,
         creator: "types.User" = None,
-        name: str = None,
-        creates_join_request: bool = None,
-        start_date: datetime = None,
-        expire_date: datetime = None,
-        member_limit: int = None,
-        member_count: int = None,
-        pending_join_request_count: int = None,
+        name: str | None = None,
+        creates_join_request: bool | None = None,
+        start_date: datetime | None = None,
+        expire_date: datetime | None = None,
+        member_limit: int | None = None,
+        member_count: int | None = None,
+        pending_join_request_count: int | None = None,
     ):
         super().__init__()
 
@@ -104,7 +103,7 @@ class ChatInviteLink(Object):
     def _parse(
         client: "pyrogram.Client",
         invite: "raw.base.ExportedChatInvite",
-        users: dict[int, "raw.types.User"] = None,
+        users: dict[int, "raw.types.User"] | None = None,
     ) -> Optional["ChatInviteLink"]:
         if not isinstance(invite, raw.types.ChatInviteExported):
             return None

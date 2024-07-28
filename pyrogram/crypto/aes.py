@@ -36,7 +36,7 @@ try:
         data: bytes,
         key: bytes,
         iv: bytearray,
-        state: bytearray = None,
+        state: bytearray | None = None,
     ) -> bytes:
         return tgcrypto.ctr256_encrypt(
             data, key, iv, state or bytearray(1)
@@ -46,7 +46,7 @@ try:
         data: bytes,
         key: bytes,
         iv: bytearray,
-        state: bytearray = None,
+        state: bytearray | None = None,
     ) -> bytes:
         return tgcrypto.ctr256_decrypt(
             data, key, iv, state or bytearray(1)
@@ -77,7 +77,7 @@ except ImportError:
         data: bytes,
         key: bytes,
         iv: bytearray,
-        state: bytearray = None,
+        state: bytearray | None = None,
     ) -> bytes:
         return ctr(data, key, iv, state or bytearray(1))
 
@@ -85,7 +85,7 @@ except ImportError:
         data: bytes,
         key: bytes,
         iv: bytearray,
-        state: bytearray = None,
+        state: bytearray | None = None,
     ) -> bytes:
         return ctr(data, key, iv, state or bytearray(1))
 

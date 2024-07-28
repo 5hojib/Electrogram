@@ -28,7 +28,7 @@ class SearchMessagesCount:
         chat_id: int | str,
         query: str = "",
         filter: "enums.MessagesFilter" = enums.MessagesFilter.EMPTY,
-        from_user: int | str = None,
+        from_user: int | str | None = None,
     ) -> int:
         """Get the count of messages resulting from a search inside a chat.
 

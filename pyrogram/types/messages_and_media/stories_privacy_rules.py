@@ -17,8 +17,7 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyrogram import enums, raw
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class StoriesPrivacyRules(Object):
@@ -48,3 +47,4 @@ class StoriesPrivacyRules(Object):
             )
         if self.type == enums.StoriesPrivacyRules.PRIVATE:
             return raw.types.InputPrivacyValueDisallowAll().write()
+        return None

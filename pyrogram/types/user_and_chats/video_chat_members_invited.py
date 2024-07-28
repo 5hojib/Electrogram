@@ -19,8 +19,7 @@
 
 
 from pyrogram import raw, types
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class VideoChatMembersInvited(Object):

@@ -18,8 +18,7 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyrogram import enums, raw
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class SentCode(Object):
@@ -46,7 +45,7 @@ class SentCode(Object):
         type: "enums.SentCodeType",
         phone_code_hash: str,
         next_type: "enums.NextCodeType" = None,
-        timeout: int = None,
+        timeout: int | None = None,
     ):
         super().__init__()
 

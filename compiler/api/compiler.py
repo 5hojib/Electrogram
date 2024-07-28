@@ -271,8 +271,8 @@ def start(format: bool = False):
         dir_path.mkdir(parents=True, exist_ok=True)
 
         constructors = sorted(qualval)
-        constr_count = len(constructors)
-        items = "\n            ".join([f"{c}" for c in constructors])
+        len(constructors)
+        "\n            ".join([f"{c}" for c in constructors])
 
         with open(dir_path / f"{snake(module)}.py", "w") as f:
             f.write(
@@ -313,7 +313,7 @@ def start(format: bool = False):
 
         for arg in sorted_args:
             arg_name, arg_type = arg
-            is_optional = FLAGS_RE.match(arg_type)
+            FLAGS_RE.match(arg_type)
             arg_type = arg_type.split("?")[-1]
 
         write_types = read_types = (

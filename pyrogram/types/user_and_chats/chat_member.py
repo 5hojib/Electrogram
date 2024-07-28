@@ -22,8 +22,7 @@ from typing import Union
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class ChatMember(Object):
@@ -81,14 +80,14 @@ class ChatMember(Object):
         status: "enums.ChatMemberStatus",
         user: "types.User" = None,
         chat: "types.Chat" = None,
-        custom_title: str = None,
-        until_date: datetime = None,
-        joined_date: datetime = None,
+        custom_title: str | None = None,
+        until_date: datetime | None = None,
+        joined_date: datetime | None = None,
         invited_by: "types.User" = None,
         promoted_by: "types.User" = None,
         restricted_by: "types.User" = None,
-        is_member: bool = None,
-        can_be_edited: bool = None,
+        is_member: bool | None = None,
+        can_be_edited: bool | None = None,
         permissions: "types.ChatPermissions" = None,
         privileges: "types.ChatPrivileges" = None,
     ):
@@ -254,3 +253,4 @@ class ChatMember(Object):
                 ),
                 client=client,
             )
+        return None

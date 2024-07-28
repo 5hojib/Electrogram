@@ -30,11 +30,11 @@ class EditMessageText:
         message_id: int,
         text: str,
         parse_mode: Optional["enums.ParseMode"] = None,
-        entities: list["types.MessageEntity"] = None,
-        disable_web_page_preview: bool = None,
-        invert_media: bool = None,
+        entities: list["types.MessageEntity"] | None = None,
+        disable_web_page_preview: bool | None = None,
+        invert_media: bool | None = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        business_connection_id: str = None,
+        business_connection_id: str | None = None,
     ) -> "types.Message":
         """Edit the text of messages.
 
@@ -112,10 +112,8 @@ class EditMessageText:
         for i in r.updates:
             if isinstance(
                 i,
-                (
-                    raw.types.UpdateEditMessage,
-                    raw.types.UpdateEditChannelMessage,
-                ),
+                raw.types.UpdateEditMessage
+                | raw.types.UpdateEditChannelMessage,
             ):
                 return await types.Message._parse(
                     self,
@@ -123,3 +121,4 @@ class EditMessageText:
                     {i.id: i for i in r.users},
                     {i.id: i for i in r.chats},
                 )
+        return None

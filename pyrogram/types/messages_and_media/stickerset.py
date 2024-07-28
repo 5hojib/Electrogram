@@ -17,9 +17,12 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from pyrogram import raw
+from typing import TYPE_CHECKING
 
-from ..object import Object
+from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    from pyrogram import raw
 
 
 class StickerSet(Object):
@@ -58,10 +61,10 @@ class StickerSet(Object):
         title: str,
         short_name: str,
         count: int,
-        masks: bool = None,
-        animated: bool = None,
-        videos: bool = None,
-        emojis: bool = None,
+        masks: bool | None = None,
+        animated: bool | None = None,
+        videos: bool | None = None,
+        emojis: bool | None = None,
     ):
         self.id = id
         self.title = title

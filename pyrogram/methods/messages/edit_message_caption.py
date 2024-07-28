@@ -17,10 +17,11 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
-import pyrogram
-from pyrogram import enums, types
+if TYPE_CHECKING:
+    import pyrogram
+    from pyrogram import enums, types
 
 
 class EditMessageCaption:
@@ -30,10 +31,10 @@ class EditMessageCaption:
         message_id: int,
         caption: str,
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
         invert_media: bool = False,
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        business_connection_id: str = None,
+        business_connection_id: str | None = None,
     ) -> "types.Message":
         """Edit the caption of media messages.
 

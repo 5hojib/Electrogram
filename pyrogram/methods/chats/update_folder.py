@@ -27,19 +27,19 @@ class UpdateFolder:
         self: "pyrogram.Client",
         folder_id: int,
         title: str,
-        included_chats: int | str | list[int | str] = None,
-        excluded_chats: int | str | list[int | str] = None,
-        pinned_chats: int | str | list[int | str] = None,
-        contacts: bool = None,
-        non_contacts: bool = None,
-        groups: bool = None,
-        channels: bool = None,
-        bots: bool = None,
-        exclude_muted: bool = None,
-        exclude_read: bool = None,
-        exclude_archived: bool = None,
+        included_chats: int | str | list[int | str] | None = None,
+        excluded_chats: int | str | list[int | str] | None = None,
+        pinned_chats: int | str | list[int | str] | None = None,
+        contacts: bool | None = None,
+        non_contacts: bool | None = None,
+        groups: bool | None = None,
+        channels: bool | None = None,
+        bots: bool | None = None,
+        exclude_muted: bool | None = None,
+        exclude_read: bool | None = None,
+        exclude_archived: bool | None = None,
         color: "enums.FolderColor" = None,
-        emoji: str = None,
+        emoji: str | None = None,
     ) -> bool:
         """Create or update a user's folder.
 
@@ -116,7 +116,7 @@ class UpdateFolder:
         if not isinstance(pinned_chats, list):
             pinned_chats = [pinned_chats] if pinned_chats else []
 
-        r = await self.invoke(
+        return await self.invoke(
             raw.functions.messages.UpdateDialogFilter(
                 id=folder_id,
                 filter=raw.types.DialogFilter(
@@ -147,5 +147,3 @@ class UpdateFolder:
                 ),
             )
         )
-
-        return r

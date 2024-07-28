@@ -16,12 +16,15 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-import datetime
+
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, utils
+from pyrogram.types.object import Object
 
-from ..object import Object
+if TYPE_CHECKING:
+    import datetime
 
 
 class BotBusinessConnection(Object):
@@ -55,8 +58,8 @@ class BotBusinessConnection(Object):
         user: "pyrogram.types.User",
         dc_id: int,
         date: "datetime.datetime",
-        can_reply: bool = None,
-        is_disabled: bool = None,
+        can_reply: bool | None = None,
+        is_disabled: bool | None = None,
     ):
         super().__init__(client)
 

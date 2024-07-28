@@ -30,7 +30,7 @@ class BanChatMember:
         chat_id: int | str,
         user_id: int | str,
         until_date: datetime = utils.zero_datetime(),
-        revoke_messages: bool = None,
+        revoke_messages: bool | None = None,
     ) -> Union["types.Message", bool]:
         """Ban a user from a group, a supergroup or a channel.
         In the case of supergroups and channels, the user will not be able to return to the group on their own using
@@ -114,10 +114,8 @@ class BanChatMember:
         for i in r.updates:
             if isinstance(
                 i,
-                (
-                    raw.types.UpdateNewMessage,
-                    raw.types.UpdateNewChannelMessage,
-                ),
+                raw.types.UpdateNewMessage
+                | raw.types.UpdateNewChannelMessage,
             ):
                 return await types.Message._parse(
                     self,

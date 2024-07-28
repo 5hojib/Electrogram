@@ -31,17 +31,17 @@ class SendCachedMedia:
         file_id: str,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] = None,
-        has_spoiler: bool = None,
-        disable_notification: bool = None,
-        message_thread_id: int = None,
-        reply_to_message_id: int = None,
-        reply_to_story_id: int = None,
-        reply_to_chat_id: int | str = None,
-        quote_text: str = None,
-        quote_entities: list["types.MessageEntity"] = None,
-        schedule_date: datetime = None,
-        protect_content: bool = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
+        has_spoiler: bool | None = None,
+        disable_notification: bool | None = None,
+        message_thread_id: int | None = None,
+        reply_to_message_id: int | None = None,
+        reply_to_story_id: int | None = None,
+        reply_to_chat_id: int | str | None = None,
+        quote_text: str | None = None,
+        quote_entities: list["types.MessageEntity"] | None = None,
+        schedule_date: datetime | None = None,
+        protect_content: bool | None = None,
         invert_media: bool = False,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
@@ -173,11 +173,9 @@ class SendCachedMedia:
         for i in r.updates:
             if isinstance(
                 i,
-                (
-                    raw.types.UpdateNewMessage,
-                    raw.types.UpdateNewChannelMessage,
-                    raw.types.UpdateNewScheduledMessage,
-                ),
+                raw.types.UpdateNewMessage
+                | raw.types.UpdateNewChannelMessage
+                | raw.types.UpdateNewScheduledMessage,
             ):
                 return await types.Message._parse(
                     self,
@@ -188,3 +186,4 @@ class SendCachedMedia:
                         i, raw.types.UpdateNewScheduledMessage
                     ),
                 )
+        return None

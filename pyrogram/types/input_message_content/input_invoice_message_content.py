@@ -101,7 +101,7 @@ class InputInvoiceMessageContent(InputMessageContent):
         prices: list["types.LabeledPrice"],
         provider_token: str | None = None,
         max_tip_amount: int | None = None,
-        suggested_tip_amounts: list[int] = None,
+        suggested_tip_amounts: list[int] | None = None,
         provider_data: str | None = None,
         photo_url: str | None = None,
         photo_size: int | None = None,

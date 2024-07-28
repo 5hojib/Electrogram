@@ -37,7 +37,7 @@ class DownloadMedia:
         file_name: str = DEFAULT_DOWNLOAD_DIR,
         in_memory: bool = False,
         block: bool = True,
-        progress: Callable = None,
+        progress: Callable | None = None,
         progress_args: tuple = (),
     ) -> str | BinaryIO | None:
         """Download the media from a message.
@@ -133,9 +133,7 @@ class DownloadMedia:
             "new_chat_photo",
         )
 
-        if isinstance(message, types.Message) or isinstance(
-            message, types.Story
-        ):
+        if isinstance(message, types.Message | types.Story):
             for kind in available_media:
                 media = getattr(message, kind, None)
 
@@ -216,3 +214,4 @@ class DownloadMedia:
             return await downloader
         else:
             asyncio.get_event_loop().create_task(downloader)
+            return None

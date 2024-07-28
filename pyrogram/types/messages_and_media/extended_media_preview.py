@@ -17,8 +17,7 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyrogram import raw, types
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class ExtendedMediaPreview(Object):
@@ -41,10 +40,10 @@ class ExtendedMediaPreview(Object):
     def __init__(
         self,
         *,
-        width: int = None,
-        height: int = None,
+        width: int | None = None,
+        height: int | None = None,
         thumb: "types.Thumbnail" = None,
-        video_duration: int = None,
+        video_duration: int | None = None,
     ):
         super().__init__()
 

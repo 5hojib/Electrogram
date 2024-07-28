@@ -20,8 +20,7 @@ from typing import Union
 
 import pyrogram
 from pyrogram import raw, types, utils
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class MessageStory(Object):

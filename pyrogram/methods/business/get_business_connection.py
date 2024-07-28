@@ -47,3 +47,4 @@ class GetBusinessConnection:
                 return await types.BotBusinessConnection._parse(
                     client=self, bot_connection=i.connection
                 )
+        return None

@@ -27,8 +27,8 @@ class SetProfilePhoto:
     async def set_profile_photo(
         self: "pyrogram.Client",
         *,
-        photo: str | BinaryIO = None,
-        video: str | BinaryIO = None,
+        photo: str | BinaryIO | None = None,
+        video: str | BinaryIO | None = None,
     ) -> bool:
         """Set a new profile photo or video (H.264/MPEG-4 AVC video, max 5 seconds).
 

@@ -21,9 +21,8 @@ import inspect
 import time
 from typing import Any
 
-from pyrogram import raw
+from pyrogram import raw, utils
 
-from .. import utils
 from .storage import Storage
 
 # language=SQLite
@@ -187,12 +186,14 @@ class SQLiteStorage(Storage):
                         "DELETE FROM update_state WHERE id = ?",
                         (value,),
                     )
+                    return None
                 else:
                     self.conn.execute(
                         "REPLACE INTO update_state (id, pts, qts, date, seq)"
                         "VALUES (?, ?, ?, ?, ?)",
                         value,
                     )
+                    return None
 
     async def remove_state(self, chat_id):
         self.conn.execute(
@@ -300,3 +301,4 @@ class SQLiteStorage(Storage):
                 self.conn.execute(
                     "UPDATE version SET number = ?", (value,)
                 )
+                return None

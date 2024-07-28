@@ -19,8 +19,7 @@
 
 import pyrogram
 from pyrogram import raw
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class ForceReply(Object):
@@ -43,7 +42,9 @@ class ForceReply(Object):
     """
 
     def __init__(
-        self, selective: bool = None, placeholder: str = None
+        self,
+        selective: bool | None = None,
+        placeholder: str | None = None,
     ):
         super().__init__()
 

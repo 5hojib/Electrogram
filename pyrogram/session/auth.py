@@ -23,15 +23,18 @@ import time
 from hashlib import sha1
 from io import BytesIO
 from os import urandom
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw
-from pyrogram.connection import Connection
 from pyrogram.crypto import aes, prime, rsa
 from pyrogram.errors import SecurityCheckMismatch
 from pyrogram.raw.core import Int, Long, TLObject
 
 from .internals import MsgId
+
+if TYPE_CHECKING:
+    from pyrogram.connection import Connection
 
 log = logging.getLogger(__name__)
 

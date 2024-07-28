@@ -17,9 +17,13 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-import pyrogram
+from typing import TYPE_CHECKING
+
 from pyrogram.handlers import DisconnectHandler
-from pyrogram.handlers.handler import Handler
+
+if TYPE_CHECKING:
+    import pyrogram
+    from pyrogram.handlers.handler import Handler
 
 
 class AddHandler:

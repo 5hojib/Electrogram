@@ -21,8 +21,7 @@ from typing import Optional
 
 import pyrogram
 from pyrogram import raw, types
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class InlineKeyboardButton(Object):
@@ -158,6 +157,7 @@ class InlineKeyboardButton(Object):
 
         if isinstance(b, raw.types.KeyboardButtonBuy):
             return types.InlineKeyboardButtonBuy.read(b)
+        return None
 
     async def write(self, client: "pyrogram.Client"):
         if self.callback_data is not None:
@@ -212,3 +212,4 @@ class InlineKeyboardButton(Object):
             return raw.types.KeyboardButtonWebView(
                 text=self.text, url=self.web_app.url
             )
+        return None

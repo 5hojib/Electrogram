@@ -33,7 +33,7 @@ class CreateStickerSet:
         short_name: str,
         sticker: str,
         emoji: str = "🤔",
-        masks: bool = None,
+        masks: bool | None = None,
     ) -> Optional["types.Message"]:
         """Create a new stickerset.
 
@@ -73,7 +73,6 @@ class CreateStickerSet:
                 # Send document by uploading from local file
                 await app.create_sticker_set("me", "My First Pack", "myfirstpack", "AAjjHjk")
         """
-        file = None
 
         if isinstance(sticker, str):
             if os.path.isfile(sticker) or re.match(

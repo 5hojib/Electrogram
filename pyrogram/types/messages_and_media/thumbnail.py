@@ -28,8 +28,7 @@ from pyrogram.file_id import (
     FileUniqueType,
     ThumbnailSource,
 )
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class Thumbnail(Object):

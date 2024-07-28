@@ -28,10 +28,10 @@ class EditChatInviteLink:
         self: "pyrogram.Client",
         chat_id: int | str,
         invite_link: str,
-        name: str = None,
-        expire_date: datetime = None,
-        member_limit: int = None,
-        creates_join_request: bool = None,
+        name: str | None = None,
+        expire_date: datetime | None = None,
+        member_limit: int | None = None,
+        creates_join_request: bool | None = None,
     ) -> "types.ChatInviteLink":
         """Edit a non-primary invite link.
 

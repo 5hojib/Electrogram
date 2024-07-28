@@ -25,8 +25,8 @@ class AnswerPreCheckoutQuery:
     async def answer_pre_checkout_query(
         self: "pyrogram.Client",
         pre_checkout_query_id: str,
-        success: bool = None,
-        error: str = None,
+        success: bool | None = None,
+        error: str | None = None,
     ):
         """Send answers to pre-checkout queries.
 

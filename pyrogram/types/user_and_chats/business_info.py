@@ -19,8 +19,7 @@
 from typing import Optional
 
 from pyrogram import raw, types
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class BusinessInfo(Object):
@@ -46,7 +45,7 @@ class BusinessInfo(Object):
     def __init__(
         self,
         *,
-        address: str = None,
+        address: str | None = None,
         location: "types.Location" = None,
         greeting_message: "types.BusinessMessage" = None,
         away_message: "types.BusinessMessage" = None,
@@ -60,7 +59,9 @@ class BusinessInfo(Object):
 
     @staticmethod
     def _parse(
-        client, user: "raw.types.UserFull" = None, users: dict = None
+        client,
+        user: "raw.types.UserFull" = None,
+        users: dict | None = None,
     ) -> Optional["BusinessInfo"]:
         working_hours = getattr(user, "business_work_hours", None)
         location = getattr(user, "business_location", None)

@@ -20,8 +20,7 @@ from typing import Optional
 
 import pyrogram
 from pyrogram import raw, types
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class BotAllowed(Object):

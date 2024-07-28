@@ -17,11 +17,14 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import BinaryIO, Optional
+from typing import TYPE_CHECKING, BinaryIO, Optional
 
-from ... import enums
-from ..messages_and_media import MessageEntity
+from pyrogram.types.messages_and_media import MessageEntity
+
 from .input_media import InputMedia
+
+if TYPE_CHECKING:
+    from pyrogram import enums
 
 
 class InputMediaAnimation(InputMedia):
@@ -68,14 +71,14 @@ class InputMediaAnimation(InputMedia):
     def __init__(
         self,
         media: str | BinaryIO,
-        thumb: str = None,
+        thumb: str | None = None,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list[MessageEntity] = None,
+        caption_entities: list[MessageEntity] | None = None,
         width: int = 0,
         height: int = 0,
         duration: int = 0,
-        has_spoiler: bool = None,
+        has_spoiler: bool | None = None,
     ):
         super().__init__(media, caption, parse_mode, caption_entities)
 

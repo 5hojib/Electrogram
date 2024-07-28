@@ -26,12 +26,14 @@ class Client:
 
 
 class User:
-    def __init__(self, username: str = None):
+    def __init__(self, username: str | None = None):
         self.username = username
 
 
 class Message:
-    def __init__(self, text: str = None, caption: str = None):
+    def __init__(
+        self, text: str | None = None, caption: str | None = None
+    ):
         self.text = text
         self.caption = caption
         self.command = None

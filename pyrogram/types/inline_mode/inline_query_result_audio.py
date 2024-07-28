@@ -76,16 +76,16 @@ class InlineQueryResultAudio(InlineQueryResult):
         self,
         audio_url: str,
         title: str,
-        id: str = None,
+        id: str | None = None,
         performer: str = "",
         audio_duration: int = 0,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] = None,
-        description: str = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
+        description: str | None = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
         input_message_content: "types.InputMessageContent" = None,
-        thumb_url: str = None,
+        thumb_url: str | None = None,
     ):
         super().__init__(
             "audio", id, input_message_content, reply_markup

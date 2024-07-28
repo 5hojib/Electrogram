@@ -25,10 +25,10 @@ class SetBotInfo:
     async def set_bot_info(
         self: "pyrogram.Client",
         lang_code: str,
-        bot: int | str = None,
-        name: str = None,
-        about: str = None,
-        description: str = None,
+        bot: int | str | None = None,
+        name: str | None = None,
+        about: str | None = None,
+        description: str | None = None,
     ) -> bool:
         """Get the bot info in given language.
 

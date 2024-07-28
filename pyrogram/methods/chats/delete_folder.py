@@ -42,8 +42,6 @@ class DeleteFolder:
                 # Delete folder
                 app.delete_folder(folder_id)
         """
-        r = await self.invoke(
+        return await self.invoke(
             raw.functions.messages.UpdateDialogFilter(id=folder_id)
         )
-
-        return r

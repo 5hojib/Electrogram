@@ -34,8 +34,8 @@ class GetMessages:
     async def get_messages(
         self: "pyrogram.Client",
         chat_id: int | str,
-        message_ids: int | Iterable[int] = None,
-        reply_to_message_ids: int | Iterable[int] = None,
+        message_ids: int | Iterable[int] | None = None,
+        reply_to_message_ids: int | Iterable[int] | None = None,
         replies: int = 1,
     ) -> Union["types.Message", list["types.Message"]]:
         """Get one or more messages from a chat by using message identifiers.

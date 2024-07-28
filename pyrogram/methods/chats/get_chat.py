@@ -81,7 +81,7 @@ class GetChat:
                 raw.functions.channels.GetFullChannel(channel=peer)
             )
         elif isinstance(
-            peer, (raw.types.InputPeerUser, raw.types.InputPeerSelf)
+            peer, raw.types.InputPeerUser | raw.types.InputPeerSelf
         ):
             r = await self.invoke(
                 raw.functions.users.GetFullUser(id=peer)

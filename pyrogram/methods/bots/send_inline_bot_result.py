@@ -29,11 +29,11 @@ class SendInlineBotResult:
         chat_id: int | str,
         query_id: int,
         result_id: str,
-        disable_notification: bool = None,
-        message_thread_id: int = None,
-        reply_to_message_id: int = None,
-        quote_text: str = None,
-        quote_entities: list["types.MessageEntity"] = None,
+        disable_notification: bool | None = None,
+        message_thread_id: int | None = None,
+        reply_to_message_id: int | None = None,
+        quote_text: str | None = None,
+        quote_entities: list["types.MessageEntity"] | None = None,
         parse_mode: Optional["enums.ParseMode"] = None,
     ) -> "raw.base.Updates":
         """Send an inline bot result.

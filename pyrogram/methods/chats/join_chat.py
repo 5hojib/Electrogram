@@ -66,6 +66,7 @@ class JoinChat:
                 return types.Chat._parse_channel_chat(
                     self, chat.chats[0]
                 )
+            return None
         else:
             chat = await self.invoke(
                 raw.functions.channels.JoinChannel(

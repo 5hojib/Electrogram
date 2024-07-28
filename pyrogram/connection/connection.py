@@ -20,7 +20,8 @@
 import asyncio
 import logging
 
-from ..session.internals import DataCenter
+from pyrogram.session.internals import DataCenter
+
 from .transport import TCP, TCPAbridged
 
 log = logging.getLogger(__name__)

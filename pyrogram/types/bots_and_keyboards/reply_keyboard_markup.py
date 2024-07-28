@@ -21,8 +21,7 @@ from typing import Union
 
 import pyrogram
 from pyrogram import raw, types
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class ReplyKeyboardMarkup(Object):
@@ -60,11 +59,11 @@ class ReplyKeyboardMarkup(Object):
     def __init__(
         self,
         keyboard: list[list[Union["types.KeyboardButton", str]]],
-        is_persistent: bool = None,
-        resize_keyboard: bool = None,
-        one_time_keyboard: bool = None,
-        selective: bool = None,
-        placeholder: str = None,
+        is_persistent: bool | None = None,
+        resize_keyboard: bool | None = None,
+        one_time_keyboard: bool | None = None,
+        selective: bool | None = None,
+        placeholder: str | None = None,
     ):
         super().__init__()
 

@@ -21,9 +21,8 @@ from typing import Union
 
 import pyrogram
 from pyrogram import raw, types, utils
-
-from ..object import Object
-from ..update import Update
+from pyrogram.types.object import Object
+from pyrogram.types.update import Update
 
 
 class StorySkipped(Object, Update):
@@ -58,7 +57,7 @@ class StorySkipped(Object, Update):
         sender_chat: "types.Chat" = None,
         date: datetime,
         expire_date: datetime,
-        close_friends: bool = None,
+        close_friends: bool | None = None,
     ):
         super().__init__(client)
 
@@ -70,18 +69,18 @@ class StorySkipped(Object, Update):
         self.close_friends = close_friends
 
     async def _parse(
-        client: "pyrogram.Client",
+        self: "pyrogram.Client",
         stories: raw.base.StoryItem,
         peer: Union["raw.types.PeerChannel", "raw.types.PeerUser"],
     ) -> "StorySkipped":
         from_user = None
         sender_chat = None
         if isinstance(peer, raw.types.PeerChannel):
-            sender_chat = await client.get_chat(peer.channel_id)
+            sender_chat = await self.get_chat(peer.channel_id)
         elif isinstance(peer, raw.types.InputPeerSelf):
-            from_user = client.me
+            from_user = self.me
         else:
-            from_user = await client.get_users(peer.user_id)
+            from_user = await self.get_users(peer.user_id)
 
         return StorySkipped(
             id=stories.id,
@@ -92,5 +91,5 @@ class StorySkipped(Object, Update):
                 stories.expire_date
             ),
             close_friends=stories.close_friends,
-            client=client,
+            client=self,
         )

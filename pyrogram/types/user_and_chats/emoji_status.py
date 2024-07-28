@@ -22,8 +22,7 @@ from typing import Optional
 
 import pyrogram
 from pyrogram import raw, utils
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class EmojiStatus(Object):

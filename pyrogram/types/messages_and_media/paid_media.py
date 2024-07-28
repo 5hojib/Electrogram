@@ -19,8 +19,7 @@
 from typing import Union
 
 from pyrogram import raw, types
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class PaidMedia(Object):
@@ -45,7 +44,8 @@ class PaidMedia(Object):
                 "types.Photo",
                 "types.Video",
             ]
-        ] = None,
+        ]
+        | None = None,
     ):
         super().__init__()
 

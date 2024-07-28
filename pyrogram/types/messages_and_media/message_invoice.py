@@ -17,9 +17,12 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from pyrogram import raw
+from typing import TYPE_CHECKING
 
-from ..object import Object
+from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    from pyrogram import raw
 
 
 class MessageInvoice(Object):
@@ -59,9 +62,9 @@ class MessageInvoice(Object):
         currency: str,
         total_amount: int,
         start_parameter: str,
-        shipping_address_requested: bool = None,
-        test: bool = None,
-        receipt_message_id: int = None,
+        shipping_address_requested: bool | None = None,
+        test: bool | None = None,
+        receipt_message_id: int | None = None,
         # TODO: Implement photo, extended_media parameters
     ):
         super().__init__()

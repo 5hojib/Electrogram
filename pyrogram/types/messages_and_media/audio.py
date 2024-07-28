@@ -27,8 +27,7 @@ from pyrogram.file_id import (
     FileUniqueId,
     FileUniqueType,
 )
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class Audio(Object):
@@ -74,13 +73,13 @@ class Audio(Object):
         file_id: str,
         file_unique_id: str,
         duration: int,
-        performer: str = None,
-        title: str = None,
-        file_name: str = None,
-        mime_type: str = None,
-        file_size: int = None,
-        date: datetime = None,
-        thumbs: list["types.Thumbnail"] = None,
+        performer: str | None = None,
+        title: str | None = None,
+        file_name: str | None = None,
+        mime_type: str | None = None,
+        file_size: int | None = None,
+        date: datetime | None = None,
+        thumbs: list["types.Thumbnail"] | None = None,
     ):
         super().__init__(client)
 

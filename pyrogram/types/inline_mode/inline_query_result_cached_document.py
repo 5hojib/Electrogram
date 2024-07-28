@@ -21,8 +21,8 @@ from typing import Optional
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
+from pyrogram.file_id import FileId
 
-from ...file_id import FileId
 from .inline_query_result import InlineQueryResult
 
 
@@ -67,11 +67,11 @@ class InlineQueryResultCachedDocument(InlineQueryResult):
         self,
         document_file_id: str,
         title: str,
-        id: str = None,
-        description: str = None,
+        id: str | None = None,
+        description: str | None = None,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
         input_message_content: "types.InputMessageContent" = None,
     ):

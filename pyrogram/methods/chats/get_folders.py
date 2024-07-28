@@ -27,7 +27,7 @@ from pyrogram import raw, types, utils
 class GetFolders:
     async def get_folders(
         self: "pyrogram.Client",
-        folder_ids: int | Iterable[int] = None,
+        folder_ids: int | Iterable[int] | None = None,
     ) -> Union["types.Folder", list["types.Folder"]]:
         """Get one or more folders by using folder identifiers.
 

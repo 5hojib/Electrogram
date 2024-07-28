@@ -17,7 +17,10 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-import pyrogram
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import pyrogram
 
 
 class Disconnect:

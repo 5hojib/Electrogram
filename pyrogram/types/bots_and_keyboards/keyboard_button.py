@@ -20,8 +20,7 @@
 from typing import Union
 
 from pyrogram import raw, types
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class KeyboardButton(Object):
@@ -60,8 +59,8 @@ class KeyboardButton(Object):
     def __init__(
         self,
         text: str,
-        request_contact: bool = None,
-        request_location: bool = None,
+        request_contact: bool | None = None,
+        request_location: bool | None = None,
         request_chat: Union[
             "types.RequestPeerTypeChat",
             "types.RequestPeerTypeChannel",
@@ -127,6 +126,8 @@ class KeyboardButton(Object):
                         max=b.max_quantity,
                     ),
                 )
+            return None
+        return None
 
     def write(self):
         if self.request_contact:

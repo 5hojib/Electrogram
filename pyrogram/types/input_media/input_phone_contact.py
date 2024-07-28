@@ -19,8 +19,7 @@
 
 from pyrogram import raw
 from pyrogram.session.internals import MsgId
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class InputPhoneContact(Object):

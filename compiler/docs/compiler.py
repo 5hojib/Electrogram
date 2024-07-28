@@ -119,7 +119,7 @@ def generate(source_path, base):
             inner_path = base + "/" + k + "/index" + ".rst"
             module = f"pyrogram.raw.{base}.{k}"
         else:
-            for i in sorted(list(all_entities), reverse=True):
+            for i in sorted(all_entities, reverse=True):
                 if i != base:
                     entities.insert(0, f"{i}/index")
 
@@ -155,8 +155,8 @@ def pyrogram_api():
 
     # Methods
 
-    categories = dict(
-        utilities="""
+    categories = {
+        "utilities": """
         Utilities
             start
             stop
@@ -169,7 +169,7 @@ def pyrogram_api():
             export_session_string
             set_parse_mode
         """,
-        conversation="""
+        "conversation": """
         Conversation
             ask
             listen
@@ -184,7 +184,7 @@ def pyrogram_api():
             wait_for_callback_query
             wait_for_message
         """,
-        messages="""
+        "messages": """
         Messages
             send_message
             forward_messages
@@ -241,7 +241,7 @@ def pyrogram_api():
             get_discussion_replies_count
             get_custom_emoji_stickers
         """,
-        chats="""
+        "chats": """
         Chats
             join_chat
             leave_chat
@@ -301,7 +301,7 @@ def pyrogram_api():
             update_color
             update_folder
         """,
-        users="""
+        "users": """
         Users
             get_me
             get_users
@@ -319,7 +319,7 @@ def pyrogram_api():
             get_default_emoji_statuses
             set_emoji_status
         """,
-        stories="""
+        "stories": """
         Stories
             delete_stories
             edit_story
@@ -331,13 +331,13 @@ def pyrogram_api():
             get_peer_stories
             send_story
         """,
-        stickers="""
+        "stickers": """
         Stickers
             add_sticker_to_set
             create_sticker_set
             get_sticker_set
         """,
-        invite_links="""
+        "invite_links": """
         Invite Links
             get_chat_invite_link
             export_chat_invite_link
@@ -357,7 +357,7 @@ def pyrogram_api():
             decline_chat_join_request
             decline_all_chat_join_requests
         """,
-        contacts="""
+        "contacts": """
         Contacts
             add_contact
             delete_contacts
@@ -365,13 +365,13 @@ def pyrogram_api():
             get_contacts
             get_contacts_count
         """,
-        password="""
+        "password": """
         Password
             enable_cloud_password
             change_cloud_password
             remove_cloud_password
         """,
-        bots="""
+        "bots": """
         Bots
             get_inline_bot_results
             send_inline_bot_result
@@ -396,11 +396,11 @@ def pyrogram_api():
             set_bot_info
             get_collectible_item_info
         """,
-        business="""
+        "business": """
         Telegram Business
             get_business_connection
         """,
-        authorization="""
+        "authorization": """
         Authorization
             connect
             disconnect
@@ -418,13 +418,13 @@ def pyrogram_api():
             accept_terms_of_service
             log_out
         """,
-        advanced="""
+        "advanced": """
         Advanced
             invoke
             resolve_peer
             save_file
         """,
-    )
+    }
 
     root = PYROGRAM_API_DEST + "/methods"
 
@@ -465,8 +465,8 @@ def pyrogram_api():
 
     # Types
 
-    categories = dict(
-        users_chats="""
+    categories = {
+        "users_chats": """
         Users & Chats
             Birthday
             BusinessInfo
@@ -501,7 +501,7 @@ def pyrogram_api():
             ChatColor
             CollectibleItemInfo
         """,
-        messages_media="""
+        "messages_media": """
         Messages & Media
             Message
             MessageEntity
@@ -555,7 +555,7 @@ def pyrogram_api():
             ExtendedMediaPreview
             PaidMedia
         """,
-        stories="""
+        "stories": """
         Stories
             Story
             StoryDeleted
@@ -569,7 +569,7 @@ def pyrogram_api():
             InputMediaArea
             InputMediaAreaChannelPost
         """,
-        bot="""
+        "bot": """
         Bot
             BotAllowed
             BotApp
@@ -581,7 +581,7 @@ def pyrogram_api():
             ShippingQuery
             SuccessfulPayment
         """,
-        bot_keyboards="""
+        "bot_keyboards": """
         Bot keyboards
             ReplyKeyboardMarkup
             KeyboardButton
@@ -605,7 +605,7 @@ def pyrogram_api():
             SentWebAppMessage
             PreCheckoutQuery
         """,
-        bot_commands="""
+        "bot_commands": """
         Bot commands
             BotCommand
             BotCommandScope
@@ -617,7 +617,7 @@ def pyrogram_api():
             BotCommandScopeChatAdministrators
             BotCommandScopeChatMember
         """,
-        input_media="""
+        "input_media": """
         Input Media
             InputMedia
             InputMediaPhoto
@@ -627,7 +627,7 @@ def pyrogram_api():
             InputMediaDocument
             InputPhoneContact
         """,
-        inline_mode="""
+        "inline_mode": """
         Inline Mode
             InlineQuery
             InlineQueryResult
@@ -650,15 +650,15 @@ def pyrogram_api():
             InlineQueryResultVoice
             ChosenInlineResult
         """,
-        pre_checkout_query="""
+        "pre_checkout_query": """
         PreCheckoutQuery
             PreCheckoutQuery.answer
         """,
-        shipping_query="""
+        "shipping_query": """
         ShippingQuery
             ShippingQuery.answer
         """,
-        input_message_content="""
+        "input_message_content": """
         InputMessageContent
             InputMessageContent
             InputReplyToMessage
@@ -669,12 +669,12 @@ def pyrogram_api():
             InputContactMessageContent
             InputInvoiceMessageContent
         """,
-        authorization="""
+        "authorization": """
         Authorization
             SentCode
             TermsOfService
         """,
-    )
+    }
 
     root = PYROGRAM_API_DEST + "/types"
 
@@ -706,8 +706,8 @@ def pyrogram_api():
 
     # Bound Methods
 
-    categories = dict(
-        message="""
+    categories = {
+        "message": """
         Message
             Message.ask
             Message.click
@@ -746,7 +746,7 @@ def pyrogram_api():
             Message.react
             Message.wait_for_click
         """,
-        chat="""
+        "chat": """
         Chat
             Chat.ask
             Chat.listen
@@ -769,7 +769,7 @@ def pyrogram_api():
             Chat.set_protected_content
             Chat.unpin_all_messages
         """,
-        user="""
+        "user": """
         User
             User.ask
             User.listen
@@ -779,7 +779,7 @@ def pyrogram_api():
             User.block
             User.unblock
         """,
-        story="""
+        "story": """
         Story
             Story.delete
             Story.download
@@ -802,7 +802,7 @@ def pyrogram_api():
             Story.reply_video_note
             Story.reply_voice
         """,
-        callback_query="""
+        "callback_query": """
         Callback Query
             CallbackQuery.answer
             CallbackQuery.edit_message_text
@@ -810,24 +810,24 @@ def pyrogram_api():
             CallbackQuery.edit_message_media
             CallbackQuery.edit_message_reply_markup
         """,
-        inline_query="""
+        "inline_query": """
         InlineQuery
             InlineQuery.answer
         """,
-        pre_checkout_query="""
+        "pre_checkout_query": """
         PreCheckoutQuery
             PreCheckoutQuery.answer
         """,
-        shipping_query="""
+        "shipping_query": """
         ShippingQuery
             ShippingQuery.answer
         """,
-        chat_join_request="""
+        "chat_join_request": """
         ChatJoinRequest
             ChatJoinRequest.approve
             ChatJoinRequest.decline
         """,
-    )
+    }
 
     root = PYROGRAM_API_DEST + "/bound-methods"
 

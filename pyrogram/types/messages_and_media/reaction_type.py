@@ -19,8 +19,7 @@
 from typing import Optional
 
 from pyrogram import enums, raw
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class ReactionType(Object):
@@ -41,8 +40,8 @@ class ReactionType(Object):
         self,
         *,
         type: str = "enums.ReactionType",
-        emoji: str = None,
-        custom_emoji_id: str = None,
+        emoji: str | None = None,
+        custom_emoji_id: str | None = None,
     ):
         super().__init__()
         self.type = type
@@ -64,6 +63,7 @@ class ReactionType(Object):
                 type=enums.ReactionType.CUSTOM_EMOJI,
                 custom_emoji_id=update.document_id,
             )
+        return None
 
     def write(self):
         if self.type == enums.ReactionType.EMOJI:
@@ -72,3 +72,4 @@ class ReactionType(Object):
             return raw.types.ReactionCustomEmoji(
                 document_id=self.custom_emoji_id
             )
+        return None

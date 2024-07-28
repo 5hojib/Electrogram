@@ -51,7 +51,7 @@ async def ainput(prompt: str = "", *, hide: bool = False):
 def get_input_media_from_file_id(
     file_id: str,
     expected_file_type: FileType = None,
-    ttl_seconds: int = None,
+    ttl_seconds: int | None = None,
 ) -> Union[
     "raw.types.InputMediaPhoto", "raw.types.InputMediaDocument"
 ]:
@@ -105,7 +105,7 @@ async def parse_messages(
     client,
     messages: "raw.types.messages.Messages",
     replies: int = 1,
-    business_connection_id: str = None,
+    business_connection_id: str | None = None,
 ) -> list["types.Message"]:
     users = {i.id: i for i in messages.users}
     chats = {i.id: i for i in messages.chats}
@@ -240,7 +240,7 @@ async def parse_messages(
 
 
 def parse_deleted_messages(
-    client, update, business_connection_id: str = None
+    client, update, business_connection_id: str | None = None
 ) -> list["types.Message"]:
     messages = update.messages
     channel_id = getattr(update, "channel_id", None)
@@ -324,18 +324,18 @@ def get_raw_peer_id(
     peer: raw.base.Peer | raw.base.RequestedPeer,
 ) -> int | None:
     """Get the raw peer id from a Peer object"""
-    if isinstance(peer, raw.types.PeerUser) or isinstance(
-        peer, raw.types.RequestedPeerUser
+    if isinstance(
+        peer, raw.types.PeerUser | raw.types.RequestedPeerUser
     ):
         return peer.user_id
 
-    if isinstance(peer, raw.types.PeerChat) or isinstance(
-        peer, raw.types.RequestedPeerChat
+    if isinstance(
+        peer, raw.types.PeerChat | raw.types.RequestedPeerChat
     ):
         return peer.chat_id
 
-    if isinstance(peer, raw.types.PeerChannel) or isinstance(
-        peer, raw.types.RequestedPeerChannel
+    if isinstance(
+        peer, raw.types.PeerChannel | raw.types.RequestedPeerChannel
     ):
         return peer.channel_id
 
@@ -508,13 +508,13 @@ async def run_sync(
 
 async def get_reply_to(
     client: "pyrogram.Client",
-    chat_id: int | str = None,
-    reply_to_message_id: int = None,
-    reply_to_story_id: int = None,
-    message_thread_id: int = None,
-    reply_to_chat_id: int | str = None,
-    quote_text: str = None,
-    quote_entities: list["types.MessageEntity"] = None,
+    chat_id: int | str | None = None,
+    reply_to_message_id: int | None = None,
+    reply_to_story_id: int | None = None,
+    message_thread_id: int | None = None,
+    reply_to_chat_id: int | str | None = None,
+    quote_text: str | None = None,
+    quote_entities: list["types.MessageEntity"] | None = None,
     parse_mode: "enums.ParseMode" = None,
 ):
     reply_to = None

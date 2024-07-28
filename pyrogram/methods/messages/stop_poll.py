@@ -28,7 +28,7 @@ class StopPoll:
         chat_id: int | str,
         message_id: int,
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        business_connection_id: str = None,
+        business_connection_id: str | None = None,
     ) -> "types.Poll":
         """Stop a poll which was sent by you.
 

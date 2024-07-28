@@ -30,9 +30,9 @@ class SetChatPhoto:
         self: "pyrogram.Client",
         chat_id: int | str,
         *,
-        photo: str | BinaryIO = None,
-        video: str | BinaryIO = None,
-        video_start_ts: float = None,
+        photo: str | BinaryIO | None = None,
+        video: str | BinaryIO | None = None,
+        video_start_ts: float | None = None,
     ) -> bool:
         """Set a new chat photo or video (H.264/MPEG-4 AVC video, max 5 seconds).
 

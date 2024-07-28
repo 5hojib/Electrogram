@@ -19,8 +19,7 @@
 from typing import Union
 
 from pyrogram import raw, types
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class ForumTopic(Object):
@@ -96,11 +95,11 @@ class ForumTopic(Object):
         unread_reactions_count: int,
         from_id: Union["types.PeerChannel", "types.PeerUser"],
         # notify_settings: "types.PeerNotifySettings", //todo
-        my: bool = None,
-        closed: bool = None,
-        pinned: bool = None,
-        short: bool = None,
-        icon_emoji_id: int = None,
+        my: bool | None = None,
+        closed: bool | None = None,
+        pinned: bool | None = None,
+        short: bool | None = None,
+        icon_emoji_id: int | None = None,
         # draft: "types.DraftMessage" = None //todo
     ):
         super().__init__()

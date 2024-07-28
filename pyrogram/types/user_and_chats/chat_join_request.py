@@ -21,9 +21,8 @@ from datetime import datetime
 
 import pyrogram
 from pyrogram import raw, types, utils
-
-from ..object import Object
-from ..update import Update
+from pyrogram.types.object import Object
+from pyrogram.types.update import Update
 
 
 class ChatJoinRequest(Object, Update):
@@ -53,7 +52,7 @@ class ChatJoinRequest(Object, Update):
         chat: "types.Chat",
         from_user: "types.User",
         date: datetime,
-        bio: str = None,
+        bio: str | None = None,
         invite_link: "types.ChatInviteLink" = None,
     ):
         super().__init__(client)

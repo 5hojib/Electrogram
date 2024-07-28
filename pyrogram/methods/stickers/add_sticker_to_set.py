@@ -55,7 +55,6 @@ class AddStickerToSet:
 
                 await app.add_sticker_to_set("mypack1", "AsJiasp")
         """
-        file = None
 
         if isinstance(sticker, str):
             if os.path.isfile(sticker) or re.match(

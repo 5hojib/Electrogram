@@ -27,7 +27,7 @@ class UpdateColor:
         self: "pyrogram.Client",
         chat_id: int | str,
         color: Union["enums.ReplyColor", "enums.ProfileColor"],
-        background_emoji_id: int = None,
+        background_emoji_id: int | None = None,
     ) -> bool:
         """Update color
 

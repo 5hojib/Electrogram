@@ -27,8 +27,7 @@ from pyrogram.file_id import (
     FileUniqueId,
     FileUniqueType,
 )
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class Animation(Object):
@@ -75,12 +74,12 @@ class Animation(Object):
         file_unique_id: str,
         width: int,
         height: int,
-        duration: int = None,
-        file_name: str = None,
-        mime_type: str = None,
-        file_size: int = None,
-        date: datetime = None,
-        thumbs: list["types.Thumbnail"] = None,
+        duration: int | None = None,
+        file_name: str | None = None,
+        mime_type: str | None = None,
+        file_size: int | None = None,
+        date: datetime | None = None,
+        thumbs: list["types.Thumbnail"] | None = None,
     ):
         super().__init__(client)
 
@@ -170,3 +169,4 @@ class Animation(Object):
                 mime_type="video/mp4",
                 client=client,
             )
+        return None

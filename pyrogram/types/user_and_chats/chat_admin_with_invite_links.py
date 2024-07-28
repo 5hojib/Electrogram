@@ -20,8 +20,7 @@
 
 import pyrogram
 from pyrogram import raw, types
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class ChatAdminWithInviteLinks(Object):
@@ -43,7 +42,7 @@ class ChatAdminWithInviteLinks(Object):
         *,
         admin: "types.User",
         chat_invite_links_count: int,
-        revoked_chat_invite_links_count: int = None,
+        revoked_chat_invite_links_count: int | None = None,
     ):
         super().__init__()
 
@@ -57,7 +56,7 @@ class ChatAdminWithInviteLinks(Object):
     def _parse(
         client: "pyrogram.Client",
         admin: "raw.types.ChatAdminWithInvites",
-        users: dict[int, "raw.types.User"] = None,
+        users: dict[int, "raw.types.User"] | None = None,
     ) -> "ChatAdminWithInviteLinks":
         return ChatAdminWithInviteLinks(
             admin=types.User._parse(client, users[admin.admin_id]),

@@ -18,12 +18,15 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from collections.abc import Callable
+from typing import TYPE_CHECKING
 
-import pyrogram
 from pyrogram.filters import Filter
 from pyrogram.types import Message
 
 from .handler import Handler
+
+if TYPE_CHECKING:
+    import pyrogram
 
 
 class DeletedBotBusinessMessagesHandler(Handler):

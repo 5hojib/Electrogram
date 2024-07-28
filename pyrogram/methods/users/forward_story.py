@@ -17,8 +17,11 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import pyrogram
-from pyrogram import enums, types
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import pyrogram
+    from pyrogram import enums, types
 
 
 class ForwardStory:
@@ -29,18 +32,18 @@ class ForwardStory:
         self: "pyrogram.Client",
         from_chat_id: int | str,
         from_story_id: int,
-        chat_id: int | str = None,
+        chat_id: int | str | None = None,
         privacy: "enums.StoriesPrivacyRules" = None,
-        allowed_users: list[int] = None,
-        denied_users: list[int] = None,
+        allowed_users: list[int] | None = None,
+        denied_users: list[int] | None = None,
         # allowed_chats: list[int] = None,
         # denied_chats: list[int] = None,
-        pinned: bool = None,
-        protect_content: bool = None,
-        caption: str = None,
+        pinned: bool | None = None,
+        protect_content: bool | None = None,
+        caption: str | None = None,
         parse_mode: "enums.ParseMode" = None,
-        caption_entities: list["types.MessageEntity"] = None,
-        period: int = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
+        period: int | None = None,
     ) -> "types.Story":
         """Forward a story.
 

@@ -17,8 +17,7 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 import pyrogram
 from pyrogram import raw
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class InlineKeyboardButtonBuy(Object):

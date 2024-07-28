@@ -28,8 +28,7 @@ from pyrogram.file_id import (
     FileUniqueId,
     FileUniqueType,
 )
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class Sticker(Object):
@@ -97,13 +96,13 @@ class Sticker(Object):
         is_animated: bool,
         is_video: bool,
         needs_repainting: bool = False,
-        file_name: str = None,
-        mime_type: str = None,
-        file_size: int = None,
-        date: datetime = None,
-        emoji: str = None,
-        set_name: str = None,
-        thumbs: list["types.Thumbnail"] = None,
+        file_name: str | None = None,
+        mime_type: str | None = None,
+        file_size: int | None = None,
+        date: datetime | None = None,
+        emoji: str | None = None,
+        set_name: str | None = None,
+        thumbs: list["types.Thumbnail"] | None = None,
     ):
         super().__init__(client)
 

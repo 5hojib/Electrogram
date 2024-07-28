@@ -57,6 +57,8 @@ except Exception:
     pass
 else:
     from pyrogram.storage import MongoStorage
+import contextlib
+
 from pyrogram.types import TermsOfService, User
 from pyrogram.utils import ainput
 
@@ -268,7 +270,7 @@ class Client(Methods):
         parse_mode: "enums.ParseMode" = enums.ParseMode.DEFAULT,
         no_updates: bool | None = None,
         skip_updates: bool = True,
-        takeout: bool = None,
+        takeout: bool | None = None,
         sleep_threshold: int = Session.SLEEP_THRESHOLD,
         hide_password: bool | None = False,
         max_concurrent_transmissions: int = MAX_CONCURRENT_TRANSMISSIONS,
@@ -392,19 +394,15 @@ class Client(Methods):
         return self.start()
 
     def __exit__(self, *args):
-        try:
+        with contextlib.suppress(ConnectionError):
             self.stop()
-        except ConnectionError:
-            pass
 
     async def __aenter__(self):
         return await self.start()
 
     async def __aexit__(self, *args):
-        try:
+        with contextlib.suppress(ConnectionError):
             await self.stop()
-        except ConnectionError:
-            pass
 
     async def updates_watchdog(self):
         while True:
@@ -653,7 +651,7 @@ class Client(Methods):
                 phone_number = peer.phone
                 peer_type = "bot" if peer.bot else "user"
             elif isinstance(
-                peer, (raw.types.Chat, raw.types.ChatForbidden)
+                peer, raw.types.Chat | raw.types.ChatForbidden
             ):
                 peer_id = -peer.id
                 access_hash = 0
@@ -707,7 +705,7 @@ class Client(Methods):
         self.last_update_time = datetime.now()
 
         if isinstance(
-            updates, (raw.types.Updates, raw.types.UpdatesCombined)
+            updates, raw.types.Updates | raw.types.UpdatesCombined
         ):
             is_min = any(
                 (
@@ -799,10 +797,8 @@ class Client(Methods):
                 )
         elif isinstance(
             updates,
-            (
-                raw.types.UpdateShortMessage,
-                raw.types.UpdateShortChatMessage,
-            ),
+            raw.types.UpdateShortMessage
+            | raw.types.UpdateShortChatMessage,
         ):
             await self.storage.update_state(
                 (0, updates.pts, None, updates.date, None)
@@ -928,11 +924,11 @@ class Client(Methods):
                     Path(root.replace(".", "/")).rglob("*.py")
                 ):
                     module_path = ".".join(
-                        path.parent.parts + (path.stem,)
+                        (*path.parent.parts, path.stem)
                     )
                     module = import_module(module_path)
 
-                    for name in vars(module).keys():
+                    for name in vars(module):
                         # noinspection PyBroadException
                         try:
                             for handler, group in getattr(
@@ -1121,7 +1117,7 @@ class Client(Methods):
         file_size: int = 0,
         limit: int = 0,
         offset: int = 0,
-        progress: Callable = None,
+        progress: Callable | None = None,
         progress_args: tuple = (),
     ) -> AsyncGenerator[bytes, None] | None:
         async with self.get_file_semaphore:

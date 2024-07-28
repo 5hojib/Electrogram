@@ -19,8 +19,7 @@
 
 import pyrogram
 from pyrogram import raw, types, utils
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class GameHighScore(Object):
@@ -43,7 +42,7 @@ class GameHighScore(Object):
         client: "pyrogram.Client" = None,
         user: "types.User",
         score: int,
-        position: int = None,
+        position: int | None = None,
     ):
         super().__init__(client)
 

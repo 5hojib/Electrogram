@@ -28,10 +28,10 @@ class SetGameScore:
         self: "pyrogram.Client",
         user_id: int | str,
         score: int,
-        force: bool = None,
-        disable_edit_message: bool = None,
-        chat_id: int | str = None,
-        message_id: int = None,
+        force: bool | None = None,
+        disable_edit_message: bool | None = None,
+        chat_id: int | str | None = None,
+        message_id: int | None = None,
     ) -> Union["types.Message", bool]:
         # inline_message_id: str = None):  TODO Add inline_message_id
         """Set the score of the specified user in a game.
@@ -92,10 +92,8 @@ class SetGameScore:
         for i in r.updates:
             if isinstance(
                 i,
-                (
-                    raw.types.UpdateEditMessage,
-                    raw.types.UpdateEditChannelMessage,
-                ),
+                raw.types.UpdateEditMessage
+                | raw.types.UpdateEditChannelMessage,
             ):
                 return await types.Message._parse(
                     self,

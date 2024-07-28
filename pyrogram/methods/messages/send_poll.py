@@ -30,28 +30,29 @@ class SendPoll:
         chat_id: int | str,
         question: str,
         options: list["types.PollOption"],
-        question_entities: list["types.MessageEntity"] = None,
+        question_entities: list["types.MessageEntity"] | None = None,
         is_anonymous: bool = True,
         type: "enums.PollType" = enums.PollType.REGULAR,
-        allows_multiple_answers: bool = None,
-        correct_option_id: int = None,
-        explanation: str = None,
+        allows_multiple_answers: bool | None = None,
+        correct_option_id: int | None = None,
+        explanation: str | None = None,
         explanation_parse_mode: "enums.ParseMode" = None,
-        explanation_entities: list["types.MessageEntity"] = None,
-        open_period: int = None,
-        close_date: datetime = None,
-        is_closed: bool = None,
-        disable_notification: bool = None,
-        protect_content: bool = None,
-        message_thread_id: int = None,
-        business_connection_id: str = None,
-        reply_to_message_id: int = None,
-        reply_to_chat_id: int | str = None,
-        quote_text: str = None,
-        quote_entities: list["types.MessageEntity"] = None,
+        explanation_entities: list["types.MessageEntity"]
+        | None = None,
+        open_period: int | None = None,
+        close_date: datetime | None = None,
+        is_closed: bool | None = None,
+        disable_notification: bool | None = None,
+        protect_content: bool | None = None,
+        message_thread_id: int | None = None,
+        business_connection_id: str | None = None,
+        reply_to_message_id: int | None = None,
+        reply_to_chat_id: int | str | None = None,
+        quote_text: str | None = None,
+        quote_entities: list["types.MessageEntity"] | None = None,
         parse_mode: Optional["enums.ParseMode"] = None,
-        schedule_date: datetime = None,
-        message_effect_id: int = None,
+        schedule_date: datetime | None = None,
+        message_effect_id: int | None = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -261,12 +262,10 @@ class SendPoll:
         for i in r.updates:
             if isinstance(
                 i,
-                (
-                    raw.types.UpdateNewMessage,
-                    raw.types.UpdateNewChannelMessage,
-                    raw.types.UpdateNewScheduledMessage,
-                    raw.types.UpdateBotNewBusinessMessage,
-                ),
+                raw.types.UpdateNewMessage
+                | raw.types.UpdateNewChannelMessage
+                | raw.types.UpdateNewScheduledMessage
+                | raw.types.UpdateBotNewBusinessMessage,
             ):
                 return await types.Message._parse(
                     self,
@@ -278,3 +277,4 @@ class SendPoll:
                     ),
                     business_connection_id=business_connection_id,
                 )
+        return None

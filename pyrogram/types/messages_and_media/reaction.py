@@ -20,8 +20,7 @@
 
 import pyrogram
 from pyrogram import raw
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class Reaction(Object):
@@ -69,6 +68,7 @@ class Reaction(Object):
             return Reaction(
                 client=client, custom_emoji_id=reaction.document_id
             )
+        return None
 
     @staticmethod
     def _parse_count(

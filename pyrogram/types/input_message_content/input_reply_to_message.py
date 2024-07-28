@@ -19,8 +19,7 @@
 from typing import Union
 
 from pyrogram import raw
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class InputReplyToMessage(Object):
@@ -51,13 +50,13 @@ class InputReplyToMessage(Object):
     def __init__(
         self,
         *,
-        reply_to_message_id: int = None,
-        message_thread_id: int = None,
+        reply_to_message_id: int | None = None,
+        message_thread_id: int | None = None,
         reply_to_chat: Union[
             "raw.types.InputPeerChannel", "raw.types.InputPeerUser"
         ] = None,
-        quote_text: str = None,
-        quote_entities: list["raw.base.MessageEntity"] = None,
+        quote_text: str | None = None,
+        quote_entities: list["raw.base.MessageEntity"] | None = None,
     ):
         super().__init__()
 

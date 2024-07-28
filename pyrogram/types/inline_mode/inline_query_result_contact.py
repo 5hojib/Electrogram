@@ -69,10 +69,10 @@ class InlineQueryResultContact(InlineQueryResult):
         first_name: str,
         last_name: str = "",
         vcard: str = "",
-        id: str = None,
+        id: str | None = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
         input_message_content: "types.InputMessageContent" = None,
-        thumb_url: str = None,
+        thumb_url: str | None = None,
         thumb_width: int = 0,
         thumb_height: int = 0,
     ):

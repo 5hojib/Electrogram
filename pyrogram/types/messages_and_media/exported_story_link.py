@@ -17,9 +17,12 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from pyrogram import raw
+from typing import TYPE_CHECKING
 
-from ..object import Object
+from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    from pyrogram import raw
 
 
 class ExportedStoryLink(Object):

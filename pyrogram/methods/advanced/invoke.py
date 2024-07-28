@@ -33,7 +33,7 @@ class Invoke:
         query: TLObject,
         retries: int = Session.MAX_RETRIES,
         timeout: float = Session.WAIT_TIMEOUT,
-        sleep_threshold: float = None,
+        sleep_threshold: float | None = None,
     ):
         """Invoke raw Telegram functions.
 

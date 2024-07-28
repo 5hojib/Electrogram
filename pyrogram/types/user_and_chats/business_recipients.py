@@ -18,8 +18,7 @@
 
 
 from pyrogram import raw, types
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class BusinessRecipients(Object):
@@ -48,12 +47,12 @@ class BusinessRecipients(Object):
     def __init__(
         self,
         *,
-        existing_chats: bool = None,
-        new_chats: bool = None,
-        contacts: bool = None,
-        non_contacts: bool = None,
-        exclude_selected: bool = None,
-        users: list[int] = None,
+        existing_chats: bool | None = None,
+        new_chats: bool | None = None,
+        contacts: bool | None = None,
+        non_contacts: bool | None = None,
+        exclude_selected: bool | None = None,
+        users: list[int] | None = None,
     ):
         self.existing_chats = existing_chats
         self.new_chats = new_chats
@@ -66,7 +65,7 @@ class BusinessRecipients(Object):
     def _parse(
         client,
         recipients: "raw.types.BusinessRecipients",
-        users: dict = None,
+        users: dict | None = None,
     ) -> "BusinessRecipients":
         return BusinessRecipients(
             existing_chats=getattr(

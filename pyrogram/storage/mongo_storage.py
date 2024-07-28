@@ -188,6 +188,7 @@ class MongoStorage(Storage):
             return states if len(states) > 0 else None
         elif isinstance(value, int):
             await self._states.delete_one({"_id": value})
+            return None
         else:
             await self._states.update_one(
                 {"_id": value[0]},
@@ -201,6 +202,7 @@ class MongoStorage(Storage):
                 },
                 upsert=True,
             )
+            return None
 
     async def remove_state(self, chat_id):
         await self._states.delete_one({"_id": chat_id})

@@ -21,8 +21,8 @@ from typing import Optional
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
+from pyrogram.file_id import FileId
 
-from ...file_id import FileId
 from .inline_query_result import InlineQueryResult
 
 
@@ -60,10 +60,10 @@ class InlineQueryResultCachedAudio(InlineQueryResult):
     def __init__(
         self,
         audio_file_id: str,
-        id: str = None,
+        id: str | None = None,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
         input_message_content: "types.InputMessageContent" = None,
     ):

@@ -54,7 +54,7 @@ class SetChatDescription:
 
         if isinstance(
             peer,
-            (raw.types.InputPeerChannel, raw.types.InputPeerChat),
+            raw.types.InputPeerChannel | raw.types.InputPeerChat,
         ):
             await self.invoke(
                 raw.functions.messages.EditChatAbout(

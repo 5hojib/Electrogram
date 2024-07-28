@@ -24,9 +24,9 @@ from pyrogram import raw
 class UpdateProfile:
     async def update_profile(
         self: "pyrogram.Client",
-        first_name: str = None,
-        last_name: str = None,
-        bio: str = None,
+        first_name: str | None = None,
+        last_name: str | None = None,
+        bio: str | None = None,
     ) -> bool:
         """Update your profile details such as first name, last name and bio.
 

@@ -34,30 +34,30 @@ class SendDocument:
         self: "pyrogram.Client",
         chat_id: int | str,
         document: str | BinaryIO,
-        thumb: str | BinaryIO = None,
+        thumb: str | BinaryIO | None = None,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] = None,
-        file_name: str = None,
-        force_document: bool = None,
-        disable_notification: bool = None,
-        message_thread_id: int = None,
-        business_connection_id: str = None,
-        reply_to_message_id: int = None,
-        reply_to_story_id: int = None,
-        reply_to_chat_id: int | str = None,
-        quote_text: str = None,
-        quote_entities: list["types.MessageEntity"] = None,
-        message_effect_id: int = None,
-        schedule_date: datetime = None,
-        protect_content: bool = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
+        file_name: str | None = None,
+        force_document: bool | None = None,
+        disable_notification: bool | None = None,
+        message_thread_id: int | None = None,
+        business_connection_id: str | None = None,
+        reply_to_message_id: int | None = None,
+        reply_to_story_id: int | None = None,
+        reply_to_chat_id: int | str | None = None,
+        quote_text: str | None = None,
+        quote_entities: list["types.MessageEntity"] | None = None,
+        message_effect_id: int | None = None,
+        schedule_date: datetime | None = None,
+        protect_content: bool | None = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
             "types.ForceReply",
         ] = None,
-        progress: Callable = None,
+        progress: Callable | None = None,
         progress_args: tuple = (),
     ) -> Optional["types.Message"]:
         """Send generic files.
@@ -293,12 +293,10 @@ class SendDocument:
                     for i in r.updates:
                         if isinstance(
                             i,
-                            (
-                                raw.types.UpdateNewMessage,
-                                raw.types.UpdateNewChannelMessage,
-                                raw.types.UpdateNewScheduledMessage,
-                                raw.types.UpdateBotNewBusinessMessage,
-                            ),
+                            raw.types.UpdateNewMessage
+                            | raw.types.UpdateNewChannelMessage
+                            | raw.types.UpdateNewScheduledMessage
+                            | raw.types.UpdateBotNewBusinessMessage,
                         ):
                             return await types.Message._parse(
                                 self,

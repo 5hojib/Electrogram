@@ -47,6 +47,4 @@ class UpdatePersonalChat:
         r = await self.invoke(
             raw.functions.account.UpdatePersonalChannel(channel=chat)
         )
-        if r:
-            return True
-        return False
+        return bool(r)

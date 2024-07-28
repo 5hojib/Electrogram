@@ -19,10 +19,13 @@
 
 import inspect
 from collections.abc import Callable
+from typing import TYPE_CHECKING
 
-import pyrogram
 from pyrogram.filters import Filter
 from pyrogram.types import Update
+
+if TYPE_CHECKING:
+    import pyrogram
 
 
 class Handler:

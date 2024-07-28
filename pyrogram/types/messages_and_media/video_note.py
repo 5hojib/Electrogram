@@ -27,8 +27,7 @@ from pyrogram.file_id import (
     FileUniqueId,
     FileUniqueType,
 )
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class VideoNote(Object):
@@ -69,10 +68,10 @@ class VideoNote(Object):
         file_unique_id: str,
         length: int,
         duration: int,
-        thumbs: list["types.Thumbnail"] = None,
-        mime_type: str = None,
-        file_size: int = None,
-        date: datetime = None,
+        thumbs: list["types.Thumbnail"] | None = None,
+        mime_type: str | None = None,
+        file_size: int | None = None,
+        date: datetime | None = None,
     ):
         super().__init__(client)
 
