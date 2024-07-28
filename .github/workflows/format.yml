@@ -20,6 +20,9 @@ jobs:
     - name: Install dependencies
       run: rye sync
 
+    - name: Remove comments from code
+      run: python remove.py
+
     - name: Run ruff to format code
       run: |
         rye run ruff check . --fix --exit-zero
