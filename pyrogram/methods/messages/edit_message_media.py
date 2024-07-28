@@ -34,8 +34,9 @@ class EditMessageMedia:
         media: "types.InputMedia",
         reply_markup: "types.InlineKeyboardMarkup" = None,
         file_name: str = None,
-        invert_media: bool = False,
+        parse_mode: enums.ParseMode | None = None,
         business_connection_id: str = None,
+        invert_media: bool = False
     ) -> "types.Message":
         """Edit animation, audio, document, photo or video messages.
 
@@ -92,7 +93,7 @@ class EditMessageMedia:
                     InputMediaAudio("new_audio.mp3"))
         """
         caption = media.caption
-        parse_mode = media.parse_mode
+        parse_mode = parse_mode
 
         message, entities = None, None
 
