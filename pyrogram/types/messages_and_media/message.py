@@ -1,12 +1,8 @@
 from __future__ import annotations
 
 import logging
-
-from collections.abc import Callable
-from datetime import datetime
 from functools import partial
-from re import Match
-from typing import BinaryIO, Optional, Union
+from typing import TYPE_CHECKING, BinaryIO
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
@@ -19,6 +15,11 @@ from pyrogram.parser import Parser
 from pyrogram.parser import utils as parser_utils
 from pyrogram.types.object import Object
 from pyrogram.types.update import Update
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from datetime import datetime
+    from re import Match
 
 log = logging.getLogger(__name__)
 
@@ -423,19 +424,19 @@ class Message(Object, Update):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         id: int,
         message_thread_id: int | None = None,
         business_connection_id: str | None = None,
-        from_user: "types.User" = None,
-        sender_chat: "types.Chat" = None,
-        sender_business_bot: "types.User" = None,
+        from_user: types.User = None,
+        sender_chat: types.Chat = None,
+        sender_business_bot: types.User = None,
         date: datetime | None = None,
-        chat: "types.Chat" = None,
-        topics: "types.ForumTopic" = None,
-        forward_from: "types.User" = None,
+        chat: types.Chat = None,
+        topics: types.ForumTopic = None,
+        forward_from: types.User = None,
         forward_sender_name: str | None = None,
-        forward_from_chat: "types.Chat" = None,
+        forward_from_chat: types.Chat = None,
         forward_from_message_id: int | None = None,
         forward_signature: str | None = None,
         forward_date: datetime | None = None,
@@ -445,94 +446,92 @@ class Message(Object, Update):
         reply_to_story_user_id: int | None = None,
         reply_to_story_chat_id: int | None = None,
         reply_to_top_message_id: int | None = None,
-        reply_to_message: "Message" = None,
-        reply_to_story: "types.Story" = None,
+        reply_to_message: Message = None,
+        reply_to_story: types.Story = None,
         mentioned: bool | None = None,
         empty: bool | None = None,
-        service: "enums.MessageServiceType" = None,
+        service: enums.MessageServiceType = None,
         scheduled: bool | None = None,
         from_scheduled: bool | None = None,
         edit_hide: bool | None = None,
-        media: "enums.MessageMediaType" = None,
+        media: enums.MessageMediaType = None,
         edit_date: datetime | None = None,
         media_group_id: str | None = None,
         author_signature: str | None = None,
         has_protected_content: bool | None = None,
         has_media_spoiler: bool | None = None,
         text: Str = None,
-        entities: list["types.MessageEntity"] | None = None,
-        caption_entities: list["types.MessageEntity"] | None = None,
+        entities: list[types.MessageEntity] | None = None,
+        caption_entities: list[types.MessageEntity] | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
+        quote_entities: list[types.MessageEntity] | None = None,
         effect_id: str | None = None,
         invert_media: bool | None = None,
-        audio: "types.Audio" = None,
-        document: "types.Document" = None,
-        photo: "types.Photo" = None,
-        paid_media: "types.PaidMedia" = None,
-        sticker: "types.Sticker" = None,
-        animation: "types.Animation" = None,
-        game: "types.Game" = None,
-        giveaway: "types.Giveaway" = None,
-        giveaway_result: "types.GiveawayResult" = None,
+        audio: types.Audio = None,
+        document: types.Document = None,
+        photo: types.Photo = None,
+        paid_media: types.PaidMedia = None,
+        sticker: types.Sticker = None,
+        animation: types.Animation = None,
+        game: types.Game = None,
+        giveaway: types.Giveaway = None,
+        giveaway_result: types.GiveawayResult = None,
         boosts_applied: int | None = None,
-        invoice: "types.MessageInvoice" = None,
-        story: Union["types.MessageStory", "types.Story"] = None,
-        video: "types.Video" = None,
-        voice: "types.Voice" = None,
-        video_note: "types.VideoNote" = None,
-        web_page_preview: "types.WebPagePreview" = None,
+        invoice: types.MessageInvoice = None,
+        story: types.MessageStory | types.Story = None,
+        video: types.Video = None,
+        voice: types.Voice = None,
+        video_note: types.VideoNote = None,
+        web_page_preview: types.WebPagePreview = None,
         caption: Str = None,
-        contact: "types.Contact" = None,
-        location: "types.Location" = None,
-        venue: "types.Venue" = None,
-        poll: "types.Poll" = None,
-        dice: "types.Dice" = None,
-        new_chat_members: list["types.User"] | None = None,
-        chat_joined_by_request: "types.ChatJoinedByRequest" = None,
-        left_chat_member: "types.User" = None,
+        contact: types.Contact = None,
+        location: types.Location = None,
+        venue: types.Venue = None,
+        poll: types.Poll = None,
+        dice: types.Dice = None,
+        new_chat_members: list[types.User] | None = None,
+        chat_joined_by_request: types.ChatJoinedByRequest = None,
+        left_chat_member: types.User = None,
         new_chat_title: str | None = None,
-        new_chat_photo: "types.Photo" = None,
+        new_chat_photo: types.Photo = None,
         delete_chat_photo: bool | None = None,
         group_chat_created: bool | None = None,
         supergroup_chat_created: bool | None = None,
         channel_chat_created: bool | None = None,
         migrate_to_chat_id: int | None = None,
         migrate_from_chat_id: int | None = None,
-        pinned_message: "Message" = None,
+        pinned_message: Message = None,
         game_high_score: int | None = None,
         views: int | None = None,
         forwards: int | None = None,
-        via_bot: "types.User" = None,
+        via_bot: types.User = None,
         outgoing: bool | None = None,
         matches: list[Match] | None = None,
         command: list[str] | None = None,
-        bot_allowed: "types.BotAllowed" = None,
+        bot_allowed: types.BotAllowed = None,
         chat_shared: list[int] | None = None,
         user_shared: list[int] | None = None,
-        forum_topic_created: "types.ForumTopicCreated" = None,
-        forum_topic_closed: "types.ForumTopicClosed" = None,
-        forum_topic_reopened: "types.ForumTopicReopened" = None,
-        forum_topic_edited: "types.ForumTopicEdited" = None,
-        general_topic_hidden: "types.GeneralTopicHidden" = None,
-        general_topic_unhidden: "types.GeneralTopicUnhidden" = None,
-        gifted_premium: "types.GiftedPremium" = None,
-        giveaway_launched: "types.GiveawayLaunched" = None,
-        video_chat_scheduled: "types.VideoChatScheduled" = None,
-        video_chat_started: "types.VideoChatStarted" = None,
-        video_chat_ended: "types.VideoChatEnded" = None,
-        video_chat_members_invited: "types.VideoChatMembersInvited" = None,
-        web_app_data: "types.WebAppData" = None,
-        successful_payment: "types.SuccessfulPayment" = None,
-        payment_refunded: "types.PaymentRefunded" = None,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = None,
-        reactions: list["types.Reaction"] | None = None,
-        raw: "raw.types.Message" = None,
+        forum_topic_created: types.ForumTopicCreated = None,
+        forum_topic_closed: types.ForumTopicClosed = None,
+        forum_topic_reopened: types.ForumTopicReopened = None,
+        forum_topic_edited: types.ForumTopicEdited = None,
+        general_topic_hidden: types.GeneralTopicHidden = None,
+        general_topic_unhidden: types.GeneralTopicUnhidden = None,
+        gifted_premium: types.GiftedPremium = None,
+        giveaway_launched: types.GiveawayLaunched = None,
+        video_chat_scheduled: types.VideoChatScheduled = None,
+        video_chat_started: types.VideoChatStarted = None,
+        video_chat_ended: types.VideoChatEnded = None,
+        video_chat_members_invited: types.VideoChatMembersInvited = None,
+        web_app_data: types.WebAppData = None,
+        successful_payment: types.SuccessfulPayment = None,
+        payment_refunded: types.PaymentRefunded = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
+        reactions: list[types.Reaction] | None = None,
+        raw: raw.types.Message = None,
     ):
         super().__init__(client)
 
@@ -682,7 +681,7 @@ class Message(Object, Update):
 
     @staticmethod
     async def _parse(
-        client: "pyrogram.Client",
+        client: pyrogram.Client,
         message: raw.base.Message,
         users: dict,
         chats: dict,
@@ -1686,7 +1685,7 @@ class Message(Object, Update):
         else:
             return f"https://t.me/c/{utils.get_channel_id(self.chat.id)}/{self.id}"
 
-    async def get_media_group(self) -> list["types.Message"]:
+    async def get_media_group(self) -> list[types.Message]:
         """Bound method *get_media_group* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -1718,21 +1717,21 @@ class Message(Object, Update):
         self,
         text: str,
         quote: bool | None = None,
-        parse_mode: Optional["enums.ParseMode"] = None,
-        entities: list["types.MessageEntity"] | None = None,
+        parse_mode: enums.ParseMode | None = None,
+        entities: list[types.MessageEntity] | None = None,
         disable_web_page_preview: bool | None = None,
         disable_notification: bool | None = None,
         reply_to_message_id: int | None = None,
         business_connection_id: str | None = None,
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
+        quote_entities: list[types.MessageEntity] | None = None,
         schedule_date: datetime | None = None,
         protect_content: bool | None = None,
         message_effect_id: int | None = None,
         invert_media: bool | None = None,
         reply_markup=None,
-    ) -> "Message":
+    ) -> Message:
         """Bound method *reply_text* of :obj:`~pyrogram.types.Message`.
 
         An alias exists as *reply*.
@@ -1867,8 +1866,8 @@ class Message(Object, Update):
         animation: str | BinaryIO,
         quote: bool | None = None,
         caption: str = "",
-        parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] | None = None,
+        parse_mode: enums.ParseMode | None = None,
+        caption_entities: list[types.MessageEntity] | None = None,
         has_spoiler: bool | None = None,
         duration: int = 0,
         width: int = 0,
@@ -1877,20 +1876,18 @@ class Message(Object, Update):
         file_name: str | None = None,
         disable_notification: bool | None = None,
         invert_media: bool | None = None,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
         reply_to_message_id: int | None = None,
         business_connection_id: str | None = None,
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
+        quote_entities: list[types.MessageEntity] | None = None,
         progress: Callable | None = None,
         progress_args: tuple = (),
-    ) -> "Message":
+    ) -> Message:
         """Bound method *reply_animation* :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -2064,8 +2061,8 @@ class Message(Object, Update):
         audio: str | BinaryIO,
         quote: bool | None = None,
         caption: str = "",
-        parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] | None = None,
+        parse_mode: enums.ParseMode | None = None,
+        caption_entities: list[types.MessageEntity] | None = None,
         duration: int = 0,
         performer: str | None = None,
         title: str | None = None,
@@ -2076,16 +2073,14 @@ class Message(Object, Update):
         business_connection_id: str | None = None,
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = None,
+        quote_entities: list[types.MessageEntity] | None = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
         progress: Callable | None = None,
         progress_args: tuple = (),
-    ) -> "Message":
+    ) -> Message:
         """Bound method *reply_audio* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -2250,20 +2245,18 @@ class Message(Object, Update):
         file_id: str,
         quote: bool | None = None,
         caption: str = "",
-        parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] | None = None,
+        parse_mode: enums.ParseMode | None = None,
+        caption_entities: list[types.MessageEntity] | None = None,
         disable_notification: bool | None = None,
         reply_to_message_id: int | None = None,
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = None,
-    ) -> "Message":
+        quote_entities: list[types.MessageEntity] | None = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
+    ) -> Message:
         """Bound method *reply_cached_media* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -2362,11 +2355,11 @@ class Message(Object, Update):
 
     async def reply_chat_action(
         self,
-        action: "enums.ChatAction",
+        action: enums.ChatAction,
         business_connection_id: str | None = None,
         emoji: str | None = None,
         emoji_message_id: int | None = None,
-        emoji_message_interaction: "raw.types.DataJSON" = None,
+        emoji_message_interaction: raw.types.DataJSON = None,
     ) -> bool:
         """Bound method *reply_chat_action* of :obj:`~pyrogram.types.Message`.
 
@@ -2439,15 +2432,13 @@ class Message(Object, Update):
         business_connection_id: str | None = None,
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
-        parse_mode: Optional["enums.ParseMode"] = None,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = None,
-    ) -> "Message":
+        quote_entities: list[types.MessageEntity] | None = None,
+        parse_mode: enums.ParseMode | None = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
+    ) -> Message:
         """Bound method *reply_contact* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -2566,8 +2557,8 @@ class Message(Object, Update):
         quote: bool | None = None,
         thumb: str | BinaryIO | None = None,
         caption: str = "",
-        parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] | None = None,
+        parse_mode: enums.ParseMode | None = None,
+        caption_entities: list[types.MessageEntity] | None = None,
         file_name: str | None = None,
         force_document: bool | None = None,
         disable_notification: bool | None = None,
@@ -2575,17 +2566,15 @@ class Message(Object, Update):
         business_connection_id: str | None = None,
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
+        quote_entities: list[types.MessageEntity] | None = None,
         schedule_date: datetime | None = None,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
         progress: Callable | None = None,
         progress_args: tuple = (),
-    ) -> "Message":
+    ) -> Message:
         """Bound method *reply_document* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -2750,13 +2739,11 @@ class Message(Object, Update):
         disable_notification: bool | None = None,
         reply_to_message_id: int | None = None,
         business_connection_id: str | None = None,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = None,
-    ) -> "Message":
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
+    ) -> Message:
         """Bound method *reply_game* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -2837,9 +2824,9 @@ class Message(Object, Update):
         disable_notification: bool | None = None,
         reply_to_message_id: int | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
-        parse_mode: Optional["enums.ParseMode"] = None,
-    ) -> "Message":
+        quote_entities: list[types.MessageEntity] | None = None,
+        parse_mode: enums.ParseMode | None = None,
+    ) -> Message:
         """Bound method *reply_inline_bot_result* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -2922,15 +2909,13 @@ class Message(Object, Update):
         business_connection_id: str | None = None,
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
-        parse_mode: Optional["enums.ParseMode"] = None,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = None,
-    ) -> "Message":
+        quote_entities: list[types.MessageEntity] | None = None,
+        parse_mode: enums.ParseMode | None = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
+    ) -> Message:
         """Bound method *reply_location* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -3042,12 +3027,10 @@ class Message(Object, Update):
     async def reply_media_group(
         self,
         media: list[
-            Union[
-                "types.InputMediaPhoto",
-                "types.InputMediaVideo",
-                "types.InputMediaAudio",
-                "types.InputMediaDocument",
-            ]
+            types.InputMediaPhoto
+            | types.InputMediaVideo
+            | types.InputMediaAudio
+            | types.InputMediaDocument
         ],
         quote: bool | None = None,
         disable_notification: bool | None = None,
@@ -3055,10 +3038,10 @@ class Message(Object, Update):
         reply_in_chat_id: int | str | None = None,
         business_connection_id: str | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
-        parse_mode: Optional["enums.ParseMode"] = None,
+        quote_entities: list[types.MessageEntity] | None = None,
+        parse_mode: enums.ParseMode | None = None,
         invert_media: bool | None = None,
-    ) -> list["types.Message"]:
+    ) -> list[types.Message]:
         """Bound method *reply_media_group* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -3158,8 +3141,8 @@ class Message(Object, Update):
         photo: str | BinaryIO,
         quote: bool | None = None,
         caption: str = "",
-        parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] | None = None,
+        parse_mode: enums.ParseMode | None = None,
+        caption_entities: list[types.MessageEntity] | None = None,
         has_spoiler: bool | None = None,
         ttl_seconds: int | None = None,
         disable_notification: bool | None = None,
@@ -3167,18 +3150,16 @@ class Message(Object, Update):
         business_connection_id: str | None = None,
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
+        quote_entities: list[types.MessageEntity] | None = None,
         view_once: bool | None = None,
         invert_media: bool | None = None,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
         progress: Callable | None = None,
         progress_args: tuple = (),
-    ) -> "Message":
+    ) -> Message:
         """Bound method *reply_photo* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -3338,13 +3319,12 @@ class Message(Object, Update):
         question: str,
         options: list[str],
         is_anonymous: bool = True,
-        type: "enums.PollType" = enums.PollType.REGULAR,
+        type: enums.PollType = enums.PollType.REGULAR,
         allows_multiple_answers: bool | None = None,
         correct_option_id: int | None = None,
         explanation: str | None = None,
-        explanation_parse_mode: "enums.ParseMode" = None,
-        explanation_entities: list["types.MessageEntity"]
-        | None = None,
+        explanation_parse_mode: enums.ParseMode = None,
+        explanation_entities: list[types.MessageEntity] | None = None,
         open_period: int | None = None,
         close_date: datetime | None = None,
         is_closed: bool | None = None,
@@ -3355,16 +3335,14 @@ class Message(Object, Update):
         business_connection_id: str | None = None,
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
-        parse_mode: Optional["enums.ParseMode"] = None,
+        quote_entities: list[types.MessageEntity] | None = None,
+        parse_mode: enums.ParseMode | None = None,
         schedule_date: datetime | None = None,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = None,
-    ) -> "Message":
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
+    ) -> Message:
         """Bound method *reply_poll* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -3536,17 +3514,15 @@ class Message(Object, Update):
         business_connection_id: str | None = None,
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
-        parse_mode: Optional["enums.ParseMode"] = None,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = None,
+        quote_entities: list[types.MessageEntity] | None = None,
+        parse_mode: enums.ParseMode | None = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
         progress: Callable | None = None,
         progress_args: tuple = (),
-    ) -> "Message":
+    ) -> Message:
         """Bound method *reply_sticker* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -3690,15 +3666,13 @@ class Message(Object, Update):
         business_connection_id: str | None = None,
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
-        parse_mode: Optional["enums.ParseMode"] = None,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = None,
-    ) -> "Message":
+        quote_entities: list[types.MessageEntity] | None = None,
+        parse_mode: enums.ParseMode | None = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
+    ) -> Message:
         """Bound method *reply_venue* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -3827,8 +3801,8 @@ class Message(Object, Update):
         video: str | BinaryIO,
         quote: bool | None = None,
         caption: str = "",
-        parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] | None = None,
+        parse_mode: enums.ParseMode | None = None,
+        caption_entities: list[types.MessageEntity] | None = None,
         has_spoiler: bool | None = None,
         ttl_seconds: int | None = None,
         duration: int = 0,
@@ -3842,17 +3816,15 @@ class Message(Object, Update):
         business_connection_id: str | None = None,
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
+        quote_entities: list[types.MessageEntity] | None = None,
         invert_media: bool | None = None,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
         progress: Callable | None = None,
         progress_args: tuple = (),
-    ) -> "Message":
+    ) -> Message:
         """Bound method *reply_video* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -4042,19 +4014,17 @@ class Message(Object, Update):
         business_connection_id: str | None = None,
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
-        parse_mode: Optional["enums.ParseMode"] = None,
+        quote_entities: list[types.MessageEntity] | None = None,
+        parse_mode: enums.ParseMode | None = None,
         protect_content: bool | None = None,
         ttl_seconds: int | None = None,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
         progress: Callable | None = None,
         progress_args: tuple = (),
-    ) -> "Message":
+    ) -> Message:
         """Bound method *reply_video_note* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -4208,24 +4178,22 @@ class Message(Object, Update):
         voice: str | BinaryIO,
         quote: bool | None = None,
         caption: str = "",
-        parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] | None = None,
+        parse_mode: enums.ParseMode | None = None,
+        caption_entities: list[types.MessageEntity] | None = None,
         duration: int = 0,
         disable_notification: bool | None = None,
         reply_to_message_id: int | None = None,
         business_connection_id: str | None = None,
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = None,
+        quote_entities: list[types.MessageEntity] | None = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
         progress: Callable | None = None,
         progress_args: tuple = (),
-    ) -> "Message":
+    ) -> Message:
         """Bound method *reply_voice* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -4370,8 +4338,8 @@ class Message(Object, Update):
         url: str,
         text: str = "",
         quote: bool | None = None,
-        parse_mode: Optional["enums.ParseMode"] = None,
-        entities: list["types.MessageEntity"] | None = None,
+        parse_mode: enums.ParseMode | None = None,
+        entities: list[types.MessageEntity] | None = None,
         large_media: bool | None = None,
         invert_media: bool | None = None,
         disable_notification: bool | None = None,
@@ -4379,11 +4347,11 @@ class Message(Object, Update):
         business_connection_id: str | None = None,
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
+        quote_entities: list[types.MessageEntity] | None = None,
         schedule_date: datetime | None = None,
         protect_content: bool | None = None,
         reply_markup=None,
-    ) -> "Message":
+    ) -> Message:
         """Bound method *reply_web_page* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -4511,13 +4479,13 @@ class Message(Object, Update):
     async def edit_text(
         self,
         text: str,
-        parse_mode: Optional["enums.ParseMode"] = None,
-        entities: list["types.MessageEntity"] | None = None,
+        parse_mode: enums.ParseMode | None = None,
+        entities: list[types.MessageEntity] | None = None,
         disable_web_page_preview: bool | None = None,
         invert_media: bool | None = None,
-        reply_markup: "types.InlineKeyboardMarkup" = None,
+        reply_markup: types.InlineKeyboardMarkup = None,
         business_connection_id: str | None = None,
-    ) -> "Message":
+    ) -> Message:
         """Bound method *edit_text* of :obj:`~pyrogram.types.Message`.
 
         An alias exists as *edit*.
@@ -4586,12 +4554,12 @@ class Message(Object, Update):
     async def edit_caption(
         self,
         caption: str,
-        parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] | None = None,
+        parse_mode: enums.ParseMode | None = None,
+        caption_entities: list[types.MessageEntity] | None = None,
         invert_media: bool | None = None,
-        reply_markup: "types.InlineKeyboardMarkup" = None,
+        reply_markup: types.InlineKeyboardMarkup = None,
         business_connection_id: str | None = None,
-    ) -> "Message":
+    ) -> Message:
         """Bound method *edit_caption* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -4651,12 +4619,12 @@ class Message(Object, Update):
 
     async def edit_media(
         self,
-        media: "types.InputMedia",
+        media: types.InputMedia,
         invert_media: bool | None = None,
-        reply_markup: "types.InlineKeyboardMarkup" = None,
-        parse_mode: Optional["enums.ParseMode"] = None,
+        reply_markup: types.InlineKeyboardMarkup = None,
+        parse_mode: enums.ParseMode | None = None,
         business_connection_id: str | None = None,
-    ) -> "Message":
+    ) -> Message:
         """Bound method *edit_media* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -4712,9 +4680,9 @@ class Message(Object, Update):
 
     async def edit_reply_markup(
         self,
-        reply_markup: "types.InlineKeyboardMarkup" = None,
+        reply_markup: types.InlineKeyboardMarkup = None,
         business_connection_id: str | None = None,
-    ) -> "Message":
+    ) -> Message:
         """Bound method *edit_reply_markup* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -4764,7 +4732,7 @@ class Message(Object, Update):
         schedule_date: datetime | None = None,
         protect_content: bool | None = None,
         drop_author: bool | None = None,
-    ) -> Union["types.Message", list["types.Message"]]:
+    ) -> types.Message | list[types.Message]:
         """Bound method *forward* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -4826,24 +4794,22 @@ class Message(Object, Update):
         self,
         chat_id: int | str,
         caption: str | None = None,
-        parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] | None = None,
+        parse_mode: enums.ParseMode | None = None,
+        caption_entities: list[types.MessageEntity] | None = None,
         has_spoiler: bool | None = None,
         disable_notification: bool | None = None,
         message_thread_id: int | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
+        quote_entities: list[types.MessageEntity] | None = None,
         reply_to_message_id: int | None = None,
         schedule_date: datetime | None = None,
         protect_content: bool | None = None,
         invert_media: bool | None = None,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = object,
-    ) -> Union["types.Message", list["types.Message"]]:
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = object,
+    ) -> types.Message | list[types.Message]:
         """Bound method *copy* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -5329,7 +5295,7 @@ class Message(Object, Update):
         emoji: str = "",
         big: bool = False,
         add_to_recent: bool = True,
-    ) -> "types.MessageReactions":
+    ) -> types.MessageReactions:
         """Bound method *react* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -5376,7 +5342,7 @@ class Message(Object, Update):
 
     async def retract_vote(
         self,
-    ) -> "types.Poll":
+    ) -> types.Poll:
         """Bound method *retract_vote* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -5482,7 +5448,7 @@ class Message(Object, Update):
     async def vote(
         self,
         option: int,
-    ) -> "types.Poll":
+    ) -> types.Poll:
         """Bound method *vote* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -5519,7 +5485,7 @@ class Message(Object, Update):
         self,
         disable_notification: bool = False,
         both_sides: bool = False,
-    ) -> "types.Message":
+    ) -> types.Message:
         """Bound method *pin* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -5589,15 +5555,15 @@ class Message(Object, Update):
         self,
         text: str,
         quote: bool | None = None,
-        parse_mode: Optional["enums.ParseMode"] = None,
-        entities: list["types.MessageEntity"] | None = None,
+        parse_mode: enums.ParseMode | None = None,
+        entities: list[types.MessageEntity] | None = None,
         disable_web_page_preview: bool | None = None,
         disable_notification: bool | None = None,
         reply_to_message_id: int | None = None,
         reply_markup=None,
         filters=None,
         timeout: int | None = None,
-    ) -> "Message":
+    ) -> Message:
         """Bound method *ask* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
