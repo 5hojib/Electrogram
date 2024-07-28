@@ -28,7 +28,7 @@ from pyrogram.file_id import FileType
 
 class EditMessageMedia:
     async def edit_message_media(
-        self: pyrogram.Client,
+        self: "pyrogram.Client",
         chat_id: int | str,
         message_id: int,
         media: types.InputMedia,
