@@ -4651,7 +4651,7 @@ class Message(Object, Update):
         media: "types.InputMedia",
         invert_media: bool | None = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        parse_mode: "enums.ParseMode" | None = None,
+        parse_mode: Optional["enums.ParseMode"] = None,
         business_connection_id: str | None = None,
     ) -> "Message":
         """Bound method *edit_media* of :obj:`~pyrogram.types.Message`.
