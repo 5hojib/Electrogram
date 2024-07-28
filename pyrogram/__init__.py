@@ -26,8 +26,7 @@ from contextlib import suppress
 
 from . import enums, errors, filters, handlers, raw, types
 from .client import Client
-from .methods.utilities.compose import compose
-from .methods.utilities.idle import idle
+from .sync import compose, idle
 
 with suppress(ImportError):
     import uvloop as _uvloop
