@@ -36,7 +36,7 @@ class EditMessageMedia:
         file_name: str = None,
         parse_mode: enums.ParseMode | None = None,
         business_connection_id: str = None,
-        invert_media: bool = False
+        invert_media: bool = False,
     ) -> "types.Message":
         """Edit animation, audio, document, photo or video messages.
 
