@@ -926,7 +926,11 @@ class Client(Methods):
 
                                     log.info(
                                         '[%s] [LOAD] %s("%s") in group %s from "%s"',
-                                        self.name, type(handler).__name__, name, group, module_path
+                                        self.name,
+                                        type(handler).__name__,
+                                        name,
+                                        group,
+                                        module_path,
                                     )
 
                                     count += 1
