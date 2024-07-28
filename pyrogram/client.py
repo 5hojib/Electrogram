@@ -439,8 +439,7 @@ class Client(Methods):
                     if ":" in value:
                         self.bot_token = value
                         return await self.sign_in_bot(value)
-                    else:
-                        self.phone_number = value
+                    self.phone_number = value
 
                 sent_code = await self.send_code(self.phone_number)
             except BadRequest as e:
@@ -926,7 +925,8 @@ class Client(Methods):
                                     self.add_handler(handler, group)
 
                                     log.info(
-                                        f'[{self.name}] [LOAD] {type(handler).__name__}("{name}") in group {group} from "{module_path}"'
+                                        '[%s] [LOAD] %s("%s") in group %s from "%s"',
+                                        self.name, type(handler).__name__, name, group, module_path
                                     )
 
                                     count += 1
