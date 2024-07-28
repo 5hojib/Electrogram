@@ -109,7 +109,7 @@ class SendWebPage:
         Example:
             .. code-block:: python
 
-                await app.send_web_page("me", "https://github.com/Mayuri-Chan/pyrofork")
+                await app.send_web_page("me", "https://github.com")
 
         """
 

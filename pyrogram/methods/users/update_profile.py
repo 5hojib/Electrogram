@@ -34,10 +34,10 @@ class UpdateProfile:
             .. code-block:: python
 
                 # Update your first name only
-                await app.update_profile(first_name="Pyrofork")
+                await app.update_profile(first_name="5hojib")
 
                 # Update first name and bio
-                await app.update_profile(first_name="Pyrofork", bio="https://pyrofork.mayuri.my.id/")
+                await app.update_profile(first_name="5hojib", bio="I love you 💖")
 
                 # Remove the last name
                 await app.update_profile(last_name="")

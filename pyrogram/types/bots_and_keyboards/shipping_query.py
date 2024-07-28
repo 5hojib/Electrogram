@@ -1,22 +1,3 @@
-#  Pyrogram - Telegram MTProto API Client Library for Python
-#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
-#
-#  This file is part of Pyrogram.
-#
-#  Pyrogram is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU Lesser General Public License as published
-#  by the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
-#
-#  Pyrogram is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU Lesser General Public License for more details.
-#
-#  You should have received a copy of the GNU Lesser General Public License
-#  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
-
-
 import pyrogram
 from pyrogram import raw, types
 from pyrogram.types.object import Object
@@ -62,7 +43,7 @@ class ShippingQuery(Object, Update):
         client: "pyrogram.Client",
         shipping_query: "raw.types.updateBotShippingQuery",
         users: dict,
-    ) -> "PreCheckoutQuery":
+    ) -> "ShippingQuery":
         # Try to decode pre-checkout query payload into string. If that fails, fallback to bytes instead of decoding by
         # ignoring/replacing errors, this way, button clicks will still work.
         try:
@@ -70,7 +51,7 @@ class ShippingQuery(Object, Update):
         except (UnicodeDecodeError, AttributeError):
             payload = shipping_query.payload
 
-        return PreCheckoutQuery(
+        return ShippingQuery(
             id=str(shipping_query.query_id),
             from_user=types.User._parse(
                 client, users[shipping_query.user_id]

@@ -20,12 +20,9 @@ jobs:
     - name: Install dependencies
       run: rye sync
 
-    - name: Remove specific license comments from pyrogram directory
-      run: python remove.py
-
     - name: Run ruff to format code in pyrogram directory
       run: |
-        rye run ruff check . --fix --exit-zero
+        rye run ruff check . --fix --unsafe-fixes --exit-zero
         rye run ruff format .
         git add -u
 
