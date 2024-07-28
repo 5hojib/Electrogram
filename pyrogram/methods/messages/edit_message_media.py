@@ -22,17 +22,17 @@ import os
 import re
 
 import pyrogram
-from pyrogram import raw, types, utils
+from pyrogram import enums, raw, types, utils
 from pyrogram.file_id import FileType
 
 
 class EditMessageMedia:
     async def edit_message_media(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         message_id: int,
-        media: "types.InputMedia",
-        reply_markup: "types.InlineKeyboardMarkup" = None,
+        media: types.InputMedia,
+        reply_markup: types.InlineKeyboardMarkup = None,
         file_name: str = None,
         parse_mode: enums.ParseMode | None = None,
         business_connection_id: str = None,
