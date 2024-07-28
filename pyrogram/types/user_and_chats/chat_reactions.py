@@ -42,9 +42,9 @@ class ChatReactions(Object):
         self,
         *,
         client: "pyrogram.Client" = None,
-        all_are_enabled: Optional[bool] = None,
-        allow_custom_emoji: Optional[bool] = None,
-        reactions: Optional[list["types.Reaction"]] = None,
+        all_are_enabled: bool | None = None,
+        allow_custom_emoji: bool | None = None,
+        reactions: list["types.Reaction"] | None = None,
     ):
         super().__init__(client)
 
@@ -53,7 +53,9 @@ class ChatReactions(Object):
         self.reactions = reactions
 
     @staticmethod
-    def _parse(client, chat_reactions: "raw.base.ChatReactions") -> Optional["ChatReactions"]:
+    def _parse(
+        client, chat_reactions: "raw.base.ChatReactions"
+    ) -> Optional["ChatReactions"]:
         if isinstance(chat_reactions, raw.types.ChatReactionsAll):
             return ChatReactions(
                 client=client,
@@ -65,7 +67,8 @@ class ChatReactions(Object):
             return ChatReactions(
                 client=client,
                 reactions=[
-                    types.ReactionType._parse(reaction) for reaction in chat_reactions.reactions
+                    types.ReactionType._parse(reaction)
+                    for reaction in chat_reactions.reactions
                 ],
             )
         if isinstance(chat_reactions, raw.types.ChatReactionsNone):

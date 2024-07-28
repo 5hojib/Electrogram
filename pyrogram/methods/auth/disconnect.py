@@ -34,7 +34,9 @@ class Disconnect:
             raise ConnectionError("Client is already disconnected")
 
         if self.is_initialized:
-            raise ConnectionError("Can't disconnect an initialized client")
+            raise ConnectionError(
+                "Can't disconnect an initialized client"
+            )
 
         await self.session.stop()
         await self.storage.close()

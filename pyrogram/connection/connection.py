@@ -19,7 +19,6 @@
 
 import asyncio
 import logging
-from typing import Optional, Type
 
 from ..session.internals import DataCenter
 from .transport import TCP, TCPAbridged
@@ -38,7 +37,7 @@ class Connection:
         alt_port: bool,
         proxy: dict,
         media: bool = False,
-        protocol_factory: Type[TCP] = TCPAbridged,
+        protocol_factory: type[TCP] = TCPAbridged,
     ) -> None:
         self.dc_id = dc_id
         self.test_mode = test_mode
@@ -48,18 +47,24 @@ class Connection:
         self.media = media
         self.protocol_factory = protocol_factory
 
-        self.address = DataCenter(dc_id, test_mode, ipv6, alt_port, media)
-        self.protocol: Optional[TCP] = None
+        self.address = DataCenter(
+            dc_id, test_mode, ipv6, alt_port, media
+        )
+        self.protocol: TCP | None = None
 
     async def connect(self) -> None:
         for i in range(Connection.MAX_CONNECTION_ATTEMPTS):
-            self.protocol = self.protocol_factory(ipv6=self.ipv6, proxy=self.proxy)
+            self.protocol = self.protocol_factory(
+                ipv6=self.ipv6, proxy=self.proxy
+            )
 
             try:
                 log.info("Connecting...")
                 await self.protocol.connect(self.address)
             except OSError as e:
-                log.warning("Unable to connect due to network issues: %s", e)
+                log.warning(
+                    "Unable to connect due to network issues: %s", e
+                )
                 await self.protocol.close()
                 await asyncio.sleep(1)
             else:
@@ -82,5 +87,5 @@ class Connection:
     async def send(self, data: bytes) -> None:
         await self.protocol.send(data)
 
-    async def recv(self) -> Optional[bytes]:
+    async def recv(self) -> bytes | None:
         return await self.protocol.recv()

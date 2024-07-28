@@ -16,7 +16,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Any, Optional, Union
+from typing import Any, Union
 
 from bson.codec_options import CodecOptions
 from pymongo.client_session import TransactionOptions
@@ -35,7 +35,9 @@ try:
 except ImportError:
     from typing_extensions import Protocol, runtime_checkable
 
-ReadPreferences = Union[Primary, PrimaryPreferred, Secondary, SecondaryPreferred, Nearest]
+ReadPreferences = Union[
+    Primary, PrimaryPreferred, Secondary, SecondaryPreferred, Nearest
+]
 
 
 @runtime_checkable
@@ -45,20 +47,20 @@ class DummyMongoClient(Protocol):
 
     def get_database(
         self,
-        name: Optional[str] = None,
+        name: str | None = None,
         *,
-        codec_options: Optional[CodecOptions] = None,
-        read_preference: Optional[ReadPreferences] = None,
-        write_concern: Optional[WriteConcern] = None,
-        read_concern: Optional[ReadConcern] = None,
+        codec_options: CodecOptions | None = None,
+        read_preference: ReadPreferences | None = None,
+        write_concern: WriteConcern | None = None,
+        read_concern: ReadConcern | None = None,
     ):
         raise NotImplementedError
 
     async def start_session(
         self,
         *,
-        causal_consistency: Optional[bool] = None,
-        default_transaction_options: Optional[TransactionOptions] = None,
+        causal_consistency: bool | None = None,
+        default_transaction_options: TransactionOptions | None = None,
         snapshot: bool = False,
     ):
         raise NotImplementedError

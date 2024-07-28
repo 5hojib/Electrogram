@@ -19,7 +19,6 @@
 
 from collections.abc import AsyncGenerator
 from datetime import datetime
-from typing import Optional, Union
 
 import pyrogram
 from pyrogram import raw, types, utils
@@ -28,7 +27,7 @@ from pyrogram import raw, types, utils
 async def get_chunk(
     *,
     client: "pyrogram.Client",
-    chat_id: Union[int, str],
+    chat_id: int | str,
     limit: int = 0,
     offset: int = 0,
     from_message_id: int = 0,
@@ -56,14 +55,14 @@ async def get_chunk(
 class GetChatHistory:
     async def get_chat_history(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         limit: int = 0,
         offset: int = 0,
         offset_id: int = 0,
         offset_date: datetime = utils.zero_datetime(),
         min_id: int = 0,
         max_id: int = 0,
-    ) -> Optional[AsyncGenerator["types.Message", None]]:
+    ) -> AsyncGenerator["types.Message", None] | None:
         """Get messages from a chat history.
 
         The messages are returned in reverse chronological order.

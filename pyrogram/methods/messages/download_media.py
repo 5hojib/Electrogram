@@ -19,8 +19,9 @@
 
 import asyncio
 import os
+from collections.abc import Callable
 from datetime import datetime
-from typing import BinaryIO, Callable, Optional, Union
+from typing import BinaryIO, Union
 
 import pyrogram
 from pyrogram import types
@@ -38,7 +39,7 @@ class DownloadMedia:
         block: bool = True,
         progress: Callable = None,
         progress_args: tuple = (),
-    ) -> Optional[Union[str, BinaryIO]]:
+    ) -> str | BinaryIO | None:
         """Download the media from a message.
 
         .. include:: /_includes/usable-by/users-bots.rst
@@ -132,14 +133,18 @@ class DownloadMedia:
             "new_chat_photo",
         )
 
-        if isinstance(message, types.Message) or isinstance(message, types.Story):
+        if isinstance(message, types.Message) or isinstance(
+            message, types.Story
+        ):
             for kind in available_media:
                 media = getattr(message, kind, None)
 
                 if media is not None:
                     break
             else:
-                raise ValueError("This message doesn't contain any downloadable media")
+                raise ValueError(
+                    "This message doesn't contain any downloadable media"
+                )
         else:
             media = message
 
@@ -160,7 +165,9 @@ class DownloadMedia:
         file_name = file_name or media_file_name or ""
 
         if not os.path.isabs(file_name):
-            directory = self.PARENT_DIR / (directory or DEFAULT_DOWNLOAD_DIR)
+            directory = self.PARENT_DIR / (
+                directory or DEFAULT_DOWNLOAD_DIR
+            )
 
         if not file_name:
             guessed_extension = self.guess_extension(mime_type)
@@ -169,7 +176,11 @@ class DownloadMedia:
                 extension = ".jpg"
             elif file_type == FileType.VOICE:
                 extension = guessed_extension or ".ogg"
-            elif file_type in (FileType.VIDEO, FileType.ANIMATION, FileType.VIDEO_NOTE):
+            elif file_type in (
+                FileType.VIDEO,
+                FileType.ANIMATION,
+                FileType.VIDEO_NOTE,
+            ):
                 extension = guessed_extension or ".mp4"
             elif file_type == FileType.DOCUMENT:
                 extension = guessed_extension or ".zip"
@@ -182,7 +193,9 @@ class DownloadMedia:
 
             file_name = "{}_{}_{}{}".format(
                 FileType(file_id_obj.file_type).name.lower(),
-                (date or datetime.now()).strftime("%Y-%m-%d_%H-%M-%S"),
+                (date or datetime.now()).strftime(
+                    "%Y-%m-%d_%H-%M-%S"
+                ),
                 self.rnd_id(),
                 extension,
             )

@@ -36,7 +36,13 @@ class Username(Object):
             Is the username active.
     """
 
-    def __init__(self, *, username: str, editable: bool = None, active: bool = None):
+    def __init__(
+        self,
+        *,
+        username: str,
+        editable: bool = None,
+        active: bool = None,
+    ):
         super().__init__()
 
         self.username = username

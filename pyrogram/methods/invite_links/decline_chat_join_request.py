@@ -17,7 +17,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -26,7 +25,7 @@ from pyrogram import raw
 class DeclineChatJoinRequest:
     async def decline_chat_join_request(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         user_id: int,
     ) -> bool:
         """Decline a chat join request.

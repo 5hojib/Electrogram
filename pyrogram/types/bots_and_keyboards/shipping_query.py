@@ -73,7 +73,9 @@ class ShippingQuery(Object, Update):
 
         return PreCheckoutQuery(
             id=str(shipping_query.query_id),
-            from_user=types.User._parse(client, users[shipping_query.user_id]),
+            from_user=types.User._parse(
+                client, users[shipping_query.user_id]
+            ),
             invoice_payload=payload,
             shipping_address=types.ShippingAddress(
                 country_code=shipping_query.shipping_address.country_iso2,

@@ -86,7 +86,9 @@ html_theme_options = {
         "content.tabs.link",
         "announce.dismiss",
     ],
-    "palette": [{"media": "(prefers-color-scheme: dark)", "scheme": "slate"}],
+    "palette": [
+        {"media": "(prefers-color-scheme: dark)", "scheme": "slate"}
+    ],
     "toc_title_is_page_title": True,
     "version_dropdown": True,
     "version_info": [

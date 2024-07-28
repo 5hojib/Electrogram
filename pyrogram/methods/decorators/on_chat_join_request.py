@@ -17,14 +17,16 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Callable
+from collections.abc import Callable
 
 import pyrogram
 from pyrogram.filters import Filter
 
 
 class OnChatJoinRequest:
-    def on_chat_join_request(self=None, filters=None, group: int = 0) -> Callable:
+    def on_chat_join_request(
+        self=None, filters=None, group: int = 0
+    ) -> Callable:
         """Decorator for handling chat join requests.
 
         This does the same thing as :meth:`~pyrogram.Client.add_handler` using the
@@ -40,14 +42,21 @@ class OnChatJoinRequest:
 
         def decorator(func: Callable) -> Callable:
             if isinstance(self, pyrogram.Client):
-                self.add_handler(pyrogram.handlers.ChatJoinRequestHandler(func, filters), group)
+                self.add_handler(
+                    pyrogram.handlers.ChatJoinRequestHandler(
+                        func, filters
+                    ),
+                    group,
+                )
             elif isinstance(self, Filter) or self is None:
                 if not hasattr(func, "handlers"):
                     func.handlers = []
 
                 func.handlers.append(
                     (
-                        pyrogram.handlers.ChatJoinRequestHandler(func, self),
+                        pyrogram.handlers.ChatJoinRequestHandler(
+                            func, self
+                        ),
                         group if filters is None else filters,
                     )
                 )

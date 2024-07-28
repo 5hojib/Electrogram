@@ -68,5 +68,8 @@ class StoryDeleted(Object, Update):
             from_user = await client.get_users(peer.user_id)
 
         return StoryDeleted(
-            id=stories.id, from_user=from_user, sender_chat=sender_chat, client=client
+            id=stories.id,
+            from_user=from_user,
+            sender_chat=sender_chat,
+            client=client,
         )

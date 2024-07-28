@@ -18,7 +18,6 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from collections.abc import AsyncGenerator
-from typing import Optional, Union
 
 import pyrogram
 from pyrogram import raw, types
@@ -27,13 +26,13 @@ from pyrogram import raw, types
 class GetChatEventLog:
     async def get_chat_event_log(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         query: str = "",
         offset_id: int = 0,
         limit: int = 0,
         filters: "types.ChatEventFilter" = None,
-        user_ids: list[Union[int, str]] = None,
-    ) -> Optional[AsyncGenerator["types.ChatEvent", None]]:
+        user_ids: list[int | str] = None,
+    ) -> AsyncGenerator["types.ChatEvent", None] | None:
         """Get the actions taken by chat members and administrators in the last 48h.
 
         Only available for supergroups and channels. Requires administrator rights.
@@ -87,7 +86,9 @@ class GetChatEventLog:
                     min_id=0,
                     max_id=offset_id,
                     limit=limit,
-                    events_filter=filters.write() if filters else None,
+                    events_filter=filters.write()
+                    if filters
+                    else None,
                     admins=(
                         [await self.resolve_peer(i) for i in user_ids]
                         if user_ids is not None
@@ -103,7 +104,9 @@ class GetChatEventLog:
             offset_id = last.id
 
             for event in r.events:
-                yield await types.ChatEvent._parse(self, event, r.users, r.chats)
+                yield await types.ChatEvent._parse(
+                    self, event, r.users, r.chats
+                )
 
                 current += 1
 

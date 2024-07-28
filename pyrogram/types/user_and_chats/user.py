@@ -53,7 +53,9 @@ class Link(str):
         return str.__new__(cls, Link.format(url, text, style))
 
     def __call__(self, other: str = None, *, style: str = None):
-        return Link.format(self.url, other or self.text, style or self.style)
+        return Link.format(
+            self.url, other or self.text, style or self.style
+        )
 
     def __str__(self):
         return Link.format(self.url, self.text, self.style)
@@ -234,7 +236,10 @@ class User(Object, Update):
 
     @property
     def full_name(self) -> str:
-        return " ".join(filter(None, [self.first_name, self.last_name])) or None
+        return (
+            " ".join(filter(None, [self.first_name, self.last_name]))
+            or None
+        )
 
     @property
     def mention(self):
@@ -258,7 +263,11 @@ class User(Object, Update):
                     user_name = username.username
                 else:
                     usernames.append(types.Username._parse(username))
-        if user_name is None and usernames is not None and len(usernames) > 0:
+        if (
+            user_name is None
+            and usernames is not None
+            and len(usernames) > 0
+        ):
             user_name = usernames[0].username
             usernames.pop(0)
 
@@ -283,13 +292,24 @@ class User(Object, Update):
             username=user_name,
             usernames=usernames,
             language_code=user.lang_code,
-            emoji_status=types.EmojiStatus._parse(client, user.emoji_status),
+            emoji_status=types.EmojiStatus._parse(
+                client, user.emoji_status
+            ),
             dc_id=getattr(user.photo, "dc_id", None),
             phone_number=user.phone,
-            photo=types.ChatPhoto._parse(client, user.photo, user.id, user.access_hash),
-            restrictions=types.List([types.Restriction._parse(r) for r in user.restriction_reason])
+            photo=types.ChatPhoto._parse(
+                client, user.photo, user.id, user.access_hash
+            ),
+            restrictions=types.List(
+                [
+                    types.Restriction._parse(r)
+                    for r in user.restriction_reason
+                ]
+            )
             or None,
-            reply_color=types.ChatColor._parse(getattr(user, "color", None)),
+            reply_color=types.ChatColor._parse(
+                getattr(user, "color", None)
+            ),
             profile_color=types.ChatColor._parse_profile_color(
                 getattr(user, "profile_color", None)
             ),
@@ -297,11 +317,19 @@ class User(Object, Update):
         )
 
     @staticmethod
-    def _parse_status(user_status: "raw.base.UserStatus", is_bot: bool = False):
+    def _parse_status(
+        user_status: "raw.base.UserStatus", is_bot: bool = False
+    ):
         if isinstance(user_status, raw.types.UserStatusOnline):
-            status, date = enums.UserStatus.ONLINE, user_status.expires
+            status, date = (
+                enums.UserStatus.ONLINE,
+                user_status.expires,
+            )
         elif isinstance(user_status, raw.types.UserStatusOffline):
-            status, date = enums.UserStatus.OFFLINE, user_status.was_online
+            status, date = (
+                enums.UserStatus.OFFLINE,
+                user_status.was_online,
+            )
         elif isinstance(user_status, raw.types.UserStatusRecently):
             status, date = enums.UserStatus.RECENTLY, None
         elif isinstance(user_status, raw.types.UserStatusLastWeek):
@@ -330,7 +358,9 @@ class User(Object, Update):
         }
 
     @staticmethod
-    def _parse_user_status(client, user_status: "raw.types.UpdateUserStatus"):
+    def _parse_user_status(
+        client, user_status: "raw.types.UpdateUserStatus"
+    ):
         return User(
             id=user_status.user_id,
             **User._parse_status(user_status.status),
@@ -398,7 +428,9 @@ class User(Object, Update):
             RPCError: In case of a Telegram RPC error.
             asyncio.TimeoutError: In case reply not received within the timeout.
         """
-        return self._client.ask(self.id, text, *args, user_id=self.id, **kwargs)
+        return self._client.ask(
+            self.id, text, *args, user_id=self.id, **kwargs
+        )
 
     def stop_listening(self, *args, **kwargs):
         """Bound method *stop_listening* of :obj:`~pyrogram.types.User`.
@@ -421,7 +453,9 @@ class User(Object, Update):
 
                 user.stop_listen()
         """
-        return self._client.stop_listening(*args, user_id=self.id, **kwargs)
+        return self._client.stop_listening(
+            *args, user_id=self.id, **kwargs
+        )
 
     async def archive(self):
         """Bound method *archive* of :obj:`~pyrogram.types.User`.

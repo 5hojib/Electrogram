@@ -17,7 +17,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw, types
@@ -26,8 +25,8 @@ from pyrogram import raw, types
 class GetGameHighScores:
     async def get_game_high_scores(
         self: "pyrogram.Client",
-        user_id: Union[int, str],
-        chat_id: Union[int, str],
+        user_id: int | str,
+        chat_id: int | str,
         message_id: int = None,
     ) -> list["types.GameHighScore"]:
         """Get data for high score tables.
@@ -70,4 +69,7 @@ class GetGameHighScores:
             )
         )
 
-        return types.List(types.GameHighScore._parse(self, score, r.users) for score in r.scores)
+        return types.List(
+            types.GameHighScore._parse(self, score, r.users)
+            for score in r.scores
+        )

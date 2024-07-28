@@ -38,7 +38,12 @@ class InlineKeyboardMarkup(Object):
     def __init__(
         self,
         inline_keyboard: list[
-            list[Union["types.InlineKeyboardButton", "types.InlineKeyboardButtonBuy"]]
+            list[
+                Union[
+                    "types.InlineKeyboardButton",
+                    "types.InlineKeyboardButtonBuy",
+                ]
+            ]
         ],
     ):
         super().__init__()

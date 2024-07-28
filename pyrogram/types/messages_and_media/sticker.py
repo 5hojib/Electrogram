@@ -18,12 +18,16 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Dict, Type
 
 import pyrogram
 from pyrogram import raw, types, utils
 from pyrogram.errors import StickersetInvalid
-from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType
+from pyrogram.file_id import (
+    FileId,
+    FileType,
+    FileUniqueId,
+    FileUniqueType,
+)
 
 from ..object import Object
 
@@ -158,32 +162,49 @@ class Sticker(Object):
         client,
         sticker: "raw.types.Document",
         document_attributes: dict[
-            Type["raw.base.DocumentAttribute"], "raw.base.DocumentAttribute"
+            type["raw.base.DocumentAttribute"],
+            "raw.base.DocumentAttribute",
         ],
     ) -> "Sticker":
         sticker_attributes = (
             document_attributes[raw.types.DocumentAttributeSticker]
-            if raw.types.DocumentAttributeSticker in document_attributes
-            else document_attributes[raw.types.DocumentAttributeCustomEmoji]
+            if raw.types.DocumentAttributeSticker
+            in document_attributes
+            else document_attributes[
+                raw.types.DocumentAttributeCustomEmoji
+            ]
         )
 
-        image_size_attributes = document_attributes.get(raw.types.DocumentAttributeImageSize, None)
+        image_size_attributes = document_attributes.get(
+            raw.types.DocumentAttributeImageSize, None
+        )
         file_name = getattr(
-            document_attributes.get(raw.types.DocumentAttributeFilename, None),
+            document_attributes.get(
+                raw.types.DocumentAttributeFilename, None
+            ),
             "file_name",
             None,
         )
-        video_attributes = document_attributes.get(raw.types.DocumentAttributeVideo, None)
+        video_attributes = document_attributes.get(
+            raw.types.DocumentAttributeVideo, None
+        )
 
         sticker_set = sticker_attributes.stickerset
 
         if isinstance(sticker_set, raw.types.InputStickerSetID):
-            input_sticker_set_id = (sticker_set.id, sticker_set.access_hash)
-            set_name = await Sticker._get_sticker_set_name(client.invoke, input_sticker_set_id)
+            input_sticker_set_id = (
+                sticker_set.id,
+                sticker_set.access_hash,
+            )
+            set_name = await Sticker._get_sticker_set_name(
+                client.invoke, input_sticker_set_id
+            )
         else:
             set_name = None
 
-        if isinstance(sticker_attributes, raw.types.DocumentAttributeCustomEmoji):
+        if isinstance(
+            sticker_attributes, raw.types.DocumentAttributeCustomEmoji
+        ):
             needs_repainting = sticker_attributes.text_color
         else:
             needs_repainting = None
@@ -197,7 +218,8 @@ class Sticker(Object):
                 file_reference=sticker.file_reference,
             ).encode(),
             file_unique_id=FileUniqueId(
-                file_unique_type=FileUniqueType.DOCUMENT, media_id=sticker.id
+                file_unique_type=FileUniqueType.DOCUMENT,
+                media_id=sticker.id,
             ).encode(),
             width=(
                 image_size_attributes.w
@@ -213,7 +235,8 @@ class Sticker(Object):
                 if video_attributes
                 else 512
             ),
-            is_animated=sticker.mime_type == "application/x-tgsticker",
+            is_animated=sticker.mime_type
+            == "application/x-tgsticker",
             is_video=sticker.mime_type == "video/webm",
             needs_repainting=needs_repainting,
             # TODO: mask_position

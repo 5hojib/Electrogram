@@ -17,7 +17,6 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-from typing import Optional
 
 import pyrogram
 from pyrogram import raw
@@ -55,10 +54,10 @@ class InputLocationMessageContent(InputMessageContent):
         self,
         latitude: float,
         longitude: float,
-        horizontal_accuracy: Optional[float] = None,
-        live_period: Optional[int] = None,
-        heading: Optional[int] = None,
-        proximity_alert_radius: Optional[int] = None,
+        horizontal_accuracy: float | None = None,
+        live_period: int | None = None,
+        heading: int | None = None,
+        proximity_alert_radius: int | None = None,
     ):
         super().__init__()
 
@@ -79,5 +78,7 @@ class InputLocationMessageContent(InputMessageContent):
             heading=self.heading,
             period=self.live_period,
             proximity_notification_radius=self.proximity_alert_radius,
-            reply_markup=await reply_markup.write(client) if reply_markup else None,
+            reply_markup=await reply_markup.write(client)
+            if reply_markup
+            else None,
         )

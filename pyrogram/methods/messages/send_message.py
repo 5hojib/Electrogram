@@ -27,7 +27,7 @@ from pyrogram import enums, raw, types, utils
 class SendMessage:
     async def send_message(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         text: str,
         parse_mode: Optional["enums.ParseMode"] = None,
         entities: list["types.MessageEntity"] = None,
@@ -161,7 +161,9 @@ class SendMessage:
         """
 
         message, entities = (
-            await utils.parse_text_entities(self, text, parse_mode, entities)
+            await utils.parse_text_entities(
+                self, text, parse_mode, entities
+            )
         ).values()
 
         reply_to = await utils.get_reply_to(
@@ -183,7 +185,9 @@ class SendMessage:
             reply_to=reply_to,
             random_id=self.rnd_id(),
             schedule_date=utils.datetime_to_timestamp(schedule_date),
-            reply_markup=await reply_markup.write(self) if reply_markup else None,
+            reply_markup=await reply_markup.write(self)
+            if reply_markup
+            else None,
             message=message,
             entities=entities,
             noforwards=protect_content,
@@ -202,16 +206,27 @@ class SendMessage:
         if isinstance(r, raw.types.UpdateShortSentMessage):
             peer = await self.resolve_peer(chat_id)
 
-            peer_id = peer.user_id if isinstance(peer, raw.types.InputPeerUser) else -peer.chat_id
+            peer_id = (
+                peer.user_id
+                if isinstance(peer, raw.types.InputPeerUser)
+                else -peer.chat_id
+            )
 
             return types.Message(
                 id=r.id,
-                chat=types.Chat(id=peer_id, type=enums.ChatType.PRIVATE, client=self),
+                chat=types.Chat(
+                    id=peer_id,
+                    type=enums.ChatType.PRIVATE,
+                    client=self,
+                ),
                 text=message,
                 date=utils.timestamp_to_datetime(r.date),
                 outgoing=r.out,
                 reply_markup=reply_markup,
-                entities=[types.MessageEntity._parse(None, entity, {}) for entity in entities]
+                entities=[
+                    types.MessageEntity._parse(None, entity, {})
+                    for entity in entities
+                ]
                 if entities
                 else None,
                 client=self,
@@ -232,6 +247,8 @@ class SendMessage:
                     i.message,
                     {i.id: i for i in r.users},
                     {i.id: i for i in r.chats},
-                    is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
+                    is_scheduled=isinstance(
+                        i, raw.types.UpdateNewScheduledMessage
+                    ),
                     business_connection_id=business_connection_id,
                 )

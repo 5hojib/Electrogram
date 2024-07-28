@@ -18,7 +18,6 @@
 
 import logging
 from collections.abc import AsyncGenerator
-from typing import Optional
 
 import pyrogram
 from pyrogram import raw, types
@@ -29,7 +28,7 @@ log = logging.getLogger(__name__)
 class GetAllStories:
     async def get_all_stories(
         self: "pyrogram.Client",
-    ) -> Optional[AsyncGenerator["types.Story", None]]:
+    ) -> AsyncGenerator["types.Story", None] | None:
         """Get all active stories.
 
         .. include:: /_includes/usable-by/users.rst
@@ -54,4 +53,6 @@ class GetAllStories:
 
         for peer_story in r.peer_stories:
             for story in peer_story.stories:
-                yield await types.Story._parse(self, story, peer_story.peer)
+                yield await types.Story._parse(
+                    self, story, peer_story.peer
+                )

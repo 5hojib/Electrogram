@@ -16,8 +16,9 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
+from collections.abc import Callable
 from datetime import datetime
-from typing import BinaryIO, Callable, Optional, Union
+from typing import BinaryIO, Optional, Union
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
@@ -187,11 +188,20 @@ class Story(Object, Update):
         ],
     ) -> "Story":
         if isinstance(stories, raw.types.StoryItemSkipped):
-            return await types.StorySkipped._parse(client, stories, peer)
+            return await types.StorySkipped._parse(
+                client, stories, peer
+            )
         if isinstance(stories, raw.types.StoryItemDeleted):
-            return await types.StoryDeleted._parse(client, stories, peer)
-        entities = [types.MessageEntity._parse(client, entity, {}) for entity in stories.entities]
-        entities = types.List(filter(lambda x: x is not None, entities))
+            return await types.StoryDeleted._parse(
+                client, stories, peer
+            )
+        entities = [
+            types.MessageEntity._parse(client, entity, {})
+            for entity in stories.entities
+        ]
+        entities = types.List(
+            filter(lambda x: x is not None, entities)
+        )
         animation = None
         photo = None
         video = None
@@ -206,20 +216,37 @@ class Story(Object, Update):
         denied_users = None
         if stories.media:
             if isinstance(stories.media, raw.types.MessageMediaPhoto):
-                photo = types.Photo._parse(client, stories.media.photo, stories.media.ttl_seconds)
+                photo = types.Photo._parse(
+                    client,
+                    stories.media.photo,
+                    stories.media.ttl_seconds,
+                )
                 media_type = enums.MessageMediaType.PHOTO
-            elif isinstance(stories.media, raw.types.MessageMediaDocument):
+            elif isinstance(
+                stories.media, raw.types.MessageMediaDocument
+            ):
                 doc = stories.media.document
 
                 if isinstance(doc, raw.types.Document):
                     attributes = {type(i): i for i in doc.attributes}
 
-                    if raw.types.DocumentAttributeAnimated in attributes:
-                        video_attributes = attributes.get(raw.types.DocumentAttributeVideo, None)
-                        animation = types.Animation._parse(client, doc, video_attributes, None)
+                    if (
+                        raw.types.DocumentAttributeAnimated
+                        in attributes
+                    ):
+                        video_attributes = attributes.get(
+                            raw.types.DocumentAttributeVideo, None
+                        )
+                        animation = types.Animation._parse(
+                            client, doc, video_attributes, None
+                        )
                         media_type = enums.MessageMediaType.ANIMATION
-                    elif raw.types.DocumentAttributeVideo in attributes:
-                        video_attributes = attributes.get(raw.types.DocumentAttributeVideo, None)
+                    elif (
+                        raw.types.DocumentAttributeVideo in attributes
+                    ):
+                        video_attributes = attributes.get(
+                            raw.types.DocumentAttributeVideo, None
+                        )
                         video = types.Video._parse(
                             client,
                             doc,
@@ -232,12 +259,18 @@ class Story(Object, Update):
                         media_type = None
             else:
                 media_type = None
-        if isinstance(peer, raw.types.PeerChannel) or isinstance(peer, raw.types.InputPeerChannel):
+        if isinstance(peer, raw.types.PeerChannel) or isinstance(
+            peer, raw.types.InputPeerChannel
+        ):
             chat_id = utils.get_channel_id(peer.channel_id)
             chat = await client.invoke(
-                raw.functions.channels.GetChannels(id=[await client.resolve_peer(chat_id)])
+                raw.functions.channels.GetChannels(
+                    id=[await client.resolve_peer(chat_id)]
+                )
             )
-            sender_chat = types.Chat._parse_chat(client, chat.chats[0])
+            sender_chat = types.Chat._parse_chat(
+                client, chat.chats[0]
+            )
         elif isinstance(peer, raw.types.InputPeerSelf):
             from_user = client.me
         else:
@@ -246,40 +279,56 @@ class Story(Object, Update):
         from_id = getattr(stories, "from_id", None)
         if from_id is not None:
             if getattr(from_id, "user_id", None) is not None:
-                from_user = await client.get_users(getattr(from_id, "user_id"))
+                from_user = await client.get_users(
+                    getattr(from_id, "user_id")
+                )
             elif getattr(from_id, "channel_id", None) is not None:
                 chat = await client.invoke(
                     raw.functions.channels.GetChannels(
                         id=[
                             await client.resolve_peer(
-                                utils.get_channel_id(getattr(from_id, "channel_id"))
+                                utils.get_channel_id(
+                                    getattr(from_id, "channel_id")
+                                )
                             )
                         ]
                     )
                 )
-                sender_chat = types.Chat._parse_chat(client, chat.chats[0])
+                sender_chat = types.Chat._parse_chat(
+                    client, chat.chats[0]
+                )
             elif getattr(from_id, "chat_id", None) is not None:
                 chat = await client.invoke(
                     raw.functions.channels.GetChannels(
                         id=[
                             await client.resolve_peer(
-                                utils.get_channel_id(getattr(from_id, "chat_id"))
+                                utils.get_channel_id(
+                                    getattr(from_id, "chat_id")
+                                )
                             )
                         ]
                     )
                 )
-                sender_chat = types.Chat._parse_chat(client, chat.chats[0])
+                sender_chat = types.Chat._parse_chat(
+                    client, chat.chats[0]
+                )
 
         for priv in stories.privacy:
             if isinstance(priv, raw.types.PrivacyValueAllowAll):
                 privacy = enums.StoryPrivacy.PUBLIC
-            elif isinstance(priv, raw.types.PrivacyValueAllowCloseFriends):
+            elif isinstance(
+                priv, raw.types.PrivacyValueAllowCloseFriends
+            ):
                 privacy = enums.StoryPrivacy.CLOSE_FRIENDS
-            elif isinstance(priv, raw.types.PrivacyValueAllowContacts):
+            elif isinstance(
+                priv, raw.types.PrivacyValueAllowContacts
+            ):
                 privacy = enums.StoryPrivacy.CONTACTS
             elif isinstance(priv, raw.types.PrivacyValueDisallowAll):
                 privacy = enums.StoryPrivacy.PRIVATE
-            elif isinstance(priv, raw.types.PrivacyValueDisallowContacts):
+            elif isinstance(
+                priv, raw.types.PrivacyValueDisallowContacts
+            ):
                 privacy = enums.StoryPrivacy.NO_CONTACTS
 
             """
@@ -296,10 +345,15 @@ class Story(Object, Update):
                 denied_users = priv.users
 
         if stories.fwd_from is not None:
-            forward_from = await types.StoryForwardHeader._parse(client, stories.fwd_from)
+            forward_from = await types.StoryForwardHeader._parse(
+                client, stories.fwd_from
+            )
 
         media_areas = None
-        if stories.media_areas is not None and len(stories.media_areas) > 0:
+        if (
+            stories.media_areas is not None
+            and len(stories.media_areas) > 0
+        ):
             media_areas = [
                 await types.MediaArea._parse(client, media_area)
                 for media_area in stories.media_areas
@@ -310,7 +364,9 @@ class Story(Object, Update):
             from_user=from_user,
             sender_chat=sender_chat,
             date=utils.timestamp_to_datetime(stories.date),
-            expire_date=utils.timestamp_to_datetime(stories.expire_date),
+            expire_date=utils.timestamp_to_datetime(
+                stories.expire_date
+            ),
             media=media_type,
             has_protected_content=stories.noforwards,
             animation=animation,
@@ -409,7 +465,9 @@ class Story(Object, Update):
             reply_to_story_id = self.id
 
         return await self._client.send_message(
-            chat_id=self.from_user.id if self.from_user else self.sender_chat.id,
+            chat_id=self.from_user.id
+            if self.from_user
+            else self.sender_chat.id,
             text=text,
             parse_mode=parse_mode,
             entities=entities,
@@ -425,7 +483,7 @@ class Story(Object, Update):
 
     async def reply_animation(
         self,
-        animation: Union[str, BinaryIO],
+        animation: str | BinaryIO,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
         caption_entities: list["types.MessageEntity"] = None,
@@ -433,7 +491,7 @@ class Story(Object, Update):
         duration: int = 0,
         width: int = 0,
         height: int = 0,
-        thumb: Union[str, BinaryIO] = None,
+        thumb: str | BinaryIO = None,
         file_name: str = None,
         disable_notification: bool = None,
         reply_markup: Union[
@@ -548,7 +606,9 @@ class Story(Object, Update):
             reply_to_story_id = self.id
 
         return await self._client.send_animation(
-            chat_id=self.from_user.id if self.from_user else self.sender_chat.id,
+            chat_id=self.from_user.id
+            if self.from_user
+            else self.sender_chat.id,
             animation=animation,
             caption=caption,
             parse_mode=parse_mode,
@@ -568,14 +628,14 @@ class Story(Object, Update):
 
     async def reply_audio(
         self,
-        audio: Union[str, BinaryIO],
+        audio: str | BinaryIO,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
         caption_entities: list["types.MessageEntity"] = None,
         duration: int = 0,
         performer: str = None,
         title: str = None,
-        thumb: Union[str, BinaryIO] = None,
+        thumb: str | BinaryIO = None,
         file_name: str = None,
         disable_notification: bool = None,
         reply_to_story_id: int = None,
@@ -687,7 +747,9 @@ class Story(Object, Update):
             reply_to_story_id = self.id
 
         return await self._client.send_audio(
-            chat_id=self.from_user.id if self.from_user else self.sender_chat.id,
+            chat_id=self.from_user.id
+            if self.from_user
+            else self.sender_chat.id,
             audio=audio,
             caption=caption,
             parse_mode=parse_mode,
@@ -772,7 +834,9 @@ class Story(Object, Update):
             reply_to_story_id = self.id
 
         return await self._client.send_cached_media(
-            chat_id=self.from_user.id if self.from_user else self.sender_chat.id,
+            chat_id=self.from_user.id
+            if self.from_user
+            else self.sender_chat.id,
             file_id=file_id,
             caption=caption,
             parse_mode=parse_mode,
@@ -836,7 +900,9 @@ class Story(Object, Update):
             reply_to_story_id = self.id
 
         return await self._client.send_media_group(
-            chat_id=self.from_user.id if self.from_user else self.sender_chat.id,
+            chat_id=self.from_user.id
+            if self.from_user
+            else self.sender_chat.id,
             media=media,
             disable_notification=disable_notification,
             reply_to_story_id=reply_to_story_id,
@@ -844,7 +910,7 @@ class Story(Object, Update):
 
     async def reply_photo(
         self,
-        photo: Union[str, BinaryIO],
+        photo: str | BinaryIO,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
         caption_entities: list["types.MessageEntity"] = None,
@@ -953,7 +1019,9 @@ class Story(Object, Update):
             reply_to_story_id = self.id
 
         return await self._client.send_photo(
-            chat_id=self.from_user.id if self.from_user else self.sender_chat.id,
+            chat_id=self.from_user.id
+            if self.from_user
+            else self.sender_chat.id,
             photo=photo,
             caption=caption,
             parse_mode=parse_mode,
@@ -970,7 +1038,7 @@ class Story(Object, Update):
 
     async def reply_sticker(
         self,
-        sticker: Union[str, BinaryIO],
+        sticker: str | BinaryIO,
         disable_notification: bool = None,
         reply_to_story_id: int = None,
         reply_markup: Union[
@@ -1052,7 +1120,9 @@ class Story(Object, Update):
             reply_to_story_id = self.id
 
         return await self._client.send_sticker(
-            chat_id=self.from_user.id if self.from_user else self.sender_chat.id,
+            chat_id=self.from_user.id
+            if self.from_user
+            else self.sender_chat.id,
             sticker=sticker,
             disable_notification=disable_notification,
             reply_to_story_id=reply_to_story_id,
@@ -1063,7 +1133,7 @@ class Story(Object, Update):
 
     async def reply_video(
         self,
-        video: Union[str, BinaryIO],
+        video: str | BinaryIO,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
         caption_entities: list["types.MessageEntity"] = None,
@@ -1072,7 +1142,7 @@ class Story(Object, Update):
         duration: int = 0,
         width: int = 0,
         height: int = 0,
-        thumb: Union[str, BinaryIO] = None,
+        thumb: str | BinaryIO = None,
         file_name: str = None,
         supports_streaming: bool = True,
         disable_notification: bool = None,
@@ -1195,7 +1265,9 @@ class Story(Object, Update):
             reply_to_story_id = self.id
 
         return await self._client.send_video(
-            chat_id=self.from_user.id if self.from_user else self.sender_chat.id,
+            chat_id=self.from_user.id
+            if self.from_user
+            else self.sender_chat.id,
             video=video,
             caption=caption,
             parse_mode=parse_mode,
@@ -1217,10 +1289,10 @@ class Story(Object, Update):
 
     async def reply_video_note(
         self,
-        video_note: Union[str, BinaryIO],
+        video_note: str | BinaryIO,
         duration: int = 0,
         length: int = 1,
-        thumb: Union[str, BinaryIO] = None,
+        thumb: str | BinaryIO = None,
         disable_notification: bool = None,
         reply_to_story_id: int = None,
         reply_markup: Union[
@@ -1313,7 +1385,9 @@ class Story(Object, Update):
             reply_to_story_id = self.id
 
         return await self._client.send_video_note(
-            chat_id=self.from_user.id if self.from_user else self.sender_chat.id,
+            chat_id=self.from_user.id
+            if self.from_user
+            else self.sender_chat.id,
             video_note=video_note,
             duration=duration,
             length=length,
@@ -1327,7 +1401,7 @@ class Story(Object, Update):
 
     async def reply_voice(
         self,
-        voice: Union[str, BinaryIO],
+        voice: str | BinaryIO,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
         caption_entities: list["types.MessageEntity"] = None,
@@ -1425,7 +1499,9 @@ class Story(Object, Update):
             reply_to_story_id = self.id
 
         return await self._client.send_voice(
-            chat_id=self.from_user.id if self.from_user else self.sender_chat.id,
+            chat_id=self.from_user.id
+            if self.from_user
+            else self.sender_chat.id,
             voice=voice,
             caption=caption,
             parse_mode=parse_mode,
@@ -1461,10 +1537,13 @@ class Story(Object, Update):
             RPCError: In case of a Telegram RPC error.
         """
         return await self._client.delete_stories(
-            chat_id=self.sender_chat.id if self.sender_chat else None, story_ids=self.id
+            chat_id=self.sender_chat.id if self.sender_chat else None,
+            story_ids=self.id,
         )
 
-    async def edit_animation(self, animation: Union[str, BinaryIO]) -> "types.Story":
+    async def edit_animation(
+        self, animation: str | BinaryIO
+    ) -> "types.Story":
         """Bound method *edit_animation* of :obj:`~pyrogram.types.Story`.
 
         Use as a shortcut for:
@@ -1645,7 +1724,9 @@ class Story(Object, Update):
             caption_entities=caption_entities,
         )
 
-    async def edit_photo(self, photo: Union[str, BinaryIO]) -> "types.Story":
+    async def edit_photo(
+        self, photo: str | BinaryIO
+    ) -> "types.Story":
         """Bound method *edit_photo* of :obj:`~pyrogram.types.Story`.
 
         Use as a shortcut for:
@@ -1728,7 +1809,9 @@ class Story(Object, Update):
             denied_users=denied_users,
         )
 
-    async def edit_video(self, video: Union[str, BinaryIO]) -> "types.Story":
+    async def edit_video(
+        self, video: str | BinaryIO
+    ) -> "types.Story":
         """Bound method *edit_video* of :obj:`~pyrogram.types.Story`.
 
         Use as a shortcut for:
@@ -1785,7 +1868,9 @@ class Story(Object, Update):
             RPCError: In case of a Telegram RPC error.
         """
         return await self._client.export_story_link(
-            chat_id=self.from_user.id if self.from_user else self.sender_chat.id,
+            chat_id=self.from_user.id
+            if self.from_user
+            else self.sender_chat.id,
             story_id=self.id,
         )
 

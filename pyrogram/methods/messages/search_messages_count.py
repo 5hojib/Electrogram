@@ -17,7 +17,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import enums, raw
@@ -26,10 +25,10 @@ from pyrogram import enums, raw
 class SearchMessagesCount:
     async def search_messages_count(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         query: str = "",
         filter: "enums.MessagesFilter" = enums.MessagesFilter.EMPTY,
-        from_user: Union[int, str] = None,
+        from_user: int | str = None,
     ) -> int:
         """Get the count of messages resulting from a search inside a chat.
 
@@ -71,7 +70,11 @@ class SearchMessagesCount:
                 limit=1,
                 min_id=0,
                 max_id=0,
-                from_id=(await self.resolve_peer(from_user) if from_user else None),
+                from_id=(
+                    await self.resolve_peer(from_user)
+                    if from_user
+                    else None
+                ),
                 hash=0,
             )
         )

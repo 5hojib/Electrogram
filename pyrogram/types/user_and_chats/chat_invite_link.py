@@ -18,7 +18,7 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Dict, Optional
+from typing import Optional
 
 import pyrogram
 from pyrogram import raw, types, utils
@@ -109,7 +109,11 @@ class ChatInviteLink(Object):
         if not isinstance(invite, raw.types.ChatInviteExported):
             return None
 
-        creator = types.User._parse(client, users[invite.admin_id]) if users is not None else None
+        creator = (
+            types.User._parse(client, users[invite.admin_id])
+            if users is not None
+            else None
+        )
 
         return ChatInviteLink(
             invite_link=invite.link,
@@ -120,7 +124,9 @@ class ChatInviteLink(Object):
             name=invite.title,
             creates_join_request=invite.request_needed,
             start_date=utils.timestamp_to_datetime(invite.start_date),
-            expire_date=utils.timestamp_to_datetime(invite.expire_date),
+            expire_date=utils.timestamp_to_datetime(
+                invite.expire_date
+            ),
             member_limit=invite.usage_limit,
             member_count=invite.usage,
             pending_join_request_count=invite.requested,

@@ -17,7 +17,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw, types
@@ -26,7 +25,7 @@ from pyrogram import raw, types
 class AddContact:
     async def add_contact(
         self: "pyrogram.Client",
-        user_id: Union[int, str],
+        user_id: int | str,
         first_name: str,
         last_name: str = "",
         phone_number: str = "",

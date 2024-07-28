@@ -20,7 +20,6 @@
 import logging
 import os
 from struct import pack, unpack
-from typing import Optional
 
 from pyrogram.crypto import aes
 
@@ -62,9 +61,13 @@ class TCPIntermediateO(TCP):
         await super().send(nonce)
 
     async def send(self, data: bytes, *args) -> None:
-        await super().send(aes.ctr256_encrypt(pack("<i", len(data)) + data, *self.encrypt))
+        await super().send(
+            aes.ctr256_encrypt(
+                pack("<i", len(data)) + data, *self.encrypt
+            )
+        )
 
-    async def recv(self, length: int = 0) -> Optional[bytes]:
+    async def recv(self, length: int = 0) -> bytes | None:
         length = await super().recv(4)
 
         if length is None:

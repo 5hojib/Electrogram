@@ -39,7 +39,14 @@ class ForumTopicCreated(Object):
             Unique identifier of the custom emoji shown as the topic icon
     """
 
-    def __init__(self, *, id: int, title: str, icon_color: int, icon_emoji_id: int = None):
+    def __init__(
+        self,
+        *,
+        id: int,
+        title: str,
+        icon_color: int,
+        icon_emoji_id: int = None,
+    ):
         super().__init__()
 
         self.id = id
@@ -53,5 +60,7 @@ class ForumTopicCreated(Object):
             id=getattr(message, "id", None),
             title=getattr(message.action, "title", None),
             icon_color=getattr(message.action, "icon_color", None),
-            icon_emoji_id=getattr(message.action, "icon_emoji_id", None),
+            icon_emoji_id=getattr(
+                message.action, "icon_emoji_id", None
+            ),
         )

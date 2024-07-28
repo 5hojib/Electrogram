@@ -21,7 +21,9 @@ from pyrogram import raw, types
 
 
 class GetStickerSet:
-    async def get_sticker_set(self: "pyrogram.Client", set_short_name: str) -> "types.StickerSet":
+    async def get_sticker_set(
+        self: "pyrogram.Client", set_short_name: str
+    ) -> "types.StickerSet":
         """Get info about a stickerset.
 
         .. include:: /_includes/usable-by/users-bots.rst
@@ -40,7 +42,9 @@ class GetStickerSet:
         """
         r = await self.invoke(
             raw.functions.messages.GetStickerSet(
-                stickerset=raw.types.InputStickerSetShortName(short_name=set_short_name),
+                stickerset=raw.types.InputStickerSetShortName(
+                    short_name=set_short_name
+                ),
                 hash=0,
             )
         )

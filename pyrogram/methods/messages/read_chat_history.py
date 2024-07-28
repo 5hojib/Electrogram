@@ -17,7 +17,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -25,7 +24,7 @@ from pyrogram import raw
 
 class ReadChatHistory:
     async def read_chat_history(
-        self: "pyrogram.Client", chat_id: Union[int, str], max_id: int = 0
+        self: "pyrogram.Client", chat_id: int | str, max_id: int = 0
     ) -> bool:
         """Mark a chat's message history as read.
 
@@ -58,9 +57,13 @@ class ReadChatHistory:
         peer = await self.resolve_peer(chat_id)
 
         if isinstance(peer, raw.types.InputPeerChannel):
-            q = raw.functions.channels.ReadHistory(channel=peer, max_id=max_id)
+            q = raw.functions.channels.ReadHistory(
+                channel=peer, max_id=max_id
+            )
         else:
-            q = raw.functions.messages.ReadHistory(peer=peer, max_id=max_id)
+            q = raw.functions.messages.ReadHistory(
+                peer=peer, max_id=max_id
+            )
 
         await self.invoke(q)
 

@@ -73,7 +73,7 @@ class CallbackQuery(Object, Update):
         chat_instance: str,
         message: "types.Message" = None,
         inline_message_id: str = None,
-        data: Union[str, bytes] = None,
+        data: str | bytes = None,
         game_short_name: str = None,
         matches: list[Match] = None,
     ):
@@ -89,21 +89,33 @@ class CallbackQuery(Object, Update):
         self.matches = matches
 
     @staticmethod
-    async def _parse(client: "pyrogram.Client", callback_query, users) -> "CallbackQuery":
+    async def _parse(
+        client: "pyrogram.Client", callback_query, users
+    ) -> "CallbackQuery":
         message = None
         inline_message_id = None
 
-        if isinstance(callback_query, raw.types.UpdateBotCallbackQuery):
+        if isinstance(
+            callback_query, raw.types.UpdateBotCallbackQuery
+        ):
             chat_id = utils.get_peer_id(callback_query.peer)
             message_id = callback_query.msg_id
 
             message = client.message_cache[(chat_id, message_id)]
 
             if not message:
-                message = await client.get_messages(chat_id, message_id)
-        elif isinstance(callback_query, raw.types.UpdateInlineBotCallbackQuery):
-            inline_message_id = utils.pack_inline_message_id(callback_query.msg_id)
-        elif isinstance(callback_query, raw.types.UpdateBusinessBotCallbackQuery):
+                message = await client.get_messages(
+                    chat_id, message_id
+                )
+        elif isinstance(
+            callback_query, raw.types.UpdateInlineBotCallbackQuery
+        ):
+            inline_message_id = utils.pack_inline_message_id(
+                callback_query.msg_id
+            )
+        elif isinstance(
+            callback_query, raw.types.UpdateBusinessBotCallbackQuery
+        ):
             message = await types.Message._parse(
                 client,
                 callback_query.message,
@@ -124,12 +136,16 @@ class CallbackQuery(Object, Update):
 
         return CallbackQuery(
             id=str(callback_query.query_id),
-            from_user=types.User._parse(client, users[callback_query.user_id]),
+            from_user=types.User._parse(
+                client, users[callback_query.user_id]
+            ),
             message=message,
             inline_message_id=inline_message_id,
             chat_instance=str(callback_query.chat_instance),
             data=data,
-            game_short_name=getattr(callback_query, "game_short_name", None),
+            game_short_name=getattr(
+                callback_query, "game_short_name", None
+            ),
             client=client,
         )
 
@@ -189,7 +205,7 @@ class CallbackQuery(Object, Update):
         parse_mode: Optional["enums.ParseMode"] = None,
         disable_web_page_preview: bool = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        business_connection_id: Optional[str] = None,
+        business_connection_id: str | None = None,
     ) -> Union["types.Message", bool]:
         """Edit the text of messages attached to callback queries.
 
@@ -228,7 +244,9 @@ class CallbackQuery(Object, Update):
                 parse_mode=parse_mode,
                 disable_web_page_preview=disable_web_page_preview,
                 reply_markup=reply_markup,
-                business_connection_id=getattr(self.message, "business_connection_id", None),
+                business_connection_id=getattr(
+                    self.message, "business_connection_id", None
+                ),
             )
         else:
             return await self._client.edit_inline_text(
@@ -244,7 +262,7 @@ class CallbackQuery(Object, Update):
         caption: str,
         parse_mode: Optional["enums.ParseMode"] = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        business_connection_id: Optional[str] = None,
+        business_connection_id: str | None = None,
     ) -> Union["types.Message", bool]:
         """Edit the caption of media messages attached to callback queries.
 
@@ -276,7 +294,9 @@ class CallbackQuery(Object, Update):
             caption,
             parse_mode,
             reply_markup=reply_markup,
-            business_connection_id=getattr(self.message, "business_connection_id", None)
+            business_connection_id=getattr(
+                self.message, "business_connection_id", None
+            )
             if business_connection_id is None
             else business_connection_id,
         )
@@ -285,7 +305,7 @@ class CallbackQuery(Object, Update):
         self,
         media: "types.InputMedia",
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        business_connection_id: Optional[str] = None,
+        business_connection_id: str | None = None,
     ) -> Union["types.Message", bool]:
         """Edit animation, audio, document, photo or video messages attached to callback queries.
 
@@ -315,7 +335,9 @@ class CallbackQuery(Object, Update):
                 message_id=self.message.id,
                 media=media,
                 reply_markup=reply_markup,
-                business_connection_id=getattr(self.message, "business_connection_id", None)
+                business_connection_id=getattr(
+                    self.message, "business_connection_id", None
+                )
                 if business_connection_id is None
                 else business_connection_id,
             )
@@ -329,7 +351,7 @@ class CallbackQuery(Object, Update):
     async def edit_message_reply_markup(
         self,
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        business_connection_id: Optional[str] = None,
+        business_connection_id: str | None = None,
     ) -> Union["types.Message", bool]:
         """Edit only the reply markup of messages attached to callback queries.
 
@@ -355,11 +377,14 @@ class CallbackQuery(Object, Update):
                 chat_id=self.message.chat.id,
                 message_id=self.message.id,
                 reply_markup=reply_markup,
-                business_connection_id=getattr(self.message, "business_connection_id", None)
+                business_connection_id=getattr(
+                    self.message, "business_connection_id", None
+                )
                 if business_connection_id is None
                 else business_connection_id,
             )
         else:
             return await self._client.edit_inline_reply_markup(
-                inline_message_id=self.inline_message_id, reply_markup=reply_markup
+                inline_message_id=self.inline_message_id,
+                reply_markup=reply_markup,
             )

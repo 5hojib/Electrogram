@@ -21,7 +21,12 @@ from datetime import datetime
 
 import pyrogram
 from pyrogram import raw, types, utils
-from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType
+from pyrogram.file_id import (
+    FileId,
+    FileType,
+    FileUniqueId,
+    FileUniqueType,
+)
 
 from ..object import Object
 
@@ -76,7 +81,9 @@ class Document(Object):
         self.thumbs = thumbs
 
     @staticmethod
-    def _parse(client, document: "raw.types.Document", file_name: str) -> "Document":
+    def _parse(
+        client, document: "raw.types.Document", file_name: str
+    ) -> "Document":
         return Document(
             file_id=FileId(
                 file_type=FileType.DOCUMENT,
@@ -86,7 +93,8 @@ class Document(Object):
                 file_reference=document.file_reference,
             ).encode(),
             file_unique_id=FileUniqueId(
-                file_unique_type=FileUniqueType.DOCUMENT, media_id=document.id
+                file_unique_type=FileUniqueType.DOCUMENT,
+                media_id=document.id,
             ).encode(),
             file_name=file_name,
             mime_type=document.mime_type,

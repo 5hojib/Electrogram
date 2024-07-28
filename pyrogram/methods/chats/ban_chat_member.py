@@ -27,8 +27,8 @@ from pyrogram import raw, types, utils
 class BanChatMember:
     async def ban_chat_member(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        user_id: Union[int, str],
+        chat_id: int | str,
+        user_id: int | str,
         until_date: datetime = utils.zero_datetime(),
         revoke_messages: bool = None,
     ) -> Union["types.Message", bool]:
@@ -87,7 +87,9 @@ class BanChatMember:
                     channel=chat_peer,
                     participant=user_peer,
                     banned_rights=raw.types.ChatBannedRights(
-                        until_date=utils.datetime_to_timestamp(until_date),
+                        until_date=utils.datetime_to_timestamp(
+                            until_date
+                        ),
                         view_messages=True,
                         send_messages=True,
                         send_media=True,
@@ -110,7 +112,13 @@ class BanChatMember:
             )
 
         for i in r.updates:
-            if isinstance(i, (raw.types.UpdateNewMessage, raw.types.UpdateNewChannelMessage)):
+            if isinstance(
+                i,
+                (
+                    raw.types.UpdateNewMessage,
+                    raw.types.UpdateNewChannelMessage,
+                ),
+            ):
                 return await types.Message._parse(
                     self,
                     i.message,

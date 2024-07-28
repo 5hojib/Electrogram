@@ -17,7 +17,6 @@
 #  along with PyroFork.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Dict
 
 import pyrogram
 from pyrogram import raw, types, utils
@@ -72,14 +71,21 @@ class MessageReactionCountUpdated(Object, Update):
         peer_id = utils.get_peer_id(update.peer)
         raw_peer_id = utils.get_raw_peer_id(update.peer)
         if peer_id > 0:
-            chat = types.Chat._parse_user_chat(client, users[raw_peer_id])
+            chat = types.Chat._parse_user_chat(
+                client, users[raw_peer_id]
+            )
         else:
-            chat = types.Chat._parse_chat_chat(client, chats[raw_peer_id])
+            chat = types.Chat._parse_chat_chat(
+                client, chats[raw_peer_id]
+            )
 
         return MessageReactionCountUpdated(
             client=client,
             chat=chat,
             message_id=update.msg_id,
             date=utils.timestamp_to_datetime(update.date),
-            reactions=[types.ReactionCount._parse(rt) for rt in update.reactions],
+            reactions=[
+                types.ReactionCount._parse(rt)
+                for rt in update.reactions
+            ],
         )

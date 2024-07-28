@@ -24,5 +24,11 @@ from .get_contacts_count import GetContactsCount
 from .import_contacts import ImportContacts
 
 
-class Contacts(GetContacts, DeleteContacts, ImportContacts, GetContactsCount, AddContact):
+class Contacts(
+    GetContacts,
+    DeleteContacts,
+    ImportContacts,
+    GetContactsCount,
+    AddContact,
+):
     pass

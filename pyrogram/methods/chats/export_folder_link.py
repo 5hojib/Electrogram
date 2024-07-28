@@ -22,7 +22,9 @@ from pyrogram import raw
 
 
 class ExportFolderLink:
-    async def export_folder_link(self: "pyrogram.Client", folder_id: int) -> str:
+    async def export_folder_link(
+        self: "pyrogram.Client", folder_id: int
+    ) -> str:
         """Export link to a user's folder.
 
         .. include:: /_includes/usable-by/users.rst
@@ -58,7 +60,9 @@ class ExportFolderLink:
 
         r = await self.invoke(
             raw.functions.chatlists.ExportChatlistInvite(
-                chatlist=raw.types.InputChatlistDialogFilter(filter_id=folder_id),
+                chatlist=raw.types.InputChatlistDialogFilter(
+                    filter_id=folder_id
+                ),
                 title=folder.title,
                 peers=[await self.resolve_peer(i.id) for i in peers],
             )

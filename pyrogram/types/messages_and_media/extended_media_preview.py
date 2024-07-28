@@ -54,10 +54,14 @@ class ExtendedMediaPreview(Object):
         self.video_duration = video_duration
 
     @staticmethod
-    def _parse(client, media: "raw.types.MessageExtendedMediaPreview") -> "ExtendedMediaPreview":
+    def _parse(
+        client, media: "raw.types.MessageExtendedMediaPreview"
+    ) -> "ExtendedMediaPreview":
         thumb = None
         if media.thumb:
-            thumb = types.StrippedThumbnail._parse(client, media.thumb)
+            thumb = types.StrippedThumbnail._parse(
+                client, media.thumb
+            )
 
         return ExtendedMediaPreview(
             width=media.w,

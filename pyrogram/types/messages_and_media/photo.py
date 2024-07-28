@@ -87,7 +87,9 @@ class Photo(Object):
         self.thumbs = thumbs
 
     @staticmethod
-    def _parse(client, photo: "raw.types.Photo", ttl_seconds: int = None) -> "Photo":
+    def _parse(
+        client, photo: "raw.types.Photo", ttl_seconds: int = None
+    ) -> "Photo":
         if isinstance(photo, raw.types.Photo):
             photos: list[raw.types.PhotoSize] = []
 
@@ -97,7 +99,12 @@ class Photo(Object):
 
                 if isinstance(p, raw.types.PhotoSizeProgressive):
                     photos.append(
-                        raw.types.PhotoSize(type=p.type, w=p.w, h=p.h, size=max(p.sizes))
+                        raw.types.PhotoSize(
+                            type=p.type,
+                            w=p.w,
+                            h=p.h,
+                            size=max(p.sizes),
+                        )
                     )
 
             photos.sort(key=lambda p: p.size)
@@ -118,7 +125,8 @@ class Photo(Object):
                     local_id=0,
                 ).encode(),
                 file_unique_id=FileUniqueId(
-                    file_unique_type=FileUniqueType.DOCUMENT, media_id=photo.id
+                    file_unique_type=FileUniqueType.DOCUMENT,
+                    media_id=photo.id,
                 ).encode(),
                 width=main.w,
                 height=main.h,

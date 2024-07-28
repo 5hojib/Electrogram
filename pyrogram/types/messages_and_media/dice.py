@@ -34,7 +34,13 @@ class Dice(Object):
             Value of the dice, 1-6 for currently supported base emoji.
     """
 
-    def __init__(self, *, client: "pyrogram.Client" = None, emoji: str, value: int):
+    def __init__(
+        self,
+        *,
+        client: "pyrogram.Client" = None,
+        emoji: str,
+        value: int,
+    ):
         super().__init__(client)
 
         self.emoji = emoji
@@ -42,4 +48,6 @@ class Dice(Object):
 
     @staticmethod
     def _parse(client, dice: "raw.types.MessageMediaDice") -> "Dice":
-        return Dice(emoji=dice.emoticon, value=dice.value, client=client)
+        return Dice(
+            emoji=dice.emoticon, value=dice.value, client=client
+        )

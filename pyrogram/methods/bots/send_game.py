@@ -26,7 +26,7 @@ from pyrogram import raw, types, utils
 class SendGame:
     async def send_game(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         game_short_name: str,
         disable_notification: bool = None,
         message_thread_id: int = None,
@@ -99,7 +99,8 @@ class SendGame:
             peer=await self.resolve_peer(chat_id),
             media=raw.types.InputMediaGame(
                 id=raw.types.InputGameShortName(
-                    bot_id=raw.types.InputUserSelf(), short_name=game_short_name
+                    bot_id=raw.types.InputUserSelf(),
+                    short_name=game_short_name,
                 ),
             ),
             message="",
@@ -108,7 +109,9 @@ class SendGame:
             random_id=self.rnd_id(),
             noforwards=protect_content,
             effect=message_effect_id,
-            reply_markup=await reply_markup.write(self) if reply_markup else None,
+            reply_markup=await reply_markup.write(self)
+            if reply_markup
+            else None,
         )
         if business_connection_id is not None:
             r = await self.invoke(

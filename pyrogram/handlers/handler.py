@@ -18,7 +18,7 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 import inspect
-from typing import Callable
+from collections.abc import Callable
 
 import pyrogram
 from pyrogram.filters import Filter

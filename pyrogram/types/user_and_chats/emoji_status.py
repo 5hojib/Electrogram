@@ -42,7 +42,7 @@ class EmojiStatus(Object):
         *,
         client: "pyrogram.Client" = None,
         custom_emoji_id: int,
-        until_date: Optional[datetime] = None,
+        until_date: datetime | None = None,
     ):
         super().__init__(client)
 
@@ -50,15 +50,22 @@ class EmojiStatus(Object):
         self.until_date = until_date
 
     @staticmethod
-    def _parse(client, emoji_status: "raw.base.EmojiStatus") -> Optional["EmojiStatus"]:
+    def _parse(
+        client, emoji_status: "raw.base.EmojiStatus"
+    ) -> Optional["EmojiStatus"]:
         if isinstance(emoji_status, raw.types.EmojiStatus):
-            return EmojiStatus(client=client, custom_emoji_id=emoji_status.document_id)
+            return EmojiStatus(
+                client=client,
+                custom_emoji_id=emoji_status.document_id,
+            )
 
         if isinstance(emoji_status, raw.types.EmojiStatusUntil):
             return EmojiStatus(
                 client=client,
                 custom_emoji_id=emoji_status.document_id,
-                until_date=utils.timestamp_to_datetime(emoji_status.until),
+                until_date=utils.timestamp_to_datetime(
+                    emoji_status.until
+                ),
             )
 
         return None

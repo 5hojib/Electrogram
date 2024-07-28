@@ -28,9 +28,9 @@ from pyrogram import raw, types, utils
 class ForwardMessages:
     async def forward_messages(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        from_chat_id: Union[int, str],
-        message_ids: Union[int, Iterable[int]],
+        chat_id: int | str,
+        from_chat_id: int | str,
+        message_ids: int | Iterable[int],
         message_thread_id: int = None,
         disable_notification: bool = None,
         schedule_date: datetime = None,
@@ -89,7 +89,9 @@ class ForwardMessages:
         """
 
         is_iterable = not isinstance(message_ids, int)
-        message_ids = list(message_ids) if is_iterable else [message_ids]
+        message_ids = (
+            list(message_ids) if is_iterable else [message_ids]
+        )
 
         r = await self.invoke(
             raw.functions.messages.ForwardMessages(
@@ -99,7 +101,9 @@ class ForwardMessages:
                 top_msg_id=message_thread_id,
                 silent=disable_notification or None,
                 random_id=[self.rnd_id() for _ in message_ids],
-                schedule_date=utils.datetime_to_timestamp(schedule_date),
+                schedule_date=utils.datetime_to_timestamp(
+                    schedule_date
+                ),
                 noforwards=protect_content,
                 drop_author=drop_author,
             )
@@ -120,7 +124,13 @@ class ForwardMessages:
                 ),
             ):
                 forwarded_messages.append(
-                    await types.Message._parse(self, i.message, users, chats)
+                    await types.Message._parse(
+                        self, i.message, users, chats
+                    )
                 )
 
-        return types.List(forwarded_messages) if is_iterable else forwarded_messages[0]
+        return (
+            types.List(forwarded_messages)
+            if is_iterable
+            else forwarded_messages[0]
+        )

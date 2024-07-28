@@ -61,7 +61,12 @@ def generate(source_path, base):
                 else:
                     continue
 
-                full_path = os.path.basename(path) + "/" + snek(name).replace("_", "-") + ".rst"
+                full_path = (
+                    os.path.basename(path)
+                    + "/"
+                    + snek(name).replace("_", "-")
+                    + ".rst"
+                )
 
                 if level:
                     full_path = base + "/" + full_path
@@ -70,17 +75,28 @@ def generate(source_path, base):
                 if namespace in ["base", "types", "functions"]:
                     namespace = ""
 
-                full_name = f"{(namespace + '.') if namespace else ''}{name}"
+                full_name = (
+                    f"{(namespace + '.') if namespace else ''}{name}"
+                )
 
-                os.makedirs(os.path.dirname(DESTINATION + "/" + full_path), exist_ok=True)
+                os.makedirs(
+                    os.path.dirname(DESTINATION + "/" + full_path),
+                    exist_ok=True,
+                )
 
-                with open(DESTINATION + "/" + full_path, "w", encoding="utf-8") as f:
+                with open(
+                    DESTINATION + "/" + full_path,
+                    "w",
+                    encoding="utf-8",
+                ) as f:
                     f.write(
                         page_template.format(
                             title=full_name,
                             title_markup="=" * len(full_name),
                             full_class_path="pyrogram.raw.{}".format(
-                                ".".join(full_path.split("/")[:-1]) + "." + name
+                                ".".join(full_path.split("/")[:-1])
+                                + "."
+                                + name
                             ),
                         )
                     )
@@ -110,7 +126,9 @@ def generate(source_path, base):
             inner_path = base + "/index" + ".rst"
             module = f"pyrogram.raw.{base}"
 
-        with open(DESTINATION + "/" + inner_path, "w", encoding="utf-8") as f:
+        with open(
+            DESTINATION + "/" + inner_path, "w", encoding="utf-8"
+        ) as f:
             if k == base:
                 f.write(":tocdepth: 1\n\n")
                 k = "Raw " + k
@@ -129,7 +147,11 @@ def generate(source_path, base):
 
 def pyrogram_api():
     def get_title_list(s: str) -> list:
-        return [i.strip() for i in [j.strip() for j in s.split("\n") if j] if i]
+        return [
+            i.strip()
+            for i in [j.strip() for j in s.split("\n") if j]
+            if i
+        ]
 
     # Methods
 
@@ -417,14 +439,18 @@ def pyrogram_api():
 
         for k, v in categories.items():
             name, *methods = get_title_list(v)
-            fmt_keys.update({k: "\n    ".join(f"{m} <{m}>" for m in methods)})
+            fmt_keys.update(
+                {k: "\n    ".join(f"{m} <{m}>" for m in methods)}
+            )
 
             for method in methods:
                 with open(root + f"/{method}.rst", "w") as f2:
                     title = f"{method}()"
 
                     f2.write(title + "\n" + "=" * len(title) + "\n\n")
-                    f2.write(f".. automethod:: pyrogram.Client.{method}()")
+                    f2.write(
+                        f".. automethod:: pyrogram.Client.{method}()"
+                    )
 
             functions = ["idle", "compose"]
 
@@ -672,7 +698,9 @@ def pyrogram_api():
                     title = f"{type}"
 
                     f2.write(title + "\n" + "=" * len(title) + "\n\n")
-                    f2.write(f".. autoclass:: pyrogram.types.{type}()\n")
+                    f2.write(
+                        f".. autoclass:: pyrogram.types.{type}()\n"
+                    )
 
         f.write(template.format(**fmt_keys))
 
@@ -816,13 +844,18 @@ def pyrogram_api():
             name, *bound_methods = get_title_list(v)
 
             fmt_keys.update(
-                {f"{k}_hlist": "\n    ".join(f"- :meth:`~{bm}`" for bm in bound_methods)}
+                {
+                    f"{k}_hlist": "\n    ".join(
+                        f"- :meth:`~{bm}`" for bm in bound_methods
+                    )
+                }
             )
 
             fmt_keys.update(
                 {
                     f"{k}_toctree": "\n    ".join(
-                        "{} <{}>".format(bm.split(".")[1], bm) for bm in bound_methods
+                        "{} <{}>".format(bm.split(".")[1], bm)
+                        for bm in bound_methods
                     )
                 }
             )

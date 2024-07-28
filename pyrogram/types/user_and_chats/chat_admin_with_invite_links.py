@@ -17,7 +17,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Dict
 
 import pyrogram
 from pyrogram import raw, types
@@ -50,7 +49,9 @@ class ChatAdminWithInviteLinks(Object):
 
         self.admin = admin
         self.chat_invite_links_count = chat_invite_links_count
-        self.revoked_chat_invite_links_count = revoked_chat_invite_links_count
+        self.revoked_chat_invite_links_count = (
+            revoked_chat_invite_links_count
+        )
 
     @staticmethod
     def _parse(

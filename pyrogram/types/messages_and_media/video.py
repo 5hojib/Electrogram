@@ -122,7 +122,8 @@ class Video(Object):
                 file_reference=video.file_reference,
             ).encode(),
             file_unique_id=FileUniqueId(
-                file_unique_type=FileUniqueType.DOCUMENT, media_id=video.id
+                file_unique_type=FileUniqueType.DOCUMENT,
+                media_id=video.id,
             ).encode(),
             width=video_attributes.w,
             height=video_attributes.h,

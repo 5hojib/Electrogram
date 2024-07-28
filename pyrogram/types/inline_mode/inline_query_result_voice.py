@@ -75,7 +75,9 @@ class InlineQueryResultVoice(InlineQueryResult):
         reply_markup: "types.InlineKeyboardMarkup" = None,
         input_message_content: "types.InputMessageContent" = None,
     ):
-        super().__init__("voice", id, input_message_content, reply_markup)
+        super().__init__(
+            "voice", id, input_message_content, reply_markup
+        )
 
         self.voice_url = voice_url
         self.title = title
@@ -99,7 +101,10 @@ class InlineQueryResultVoice(InlineQueryResult):
 
         message, entities = (
             await utils.parse_text_entities(
-                client, self.caption, self.parse_mode, self.caption_entities
+                client,
+                self.caption,
+                self.parse_mode,
+                self.caption_entities,
             )
         ).values()
 
@@ -109,7 +114,9 @@ class InlineQueryResultVoice(InlineQueryResult):
             title=self.title,
             content=audio,
             send_message=(
-                await self.input_message_content.write(client, self.reply_markup)
+                await self.input_message_content.write(
+                    client, self.reply_markup
+                )
                 if self.input_message_content
                 else raw.types.InputBotInlineMessageMediaAuto(
                     reply_markup=await self.reply_markup.write(client)

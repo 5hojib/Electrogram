@@ -18,7 +18,7 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 import math
-from typing import BinaryIO, Optional, Union
+from typing import BinaryIO, Union
 
 import pyrogram
 from pyrogram import types
@@ -31,7 +31,7 @@ class StreamMedia:
         message: Union["types.Message", str],
         limit: int = 0,
         offset: int = 0,
-    ) -> Optional[Union[str, BinaryIO]]:
+    ) -> str | BinaryIO | None:
         """Stream the media from a message chunk by chunk.
 
         You can use this method to partially download a file into memory or to selectively download chunks of file.
@@ -93,7 +93,9 @@ class StreamMedia:
                 if media is not None:
                     break
             else:
-                raise ValueError("This message doesn't contain any downloadable media")
+                raise ValueError(
+                    "This message doesn't contain any downloadable media"
+                )
         else:
             media = message
 
@@ -114,5 +116,7 @@ class StreamMedia:
             chunks = math.ceil(file_size / 1024 / 1024)
             offset += chunks
 
-        async for chunk in self.get_file(file_id_obj, file_size, limit, offset):
+        async for chunk in self.get_file(
+            file_id_obj, file_size, limit, offset
+        ):
             yield chunk

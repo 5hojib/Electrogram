@@ -18,7 +18,6 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from collections.abc import AsyncGenerator
-from typing import Optional, Union
 
 import pyrogram
 from pyrogram import raw, types
@@ -27,10 +26,10 @@ from pyrogram import raw, types
 class GetChatInviteLinkJoiners:
     async def get_chat_invite_link_joiners(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         invite_link: str,
         limit: int = 0,
-    ) -> Optional[AsyncGenerator["types.ChatJoiner", None]]:
+    ) -> AsyncGenerator["types.ChatJoiner", None] | None:
         """Get the members who joined the chat with the invite link.
 
         .. include:: /_includes/usable-by/users.rst
@@ -78,7 +77,9 @@ class GetChatInviteLinkJoiners:
             users = {i.id: i for i in r.users}
 
             offset_date = r.importers[-1].date
-            offset_user = await self.resolve_peer(r.importers[-1].user_id)
+            offset_user = await self.resolve_peer(
+                r.importers[-1].user_id
+            )
 
             for i in r.importers:
                 yield types.ChatJoiner._parse(self, i, users)

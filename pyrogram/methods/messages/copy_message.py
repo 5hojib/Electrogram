@@ -30,8 +30,8 @@ log = logging.getLogger(__name__)
 class CopyMessage:
     async def copy_message(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        from_chat_id: Union[int, str],
+        chat_id: int | str,
+        from_chat_id: int | str,
         message_id: int,
         caption: str = None,
         parse_mode: Optional["enums.ParseMode"] = None,
@@ -122,7 +122,9 @@ class CopyMessage:
                 await app.copy_message(to_chat, from_chat, 123)
 
         """
-        message: types.Message = await self.get_messages(from_chat_id, message_id)
+        message: types.Message = await self.get_messages(
+            from_chat_id, message_id
+        )
 
         return await message.copy(
             chat_id=chat_id,

@@ -18,7 +18,6 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from collections.abc import AsyncGenerator
-from typing import Optional
 
 import pyrogram
 from pyrogram import raw, types, utils
@@ -28,7 +27,7 @@ from pyrogram.errors import ChannelPrivate
 class GetDialogs:
     async def get_dialogs(
         self: "pyrogram.Client", limit: int = 0
-    ) -> Optional[AsyncGenerator["types.Dialog", None]]:
+    ) -> AsyncGenerator["types.Dialog", None] | None:
         """Get a user's dialogs sequentially.
 
         .. include:: /_includes/usable-by/users.rst
@@ -79,7 +78,9 @@ class GetDialogs:
 
                 chat_id = utils.get_peer_id(message.peer_id)
                 try:
-                    messages[chat_id] = await types.Message._parse(self, message, users, chats)
+                    messages[chat_id] = await types.Message._parse(
+                        self, message, users, chats
+                    )
                 except ChannelPrivate:
                     continue
 
@@ -89,7 +90,11 @@ class GetDialogs:
                 if not isinstance(dialog, raw.types.Dialog):
                     continue
 
-                dialogs.append(types.Dialog._parse(self, dialog, messages, users, chats))
+                dialogs.append(
+                    types.Dialog._parse(
+                        self, dialog, messages, users, chats
+                    )
+                )
 
             if not dialogs:
                 return
@@ -97,7 +102,9 @@ class GetDialogs:
             last = dialogs[-1]
 
             offset_id = last.top_message.id
-            offset_date = utils.datetime_to_timestamp(last.top_message.date)
+            offset_date = utils.datetime_to_timestamp(
+                last.top_message.date
+            )
             offset_peer = await self.resolve_peer(last.chat.id)
 
             for dialog in dialogs:

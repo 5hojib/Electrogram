@@ -17,7 +17,8 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Callable, Optional, Union
+from collections.abc import Callable
+from typing import Union
 
 import pyrogram
 from pyrogram.filters import Filter
@@ -26,7 +27,7 @@ from pyrogram.filters import Filter
 class OnPreCheckoutQuery:
     def on_pre_checkout_query(
         self: Union["OnPreCheckoutQuery", Filter, None] = None,
-        filters: Optional[Filter] = None,
+        filters: Filter | None = None,
         group: int = 0,
     ) -> Callable:
         """Decorator for handling pre-checkout queries.
@@ -45,14 +46,21 @@ class OnPreCheckoutQuery:
 
         def decorator(func: Callable) -> Callable:
             if isinstance(self, pyrogram.Client):
-                self.add_handler(pyrogram.handlers.PreCheckoutQueryHandler(func, filters), group)
+                self.add_handler(
+                    pyrogram.handlers.PreCheckoutQueryHandler(
+                        func, filters
+                    ),
+                    group,
+                )
             elif isinstance(self, Filter) or self is None:
                 if not hasattr(func, "handlers"):
                     func.handlers = []
 
                 func.handlers.append(
                     (
-                        pyrogram.handlers.PreCheckoutQueryHandler(func, self),
+                        pyrogram.handlers.PreCheckoutQueryHandler(
+                            func, self
+                        ),
                         group if filters is None else filters,
                     )
                 )

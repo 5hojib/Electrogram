@@ -21,7 +21,7 @@ import asyncio
 import ipaddress
 import logging
 import socket
-from typing import Dict, Optional, TypedDict
+from typing import TypedDict
 
 import socks
 
@@ -38,8 +38,8 @@ class Proxy(TypedDict):
     scheme: str
     hostname: str
     port: int
-    username: Optional[str]
-    password: Optional[str]
+    username: str | None
+    password: str | None
 
 
 class TCP:
@@ -49,13 +49,15 @@ class TCP:
         self.ipv6 = ipv6
         self.proxy = proxy
 
-        self.reader: Optional[asyncio.StreamReader] = None
-        self.writer: Optional[asyncio.StreamWriter] = None
+        self.reader: asyncio.StreamReader | None = None
+        self.writer: asyncio.StreamWriter | None = None
 
         self.lock = asyncio.Lock()
         self.loop = asyncio.get_event_loop()
 
-    async def _connect_via_proxy(self, destination: tuple[str, int]) -> None:
+    async def _connect_via_proxy(
+        self, destination: tuple[str, int]
+    ) -> None:
         scheme = self.proxy.get("scheme")
         if scheme is None:
             raise ValueError("No scheme specified")
@@ -74,9 +76,13 @@ class TCP:
         except ValueError:
             is_proxy_ipv6 = False
         else:
-            is_proxy_ipv6 = isinstance(ip_address, ipaddress.IPv6Address)
+            is_proxy_ipv6 = isinstance(
+                ip_address, ipaddress.IPv6Address
+            )
 
-        proxy_family = socket.AF_INET6 if is_proxy_ipv6 else socket.AF_INET
+        proxy_family = (
+            socket.AF_INET6 if is_proxy_ipv6 else socket.AF_INET
+        )
         sock = socks.socksocket(proxy_family)
 
         sock.set_proxy(
@@ -92,9 +98,13 @@ class TCP:
 
         sock.setblocking(False)
 
-        self.reader, self.writer = await asyncio.open_connection(sock=sock)
+        self.reader, self.writer = await asyncio.open_connection(
+            sock=sock
+        )
 
-    async def _connect_via_direct(self, destination: tuple[str, int]) -> None:
+    async def _connect_via_direct(
+        self, destination: tuple[str, int]
+    ) -> None:
         host, port = destination
         family = socket.AF_INET6 if self.ipv6 else socket.AF_INET
         self.reader, self.writer = await asyncio.open_connection(
@@ -109,10 +119,10 @@ class TCP:
 
     async def connect(self, address: tuple[str, int]) -> None:
         try:
-            await asyncio.wait_for(self._connect(address), TCP.TIMEOUT)
-        except (
-            asyncio.TimeoutError
-        ):  # Re-raise as TimeoutError. asyncio.TimeoutError is deprecated in 3.11
+            await asyncio.wait_for(
+                self._connect(address), TCP.TIMEOUT
+            )
+        except asyncio.TimeoutError:  # Re-raise as TimeoutError. asyncio.TimeoutError is deprecated in 3.11
             raise TimeoutError("Connection timed out")
 
     async def close(self) -> None:
@@ -121,7 +131,9 @@ class TCP:
 
         try:
             self.writer.close()
-            await asyncio.wait_for(self.writer.wait_closed(), TCP.TIMEOUT)
+            await asyncio.wait_for(
+                self.writer.wait_closed(), TCP.TIMEOUT
+            )
         except Exception as e:
             log.info("Close exception: %s %s", type(e).__name__, e)
 
@@ -137,12 +149,14 @@ class TCP:
                 log.info("Send exception: %s %s", type(e).__name__, e)
                 raise OSError(e)
 
-    async def recv(self, length: int = 0) -> Optional[bytes]:
+    async def recv(self, length: int = 0) -> bytes | None:
         data = b""
 
         while len(data) < length:
             try:
-                chunk = await asyncio.wait_for(self.reader.read(length - len(data)), TCP.TIMEOUT)
+                chunk = await asyncio.wait_for(
+                    self.reader.read(length - len(data)), TCP.TIMEOUT
+                )
             except (OSError, asyncio.TimeoutError):
                 return None
             else:

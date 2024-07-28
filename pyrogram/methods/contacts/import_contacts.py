@@ -23,7 +23,10 @@ from pyrogram import raw, types
 
 
 class ImportContacts:
-    async def import_contacts(self: "pyrogram.Client", contacts: list["types.InputPhoneContact"]):
+    async def import_contacts(
+        self: "pyrogram.Client",
+        contacts: list["types.InputPhoneContact"],
+    ):
         """Import contacts to your Telegram address book.
 
         .. include:: /_includes/usable-by/users.rst

@@ -45,7 +45,8 @@ class AnswerWebAppQuery:
 
         r = await self.invoke(
             raw.functions.messages.SendWebViewResultMessage(
-                bot_query_id=web_app_query_id, result=await result.write(self)
+                bot_query_id=web_app_query_id,
+                result=await result.write(self),
             )
         )
 

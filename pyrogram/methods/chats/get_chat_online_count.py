@@ -17,14 +17,15 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
 
 
 class GetChatOnlineCount:
-    async def get_chat_online_count(self: "pyrogram.Client", chat_id: Union[int, str]) -> int:
+    async def get_chat_online_count(
+        self: "pyrogram.Client", chat_id: int | str
+    ) -> int:
         """Get the number of members that are currently online in a chat.
 
         .. include:: /_includes/usable-by/users.rst
@@ -45,6 +46,8 @@ class GetChatOnlineCount:
         """
         return (
             await self.invoke(
-                raw.functions.messages.GetOnlines(peer=await self.resolve_peer(chat_id))
+                raw.functions.messages.GetOnlines(
+                    peer=await self.resolve_peer(chat_id)
+                )
             )
         ).onlines

@@ -21,7 +21,12 @@ from datetime import datetime
 
 import pyrogram
 from pyrogram import raw, types, utils
-from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType
+from pyrogram.file_id import (
+    FileId,
+    FileType,
+    FileUniqueId,
+    FileUniqueType,
+)
 
 from ..object import Object
 
@@ -106,7 +111,8 @@ class Animation(Object):
                 file_reference=animation.file_reference,
             ).encode(),
             file_unique_id=FileUniqueId(
-                file_unique_type=FileUniqueType.DOCUMENT, media_id=animation.id
+                file_unique_type=FileUniqueType.DOCUMENT,
+                media_id=animation.id,
             ).encode(),
             width=getattr(video_attributes, "w", 0),
             height=getattr(video_attributes, "h", 0),
@@ -120,7 +126,9 @@ class Animation(Object):
         )
 
     @staticmethod
-    def _parse_chat_animation(client, video: "raw.types.Photo") -> "Animation":
+    def _parse_chat_animation(
+        client, video: "raw.types.Photo"
+    ) -> "Animation":
         if isinstance(video, raw.types.Photo):
             if not video.video_sizes:
                 return None
@@ -147,14 +155,17 @@ class Animation(Object):
                 if video
                 else None,
                 file_unique_id=FileUniqueId(
-                    file_unique_type=FileUniqueType.DOCUMENT, media_id=video.id
+                    file_unique_type=FileUniqueType.DOCUMENT,
+                    media_id=video.id,
                 ).encode()
                 if video
                 else None,
                 width=video_size.w,
                 height=video_size.h,
                 file_size=video_size.size,
-                date=utils.timestamp_to_datetime(video.date) if video else None,
+                date=utils.timestamp_to_datetime(video.date)
+                if video
+                else None,
                 file_name=f"chat_video_{video.date}_{client.rnd_id()}.mp4",
                 mime_type="video/mp4",
                 client=client,

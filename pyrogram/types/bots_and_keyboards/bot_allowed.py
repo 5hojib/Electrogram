@@ -44,9 +44,9 @@ class BotAllowed(Object):
     def __init__(
         self,
         *,
-        attach_menu: Optional[bool] = None,
-        from_request: Optional[bool] = None,
-        domain: Optional[str] = None,
+        attach_menu: bool | None = None,
+        from_request: bool | None = None,
+        domain: str | None = None,
         app: Optional["types.BotApp"] = None,
     ):
         super().__init__()
@@ -57,11 +57,15 @@ class BotAllowed(Object):
         self.app = app
 
     @staticmethod
-    def _parse(client: "pyrogram.Client", bot_allowed: "raw.types.BotAllowed") -> "BotAllowed":
+    def _parse(
+        client: "pyrogram.Client", bot_allowed: "raw.types.BotAllowed"
+    ) -> "BotAllowed":
         bot_app = getattr(bot_allowed, "app", None)
         return BotAllowed(
             attach_menu=getattr(bot_allowed, "attach_menu", None),
             from_request=getattr(bot_allowed, "from_request", None),
             domain=getattr(bot_allowed, "domain", None),
-            app=types.BotApp._parse(client, bot_app) if bot_app is not None else None,
+            app=types.BotApp._parse(client, bot_app)
+            if bot_app is not None
+            else None,
         )

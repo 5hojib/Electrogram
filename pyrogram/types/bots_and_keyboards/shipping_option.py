@@ -37,7 +37,9 @@ class ShippingOption(Object):
 
     """
 
-    def __init__(self, id: str, title: str, prices: "types.LabeledPrice"):
+    def __init__(
+        self, id: str, title: str, prices: "types.LabeledPrice"
+    ):
         super().__init__()
 
         self.id = id
@@ -45,12 +47,17 @@ class ShippingOption(Object):
         self.prices = prices
 
     @staticmethod
-    def _parse(shipping_option: "raw.types.ShippingOption") -> "ShippingOption":
+    def _parse(
+        shipping_option: "raw.types.ShippingOption",
+    ) -> "ShippingOption":
         if isinstance(shipping_option, raw.types.ShippingOption):
             return ShippingOption(
                 id=shipping_option.id,
                 title=shipping_option.title,
-                prices=[types.LabeledPrice._parse(price) for price in shipping_option.prices],
+                prices=[
+                    types.LabeledPrice._parse(price)
+                    for price in shipping_option.prices
+                ],
             )
 
     def write(self):

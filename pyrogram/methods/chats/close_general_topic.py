@@ -15,14 +15,15 @@
 #
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
 
 
 class CloseGeneralTopic:
-    async def close_general_topic(self: "pyrogram.Client", chat_id: Union[int, str]) -> bool:
+    async def close_general_topic(
+        self: "pyrogram.Client", chat_id: int | str
+    ) -> bool:
         """Close a forum topic.
 
         .. include:: /_includes/usable-by/users-bots.rst
@@ -42,7 +43,9 @@ class CloseGeneralTopic:
         """
         await self.invoke(
             raw.functions.channels.EditForumTopic(
-                channel=await self.resolve_peer(chat_id), topic_id=1, closed=True
+                channel=await self.resolve_peer(chat_id),
+                topic_id=1,
+                closed=True,
             )
         )
         return True

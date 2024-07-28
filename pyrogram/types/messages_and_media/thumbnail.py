@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional, Union
+from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -74,9 +74,13 @@ class Thumbnail(Object):
     @staticmethod
     def _parse(
         client, media: Union["raw.types.Photo", "raw.types.Document"]
-    ) -> Optional[list["Thumbnail"]]:
+    ) -> list["Thumbnail"] | None:
         if isinstance(media, raw.types.Photo):
-            raw_thumbs = [i for i in media.sizes if isinstance(i, raw.types.PhotoSize)]
+            raw_thumbs = [
+                i
+                for i in media.sizes
+                if isinstance(i, raw.types.PhotoSize)
+            ]
             raw_thumbs.sort(key=lambda p: p.size)
             raw_thumbs = raw_thumbs[:-1]
 
@@ -108,7 +112,8 @@ class Thumbnail(Object):
                         local_id=0,
                     ).encode(),
                     file_unique_id=FileUniqueId(
-                        file_unique_type=FileUniqueType.DOCUMENT, media_id=media.id
+                        file_unique_type=FileUniqueType.DOCUMENT,
+                        media_id=media.id,
                     ).encode(),
                     width=thumb.w,
                     height=thumb.h,

@@ -17,7 +17,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -25,7 +24,9 @@ from pyrogram import raw
 
 class UnbanChatMember:
     async def unban_chat_member(
-        self: "pyrogram.Client", chat_id: Union[int, str], user_id: Union[int, str]
+        self: "pyrogram.Client",
+        chat_id: int | str,
+        user_id: int | str,
     ) -> bool:
         """Unban a previously banned user in a supergroup or channel.
         The user will **not** return to the group or channel automatically, but will be able to join via link, etc.
@@ -55,7 +56,9 @@ class UnbanChatMember:
             raw.functions.channels.EditBanned(
                 channel=await self.resolve_peer(chat_id),
                 participant=await self.resolve_peer(user_id),
-                banned_rights=raw.types.ChatBannedRights(until_date=0),
+                banned_rights=raw.types.ChatBannedRights(
+                    until_date=0
+                ),
             )
         )
 

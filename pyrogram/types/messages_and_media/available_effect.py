@@ -57,9 +57,9 @@ class AvailableEffect(Object):
         emoji: str,
         effect_sticker_id: int,
         sticker: Optional["types.Sticker"] = None,
-        is_premium: Optional[bool] = None,
-        static_icon_id: Optional[int] = None,
-        effect_animation_id: Optional[int] = None,
+        is_premium: bool | None = None,
+        static_icon_id: int | None = None,
+        effect_animation_id: int | None = None,
     ):
         super().__init__()
 
@@ -81,7 +81,9 @@ class AvailableEffect(Object):
 
         if document:
             attributes = {type(i): i for i in document.attributes}
-            sticker = await types.Sticker._parse(client, document, attributes)
+            sticker = await types.Sticker._parse(
+                client, document, attributes
+            )
 
         return AvailableEffect(
             id=effect.id,
@@ -90,5 +92,7 @@ class AvailableEffect(Object):
             sticker=sticker,
             is_premium=getattr(effect, "premium_required", None),
             static_icon_id=getattr(effect, "static_icon_id", None),
-            effect_animation_id=getattr(effect, "effect_animation_id", None),
+            effect_animation_id=getattr(
+                effect, "effect_animation_id", None
+            ),
         )

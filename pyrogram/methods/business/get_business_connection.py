@@ -38,7 +38,9 @@ class GetBusinessConnection:
         """
 
         r = await self.invoke(
-            raw.functions.account.GetBotBusinessConnection(connection_id=business_connection_id)
+            raw.functions.account.GetBotBusinessConnection(
+                connection_id=business_connection_id
+            )
         )
         for i in r.updates:
             if isinstance(i, (raw.types.UpdateBotBusinessConnect)):

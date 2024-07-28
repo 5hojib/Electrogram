@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -25,7 +24,7 @@ from pyrogram import raw
 class RefundStarPayment:
     async def refund_star_payment(
         self: "pyrogram.Client",
-        user_id: Union[int, str],
+        user_id: int | str,
         telegram_payment_charge_id: str,
     ) -> bool:
         """Refund the star to the user.

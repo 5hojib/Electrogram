@@ -19,7 +19,6 @@
 
 from json import dumps
 from random import randint
-from typing import Union
 
 import pyrogram
 from pyrogram import enums, raw
@@ -28,7 +27,7 @@ from pyrogram import enums, raw
 class SendChatAction:
     async def send_chat_action(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         action: "enums.ChatAction",
         message_thread_id: int = None,
         business_connection_id: str = None,
@@ -107,7 +106,19 @@ class SendChatAction:
                     raw.types.InputStickerSetAnimatedEmojiAnimations()
                 )
                 emoji_message_interaction = raw.types.DataJSON(
-                    data=dumps({"v": 1, "a": [{"t": 0, "i": randint(1, sticker_set.count)}]})
+                    data=dumps(
+                        {
+                            "v": 1,
+                            "a": [
+                                {
+                                    "t": 0,
+                                    "i": randint(
+                                        1, sticker_set.count
+                                    ),
+                                }
+                            ],
+                        }
+                    )
                 )
             action = action.value(
                 emoticon=emoji,

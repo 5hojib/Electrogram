@@ -130,27 +130,39 @@ class EditStory:
                 if os.path.isfile(animation):
                     file = await self.save_file(animation)
                     media = raw.types.InputMediaUploadedDocument(
-                        mime_type=self.guess_mime_type(animation) or "video/mp4",
+                        mime_type=self.guess_mime_type(animation)
+                        or "video/mp4",
                         file=file,
                         attributes=[
                             raw.types.DocumentAttributeVideo(
-                                supports_streaming=True, duration=0, w=0, h=0
+                                supports_streaming=True,
+                                duration=0,
+                                w=0,
+                                h=0,
                             ),
                             raw.types.DocumentAttributeAnimated(),
                         ],
                     )
                 elif re.match("^https?://", animation):
-                    media = raw.types.InputMediaDocumentExternal(url=animation)
+                    media = raw.types.InputMediaDocumentExternal(
+                        url=animation
+                    )
                 else:
-                    media = utils.get_input_media_from_file_id(animation, FileType.ANIMATION)
+                    media = utils.get_input_media_from_file_id(
+                        animation, FileType.ANIMATION
+                    )
             else:
                 file = await self.save_file(animation)
                 media = raw.types.InputMediaUploadedDocument(
-                    mime_type=self.guess_mime_type(animation) or "video/mp4",
+                    mime_type=self.guess_mime_type(animation)
+                    or "video/mp4",
                     file=file,
                     attributes=[
                         raw.types.DocumentAttributeVideo(
-                            supports_streaming=True, duration=0, w=0, h=0
+                            supports_streaming=True,
+                            duration=0,
+                            w=0,
+                            h=0,
                         ),
                         raw.types.DocumentAttributeAnimated(),
                     ],
@@ -159,11 +171,17 @@ class EditStory:
             if isinstance(photo, str):
                 if os.path.isfile(photo):
                     file = await self.save_file(photo)
-                    media = raw.types.InputMediaUploadedPhoto(file=file)
+                    media = raw.types.InputMediaUploadedPhoto(
+                        file=file
+                    )
                 elif re.match("^https?://", photo):
-                    media = raw.types.InputMediaPhotoExternal(url=photo)
+                    media = raw.types.InputMediaPhotoExternal(
+                        url=photo
+                    )
                 else:
-                    media = utils.get_input_media_from_file_id(photo, FileType.PHOTO)
+                    media = utils.get_input_media_from_file_id(
+                        photo, FileType.PHOTO
+                    )
             else:
                 file = await self.save_file(photo)
                 media = raw.types.InputMediaUploadedPhoto(file=file)
@@ -172,26 +190,38 @@ class EditStory:
                 if os.path.isfile(video):
                     file = await self.save_file(video)
                     media = raw.types.InputMediaUploadedDocument(
-                        mime_type=self.guess_mime_type(video) or "video/mp4",
+                        mime_type=self.guess_mime_type(video)
+                        or "video/mp4",
                         file=file,
                         attributes=[
                             raw.types.DocumentAttributeVideo(
-                                supports_streaming=True, duration=0, w=0, h=0
+                                supports_streaming=True,
+                                duration=0,
+                                w=0,
+                                h=0,
                             )
                         ],
                     )
                 elif re.match("^https?://", video):
-                    media = raw.types.InputMediaDocumentExternal(url=video)
+                    media = raw.types.InputMediaDocumentExternal(
+                        url=video
+                    )
                 else:
-                    media = utils.get_input_media_from_file_id(video, FileType.VIDEO)
+                    media = utils.get_input_media_from_file_id(
+                        video, FileType.VIDEO
+                    )
             else:
                 file = await self.save_file(video)
                 media = raw.types.InputMediaUploadedDocument(
-                    mime_type=self.guess_mime_type(video) or "video/mp4",
+                    mime_type=self.guess_mime_type(video)
+                    or "video/mp4",
                     file=file,
                     attributes=[
                         raw.types.DocumentAttributeVideo(
-                            supports_streaming=True, duration=0, w=0, h=0
+                            supports_streaming=True,
+                            duration=0,
+                            w=0,
+                            h=0,
                         )
                     ],
                 )
@@ -199,7 +229,9 @@ class EditStory:
         entities = None
         if caption:
             text, entities = self._split(
-                **await utils.parse_text_entities(self, caption, parse_mode, caption_entities)
+                **await utils.parse_text_entities(
+                    self, caption, parse_mode, caption_entities
+                )
             )
 
         """
@@ -211,11 +243,21 @@ class EditStory:
             privacy_rules.append(raw.types.InputPrivacyValueDisallowChatParticipants(chats=chats))
         """
         if allowed_users and len(allowed_users) > 0:
-            users = [await self.resolve_peer(user_id) for user_id in allowed_users]
-            privacy_rules.append(raw.types.InputPrivacyValueAllowUsers(users=users))
+            users = [
+                await self.resolve_peer(user_id)
+                for user_id in allowed_users
+            ]
+            privacy_rules.append(
+                raw.types.InputPrivacyValueAllowUsers(users=users)
+            )
         if denied_users and len(denied_users) > 0:
-            users = [await self.resolve_peer(user_id) for user_id in denied_users]
-            privacy_rules.append(raw.types.InputPrivacyValueDisallowUsers(users=users))
+            users = [
+                await self.resolve_peer(user_id)
+                for user_id in denied_users
+            ]
+            privacy_rules.append(
+                raw.types.InputPrivacyValueDisallowUsers(users=users)
+            )
 
         r = await self.invoke(
             raw.functions.stories.EditStory(
@@ -225,7 +267,12 @@ class EditStory:
                 privacy_rules=privacy_rules,
                 caption=text,
                 entities=entities,
-                media_areas=[await media_area.write(self) for media_area in media_areas],
+                media_areas=[
+                    await media_area.write(self)
+                    for media_area in media_areas
+                ],
             )
         )
-        return await types.Story._parse(self, r.updates[0].story, r.updates[0].peer)
+        return await types.Story._parse(
+            self, r.updates[0].story, r.updates[0].peer
+        )

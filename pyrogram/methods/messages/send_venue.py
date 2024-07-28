@@ -27,7 +27,7 @@ from pyrogram import enums, raw, types, utils
 class SendVenue:
     async def send_venue(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         latitude: float,
         longitude: float,
         title: str,
@@ -40,7 +40,7 @@ class SendVenue:
         message_thread_id: int = None,
         business_connection_id: str = None,
         reply_to_message_id: int = None,
-        reply_to_chat_id: Union[int, str] = None,
+        reply_to_chat_id: int | str = None,
         quote_text: str = None,
         quote_entities: list["types.MessageEntity"] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
@@ -155,7 +155,9 @@ class SendVenue:
         rpc = raw.functions.messages.SendMedia(
             peer=await self.resolve_peer(chat_id),
             media=raw.types.InputMediaVenue(
-                geo_point=raw.types.InputGeoPoint(lat=latitude, long=longitude),
+                geo_point=raw.types.InputGeoPoint(
+                    lat=latitude, long=longitude
+                ),
                 title=title,
                 address=address,
                 provider="",  # TODO
@@ -168,7 +170,9 @@ class SendVenue:
             random_id=self.rnd_id(),
             schedule_date=utils.datetime_to_timestamp(schedule_date),
             noforwards=protect_content,
-            reply_markup=await reply_markup.write(self) if reply_markup else None,
+            reply_markup=await reply_markup.write(self)
+            if reply_markup
+            else None,
             effect=message_effect_id,
         )
         if business_connection_id is not None:
@@ -195,6 +199,8 @@ class SendVenue:
                     i.message,
                     {i.id: i for i in r.users},
                     {i.id: i for i in r.chats},
-                    is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
+                    is_scheduled=isinstance(
+                        i, raw.types.UpdateNewScheduledMessage
+                    ),
                     business_connection_id=business_connection_id,
                 )

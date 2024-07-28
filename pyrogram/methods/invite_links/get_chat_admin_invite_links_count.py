@@ -17,7 +17,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -26,8 +25,8 @@ from pyrogram import raw
 class GetChatAdminInviteLinksCount:
     async def get_chat_admin_invite_links_count(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        admin_id: Union[int, str],
+        chat_id: int | str,
+        admin_id: int | str,
         revoked: bool = False,
     ) -> int:
         """Get the count of the invite links created by an administrator in a chat.

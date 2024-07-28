@@ -17,7 +17,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -34,10 +33,14 @@ class BotCommandScopeChatAdministrators(BotCommandScope):
             @supergroupusername).
     """
 
-    def __init__(self, chat_id: Union[int, str]):
+    def __init__(self, chat_id: int | str):
         super().__init__("chat_administrators")
 
         self.chat_id = chat_id
 
-    async def write(self, client: "pyrogram.Client") -> "raw.base.BotCommandScope":
-        return raw.types.BotCommandScopePeerAdmins(peer=await client.resolve_peer(self.chat_id))
+    async def write(
+        self, client: "pyrogram.Client"
+    ) -> "raw.base.BotCommandScope":
+        return raw.types.BotCommandScopePeerAdmins(
+            peer=await client.resolve_peer(self.chat_id)
+        )

@@ -33,7 +33,9 @@ class TLObject:
 
     @classmethod
     def read(cls, b: BytesIO, *args: Any) -> Any:
-        return cast(TLObject, objects[int.from_bytes(b.read(4), "little")]).read(b, *args)
+        return cast(
+            TLObject, objects[int.from_bytes(b.read(4), "little")]
+        ).read(b, *args)
 
     def write(self, *args: Any) -> bytes:
         pass
@@ -53,7 +55,12 @@ class TLObject:
         }
 
     def __str__(self) -> str:
-        return dumps(self, indent=4, default=TLObject.default, ensure_ascii=False)
+        return dumps(
+            self,
+            indent=4,
+            default=TLObject.default,
+            ensure_ascii=False,
+        )
 
     def __repr__(self) -> str:
         return (
@@ -79,9 +86,13 @@ class TLObject:
         pass
 
     def __hash__(self) -> int:
-        return hash((
-            self.__class__,
-            *tuple(
-                getattr(self, attr) for attr in self.__slots__ if getattr(self, attr) is not None
-            ),
-        ))
+        return hash(
+            (
+                self.__class__,
+                *tuple(
+                    getattr(self, attr)
+                    for attr in self.__slots__
+                    if getattr(self, attr) is not None
+                ),
+            )
+        )

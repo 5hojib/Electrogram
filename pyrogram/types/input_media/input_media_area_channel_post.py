@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw, types
@@ -41,7 +40,7 @@ class InputMediaAreaChannelPost(InputMediaArea):
     def __init__(
         self,
         coordinates: "types.MediaAreaCoordinates",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         message_id: int,
     ):
         super().__init__(coordinates=coordinates)

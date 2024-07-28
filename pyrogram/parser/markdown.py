@@ -80,16 +80,28 @@ class Markdown:
         for line in lines:
             if line.startswith(BLOCKQUOTE_DELIM):
                 if not in_blockquote:
-                    line = re.sub(r"^> ", OPENING_TAG.format("blockquote"), line)
-                    line = re.sub(r"^>", OPENING_TAG.format("blockquote"), line)
+                    line = re.sub(
+                        r"^> ", OPENING_TAG.format("blockquote"), line
+                    )
+                    line = re.sub(
+                        r"^>", OPENING_TAG.format("blockquote"), line
+                    )
                     in_blockquote = True
                     result.append(line.strip())
                 else:
                     result.append(line[1:].strip())
             elif line.startswith(BLOCKQUOTE_EXPANDABLE_DELIM):
                 if not in_blockquote:
-                    line = re.sub(r"^\*\*> ", OPENING_TAG.format("blockquote expandable"), line)
-                    line = re.sub(r"^\*\*>", OPENING_TAG.format("blockquote expandable"), line)
+                    line = re.sub(
+                        r"^\*\*> ",
+                        OPENING_TAG.format("blockquote expandable"),
+                        line,
+                    )
+                    line = re.sub(
+                        r"^\*\*>",
+                        OPENING_TAG.format("blockquote expandable"),
+                        line,
+                    )
                     in_blockquote = True
                     result.append(line.strip())
                 else:
@@ -101,7 +113,9 @@ class Markdown:
                 result.append(line)
 
         if in_blockquote:
-            line = result[len(result) - 1] + CLOSING_TAG.format("blockquote")
+            line = result[len(result) - 1] + CLOSING_TAG.format(
+                "blockquote"
+            )
             result.pop(len(result) - 1)
             result.append(line)
 
@@ -133,7 +147,12 @@ class Markdown:
                 continue
 
             if text_url:
-                text = utils.replace_once(text, full, URL_MARKUP.format(url, text_url), start)
+                text = utils.replace_once(
+                    text,
+                    full,
+                    URL_MARKUP.format(url, text_url),
+                    start,
+                )
                 continue
 
             if delim == BOLD_DELIM:
@@ -161,10 +180,15 @@ class Markdown:
                 tag = CLOSING_TAG.format(tag)
 
             if delim == PRE_DELIM and delim in delims:
-                delim_and_language = text[text.find(PRE_DELIM) :].split("\n")[0]
+                delim_and_language = text[
+                    text.find(PRE_DELIM) :
+                ].split("\n")[0]
                 language = delim_and_language[len(PRE_DELIM) :]
                 text = utils.replace_once(
-                    text, delim_and_language, f'<pre language="{language}">', start
+                    text,
+                    delim_and_language,
+                    f'<pre language="{language}">',
+                    start,
                 )
                 continue
 
@@ -257,7 +281,11 @@ class Markdown:
 
         entities_offsets = map(
             lambda x: x[1],
-            sorted(enumerate(entities_offsets), key=lambda x: (x[1][1], x[0]), reverse=True),
+            sorted(
+                enumerate(entities_offsets),
+                key=lambda x: (x[1][1], x[0]),
+                reverse=True,
+            ),
         )
 
         for entity, offset in entities_offsets:

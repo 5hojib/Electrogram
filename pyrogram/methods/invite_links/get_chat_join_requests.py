@@ -18,7 +18,6 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from collections.abc import AsyncGenerator
-from typing import Optional, Union
 
 import pyrogram
 from pyrogram import raw, types
@@ -27,10 +26,10 @@ from pyrogram import raw, types
 class GetChatJoinRequests:
     async def get_chat_join_requests(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         limit: int = 0,
         query: str = "",
-    ) -> Optional[AsyncGenerator["types.ChatJoiner", None]]:
+    ) -> AsyncGenerator["types.ChatJoiner", None] | None:
         """Get the pending join requests of a chat.
 
         .. include:: /_includes/usable-by/users.rst
@@ -79,7 +78,9 @@ class GetChatJoinRequests:
             users = {i.id: i for i in r.users}
 
             offset_date = r.importers[-1].date
-            offset_user = await self.resolve_peer(r.importers[-1].user_id)
+            offset_user = await self.resolve_peer(
+                r.importers[-1].user_id
+            )
 
             for i in r.importers:
                 yield types.ChatJoiner._parse(self, i, users)

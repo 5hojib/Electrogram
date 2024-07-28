@@ -42,4 +42,6 @@ class SentWebAppMessage(Object):
 
     @staticmethod
     def _parse(obj: "raw.types.WebViewMessageSent"):
-        return SentWebAppMessage(inline_message_id=utils.pack_inline_message_id(obj.msg_id))
+        return SentWebAppMessage(
+            inline_message_id=utils.pack_inline_message_id(obj.msg_id)
+        )

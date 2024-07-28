@@ -17,7 +17,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -26,8 +25,8 @@ from pyrogram import raw
 class AddChatMembers:
     async def add_chat_members(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        user_ids: Union[Union[int, str], list[Union[int, str]]],
+        chat_id: int | str,
+        user_ids: int | str | list[int | str],
         forward_limit: int = 100,
     ) -> bool:
         """Add new chat members to a group, supergroup or channel
@@ -82,7 +81,10 @@ class AddChatMembers:
             await self.invoke(
                 raw.functions.channels.InviteToChannel(
                     channel=peer,
-                    users=[await self.resolve_peer(user_id) for user_id in user_ids],
+                    users=[
+                        await self.resolve_peer(user_id)
+                        for user_id in user_ids
+                    ],
                 )
             )
 

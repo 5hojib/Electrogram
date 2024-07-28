@@ -27,7 +27,9 @@ class BusinessSchedule(AutoName):
     ALWAYS = raw.types.BusinessAwayMessageScheduleAlways
     "Send always"
 
-    OUTSIDE_WORK_HOURS = raw.types.BusinessAwayMessageScheduleOutsideWorkHours
+    OUTSIDE_WORK_HOURS = (
+        raw.types.BusinessAwayMessageScheduleOutsideWorkHours
+    )
     "Outside of Business Hours"
 
     CUSTOM = raw.types.BusinessAwayMessageScheduleCustom

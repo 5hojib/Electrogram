@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional, Union
+from typing import Optional
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
@@ -26,7 +26,7 @@ from pyrogram import enums, raw, types, utils
 class SendInlineBotResult:
     async def send_inline_bot_result(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         query_id: int,
         result_id: str,
         disable_notification: bool = None,

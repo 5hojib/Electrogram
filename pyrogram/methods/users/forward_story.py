@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import enums, types
@@ -28,9 +27,9 @@ class ForwardStory:
 
     async def forward_story(
         self: "pyrogram.Client",
-        from_chat_id: Union[int, str],
+        from_chat_id: int | str,
         from_story_id: int,
-        chat_id: Union[int, str] = None,
+        chat_id: int | str = None,
         privacy: "enums.StoriesPrivacyRules" = None,
         allowed_users: list[int] = None,
         denied_users: list[int] = None,

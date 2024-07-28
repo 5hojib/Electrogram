@@ -18,7 +18,6 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Union
 
 import pyrogram
 from pyrogram import raw, types, utils
@@ -27,7 +26,7 @@ from pyrogram import raw, types, utils
 class EditChatInviteLink:
     async def edit_chat_invite_link(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         invite_link: str,
         name: str = None,
         expire_date: datetime = None,

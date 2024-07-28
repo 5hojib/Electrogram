@@ -61,13 +61,19 @@ class WebPagePreview(Object):
     @staticmethod
     def _parse(
         client,
-        web_page_preview: Union["raw.types.WebPage", "raw.types.WebPageEmpty"],
+        web_page_preview: Union[
+            "raw.types.WebPage", "raw.types.WebPageEmpty"
+        ],
         invert_media: bool = None,
     ):
         if isinstance(web_page_preview.webpage, raw.types.WebPage):
-            webpage = types.WebPage._parse(client, web_page_preview.webpage)
+            webpage = types.WebPage._parse(
+                client, web_page_preview.webpage
+            )
         else:
-            webpage = types.WebPageEmpty._parse(web_page_preview.webpage)
+            webpage = types.WebPageEmpty._parse(
+                web_page_preview.webpage
+            )
         return WebPagePreview(
             webpage=webpage,
             force_large_media=web_page_preview.force_large_media,

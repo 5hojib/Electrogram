@@ -19,8 +19,8 @@
 
 import inspect
 import re
+from collections.abc import Callable
 from re import Pattern
-from typing import Callable, Union
 
 import pyrogram
 from pyrogram import enums
@@ -37,7 +37,9 @@ from pyrogram.types import (
 
 
 class Filter:
-    async def __call__(self, client: "pyrogram.Client", update: Update):
+    async def __call__(
+        self, client: "pyrogram.Client", update: Update
+    ):
         raise NotImplementedError
 
     def __invert__(self):
@@ -54,11 +56,15 @@ class InvertFilter(Filter):
     def __init__(self, base):
         self.base = base
 
-    async def __call__(self, client: "pyrogram.Client", update: Update):
+    async def __call__(
+        self, client: "pyrogram.Client", update: Update
+    ):
         if inspect.iscoroutinefunction(self.base.__call__):
             x = await self.base(client, update)
         else:
-            x = await client.loop.run_in_executor(client.executor, self.base, client, update)
+            x = await client.loop.run_in_executor(
+                client.executor, self.base, client, update
+            )
 
         return not x
 
@@ -68,11 +74,15 @@ class AndFilter(Filter):
         self.base = base
         self.other = other
 
-    async def __call__(self, client: "pyrogram.Client", update: Update):
+    async def __call__(
+        self, client: "pyrogram.Client", update: Update
+    ):
         if inspect.iscoroutinefunction(self.base.__call__):
             x = await self.base(client, update)
         else:
-            x = await client.loop.run_in_executor(client.executor, self.base, client, update)
+            x = await client.loop.run_in_executor(
+                client.executor, self.base, client, update
+            )
 
         # short circuit
         if not x:
@@ -81,7 +91,9 @@ class AndFilter(Filter):
         if inspect.iscoroutinefunction(self.other.__call__):
             y = await self.other(client, update)
         else:
-            y = await client.loop.run_in_executor(client.executor, self.other, client, update)
+            y = await client.loop.run_in_executor(
+                client.executor, self.other, client, update
+            )
 
         return x and y
 
@@ -91,11 +103,15 @@ class OrFilter(Filter):
         self.base = base
         self.other = other
 
-    async def __call__(self, client: "pyrogram.Client", update: Update):
+    async def __call__(
+        self, client: "pyrogram.Client", update: Update
+    ):
         if inspect.iscoroutinefunction(self.base.__call__):
             x = await self.base(client, update)
         else:
-            x = await client.loop.run_in_executor(client.executor, self.base, client, update)
+            x = await client.loop.run_in_executor(
+                client.executor, self.base, client, update
+            )
 
         # short circuit
         if x:
@@ -104,7 +120,9 @@ class OrFilter(Filter):
         if inspect.iscoroutinefunction(self.other.__call__):
             y = await self.other(client, update)
         else:
-            y = await client.loop.run_in_executor(client.executor, self.other, client, update)
+            y = await client.loop.run_in_executor(
+                client.executor, self.other, client, update
+            )
 
         return x or y
 
@@ -156,7 +174,11 @@ all = create(all_filter)
 
 # region me_filter
 async def me_filter(_, __, m: Message):
-    return bool(m.from_user and m.from_user.is_self or getattr(m, "outgoing", False))
+    return bool(
+        m.from_user
+        and m.from_user.is_self
+        or getattr(m, "outgoing", False)
+    )
 
 
 me = create(me_filter)
@@ -467,7 +489,11 @@ media_spoiler = create(media_spoiler_filter)
 
 # region private_filter
 async def private_filter(_, __, m: Message):
-    return bool(m.chat and m.chat.type in {enums.ChatType.PRIVATE, enums.ChatType.BOT})
+    return bool(
+        m.chat
+        and m.chat.type
+        in {enums.ChatType.PRIVATE, enums.ChatType.BOT}
+    )
 
 
 private = create(private_filter)
@@ -479,7 +505,11 @@ private = create(private_filter)
 
 # region group_filter
 async def group_filter(_, __, m: Message):
-    return bool(m.chat and m.chat.type in {enums.ChatType.GROUP, enums.ChatType.SUPERGROUP})
+    return bool(
+        m.chat
+        and m.chat.type
+        in {enums.ChatType.GROUP, enums.ChatType.SUPERGROUP}
+    )
 
 
 group = create(group_filter)
@@ -886,8 +916,8 @@ general_forum_topic_unhidden = create(general_topic_unhidden_filter)
 
 # region command_filter
 def command(
-    commands: Union[str, list[str]],
-    prefixes: Union[str, list[str]] = "/",
+    commands: str | list[str],
+    prefixes: str | list[str] = "/",
     case_sensitive: bool = False,
 ):
     """Filter commands, i.e.: text messages starting with "/" or any other custom prefix.
@@ -928,7 +958,9 @@ def command(
                 if not re.match(
                     rf"^(?:{cmd}(?:@?{username})?)(?:\s|$)",
                     without_prefix,
-                    flags=re.IGNORECASE if not flt.case_sensitive else 0,
+                    flags=re.IGNORECASE
+                    if not flt.case_sensitive
+                    else 0,
                 ):
                     continue
 
@@ -937,7 +969,9 @@ def command(
                     "",
                     without_prefix,
                     count=1,
-                    flags=re.IGNORECASE if not flt.case_sensitive else 0,
+                    flags=re.IGNORECASE
+                    if not flt.case_sensitive
+                    else 0,
                 )
 
                 # match.groups are 1-indexed, group(1) is the quote, group(2) is the text
@@ -945,7 +979,11 @@ def command(
 
                 # Remove the escape character from the arguments
                 message.command = [cmd] + [
-                    re.sub(r"\\([\"'])", r"\1", m.group(2) or m.group(3) or "")
+                    re.sub(
+                        r"\\([\"'])",
+                        r"\1",
+                        m.group(2) or m.group(3) or "",
+                    )
                     for m in command_re.finditer(without_command)
                 ]
 
@@ -972,7 +1010,7 @@ def command(
 # endregion
 
 
-def regex(pattern: Union[str, Pattern], flags: int = 0):
+def regex(pattern: str | Pattern, flags: int = 0):
     """Filter updates that match a given regular expression pattern.
 
     Can be applied to handlers that receive one of the following updates:
@@ -1003,7 +1041,9 @@ def regex(pattern: Union[str, Pattern], flags: int = 0):
         elif isinstance(update, PreCheckoutQuery):
             value = update.payload
         else:
-            raise ValueError(f"Regex filter doesn't work with {type(update)}")
+            raise ValueError(
+                f"Regex filter doesn't work with {type(update)}"
+            )
 
         if value:
             update.matches = list(flt.p.finditer(value)) or None
@@ -1013,7 +1053,9 @@ def regex(pattern: Union[str, Pattern], flags: int = 0):
     return create(
         func,
         "RegexFilter",
-        p=pattern if isinstance(pattern, Pattern) else re.compile(pattern, flags),
+        p=pattern
+        if isinstance(pattern, Pattern)
+        else re.compile(pattern, flags),
     )
 
 
@@ -1031,18 +1073,31 @@ class user(Filter, set):
             Defaults to None (no users).
     """
 
-    def __init__(self, users: Union[int, str, list[Union[int, str]]] = None):
-        users = [] if users is None else users if isinstance(users, list) else [users]
+    def __init__(self, users: int | str | list[int | str] = None):
+        users = (
+            []
+            if users is None
+            else users
+            if isinstance(users, list)
+            else [users]
+        )
 
         super().__init__(
-            "me" if u in ["me", "self"] else u.lower().strip("@") if isinstance(u, str) else u
+            "me"
+            if u in ["me", "self"]
+            else u.lower().strip("@")
+            if isinstance(u, str)
+            else u
             for u in users
         )
 
     async def __call__(self, _, message: Message):
         return message.from_user and (
             message.from_user.id in self
-            or (message.from_user.username and message.from_user.username.lower() in self)
+            or (
+                message.from_user.username
+                and message.from_user.username.lower() in self
+            )
             or ("me" in self and message.from_user.is_self)
         )
 
@@ -1061,15 +1116,25 @@ class chat(Filter, set):
             Defaults to None (no chats).
     """
 
-    def __init__(self, chats: Union[int, str, list[Union[int, str]]] = None):
-        chats = [] if chats is None else chats if isinstance(chats, list) else [chats]
+    def __init__(self, chats: int | str | list[int | str] = None):
+        chats = (
+            []
+            if chats is None
+            else chats
+            if isinstance(chats, list)
+            else [chats]
+        )
 
         super().__init__(
-            "me" if c in ["me", "self"] else c.lower().strip("@") if isinstance(c, str) else c
+            "me"
+            if c in ["me", "self"]
+            else c.lower().strip("@")
+            if isinstance(c, str)
+            else c
             for c in chats
         )
 
-    async def __call__(self, _, message: Union[Message, Story]):
+    async def __call__(self, _, message: Message | Story):
         if isinstance(message, Story):
             return (
                 message.sender_chat
@@ -1077,20 +1142,27 @@ class chat(Filter, set):
                     message.sender_chat.id in self
                     or (
                         message.sender_chat.username
-                        and message.sender_chat.username.lower() in self
+                        and message.sender_chat.username.lower()
+                        in self
                     )
                 )
             ) or (
                 message.from_user
                 and (
                     message.from_user.id in self
-                    or (message.from_user.username and message.from_user.username.lower() in self)
+                    or (
+                        message.from_user.username
+                        and message.from_user.username.lower() in self
+                    )
                 )
             )
         else:
             return message.chat and (
                 message.chat.id in self
-                or (message.chat.username and message.chat.username.lower() in self)
+                or (
+                    message.chat.username
+                    and message.chat.username.lower() in self
+                )
                 or (
                     "me" in self
                     and message.from_user
@@ -1111,8 +1183,14 @@ class topic(Filter, set):
             Defaults to None (no topics).
     """
 
-    def __init__(self, topics: Union[int, list[int]] = None):
-        topics = [] if topics is None else topics if isinstance(topics, list) else [topics]
+    def __init__(self, topics: int | list[int] = None):
+        topics = (
+            []
+            if topics is None
+            else topics
+            if isinstance(topics, list)
+            else [topics]
+        )
 
         super().__init__(t for t in topics)
 

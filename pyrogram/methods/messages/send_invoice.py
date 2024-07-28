@@ -15,7 +15,6 @@
 #
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
-from typing import Union
 
 import pyrogram
 from pyrogram import raw, types, utils
@@ -24,7 +23,7 @@ from pyrogram import raw, types, utils
 class SendInvoice:
     async def send_invoice(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         title: str,
         description: str,
         currency: str,
@@ -146,7 +145,9 @@ class SendInvoice:
                     for price in prices:
                         prices_total += price.amount
                     text = f"Pay ⭐️{prices_total}"
-                reply_markup.inline_keyboard.insert(0, [types.InlineKeyboardButtonBuy(text=text)])
+                reply_markup.inline_keyboard.insert(
+                    0, [types.InlineKeyboardButtonBuy(text=text)]
+                )
 
         reply_to = await utils.get_reply_to(
             client=self,
@@ -168,7 +169,8 @@ class SendInvoice:
                     title=title,
                     description=description,
                     invoice=raw.types.Invoice(
-                        currency=currency, prices=[price.write() for price in prices]
+                        currency=currency,
+                        prices=[price.write() for price in prices],
                     ),
                     payload=encoded_payload,
                     provider=provider,
@@ -189,12 +191,20 @@ class SendInvoice:
                 random_id=self.rnd_id(),
                 reply_to=reply_to,
                 message="",
-                reply_markup=await reply_markup.write(self) if reply_markup is not None else None,
+                reply_markup=await reply_markup.write(self)
+                if reply_markup is not None
+                else None,
             )
         )
 
         for i in r.updates:
-            if isinstance(i, (raw.types.UpdateNewMessage, raw.types.UpdateNewChannelMessage)):
+            if isinstance(
+                i,
+                (
+                    raw.types.UpdateNewMessage,
+                    raw.types.UpdateNewChannelMessage,
+                ),
+            ):
                 return await types.Message._parse(
                     self,
                     i.message,

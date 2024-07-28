@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Callable
+from collections.abc import Callable
 
 import pyrogram
 
@@ -32,12 +32,16 @@ class OnDisconnect:
 
         def decorator(func: Callable) -> Callable:
             if isinstance(self, pyrogram.Client):
-                self.add_handler(pyrogram.handlers.DisconnectHandler(func))
+                self.add_handler(
+                    pyrogram.handlers.DisconnectHandler(func)
+                )
             else:
                 if not hasattr(func, "handlers"):
                     func.handlers = []
 
-                func.handlers.append((pyrogram.handlers.DisconnectHandler(func), 0))
+                func.handlers.append(
+                    (pyrogram.handlers.DisconnectHandler(func), 0)
+                )
 
             return func
 

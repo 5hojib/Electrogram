@@ -18,7 +18,6 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 import inspect
-from typing import Union
 
 import pyrogram
 from pyrogram.types import CallbackQuery, Message
@@ -33,17 +32,29 @@ class ConversationHandler(MessageHandler, CallbackQueryHandler):
     def __init__(self):
         self.waiters = {}
 
-    async def check(self, client: "pyrogram.Client", update: Union[Message, CallbackQuery]):
+    async def check(
+        self,
+        client: "pyrogram.Client",
+        update: Message | CallbackQuery,
+    ):
         if isinstance(update, Message) and update.outgoing:
             return False
 
         try:
-            chat_id = update.chat.id if isinstance(update, Message) else update.message.chat.id
+            chat_id = (
+                update.chat.id
+                if isinstance(update, Message)
+                else update.message.chat.id
+            )
         except AttributeError:
             return False
 
         waiter = self.waiters.get(chat_id)
-        if not waiter or not isinstance(update, waiter["update_type"]) or waiter["future"].done():
+        if (
+            not waiter
+            or not isinstance(update, waiter["update_type"])
+            or waiter["future"].done()
+        ):
             return False
 
         filters = waiter.get("filters")

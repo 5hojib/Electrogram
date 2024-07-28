@@ -18,7 +18,6 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-from typing import Union
 
 import pyrogram
 from pyrogram import types
@@ -28,7 +27,7 @@ log = logging.getLogger(__name__)
 
 class GetMediaGroup:
     async def get_media_group(
-        self: "pyrogram.Client", chat_id: Union[int, str], message_id: int
+        self: "pyrogram.Client", chat_id: int | str, message_id: int
     ) -> list["types.Message"]:
         """Get the media group a message belongs to.
 
@@ -54,12 +53,17 @@ class GetMediaGroup:
         """
 
         if message_id <= 0:
-            raise ValueError("Passed message_id is negative or equal to zero.")
+            raise ValueError(
+                "Passed message_id is negative or equal to zero."
+            )
 
         # Get messages with id from `id - 9` to `id + 10` to get all possible media group messages.
         messages = await self.get_messages(
             chat_id=chat_id,
-            message_ids=[msg_id for msg_id in range(message_id - 9, message_id + 10)],
+            message_ids=[
+                msg_id
+                for msg_id in range(message_id - 9, message_id + 10)
+            ],
             replies=0,
         )
 
@@ -72,6 +76,12 @@ class GetMediaGroup:
         )
 
         if media_group_id is None:
-            raise ValueError("The message doesn't belong to a media group")
+            raise ValueError(
+                "The message doesn't belong to a media group"
+            )
 
-        return types.List(msg for msg in messages if msg.media_group_id == media_group_id)
+        return types.List(
+            msg
+            for msg in messages
+            if msg.media_group_id == media_group_id
+        )

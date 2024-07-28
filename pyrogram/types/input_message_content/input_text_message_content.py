@@ -60,13 +60,18 @@ class InputTextMessageContent(InputMessageContent):
     async def write(self, client: "pyrogram.Client", reply_markup):
         message, entities = (
             await utils.parse_text_entities(
-                client, self.message_text, self.parse_mode, self.entities
+                client,
+                self.message_text,
+                self.parse_mode,
+                self.entities,
             )
         ).values()
 
         return raw.types.InputBotInlineMessageText(
             no_webpage=self.disable_web_page_preview or None,
-            reply_markup=await reply_markup.write(client) if reply_markup else None,
+            reply_markup=await reply_markup.write(client)
+            if reply_markup
+            else None,
             message=message,
             entities=entities,
         )

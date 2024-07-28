@@ -75,7 +75,9 @@ class Giveaway(Object):
         self.private_channel_ids = private_channel_ids
 
     @staticmethod
-    async def _parse(client, message: "raw.types.Message") -> "Giveaway":
+    async def _parse(
+        client, message: "raw.types.Message"
+    ) -> "Giveaway":
         giveaway: raw.types.MessageMediaGiveaway = message.media
         chats = []
         private_ids = []
@@ -83,24 +85,32 @@ class Giveaway(Object):
             chat_id = utils.get_channel_id(raw_chat_id)
             try:
                 chat = await client.invoke(
-                    raw.functions.channels.GetChannels(id=[await client.resolve_peer(chat_id)])
+                    raw.functions.channels.GetChannels(
+                        id=[await client.resolve_peer(chat_id)]
+                    )
                 )
             except FloodWait as e:
                 await asyncio.sleep(e.value)
             except Exception:
                 private_ids.append(chat_id)
             else:
-                chats.append(types.Chat._parse_chat(client, chat.chats[0]))
+                chats.append(
+                    types.Chat._parse_chat(client, chat.chats[0])
+                )
 
         return Giveaway(
             chats=chats,
             quantity=giveaway.quantity,
             months=giveaway.months,
-            expire_date=utils.timestamp_to_datetime(giveaway.until_date),
+            expire_date=utils.timestamp_to_datetime(
+                giveaway.until_date
+            ),
             new_subscribers=giveaway.only_new_subscribers,
             allowed_countries=giveaway.countries_iso2
             if len(giveaway.countries_iso2) > 0
             else None,
-            private_channel_ids=private_ids if len(private_ids) > 0 else None,
+            private_channel_ids=private_ids
+            if len(private_ids) > 0
+            else None,
             client=client,
         )

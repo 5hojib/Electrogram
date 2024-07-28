@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional, Union
+from typing import Optional
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
@@ -26,7 +26,7 @@ from pyrogram import enums, raw, types, utils
 class EditMessageText:
     async def edit_message_text(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         message_id: int,
         text: str,
         parse_mode: Optional["enums.ParseMode"] = None,
@@ -93,8 +93,12 @@ class EditMessageText:
             id=message_id,
             no_webpage=disable_web_page_preview or None,
             invert_media=invert_media,
-            reply_markup=await reply_markup.write(self) if reply_markup else None,
-            **await utils.parse_text_entities(self, text, parse_mode, entities),
+            reply_markup=await reply_markup.write(self)
+            if reply_markup
+            else None,
+            **await utils.parse_text_entities(
+                self, text, parse_mode, entities
+            ),
         )
         if business_connection_id is not None:
             r = await self.invoke(
@@ -106,7 +110,13 @@ class EditMessageText:
             r = await self.invoke(rpc)
 
         for i in r.updates:
-            if isinstance(i, (raw.types.UpdateEditMessage, raw.types.UpdateEditChannelMessage)):
+            if isinstance(
+                i,
+                (
+                    raw.types.UpdateEditMessage,
+                    raw.types.UpdateEditChannelMessage,
+                ),
+            ):
                 return await types.Message._parse(
                     self,
                     i.message,

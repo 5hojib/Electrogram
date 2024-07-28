@@ -18,7 +18,6 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Union
 
 import pyrogram
 from pyrogram import raw, types, utils
@@ -27,8 +26,8 @@ from pyrogram import raw, types, utils
 class RestrictChatMember:
     async def restrict_chat_member(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        user_id: Union[int, str],
+        chat_id: int | str,
+        user_id: int | str,
         permissions: "types.ChatPermissions",
         until_date: datetime = utils.zero_datetime(),
     ) -> "types.Chat":
@@ -110,7 +109,9 @@ class RestrictChatMember:
                 manage_topics = True
                 send_inline = True
         else:
-            old_permissions = (await self.get_chat(chat_id)).permissions
+            old_permissions = (
+                await self.get_chat(chat_id)
+            ).permissions
             send_messages = None
             send_media = None
             embed_links = (
@@ -204,7 +205,9 @@ class RestrictChatMember:
                 else:
                     send_plain = True
                 if permissions.can_send_media_messages is None:
-                    permissions.can_send_media_messages = old_permissions.can_send_media_messages
+                    permissions.can_send_media_messages = (
+                        old_permissions.can_send_media_messages
+                    )
             if permissions.can_send_media_messages is not None:
                 if permissions.can_send_media_messages:
                     embed_links = False
@@ -237,7 +240,9 @@ class RestrictChatMember:
                 channel=await self.resolve_peer(chat_id),
                 participant=await self.resolve_peer(user_id),
                 banned_rights=raw.types.ChatBannedRights(
-                    until_date=utils.datetime_to_timestamp(until_date),
+                    until_date=utils.datetime_to_timestamp(
+                        until_date
+                    ),
                     send_messages=send_messages,
                     send_media=send_media,
                     embed_links=embed_links,

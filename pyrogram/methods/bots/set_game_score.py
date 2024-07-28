@@ -26,11 +26,11 @@ from pyrogram import raw, types
 class SetGameScore:
     async def set_game_score(
         self: "pyrogram.Client",
-        user_id: Union[int, str],
+        user_id: int | str,
         score: int,
         force: bool = None,
         disable_edit_message: bool = None,
-        chat_id: Union[int, str] = None,
+        chat_id: int | str = None,
         message_id: int = None,
     ) -> Union["types.Message", bool]:
         # inline_message_id: str = None):  TODO Add inline_message_id
@@ -90,7 +90,13 @@ class SetGameScore:
         )
 
         for i in r.updates:
-            if isinstance(i, (raw.types.UpdateEditMessage, raw.types.UpdateEditChannelMessage)):
+            if isinstance(
+                i,
+                (
+                    raw.types.UpdateEditMessage,
+                    raw.types.UpdateEditChannelMessage,
+                ),
+            ):
                 return await types.Message._parse(
                     self,
                     i.message,

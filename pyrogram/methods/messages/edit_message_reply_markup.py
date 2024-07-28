@@ -17,7 +17,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw, types
@@ -26,7 +25,7 @@ from pyrogram import raw, types
 class EditMessageReplyMarkup:
     async def edit_message_reply_markup(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         message_id: int,
         reply_markup: "types.InlineKeyboardMarkup" = None,
         business_connection_id: str = None,
@@ -69,7 +68,9 @@ class EditMessageReplyMarkup:
         rpc = raw.functions.messages.EditMessage(
             peer=await self.resolve_peer(chat_id),
             id=message_id,
-            reply_markup=await reply_markup.write(self) if reply_markup else None,
+            reply_markup=await reply_markup.write(self)
+            if reply_markup
+            else None,
         )
         if business_connection_id is not None:
             r = await self.invoke(
@@ -81,7 +82,13 @@ class EditMessageReplyMarkup:
             r = await self.invoke(rpc)
 
         for i in r.updates:
-            if isinstance(i, (raw.types.UpdateEditMessage, raw.types.UpdateEditChannelMessage)):
+            if isinstance(
+                i,
+                (
+                    raw.types.UpdateEditMessage,
+                    raw.types.UpdateEditChannelMessage,
+                ),
+            ):
                 return await types.Message._parse(
                     self,
                     i.message,

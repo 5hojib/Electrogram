@@ -36,4 +36,6 @@ class GetPasswordHint:
         Returns:
             ``str``: On success, the password hint as string is returned.
         """
-        return (await self.invoke(raw.functions.account.GetPassword())).hint
+        return (
+            await self.invoke(raw.functions.account.GetPassword())
+        ).hint

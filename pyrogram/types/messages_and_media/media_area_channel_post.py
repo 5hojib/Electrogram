@@ -49,19 +49,24 @@ class MediaAreaChannelPost(MediaArea):
         self.message_id = message_id
 
     async def _parse(
-        client: "pyrogram.Client", media_area: "raw.types.MediaAreaChannelPost"
+        client: "pyrogram.Client",
+        media_area: "raw.types.MediaAreaChannelPost",
     ) -> "MediaAreaChannelPost":
         channel_id = utils.get_channel_id(media_area.channel_id)
         chat = types.Chat._parse_chat(
             client,
             (
                 await client.invoke(
-                    raw.functions.channels.GetChannels(id=[await client.resolve_peer(channel_id)])
+                    raw.functions.channels.GetChannels(
+                        id=[await client.resolve_peer(channel_id)]
+                    )
                 )
             ).chats[0],
         )
         return MediaAreaChannelPost(
-            coordinates=types.MediaAreaCoordinates._parse(media_area.coordinates),
+            coordinates=types.MediaAreaCoordinates._parse(
+                media_area.coordinates
+            ),
             chat=chat,
             message_id=media_area.msg_id,
         )

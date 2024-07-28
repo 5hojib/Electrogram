@@ -38,7 +38,9 @@ class MsgContainer(TLObject):
     @staticmethod
     def read(data: BytesIO, *args: Any) -> "MsgContainer":
         count = Int.read(data)
-        return MsgContainer([Message.read(data) for _ in range(count)])
+        return MsgContainer(
+            [Message.read(data) for _ in range(count)]
+        )
 
     def write(self, *args: Any) -> bytes:
         b = BytesIO()

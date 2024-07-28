@@ -91,7 +91,9 @@ class InlineQueryResultDocument(InlineQueryResult):
         thumb_width: int = 0,
         thumb_height: int = 0,
     ):
-        super().__init__("file", id, input_message_content, reply_markup)
+        super().__init__(
+            "file", id, input_message_content, reply_markup
+        )
 
         self.document_url = document_url
         self.title = title
@@ -106,7 +108,10 @@ class InlineQueryResultDocument(InlineQueryResult):
 
     async def write(self, client: "pyrogram.Client"):
         document = raw.types.InputWebDocument(
-            url=self.document_url, size=0, mime_type=self.mime_type, attributes=[]
+            url=self.document_url,
+            size=0,
+            mime_type=self.mime_type,
+            attributes=[],
         )
 
         thumb = (
@@ -115,7 +120,9 @@ class InlineQueryResultDocument(InlineQueryResult):
                 size=0,
                 mime_type="image/jpeg",
                 attributes=[
-                    raw.types.DocumentAttributeImageSize(w=self.thumb_width, h=self.thumb_height)
+                    raw.types.DocumentAttributeImageSize(
+                        w=self.thumb_width, h=self.thumb_height
+                    )
                 ],
             )
             if self.thumb_url
@@ -124,7 +131,10 @@ class InlineQueryResultDocument(InlineQueryResult):
 
         message, entities = (
             await utils.parse_text_entities(
-                client, self.caption, self.parse_mode, self.caption_entities
+                client,
+                self.caption,
+                self.parse_mode,
+                self.caption_entities,
             )
         ).values()
 
@@ -136,7 +146,9 @@ class InlineQueryResultDocument(InlineQueryResult):
             thumb=thumb,
             content=document,
             send_message=(
-                await self.input_message_content.write(client, self.reply_markup)
+                await self.input_message_content.write(
+                    client, self.reply_markup
+                )
                 if self.input_message_content
                 else raw.types.InputBotInlineMessageMediaAuto(
                     reply_markup=await self.reply_markup.write(client)

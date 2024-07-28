@@ -33,9 +33,9 @@ log = logging.getLogger(__name__)
 class GetMessages:
     async def get_messages(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        message_ids: Union[int, Iterable[int]] = None,
-        reply_to_message_ids: Union[int, Iterable[int]] = None,
+        chat_id: int | str,
+        message_ids: int | Iterable[int] = None,
+        reply_to_message_ids: int | Iterable[int] = None,
         replies: int = 1,
     ) -> Union["types.Message", list["types.Message"]]:
         """Get one or more messages from a chat by using message identifiers.
@@ -113,12 +113,22 @@ class GetMessages:
             replies = (1 << 31) - 1
 
         if isinstance(peer, raw.types.InputPeerChannel):
-            rpc = raw.functions.channels.GetMessages(channel=peer, id=ids)
+            rpc = raw.functions.channels.GetMessages(
+                channel=peer, id=ids
+            )
         else:
             rpc = raw.functions.messages.GetMessages(id=ids)
 
         r = await self.invoke(rpc, sleep_threshold=-1)
 
-        messages = await utils.parse_messages(self, r, replies=replies)
+        messages = await utils.parse_messages(
+            self, r, replies=replies
+        )
 
-        return messages if is_iterable else messages[0] if messages else None
+        return (
+            messages
+            if is_iterable
+            else messages[0]
+            if messages
+            else None
+        )

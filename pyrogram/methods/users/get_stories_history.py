@@ -18,7 +18,6 @@
 
 import logging
 from collections.abc import AsyncGenerator
-from typing import Optional
 
 import pyrogram
 from pyrogram import raw, types
@@ -28,8 +27,11 @@ log = logging.getLogger(__name__)
 
 class GetUserStoriesHistory:
     async def get_stories_history(
-        self: "pyrogram.Client", chat_id: int = None, limit: int = 0, offset_id: int = 0
-    ) -> Optional[AsyncGenerator["types.Story", None]]:
+        self: "pyrogram.Client",
+        chat_id: int = None,
+        limit: int = 0,
+        offset_id: int = 0,
+    ) -> AsyncGenerator["types.Story", None] | None:
         """Get stories history.
 
         .. include:: /_includes/usable-by/users.rst
@@ -65,7 +67,9 @@ class GetUserStoriesHistory:
         else:
             peer = await self.resolve_peer("me")
 
-        rpc = raw.functions.stories.GetStoriesArchive(peer=peer, offset_id=offset_id, limit=limit)
+        rpc = raw.functions.stories.GetStoriesArchive(
+            peer=peer, offset_id=offset_id, limit=limit
+        )
 
         r = await self.invoke(rpc, sleep_threshold=-1)
 

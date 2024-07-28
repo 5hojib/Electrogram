@@ -25,7 +25,7 @@ from pyrogram import raw, types, utils
 
 class GetChat:
     async def get_chat(
-        self: "pyrogram.Client", chat_id: Union[int, str]
+        self: "pyrogram.Client", chat_id: int | str
     ) -> Union["types.Chat", "types.ChatPreview"]:
         """Get up to date information about a chat.
 
@@ -57,7 +57,11 @@ class GetChat:
         match = self.INVITE_LINK_RE.match(str(chat_id))
 
         if match:
-            r = await self.invoke(raw.functions.messages.CheckChatInvite(hash=match.group(1)))
+            r = await self.invoke(
+                raw.functions.messages.CheckChatInvite(
+                    hash=match.group(1)
+                )
+            )
 
             if isinstance(r, raw.types.ChatInvite):
                 return types.ChatPreview._parse(self, r)
@@ -73,10 +77,20 @@ class GetChat:
         peer = await self.resolve_peer(chat_id)
 
         if isinstance(peer, raw.types.InputPeerChannel):
-            r = await self.invoke(raw.functions.channels.GetFullChannel(channel=peer))
-        elif isinstance(peer, (raw.types.InputPeerUser, raw.types.InputPeerSelf)):
-            r = await self.invoke(raw.functions.users.GetFullUser(id=peer))
+            r = await self.invoke(
+                raw.functions.channels.GetFullChannel(channel=peer)
+            )
+        elif isinstance(
+            peer, (raw.types.InputPeerUser, raw.types.InputPeerSelf)
+        ):
+            r = await self.invoke(
+                raw.functions.users.GetFullUser(id=peer)
+            )
         else:
-            r = await self.invoke(raw.functions.messages.GetFullChat(chat_id=peer.chat_id))
+            r = await self.invoke(
+                raw.functions.messages.GetFullChat(
+                    chat_id=peer.chat_id
+                )
+            )
 
         return await types.Chat._parse_full(self, r)

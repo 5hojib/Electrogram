@@ -17,14 +17,15 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
 
 
 class BlockUser:
-    async def block_user(self: "pyrogram.Client", user_id: Union[int, str]) -> bool:
+    async def block_user(
+        self: "pyrogram.Client", user_id: int | str
+    ) -> bool:
         """Block a user.
 
         .. include:: /_includes/usable-by/users.rst
@@ -45,5 +46,9 @@ class BlockUser:
                 await app.block_user(user_id)
         """
         return bool(
-            await self.invoke(raw.functions.contacts.Block(id=await self.resolve_peer(user_id)))
+            await self.invoke(
+                raw.functions.contacts.Block(
+                    id=await self.resolve_peer(user_id)
+                )
+            )
         )

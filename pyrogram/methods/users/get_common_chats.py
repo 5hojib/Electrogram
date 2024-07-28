@@ -17,7 +17,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw, types
@@ -25,7 +24,7 @@ from pyrogram import raw, types
 
 class GetCommonChats:
     async def get_common_chats(
-        self: "pyrogram.Client", user_id: Union[int, str]
+        self: "pyrogram.Client", user_id: int | str
     ) -> list["types.Chat"]:
         """Get the common chats you have with a user.
 
@@ -62,6 +61,10 @@ class GetCommonChats:
                 )
             )
 
-            return types.List([types.Chat._parse_chat(self, x) for x in r.chats])
+            return types.List(
+                [types.Chat._parse_chat(self, x) for x in r.chats]
+            )
 
-        raise ValueError(f'The user_id "{user_id}" doesn\'t belong to a user')
+        raise ValueError(
+            f'The user_id "{user_id}" doesn\'t belong to a user'
+        )

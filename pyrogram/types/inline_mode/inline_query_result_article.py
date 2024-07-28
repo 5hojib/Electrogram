@@ -68,7 +68,9 @@ class InlineQueryResultArticle(InlineQueryResult):
         thumb_width: int = 0,
         thumb_height: int = 0,
     ):
-        super().__init__("article", id, input_message_content, reply_markup)
+        super().__init__(
+            "article", id, input_message_content, reply_markup
+        )
 
         self.title = title
         self.url = url
@@ -81,7 +83,9 @@ class InlineQueryResultArticle(InlineQueryResult):
         return raw.types.InputBotInlineResult(
             id=self.id,
             type=self.type,
-            send_message=await self.input_message_content.write(client, self.reply_markup),
+            send_message=await self.input_message_content.write(
+                client, self.reply_markup
+            ),
             title=self.title,
             description=self.description,
             url=self.url,
@@ -90,7 +94,9 @@ class InlineQueryResultArticle(InlineQueryResult):
                 size=0,
                 mime_type="image/jpeg",
                 attributes=[
-                    raw.types.DocumentAttributeImageSize(w=self.thumb_width, h=self.thumb_height)
+                    raw.types.DocumentAttributeImageSize(
+                        w=self.thumb_width, h=self.thumb_height
+                    )
                 ],
             )
             if self.thumb_url

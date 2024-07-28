@@ -27,7 +27,9 @@ log = logging.getLogger(__name__)
 
 # Signal number to name
 signals = {
-    k: v for v, k in signal.__dict__.items() if v.startswith("SIG") and not v.startswith("SIG_")
+    k: v
+    for v, k in signal.__dict__.items()
+    if v.startswith("SIG") and not v.startswith("SIG_")
 }
 
 
@@ -73,7 +75,9 @@ async def idle():
     task = None
 
     def signal_handler(signum, __):
-        logging.info(f"Stop signal received ({signals[signum]}). Exiting...")
+        logging.info(
+            f"Stop signal received ({signals[signum]}). Exiting..."
+        )
         task.cancel()
 
     for s in (SIGINT, SIGTERM, SIGABRT):

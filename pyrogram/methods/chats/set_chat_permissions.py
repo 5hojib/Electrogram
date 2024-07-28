@@ -17,7 +17,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw, types
@@ -26,7 +25,7 @@ from pyrogram import raw, types
 class SetChatPermissions:
     async def set_chat_permissions(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         permissions: "types.ChatPermissions",
     ) -> "types.Chat":
         """Set default chat permissions for all members.
@@ -97,7 +96,9 @@ class SetChatPermissions:
                 manage_topics = True
                 send_inline = True
         else:
-            old_permissions = (await self.get_chat(chat_id)).permissions
+            old_permissions = (
+                await self.get_chat(chat_id)
+            ).permissions
             send_messages = None
             send_media = None
             embed_links = (
@@ -191,7 +192,9 @@ class SetChatPermissions:
                 else:
                     send_plain = True
                 if permissions.can_send_media_messages is None:
-                    permissions.can_send_media_messages = old_permissions.can_send_media_messages
+                    permissions.can_send_media_messages = (
+                        old_permissions.can_send_media_messages
+                    )
             if permissions.can_send_media_messages is not None:
                 if permissions.can_send_media_messages:
                     embed_links = False

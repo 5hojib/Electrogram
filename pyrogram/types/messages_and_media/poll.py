@@ -18,7 +18,7 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Optional, Union
+from typing import Union
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
@@ -96,12 +96,13 @@ class Poll(Object, Update):
         is_anonymous: bool = None,
         type: "enums.PollType" = None,
         allows_multiple_answers: bool = None,
-        chosen_option_id: Optional[int] = None,
-        correct_option_id: Optional[int] = None,
-        explanation: Optional[str] = None,
-        explanation_entities: Optional[list["types.MessageEntity"]] = None,
-        open_period: Optional[int] = None,
-        close_date: Optional[datetime] = None,
+        chosen_option_id: int | None = None,
+        correct_option_id: int | None = None,
+        explanation: str | None = None,
+        explanation_entities: list["types.MessageEntity"]
+        | None = None,
+        open_period: int | None = None,
+        close_date: datetime | None = None,
         recent_voters: list["types.User"] = None,
     ):
         super().__init__(client)
@@ -126,12 +127,17 @@ class Poll(Object, Update):
     @staticmethod
     async def _parse(
         client,
-        media_poll: Union["raw.types.MessageMediaPoll", "raw.types.UpdateMessagePoll"],
+        media_poll: Union[
+            "raw.types.MessageMediaPoll",
+            "raw.types.UpdateMessagePoll",
+        ],
         users: list["raw.base.User"],
     ) -> "Poll":
         poll: raw.types.Poll = media_poll.poll
         poll_results: raw.types.PollResults = media_poll.results
-        results: list[raw.types.PollAnswerVoters] = poll_results.results
+        results: list[raw.types.PollAnswerVoters] = (
+            poll_results.results
+        )
 
         chosen_option_id = None
         correct_option_id = None
@@ -151,11 +157,16 @@ class Poll(Object, Update):
                     correct_option_id = i
 
             o_entities = (
-                [types.MessageEntity._parse(client, entity, {}) for entity in answer.text.entities]
+                [
+                    types.MessageEntity._parse(client, entity, {})
+                    for entity in answer.text.entities
+                ]
                 if answer.text.entities
                 else []
             )
-            option_entities = types.List(filter(lambda x: x is not None, o_entities))
+            option_entities = types.List(
+                filter(lambda x: x is not None, o_entities)
+            )
 
             options.append(
                 types.PollOption(
@@ -168,11 +179,16 @@ class Poll(Object, Update):
             )
 
         q_entities = (
-            [types.MessageEntity._parse(client, entity, {}) for entity in poll.question.entities]
+            [
+                types.MessageEntity._parse(client, entity, {})
+                for entity in poll.question.entities
+            ]
             if poll.question.entities
             else []
         )
-        question_entities = types.List(filter(lambda x: x is not None, q_entities))
+        question_entities = types.List(
+            filter(lambda x: x is not None, q_entities)
+        )
 
         return Poll(
             id=str(poll.id),
@@ -182,20 +198,24 @@ class Poll(Object, Update):
             total_voter_count=media_poll.results.total_voters,
             is_closed=poll.closed,
             is_anonymous=not poll.public_voters,
-            type=enums.PollType.QUIZ if poll.quiz else enums.PollType.REGULAR,
+            type=enums.PollType.QUIZ
+            if poll.quiz
+            else enums.PollType.REGULAR,
             allows_multiple_answers=poll.multiple_choice,
             chosen_option_id=chosen_option_id,
             correct_option_id=correct_option_id,
             explanation=poll_results.solution,
             explanation_entities=[
-                types.MessageEntity._parse(client, i, {}) for i in poll_results.solution_entities
+                types.MessageEntity._parse(client, i, {})
+                for i in poll_results.solution_entities
             ]
             if poll_results.solution_entities
             else None,
             open_period=poll.close_period,
             close_date=utils.timestamp_to_datetime(poll.close_date),
             recent_voters=[
-                await client.get_users(user.user_id) for user in poll_results.recent_voters
+                await client.get_users(user.user_id)
+                for user in poll_results.recent_voters
             ]
             if poll_results.recent_voters
             else None,
@@ -204,7 +224,9 @@ class Poll(Object, Update):
 
     @staticmethod
     async def _parse_update(
-        client, update: "raw.types.UpdateMessagePoll", users: list["raw.base.User"]
+        client,
+        update: "raw.types.UpdateMessagePoll",
+        users: list["raw.base.User"],
     ) -> "Poll":
         if update.poll is not None:
             return await Poll._parse(client, update, users)
@@ -239,7 +261,9 @@ class Poll(Object, Update):
             chosen_option_id=chosen_option_id,
             correct_option_id=correct_option_id,
             recent_voters=[
-                types.User._parse(client, users.get(user.user_id, None))
+                types.User._parse(
+                    client, users.get(user.user_id, None)
+                )
                 for user in update.results.recent_voters
             ]
             if update.results.recent_voters

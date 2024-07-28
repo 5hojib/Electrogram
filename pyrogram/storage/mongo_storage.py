@@ -58,7 +58,12 @@ class MongoStorage(Storage):
     lock: asyncio.Lock
     USERNAME_TTL = 8 * 60 * 60
 
-    def __init__(self, name: str, connection: DummyMongoClient, remove_peers: bool = False):
+    def __init__(
+        self,
+        name: str,
+        connection: DummyMongoClient,
+        remove_peers: bool = False,
+    ):
         super().__init__(name=name)
         database = None
 
@@ -121,7 +126,9 @@ class MongoStorage(Storage):
         except Exception as _:
             return
 
-    async def update_peers(self, peers: list[tuple[int, int, str, str, str]]):
+    async def update_peers(
+        self, peers: list[tuple[int, int, str, str, str]]
+    ):
         """(id, access_hash, type, username, phone_number)"""
         s = int(time.time())
         bulk = [
@@ -144,9 +151,13 @@ class MongoStorage(Storage):
             return
         await self._peer.bulk_write(bulk)
 
-    async def update_usernames(self, usernames: list[tuple[int, str]]):
+    async def update_usernames(
+        self, usernames: list[tuple[int, str]]
+    ):
         s = int(time.time())
-        bulk_delete = [DeleteMany({"peer_id": i[0]}) for i in usernames]
+        bulk_delete = [
+            DeleteMany({"peer_id": i[0]}) for i in usernames
+        ]
         bulk = [
             UpdateOne(
                 {"_id": i[1]},
@@ -160,10 +171,18 @@ class MongoStorage(Storage):
         await self._usernames.bulk_write(bulk_delete)
         await self._usernames.bulk_write(bulk)
 
-    async def update_state(self, value: tuple[int, int, int, int, int] = object):
+    async def update_state(
+        self, value: tuple[int, int, int, int, int] = object
+    ):
         if value == object:
             states = [
-                [state["_id"], state["pts"], state["qts"], state["date"], state["seq"]]
+                [
+                    state["_id"],
+                    state["pts"],
+                    state["qts"],
+                    state["date"],
+                    state["seq"],
+                ]
                 async for state in self._states.find()
             ]
             return states if len(states) > 0 else None
@@ -188,7 +207,9 @@ class MongoStorage(Storage):
 
     async def get_peer_by_id(self, peer_id: int):
         # id, access_hash, type
-        r = await self._peer.find_one({"_id": peer_id}, {"_id": 1, "access_hash": 1, "type": 1})
+        r = await self._peer.find_one(
+            {"_id": peer_id}, {"_id": 1, "access_hash": 1, "type": 1}
+        )
         if not r:
             raise KeyError(f"ID not found: {peer_id}")
         return get_input_peer(r["_id"], r["access_hash"], r["type"])
@@ -197,7 +218,12 @@ class MongoStorage(Storage):
         # id, access_hash, type, last_update_on,
         r = await self._peer.find_one(
             {"username": username},
-            {"_id": 1, "access_hash": 1, "type": 1, "last_update_on": 1},
+            {
+                "_id": 1,
+                "access_hash": 1,
+                "type": 1,
+                "last_update_on": 1,
+            },
         )
 
         if r is None:
@@ -206,11 +232,19 @@ class MongoStorage(Storage):
             )
             if r2 is None:
                 raise KeyError(f"Username not found: {username}")
-            if abs(time.time() - r2["last_update_on"]) > self.USERNAME_TTL:
+            if (
+                abs(time.time() - r2["last_update_on"])
+                > self.USERNAME_TTL
+            ):
                 raise KeyError(f"Username expired: {username}")
             r = await self._peer.find_one(
                 {"_id": r2["peer_id"]},
-                {"_id": 1, "access_hash": 1, "type": 1, "last_update_on": 1},
+                {
+                    "_id": 1,
+                    "access_hash": 1,
+                    "type": 1,
+                    "last_update_on": 1,
+                },
             )
             if r is None:
                 raise KeyError(f"Username not found: {username}")
@@ -223,7 +257,8 @@ class MongoStorage(Storage):
     async def get_peer_by_phone_number(self, phone_number: str):
         #  _id, access_hash, type,
         r = await self._peer.find_one(
-            {"phone_number": phone_number}, {"_id": 1, "access_hash": 1, "type": 1}
+            {"phone_number": phone_number},
+            {"_id": 1, "access_hash": 1, "type": 1},
         )
 
         if r is None:
@@ -240,10 +275,16 @@ class MongoStorage(Storage):
 
     async def _set(self, value: Any):
         attr = inspect.stack()[2].function
-        await self._session.update_one({"_id": 0}, {"$set": {attr: value}}, upsert=True)
+        await self._session.update_one(
+            {"_id": 0}, {"$set": {attr: value}}, upsert=True
+        )
 
     async def _accessor(self, value: Any = object):
-        return await self._get() if value == object else await self._set(value)
+        return (
+            await self._get()
+            if value == object
+            else await self._set(value)
+        )
 
     async def dc_id(self, value: int = object):
         return await self._accessor(value)

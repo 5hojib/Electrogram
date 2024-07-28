@@ -21,7 +21,12 @@ from datetime import datetime
 
 import pyrogram
 from pyrogram import raw, types, utils
-from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType
+from pyrogram.file_id import (
+    FileId,
+    FileType,
+    FileUniqueId,
+    FileUniqueType,
+)
 
 from ..object import Object
 
@@ -106,7 +111,8 @@ class Audio(Object):
                 file_reference=audio.file_reference,
             ).encode(),
             file_unique_id=FileUniqueId(
-                file_unique_type=FileUniqueType.DOCUMENT, media_id=audio.id
+                file_unique_type=FileUniqueType.DOCUMENT,
+                media_id=audio.id,
             ).encode(),
             duration=audio_attributes.duration,
             performer=audio_attributes.performer,

@@ -31,7 +31,9 @@ class Message(TLObject):
 
     QUALNAME = "Message"
 
-    def __init__(self, body: TLObject, msg_id: int, seq_no: int, length: int):
+    def __init__(
+        self, body: TLObject, msg_id: int, seq_no: int, length: int
+    ):
         self.msg_id = msg_id
         self.seq_no = seq_no
         self.length = length
@@ -44,7 +46,9 @@ class Message(TLObject):
         length = Int.read(data)
         body = data.read(length)
 
-        return Message(TLObject.read(BytesIO(body)), msg_id, seq_no, length)
+        return Message(
+            TLObject.read(BytesIO(body)), msg_id, seq_no, length
+        )
 
     def write(self, *args: Any) -> bytes:
         b = BytesIO()

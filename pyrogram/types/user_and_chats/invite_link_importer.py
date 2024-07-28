@@ -42,7 +42,10 @@ class InviteLinkImporter(Object):
         self.user = user
 
     @staticmethod
-    def _parse(client, invite_importers: "raw.types.messages.ChatInviteImporters"):
+    def _parse(
+        client,
+        invite_importers: "raw.types.messages.ChatInviteImporters",
+    ):
         importers = types.List()
 
         d = {i.id: i for i in invite_importers.users}
@@ -51,7 +54,9 @@ class InviteLinkImporter(Object):
             importers.append(
                 InviteLinkImporter(
                     date=utils.timestamp_to_datetime(j.date),
-                    user=types.User._parse(client=None, user=d[j.user_id]),
+                    user=types.User._parse(
+                        client=None, user=d[j.user_id]
+                    ),
                 )
             )
 

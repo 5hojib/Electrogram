@@ -17,7 +17,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -26,8 +25,8 @@ from pyrogram import raw
 class SetAdministratorTitle:
     async def set_administrator_title(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        user_id: Union[int, str],
+        chat_id: int | str,
+        user_id: int | str,
         title: str,
     ) -> bool:
         """Set a custom title (rank) to an administrator of a supergroup.
@@ -64,7 +63,9 @@ class SetAdministratorTitle:
 
         r = (
             await self.invoke(
-                raw.functions.channels.GetParticipant(channel=chat_id, participant=user_id)
+                raw.functions.channels.GetParticipant(
+                    channel=chat_id, participant=user_id
+                )
             )
         ).participant
 
@@ -79,7 +80,10 @@ class SetAdministratorTitle:
 
         await self.invoke(
             raw.functions.channels.EditAdmin(
-                channel=chat_id, user_id=user_id, admin_rights=admin_rights, rank=title
+                channel=chat_id,
+                user_id=user_id,
+                admin_rights=admin_rights,
+                rank=title,
             )
         )
 

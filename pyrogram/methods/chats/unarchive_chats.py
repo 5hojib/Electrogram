@@ -17,7 +17,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -26,7 +25,7 @@ from pyrogram import raw
 class UnarchiveChats:
     async def unarchive_chats(
         self: "pyrogram.Client",
-        chat_ids: Union[int, str, list[Union[int, str]]],
+        chat_ids: int | str | list[int | str],
     ) -> bool:
         """Unarchive one or more chats.
 
@@ -58,9 +57,15 @@ class UnarchiveChats:
 
         for chat in chat_ids:
             folder_peers.append(
-                raw.types.InputFolderPeer(peer=await self.resolve_peer(chat), folder_id=0)
+                raw.types.InputFolderPeer(
+                    peer=await self.resolve_peer(chat), folder_id=0
+                )
             )
 
-        await self.invoke(raw.functions.folders.EditPeerFolders(folder_peers=folder_peers))
+        await self.invoke(
+            raw.functions.folders.EditPeerFolders(
+                folder_peers=folder_peers
+            )
+        )
 
         return True

@@ -122,7 +122,9 @@ class ChatPrivileges(Object):
         self.is_anonymous: bool = is_anonymous
 
     @staticmethod
-    def _parse(admin_rights: "raw.base.ChatAdminRights") -> "ChatPrivileges":
+    def _parse(
+        admin_rights: "raw.base.ChatAdminRights",
+    ) -> "ChatPrivileges":
         return ChatPrivileges(
             can_manage_chat=admin_rights.other,
             can_delete_messages=admin_rights.delete_messages,

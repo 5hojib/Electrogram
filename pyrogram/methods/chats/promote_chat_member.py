@@ -17,7 +17,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional, Union
 
 import pyrogram
 from pyrogram import errors, raw, types
@@ -26,10 +25,10 @@ from pyrogram import errors, raw, types
 class PromoteChatMember:
     async def promote_chat_member(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        user_id: Union[int, str],
+        chat_id: int | str,
+        user_id: int | str,
         privileges: "types.ChatPrivileges" = None,
-        title: Optional[str] = "",
+        title: str | None = "",
     ) -> bool:
         """Promote or demote a user in a supergroup or a channel.
 
@@ -75,13 +74,17 @@ class PromoteChatMember:
         try:
             raw_chat_member = (
                 await self.invoke(
-                    raw.functions.channels.GetParticipant(channel=chat_id, participant=user_id)
+                    raw.functions.channels.GetParticipant(
+                        channel=chat_id, participant=user_id
+                    )
                 )
             ).participant
         except errors.RPCError:
             raw_chat_member = None
 
-        if not title and isinstance(raw_chat_member, raw.types.ChannelParticipantAdmin):
+        if not title and isinstance(
+            raw_chat_member, raw.types.ChannelParticipantAdmin
+        ):
             rank = raw_chat_member.rank
         else:
             rank = title

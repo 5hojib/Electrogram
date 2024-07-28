@@ -23,7 +23,6 @@ import logging
 import os
 from hashlib import sha1
 from io import BytesIO
-from typing import Optional
 
 import pyrogram
 from pyrogram import raw
@@ -85,7 +84,7 @@ class Session:
         self.is_media = is_media
         self.is_cdn = is_cdn
 
-        self.connection: Optional[Connection] = None
+        self.connection: Connection | None = None
 
         self.auth_key_id = sha1(auth_key).digest()[-8:]
 
@@ -124,9 +123,14 @@ class Session:
             try:
                 await self.connection.connect()
 
-                self.recv_task = self.loop.create_task(self.recv_worker())
+                self.recv_task = self.loop.create_task(
+                    self.recv_worker()
+                )
 
-                await self.send(raw.functions.Ping(ping_id=0), timeout=self.START_TIMEOUT)
+                await self.send(
+                    raw.functions.Ping(ping_id=0),
+                    timeout=self.START_TIMEOUT,
+                )
 
                 if not self.is_cdn:
                     await self.send(
@@ -146,11 +150,21 @@ class Session:
                         timeout=self.START_TIMEOUT,
                     )
 
-                self.ping_task = self.loop.create_task(self.ping_worker())
+                self.ping_task = self.loop.create_task(
+                    self.ping_worker()
+                )
 
                 log.info("Session initialized: Layer %s", layer)
-                log.info("Device: %s - %s", self.client.device_model, self.client.app_version)
-                log.info("System: %s (%s)", self.client.system_version, self.client.lang_code)
+                log.info(
+                    "Device: %s - %s",
+                    self.client.device_model,
+                    self.client.app_version,
+                )
+                log.info(
+                    "System: %s (%s)",
+                    self.client.system_version,
+                    self.client.lang_code,
+                )
             except AuthKeyDuplicated as e:
                 await self.stop()
                 raise e
@@ -183,7 +197,9 @@ class Session:
         if self.recv_task:
             await self.recv_task
 
-        if not self.is_media and callable(self.client.disconnect_handler):
+        if not self.is_media and callable(
+            self.client.disconnect_handler
+        ):
             try:
                 await self.client.disconnect_handler(self.client)
             except Exception as e:
@@ -205,7 +221,11 @@ class Session:
             self.auth_key_id,
         )
 
-        messages = data.body.messages if isinstance(data.body, MsgContainer) else [data]
+        messages = (
+            data.body.messages
+            if isinstance(data.body, MsgContainer)
+            else [data]
+        )
 
         log.debug("Received: %s", data)
 
@@ -217,8 +237,13 @@ class Session:
                     self.pending_acks.add(msg.msg_id)
 
             try:
-                if len(self.stored_msg_ids) > Session.STORED_MSG_IDS_MAX_SIZE:
-                    del self.stored_msg_ids[: Session.STORED_MSG_IDS_MAX_SIZE // 2]
+                if (
+                    len(self.stored_msg_ids)
+                    > Session.STORED_MSG_IDS_MAX_SIZE
+                ):
+                    del self.stored_msg_ids[
+                        : Session.STORED_MSG_IDS_MAX_SIZE // 2
+                    ]
 
                 if self.stored_msg_ids:
                     if msg.msg_id < self.stored_msg_ids[0]:
@@ -251,7 +276,13 @@ class Session:
             else:
                 bisect.insort(self.stored_msg_ids, msg.msg_id)
 
-            if isinstance(msg.body, (raw.types.MsgDetailedInfo, raw.types.MsgNewDetailedInfo)):
+            if isinstance(
+                msg.body,
+                (
+                    raw.types.MsgDetailedInfo,
+                    raw.types.MsgNewDetailedInfo,
+                ),
+            ):
                 self.pending_acks.add(msg.body.answer_msg_id)
                 continue
 
@@ -260,24 +291,41 @@ class Session:
 
             msg_id = None
 
-            if isinstance(msg.body, (raw.types.BadMsgNotification, raw.types.BadServerSalt)):
+            if isinstance(
+                msg.body,
+                (
+                    raw.types.BadMsgNotification,
+                    raw.types.BadServerSalt,
+                ),
+            ):
                 msg_id = msg.body.bad_msg_id
-            elif isinstance(msg.body, (FutureSalts, raw.types.RpcResult)):
+            elif isinstance(
+                msg.body, (FutureSalts, raw.types.RpcResult)
+            ):
                 msg_id = msg.body.req_msg_id
             elif isinstance(msg.body, raw.types.Pong):
                 msg_id = msg.body.msg_id
             elif self.client is not None:
-                self.loop.create_task(self.client.handle_updates(msg.body))
+                self.loop.create_task(
+                    self.client.handle_updates(msg.body)
+                )
 
             if msg_id in self.results:
-                self.results[msg_id].value = getattr(msg.body, "result", msg.body)
+                self.results[msg_id].value = getattr(
+                    msg.body, "result", msg.body
+                )
                 self.results[msg_id].event.set()
 
         if len(self.pending_acks) >= self.ACKS_THRESHOLD:
             log.debug("Sending %s acks", len(self.pending_acks))
 
             try:
-                await self.send(raw.types.MsgsAck(msg_ids=list(self.pending_acks)), False)
+                await self.send(
+                    raw.types.MsgsAck(
+                        msg_ids=list(self.pending_acks)
+                    ),
+                    False,
+                )
             except OSError:
                 pass
             else:
@@ -288,7 +336,9 @@ class Session:
 
         while True:
             try:
-                await asyncio.wait_for(self.ping_task_event.wait(), self.PING_INTERVAL)
+                await asyncio.wait_for(
+                    self.ping_task_event.wait(), self.PING_INTERVAL
+                )
             except asyncio.TimeoutError:
                 pass
             else:
@@ -297,7 +347,8 @@ class Session:
             try:
                 await self.send(
                     raw.functions.PingDelayDisconnect(
-                        ping_id=0, disconnect_delay=self.WAIT_TIMEOUT + 10
+                        ping_id=0,
+                        disconnect_delay=self.WAIT_TIMEOUT + 10,
                     ),
                     False,
                 )
@@ -328,7 +379,9 @@ class Session:
                     log.warning(
                         "Server sent transport error: %s (%s)",
                         error_code,
-                        Session.TRANSPORT_ERRORS.get(error_code, "unknown error"),
+                        Session.TRANSPORT_ERRORS.get(
+                            error_code, "unknown error"
+                        ),
                     )
 
                 if self.is_started.is_set():
@@ -373,7 +426,9 @@ class Session:
 
         if wait_response:
             try:
-                await asyncio.wait_for(self.results[msg_id].event.wait(), timeout)
+                await asyncio.wait_for(
+                    self.results[msg_id].event.wait(), timeout
+                )
             except asyncio.TimeoutError:
                 pass
 
@@ -399,7 +454,9 @@ class Session:
                     raise BadMsgNotification(result.error_code)
 
                 self._handle_bad_notification()
-                await self.send(data, wait_response, timeout, retry + 1)
+                await self.send(
+                    data, wait_response, timeout, retry + 1
+                )
 
             if isinstance(result, raw.types.BadServerSalt):
                 self.salt = result.new_server_salt
@@ -409,8 +466,13 @@ class Session:
 
     def _handle_bad_notification(self):
         new_msg_id = MsgId()
-        if self.stored_msg_ids[len(self.stored_msg_ids) - 1] >= new_msg_id:
-            new_msg_id = self.stored_msg_ids[len(self.stored_msg_ids) - 1] + 4
+        if (
+            self.stored_msg_ids[len(self.stored_msg_ids) - 1]
+            >= new_msg_id
+        ):
+            new_msg_id = (
+                self.stored_msg_ids[len(self.stored_msg_ids) - 1] + 4
+            )
             log.debug(
                 "Changing msg_id old=%s new=%s",
                 self.stored_msg_ids[len(self.stored_msg_ids) - 1],
@@ -426,12 +488,18 @@ class Session:
         sleep_threshold: float = SLEEP_THRESHOLD,
     ):
         try:
-            await asyncio.wait_for(self.is_started.wait(), self.WAIT_TIMEOUT)
+            await asyncio.wait_for(
+                self.is_started.wait(), self.WAIT_TIMEOUT
+            )
         except asyncio.TimeoutError:
             pass
 
         if isinstance(
-            query, (raw.functions.InvokeWithoutUpdates, raw.functions.InvokeWithTakeout)
+            query,
+            (
+                raw.functions.InvokeWithoutUpdates,
+                raw.functions.InvokeWithTakeout,
+            ),
         ):
             inner_query = query.query
         else:
@@ -456,7 +524,11 @@ class Session:
                 )
 
                 await asyncio.sleep(amount)
-            except (OSError, InternalServerError, ServiceUnavailable) as e:
+            except (
+                OSError,
+                InternalServerError,
+                ServiceUnavailable,
+            ) as e:
                 if retries == 0:
                     raise e from None
 

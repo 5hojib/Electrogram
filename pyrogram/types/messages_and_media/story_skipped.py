@@ -88,7 +88,9 @@ class StorySkipped(Object, Update):
             from_user=from_user,
             sender_chat=sender_chat,
             date=utils.timestamp_to_datetime(stories.date),
-            expire_date=utils.timestamp_to_datetime(stories.expire_date),
+            expire_date=utils.timestamp_to_datetime(
+                stories.expire_date
+            ),
             close_friends=stories.close_friends,
             client=client,
         )

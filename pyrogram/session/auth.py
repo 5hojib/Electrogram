@@ -23,7 +23,6 @@ import time
 from hashlib import sha1
 from io import BytesIO
 from os import urandom
-from typing import Optional
 
 import pyrogram
 from pyrogram import raw
@@ -40,7 +39,9 @@ log = logging.getLogger(__name__)
 class Auth:
     MAX_RETRIES = 5
 
-    def __init__(self, client: "pyrogram.Client", dc_id: int, test_mode: bool):
+    def __init__(
+        self, client: "pyrogram.Client", dc_id: int, test_mode: bool
+    ):
         self.dc_id = dc_id
         self.test_mode = test_mode
         self.ipv6 = client.ipv6
@@ -49,15 +50,22 @@ class Auth:
         self.connection_factory = client.connection_factory
         self.protocol_factory = client.protocol_factory
 
-        self.connection: Optional[Connection] = None
+        self.connection: Connection | None = None
 
     @staticmethod
     def pack(data: TLObject) -> bytes:
-        return bytes(8) + Long(MsgId()) + Int(len(data.write())) + data.write()
+        return (
+            bytes(8)
+            + Long(MsgId())
+            + Int(len(data.write()))
+            + data.write()
+        )
 
     @staticmethod
     def unpack(b: BytesIO):
-        b.seek(20)  # Skip auth_key_id (8), message_id (8) and message_length (4)
+        b.seek(
+            20
+        )  # Skip auth_key_id (8), message_id (8) and message_length (4)
         return TLObject.read(b)
 
     async def invoke(self, data: TLObject):
@@ -88,14 +96,21 @@ class Auth:
             )
 
             try:
-                log.info("Start creating a new auth key on DC%s", self.dc_id)
+                log.info(
+                    "Start creating a new auth key on DC%s",
+                    self.dc_id,
+                )
 
                 await self.connection.connect()
 
                 # Step 1; Step 2
-                nonce = int.from_bytes(urandom(16), "little", signed=True)
+                nonce = int.from_bytes(
+                    urandom(16), "little", signed=True
+                )
                 log.debug("Send req_pq: %s", nonce)
-                res_pq = await self.invoke(raw.functions.ReqPqMulti(nonce=nonce))
+                res_pq = await self.invoke(
+                    raw.functions.ReqPqMulti(nonce=nonce)
+                )
                 log.debug("Got ResPq: %s", res_pq.server_nonce)
                 log.debug(
                     "Server public key fingerprints: %s",
@@ -127,7 +142,9 @@ class Auth:
 
                 # Step 4
                 server_nonce = res_pq.server_nonce
-                new_nonce = int.from_bytes(urandom(32), "little", signed=True)
+                new_nonce = int.from_bytes(
+                    urandom(32), "little", signed=True
+                )
 
                 data = raw.types.PQInnerData(
                     pq=res_pq.pq,
@@ -141,7 +158,9 @@ class Auth:
                 sha = sha1(data).digest()
                 padding = urandom(-(len(data) + len(sha)) % 255)
                 data_with_hash = sha + data + padding
-                encrypted_data = rsa.encrypt(data_with_hash, public_key_fingerprint)
+                encrypted_data = rsa.encrypt(
+                    data_with_hash, public_key_fingerprint
+                )
 
                 log.debug("Done encrypt data with RSA")
 
@@ -160,8 +179,12 @@ class Auth:
 
                 encrypted_answer = server_dh_params.encrypted_answer
 
-                server_nonce = server_nonce.to_bytes(16, "little", signed=True)
-                new_nonce = new_nonce.to_bytes(32, "little", signed=True)
+                server_nonce = server_nonce.to_bytes(
+                    16, "little", signed=True
+                )
+                new_nonce = new_nonce.to_bytes(
+                    32, "little", signed=True
+                )
 
                 tmp_aes_key = (
                     sha1(new_nonce + server_nonce).digest()
@@ -174,17 +197,25 @@ class Auth:
                     + new_nonce[:4]
                 )
 
-                server_nonce = int.from_bytes(server_nonce, "little", signed=True)
+                server_nonce = int.from_bytes(
+                    server_nonce, "little", signed=True
+                )
 
-                answer_with_hash = aes.ige256_decrypt(encrypted_answer, tmp_aes_key, tmp_aes_iv)
+                answer_with_hash = aes.ige256_decrypt(
+                    encrypted_answer, tmp_aes_key, tmp_aes_iv
+                )
                 answer = answer_with_hash[20:]
 
                 server_dh_inner_data = TLObject.read(BytesIO(answer))
 
                 log.debug("Done decrypting answer")
 
-                dh_prime = int.from_bytes(server_dh_inner_data.dh_prime, "big")
-                delta_time = server_dh_inner_data.server_time - time.time()
+                dh_prime = int.from_bytes(
+                    server_dh_inner_data.dh_prime, "big"
+                )
+                delta_time = (
+                    server_dh_inner_data.server_time - time.time()
+                )
 
                 log.debug("Delta time: %s", round(delta_time, 3))
 
@@ -196,13 +227,18 @@ class Auth:
                 retry_id = 0
 
                 data = raw.types.ClientDHInnerData(
-                    nonce=nonce, server_nonce=server_nonce, retry_id=retry_id, g_b=g_b
+                    nonce=nonce,
+                    server_nonce=server_nonce,
+                    retry_id=retry_id,
+                    g_b=g_b,
                 ).write()
 
                 sha = sha1(data).digest()
                 padding = urandom(-(len(data) + len(sha)) % 16)
                 data_with_hash = sha + data + padding
-                encrypted_data = aes.ige256_encrypt(data_with_hash, tmp_aes_key, tmp_aes_iv)
+                encrypted_data = aes.ige256_encrypt(
+                    data_with_hash, tmp_aes_key, tmp_aes_iv
+                )
 
                 log.debug("Send set_client_DH_params")
                 set_client_dh_params_answer = await self.invoke(
@@ -218,7 +254,9 @@ class Auth:
                 # Step 7; Step 8
                 g_a = int.from_bytes(server_dh_inner_data.g_a, "big")
                 auth_key = pow(g_a, b, dh_prime).to_bytes(256, "big")
-                server_nonce = server_nonce.to_bytes(16, "little", signed=True)
+                server_nonce = server_nonce.to_bytes(
+                    16, "little", signed=True
+                )
 
                 # TODO: Handle errors
 
@@ -234,21 +272,33 @@ class Auth:
 
                 # https://core.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
                 g_b = int.from_bytes(g_b, "big")
-                SecurityCheckMismatch.check(1 < g < dh_prime - 1, "1 < g < dh_prime - 1")
-                SecurityCheckMismatch.check(1 < g_a < dh_prime - 1, "1 < g_a < dh_prime - 1")
-                SecurityCheckMismatch.check(1 < g_b < dh_prime - 1, "1 < g_b < dh_prime - 1")
                 SecurityCheckMismatch.check(
-                    2 ** (2048 - 64) < g_a < dh_prime - 2 ** (2048 - 64),
+                    1 < g < dh_prime - 1, "1 < g < dh_prime - 1"
+                )
+                SecurityCheckMismatch.check(
+                    1 < g_a < dh_prime - 1, "1 < g_a < dh_prime - 1"
+                )
+                SecurityCheckMismatch.check(
+                    1 < g_b < dh_prime - 1, "1 < g_b < dh_prime - 1"
+                )
+                SecurityCheckMismatch.check(
+                    2 ** (2048 - 64)
+                    < g_a
+                    < dh_prime - 2 ** (2048 - 64),
                     "2 ** (2048 - 64) < g_a < dh_prime - 2 ** (2048 - 64)",
                 )
                 SecurityCheckMismatch.check(
-                    2 ** (2048 - 64) < g_b < dh_prime - 2 ** (2048 - 64),
+                    2 ** (2048 - 64)
+                    < g_b
+                    < dh_prime - 2 ** (2048 - 64),
                     "2 ** (2048 - 64) < g_b < dh_prime - 2 ** (2048 - 64)",
                 )
                 log.debug("g_a and g_b validation: OK")
 
                 # https://core.telegram.org/mtproto/security_guidelines#checking-sha1-hash-values
-                answer = server_dh_inner_data.write()  # Call .write() to remove padding
+                answer = (
+                    server_dh_inner_data.write()
+                )  # Call .write() to remove padding
                 SecurityCheckMismatch.check(
                     answer_with_hash[:20] == sha1(answer).digest(),
                     "answer_with_hash[:20] == sha1(answer).digest()",
@@ -257,11 +307,16 @@ class Auth:
 
                 # https://core.telegram.org/mtproto/security_guidelines#checking-nonce-server-nonce-and-new-nonce-fields
                 # 1st message
-                SecurityCheckMismatch.check(nonce == res_pq.nonce, "nonce == res_pq.nonce")
-                # 2nd message
-                server_nonce = int.from_bytes(server_nonce, "little", signed=True)
                 SecurityCheckMismatch.check(
-                    nonce == server_dh_params.nonce, "nonce == server_dh_params.nonce"
+                    nonce == res_pq.nonce, "nonce == res_pq.nonce"
+                )
+                # 2nd message
+                server_nonce = int.from_bytes(
+                    server_nonce, "little", signed=True
+                )
+                SecurityCheckMismatch.check(
+                    nonce == server_dh_params.nonce,
+                    "nonce == server_dh_params.nonce",
                 )
                 SecurityCheckMismatch.check(
                     server_nonce == server_dh_params.server_nonce,
@@ -273,23 +328,31 @@ class Auth:
                     "nonce == set_client_dh_params_answer.nonce",
                 )
                 SecurityCheckMismatch.check(
-                    server_nonce == set_client_dh_params_answer.server_nonce,
+                    server_nonce
+                    == set_client_dh_params_answer.server_nonce,
                     "server_nonce == set_client_dh_params_answer.server_nonce",
                 )
-                server_nonce = server_nonce.to_bytes(16, "little", signed=True)
+                server_nonce = server_nonce.to_bytes(
+                    16, "little", signed=True
+                )
                 log.debug("Nonce fields check: OK")
 
                 # Step 9
                 server_salt = aes.xor(new_nonce[:8], server_nonce[:8])
 
-                log.debug("Server salt: %s", int.from_bytes(server_salt, "little"))
+                log.debug(
+                    "Server salt: %s",
+                    int.from_bytes(server_salt, "little"),
+                )
 
                 log.info(
                     "Done auth key exchange: %s",
                     set_client_dh_params_answer.__class__.__name__,
                 )
             except Exception as e:
-                log.info("Retrying due to %s: %s", type(e).__name__, e)
+                log.info(
+                    "Retrying due to %s: %s", type(e).__name__, e
+                )
 
                 if retries_left:
                     retries_left -= 1

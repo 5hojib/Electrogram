@@ -19,7 +19,6 @@
 
 import logging
 from struct import pack, unpack
-from typing import Optional
 
 from .tcp import TCP, Proxy
 
@@ -37,7 +36,7 @@ class TCPIntermediate(TCP):
     async def send(self, data: bytes, *args) -> None:
         await super().send(pack("<i", len(data)) + data)
 
-    async def recv(self, length: int = 0) -> Optional[bytes]:
+    async def recv(self, length: int = 0) -> bytes | None:
         length = await super().recv(4)
 
         if length is None:

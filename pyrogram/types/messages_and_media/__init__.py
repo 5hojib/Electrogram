@@ -38,7 +38,9 @@ from .media_area_coordinates import MediaAreaCoordinates
 from .message import Message
 from .message_entity import MessageEntity
 from .message_invoice import MessageInvoice
-from .message_reaction_count_updated import MessageReactionCountUpdated
+from .message_reaction_count_updated import (
+    MessageReactionCountUpdated,
+)
 from .message_reaction_updated import MessageReactionUpdated
 from .message_reactions import MessageReactions
 from .message_story import MessageStory

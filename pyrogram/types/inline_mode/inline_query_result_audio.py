@@ -87,7 +87,9 @@ class InlineQueryResultAudio(InlineQueryResult):
         input_message_content: "types.InputMessageContent" = None,
         thumb_url: str = None,
     ):
-        super().__init__("audio", id, input_message_content, reply_markup)
+        super().__init__(
+            "audio", id, input_message_content, reply_markup
+        )
 
         self.audio_url = audio_url
         self.title = title
@@ -115,7 +117,10 @@ class InlineQueryResultAudio(InlineQueryResult):
 
         message, entities = (
             await utils.parse_text_entities(
-                client, self.caption, self.parse_mode, self.caption_entities
+                client,
+                self.caption,
+                self.parse_mode,
+                self.caption_entities,
             )
         ).values()
 
@@ -126,12 +131,17 @@ class InlineQueryResultAudio(InlineQueryResult):
             content=audio,
             description=self.description,
             thumb=raw.types.InputWebDocument(
-                url=self.thumb_url, size=0, mime_type="image/jpeg", attributes=[]
+                url=self.thumb_url,
+                size=0,
+                mime_type="image/jpeg",
+                attributes=[],
             )
             if self.thumb_url
             else None,
             send_message=(
-                await self.input_message_content.write(client, self.reply_markup)
+                await self.input_message_content.write(
+                    client, self.reply_markup
+                )
                 if self.input_message_content
                 else raw.types.InputBotInlineMessageMediaAuto(
                     reply_markup=await self.reply_markup.write(client)

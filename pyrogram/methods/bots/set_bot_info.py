@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -26,7 +25,7 @@ class SetBotInfo:
     async def set_bot_info(
         self: "pyrogram.Client",
         lang_code: str,
-        bot: Union[int, str] = None,
+        bot: int | str = None,
         name: str = None,
         about: str = None,
         description: str = None,

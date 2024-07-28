@@ -58,7 +58,9 @@ class AddStickerToSet:
         file = None
 
         if isinstance(sticker, str):
-            if os.path.isfile(sticker) or re.match("^https?://", sticker):
+            if os.path.isfile(sticker) or re.match(
+                "^https?://", sticker
+            ):
                 raise ValueError("file_id is invalid!")
             else:
                 decoded = FileId.decode(sticker)
@@ -72,8 +74,12 @@ class AddStickerToSet:
 
         r = await self.invoke(
             raw.functions.stickers.AddStickerToSet(
-                stickerset=raw.types.InputStickerSetShortName(short_name=set_short_name),
-                sticker=raw.types.InputStickerSetItem(document=media, emoji=emoji),
+                stickerset=raw.types.InputStickerSetShortName(
+                    short_name=set_short_name
+                ),
+                sticker=raw.types.InputStickerSetItem(
+                    document=media, emoji=emoji
+                ),
             )
         )
 

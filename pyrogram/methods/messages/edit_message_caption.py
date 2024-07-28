@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional, Union
+from typing import Optional
 
 import pyrogram
 from pyrogram import enums, types
@@ -26,7 +26,7 @@ from pyrogram import enums, types
 class EditMessageCaption:
     async def edit_message_caption(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         message_id: int,
         caption: str,
         parse_mode: Optional["enums.ParseMode"] = None,

@@ -88,11 +88,16 @@ class ChatPhoto(Object):
     @staticmethod
     def _parse(
         client,
-        chat_photo: Union["raw.types.UserProfilePhoto", "raw.types.ChatPhoto"],
+        chat_photo: Union[
+            "raw.types.UserProfilePhoto", "raw.types.ChatPhoto"
+        ],
         peer_id: int,
         peer_access_hash: int,
     ):
-        if not isinstance(chat_photo, (raw.types.UserProfilePhoto, raw.types.ChatPhoto)):
+        if not isinstance(
+            chat_photo,
+            (raw.types.UserProfilePhoto, raw.types.ChatPhoto),
+        ):
             return None
 
         return ChatPhoto(
@@ -108,7 +113,8 @@ class ChatPhoto(Object):
                 chat_access_hash=peer_access_hash,
             ).encode(),
             small_photo_unique_id=FileUniqueId(
-                file_unique_type=FileUniqueType.DOCUMENT, media_id=chat_photo.photo_id
+                file_unique_type=FileUniqueType.DOCUMENT,
+                media_id=chat_photo.photo_id,
             ).encode(),
             big_file_id=FileId(
                 file_type=FileType.CHAT_PHOTO,
@@ -122,11 +128,14 @@ class ChatPhoto(Object):
                 chat_access_hash=peer_access_hash,
             ).encode(),
             big_photo_unique_id=FileUniqueId(
-                file_unique_type=FileUniqueType.DOCUMENT, media_id=chat_photo.photo_id
+                file_unique_type=FileUniqueType.DOCUMENT,
+                media_id=chat_photo.photo_id,
             ).encode(),
             has_animation=chat_photo.has_video,
             is_personal=getattr(chat_photo, "personal", False),
-            minithumbnail=types.StrippedThumbnail(data=chat_photo.stripped_thumb)
+            minithumbnail=types.StrippedThumbnail(
+                data=chat_photo.stripped_thumb
+            )
             if chat_photo.stripped_thumb
             else None,
             client=client,

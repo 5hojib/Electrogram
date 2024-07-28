@@ -64,15 +64,25 @@ class BusinessRecipients(Object):
 
     @staticmethod
     def _parse(
-        client, recipients: "raw.types.BusinessRecipients", users: dict = None
+        client,
+        recipients: "raw.types.BusinessRecipients",
+        users: dict = None,
     ) -> "BusinessRecipients":
         return BusinessRecipients(
-            existing_chats=getattr(recipients, "existing_chats", None),
+            existing_chats=getattr(
+                recipients, "existing_chats", None
+            ),
             new_chats=getattr(recipients, "new_chats", None),
             contacts=getattr(recipients, "contacts", None),
             non_contacts=getattr(recipients, "non_contacts", None),
-            exclude_selected=getattr(recipients, "exclude_selected", None),
-            users=types.List(types.User._parse(client, users[i]) for i in recipients.users) or None
+            exclude_selected=getattr(
+                recipients, "exclude_selected", None
+            ),
+            users=types.List(
+                types.User._parse(client, users[i])
+                for i in recipients.users
+            )
+            or None
             if getattr(recipients, "users", None)
             else None,
         )

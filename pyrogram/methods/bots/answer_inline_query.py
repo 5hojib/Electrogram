@@ -105,7 +105,8 @@ class AnswerInlineQuery:
                 private=is_personal or None,
                 next_offset=next_offset or None,
                 switch_pm=raw.types.InlineBotSwitchPM(
-                    text=switch_pm_text, start_param=switch_pm_parameter
+                    text=switch_pm_text,
+                    start_param=switch_pm_parameter,
                 )
                 if switch_pm_text
                 else None,

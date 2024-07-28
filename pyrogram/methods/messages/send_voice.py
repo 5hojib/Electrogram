@@ -19,8 +19,9 @@
 
 import os
 import re
+from collections.abc import Callable
 from datetime import datetime
-from typing import BinaryIO, Callable, Optional, Union
+from typing import BinaryIO, Optional, Union
 
 import pyrogram
 from pyrogram import StopTransmission, enums, raw, types, utils
@@ -31,8 +32,8 @@ from pyrogram.file_id import FileType
 class SendVoice:
     async def send_voice(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        voice: Union[str, BinaryIO],
+        chat_id: int | str,
+        voice: str | BinaryIO,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
         caption_entities: list["types.MessageEntity"] = None,
@@ -42,7 +43,7 @@ class SendVoice:
         business_connection_id: str = None,
         reply_to_message_id: int = None,
         reply_to_story_id: int = None,
-        reply_to_chat_id: Union[int, str] = None,
+        reply_to_chat_id: int | str = None,
         quote_text: str = None,
         quote_entities: list["types.MessageEntity"] = None,
         schedule_date: datetime = None,
@@ -191,25 +192,43 @@ class SendVoice:
             if isinstance(voice, str):
                 if os.path.isfile(voice):
                     file = await self.save_file(
-                        voice, progress=progress, progress_args=progress_args
+                        voice,
+                        progress=progress,
+                        progress_args=progress_args,
                     )
                     media = raw.types.InputMediaUploadedDocument(
-                        mime_type=self.guess_mime_type(voice) or "audio/mpeg",
+                        mime_type=self.guess_mime_type(voice)
+                        or "audio/mpeg",
                         file=file,
                         attributes=[
-                            raw.types.DocumentAttributeAudio(voice=True, duration=duration)
+                            raw.types.DocumentAttributeAudio(
+                                voice=True, duration=duration
+                            )
                         ],
                     )
                 elif re.match("^https?://", voice):
-                    media = raw.types.InputMediaDocumentExternal(url=voice)
+                    media = raw.types.InputMediaDocumentExternal(
+                        url=voice
+                    )
                 else:
-                    media = utils.get_input_media_from_file_id(voice, FileType.VOICE)
+                    media = utils.get_input_media_from_file_id(
+                        voice, FileType.VOICE
+                    )
             else:
-                file = await self.save_file(voice, progress=progress, progress_args=progress_args)
+                file = await self.save_file(
+                    voice,
+                    progress=progress,
+                    progress_args=progress_args,
+                )
                 media = raw.types.InputMediaUploadedDocument(
-                    mime_type=self.guess_mime_type(voice.name) or "audio/mpeg",
+                    mime_type=self.guess_mime_type(voice.name)
+                    or "audio/mpeg",
                     file=file,
-                    attributes=[raw.types.DocumentAttributeAudio(voice=True, duration=duration)],
+                    attributes=[
+                        raw.types.DocumentAttributeAudio(
+                            voice=True, duration=duration
+                        )
+                    ],
                 )
 
             while True:
@@ -220,24 +239,34 @@ class SendVoice:
                         silent=disable_notification or None,
                         reply_to=reply_to,
                         random_id=self.rnd_id(),
-                        schedule_date=utils.datetime_to_timestamp(schedule_date),
+                        schedule_date=utils.datetime_to_timestamp(
+                            schedule_date
+                        ),
                         noforwards=protect_content,
                         effect=message_effect_id,
-                        reply_markup=await reply_markup.write(self) if reply_markup else None,
+                        reply_markup=await reply_markup.write(self)
+                        if reply_markup
+                        else None,
                         **await utils.parse_text_entities(
-                            self, caption, parse_mode, caption_entities
+                            self,
+                            caption,
+                            parse_mode,
+                            caption_entities,
                         ),
                     )
                     if business_connection_id is not None:
                         r = await self.invoke(
                             raw.functions.InvokeWithBusinessConnection(
-                                connection_id=business_connection_id, query=rpc
+                                connection_id=business_connection_id,
+                                query=rpc,
                             )
                         )
                     else:
                         r = await self.invoke(rpc)
                 except FilePartMissing as e:
-                    await self.save_file(voice, file_id=file.id, file_part=e.value)
+                    await self.save_file(
+                        voice, file_id=file.id, file_part=e.value
+                    )
                 else:
                     for i in r.updates:
                         if isinstance(
@@ -254,7 +283,10 @@ class SendVoice:
                                 i.message,
                                 {i.id: i for i in r.users},
                                 {i.id: i for i in r.chats},
-                                is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
+                                is_scheduled=isinstance(
+                                    i,
+                                    raw.types.UpdateNewScheduledMessage,
+                                ),
                                 business_connection_id=business_connection_id,
                             )
         except StopTransmission:

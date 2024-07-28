@@ -20,7 +20,6 @@
 import logging
 from binascii import crc32
 from struct import pack, unpack
-from typing import Optional
 
 from .tcp import TCP, Proxy
 
@@ -31,7 +30,7 @@ class TCPFull(TCP):
     def __init__(self, ipv6: bool, proxy: Proxy) -> None:
         super().__init__(ipv6, proxy)
 
-        self.seq_no: Optional[int] = None
+        self.seq_no: int | None = None
 
     async def connect(self, address: tuple[str, int]) -> None:
         await super().connect(address)
@@ -44,7 +43,7 @@ class TCPFull(TCP):
 
         await super().send(data)
 
-    async def recv(self, length: int = 0) -> Optional[bytes]:
+    async def recv(self, length: int = 0) -> bytes | None:
         length = await super().recv(4)
 
         if length is None:

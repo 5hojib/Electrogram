@@ -21,7 +21,6 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Union
 
 import pyrogram
 from pyrogram import raw, types, utils
@@ -30,10 +29,10 @@ from pyrogram import raw, types, utils
 class CopyMediaGroup:
     async def copy_media_group(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        from_chat_id: Union[int, str],
+        chat_id: int | str,
+        from_chat_id: int | str,
         message_id: int,
-        captions: Union[list[str], str] = None,
+        captions: list[str] | str = None,
         disable_notification: bool = None,
         message_thread_id: int = None,
         reply_to_message_id: int = None,
@@ -101,7 +100,9 @@ class CopyMediaGroup:
                     captions=["caption 1", None, ""])
         """
 
-        media_group = await self.get_media_group(from_chat_id, message_id)
+        media_group = await self.get_media_group(
+            from_chat_id, message_id
+        )
         multi_media = []
 
         reply_to = None
@@ -121,16 +122,22 @@ class CopyMediaGroup:
             elif message.video:
                 file_id = message.video.file_id
             else:
-                raise ValueError("Message with this type can't be copied.")
+                raise ValueError(
+                    "Message with this type can't be copied."
+                )
 
-            media = utils.get_input_media_from_file_id(file_id=file_id)
+            media = utils.get_input_media_from_file_id(
+                file_id=file_id
+            )
             multi_media.append(
                 raw.types.InputSingleMedia(
                     media=media,
                     random_id=self.rnd_id(),
                     **await self.parser.parse(
                         captions[i]
-                        if isinstance(captions, list) and i < len(captions) and captions[i]
+                        if isinstance(captions, list)
+                        and i < len(captions)
+                        and captions[i]
                         else captions
                         if isinstance(captions, str) and i == 0
                         else message.caption
@@ -149,7 +156,9 @@ class CopyMediaGroup:
                 silent=disable_notification or None,
                 reply_to=reply_to,
                 noforwards=protect_content,
-                schedule_date=utils.datetime_to_timestamp(schedule_date),
+                schedule_date=utils.datetime_to_timestamp(
+                    schedule_date
+                ),
             ),
             sleep_threshold=60,
         )

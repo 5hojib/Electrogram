@@ -18,7 +18,6 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from collections.abc import AsyncGenerator
-from typing import Optional, Union
 
 import pyrogram
 from pyrogram import raw, types
@@ -27,11 +26,11 @@ from pyrogram import raw, types
 class GetChatAdminInviteLinks:
     async def get_chat_admin_invite_links(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        admin_id: Union[int, str],
+        chat_id: int | str,
+        admin_id: int | str,
         revoked: bool = False,
         limit: int = 0,
-    ) -> Optional[AsyncGenerator["types.ChatInviteLink", None]]:
+    ) -> AsyncGenerator["types.ChatInviteLink", None] | None:
         """Get the invite links created by an administrator in a chat.
 
         .. note::

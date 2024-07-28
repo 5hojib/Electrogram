@@ -44,7 +44,9 @@ class CreateChannel:
                 await app.create_channel("Channel Title", "Channel Description")
         """
         r = await self.invoke(
-            raw.functions.channels.CreateChannel(title=title, about=description, broadcast=True)
+            raw.functions.channels.CreateChannel(
+                title=title, about=description, broadcast=True
+            )
         )
 
         return types.Chat._parse_chat(self, r.chats[0])

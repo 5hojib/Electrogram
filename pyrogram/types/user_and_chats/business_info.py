@@ -64,16 +64,28 @@ class BusinessInfo(Object):
     ) -> Optional["BusinessInfo"]:
         working_hours = getattr(user, "business_work_hours", None)
         location = getattr(user, "business_location", None)
-        greeting_message = getattr(user, "business_greeting_message", None)
+        greeting_message = getattr(
+            user, "business_greeting_message", None
+        )
         away_message = getattr(user, "business_away_message", None)
 
-        if not any((working_hours, location, greeting_message, away_message)):
+        if not any(
+            (working_hours, location, greeting_message, away_message)
+        ):
             return None
 
         return BusinessInfo(
             address=getattr(location, "address", None),
-            location=types.Location._parse(client, getattr(location, "geo_point", None)),
-            greeting_message=types.BusinessMessage._parse(client, greeting_message, users),
-            away_message=types.BusinessMessage._parse(client, away_message, users),
-            working_hours=types.BusinessWorkingHours._parse(working_hours),
+            location=types.Location._parse(
+                client, getattr(location, "geo_point", None)
+            ),
+            greeting_message=types.BusinessMessage._parse(
+                client, greeting_message, users
+            ),
+            away_message=types.BusinessMessage._parse(
+                client, away_message, users
+            ),
+            working_hours=types.BusinessWorkingHours._parse(
+                working_hours
+            ),
         )

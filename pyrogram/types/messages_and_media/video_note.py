@@ -21,7 +21,12 @@ from datetime import datetime
 
 import pyrogram
 from pyrogram import raw, types, utils
-from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType
+from pyrogram.file_id import (
+    FileId,
+    FileType,
+    FileUniqueId,
+    FileUniqueType,
+)
 
 from ..object import Object
 
@@ -95,7 +100,8 @@ class VideoNote(Object):
                 file_reference=video_note.file_reference,
             ).encode(),
             file_unique_id=FileUniqueId(
-                file_unique_type=FileUniqueType.DOCUMENT, media_id=video_note.id
+                file_unique_type=FileUniqueType.DOCUMENT,
+                media_id=video_note.id,
             ).encode(),
             length=video_attributes.w,
             duration=video_attributes.duration,

@@ -19,7 +19,6 @@
 
 import logging
 from collections.abc import AsyncGenerator
-from typing import Optional, Union
 
 import pyrogram
 from pyrogram import raw, types
@@ -29,8 +28,8 @@ log = logging.getLogger(__name__)
 
 class GetForumTopics:
     async def get_forum_topics(
-        self: "pyrogram.Client", chat_id: Union[int, str], limit: int = 0
-    ) -> Optional[AsyncGenerator["types.ForumTopic", None]]:
+        self: "pyrogram.Client", chat_id: int | str, limit: int = 0
+    ) -> AsyncGenerator["types.ForumTopic", None] | None:
         """Get one or more topic from a chat.
 
         .. include:: /_includes/usable-by/users.rst
@@ -60,7 +59,11 @@ class GetForumTopics:
         peer = await self.resolve_peer(chat_id)
 
         rpc = raw.functions.channels.GetForumTopics(
-            channel=peer, offset_date=0, offset_id=0, offset_topic=0, limit=limit
+            channel=peer,
+            offset_date=0,
+            offset_id=0,
+            offset_topic=0,
+            limit=limit,
         )
 
         r = await self.invoke(rpc, sleep_threshold=-1)

@@ -17,7 +17,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Dict
 
 from pyrogram import raw, types
 
@@ -44,6 +43,8 @@ class VideoChatMembersInvited(Object):
         action: "raw.types.MessageActionInviteToGroupCall",
         users: dict[int, "raw.types.User"],
     ) -> "VideoChatMembersInvited":
-        users = [types.User._parse(client, users[i]) for i in action.users]
+        users = [
+            types.User._parse(client, users[i]) for i in action.users
+        ]
 
         return VideoChatMembersInvited(users=users)

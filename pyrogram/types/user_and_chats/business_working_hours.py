@@ -58,7 +58,8 @@ class BusinessWorkingHours(Object):
         return BusinessWorkingHours(
             timezone=work_hours.timezone_id,
             working_hours=types.List(
-                types.BusinessWeeklyOpen._parse(i) for i in work_hours.weekly_open
+                types.BusinessWeeklyOpen._parse(i)
+                for i in work_hours.weekly_open
             ),
             is_open_now=getattr(work_hours, "open_now", None),
         )

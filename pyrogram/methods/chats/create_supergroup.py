@@ -48,7 +48,9 @@ class CreateSupergroup:
                 await app.create_supergroup("Supergroup Title", "Supergroup Description")
         """
         r = await self.invoke(
-            raw.functions.channels.CreateChannel(title=title, about=description, megagroup=True)
+            raw.functions.channels.CreateChannel(
+                title=title, about=description, megagroup=True
+            )
         )
 
         return types.Chat._parse_chat(self, r.chats[0])

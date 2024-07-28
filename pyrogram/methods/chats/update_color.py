@@ -25,7 +25,7 @@ from pyrogram import enums, raw
 class UpdateColor:
     async def update_color(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         color: Union["enums.ReplyColor", "enums.ProfileColor"],
         background_emoji_id: int = None,
     ) -> bool:

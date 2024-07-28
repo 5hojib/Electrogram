@@ -17,14 +17,16 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Callable
+from collections.abc import Callable
 
 import pyrogram
 from pyrogram.filters import Filter
 
 
 class OnMessageReactionUpdated:
-    def on_message_reaction_updated(self=None, filters=None, group: int = 0) -> Callable:
+    def on_message_reaction_updated(
+        self=None, filters=None, group: int = 0
+    ) -> Callable:
         """Decorator for handling reaction changes on messages.
 
         This does the same thing as :meth:`~pyrogram.Client.add_handler` using the
@@ -41,7 +43,9 @@ class OnMessageReactionUpdated:
         def decorator(func: Callable) -> Callable:
             if isinstance(self, pyrogram.Client):
                 self.add_handler(
-                    pyrogram.handlers.MessageReactionUpdatedHandler(func, filters),
+                    pyrogram.handlers.MessageReactionUpdatedHandler(
+                        func, filters
+                    ),
                     group,
                 )
             elif isinstance(self, Filter) or self is None:
@@ -50,7 +54,9 @@ class OnMessageReactionUpdated:
 
                 func.handlers.append(
                     (
-                        pyrogram.handlers.MessageReactionUpdatedHandler(func, self),
+                        pyrogram.handlers.MessageReactionUpdatedHandler(
+                            func, self
+                        ),
                         group if filters is None else filters,
                     )
                 )

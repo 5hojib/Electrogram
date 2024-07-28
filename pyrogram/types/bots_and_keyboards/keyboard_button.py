@@ -62,7 +62,10 @@ class KeyboardButton(Object):
         text: str,
         request_contact: bool = None,
         request_location: bool = None,
-        request_chat: Union["types.RequestPeerTypeChat", "types.RequestPeerTypeChannel"] = None,
+        request_chat: Union[
+            "types.RequestPeerTypeChat",
+            "types.RequestPeerTypeChannel",
+        ] = None,
         request_user: "types.RequestPeerTypeUser" = None,
         web_app: "types.WebAppInfo" = None,
     ):
@@ -87,10 +90,14 @@ class KeyboardButton(Object):
             return KeyboardButton(text=b.text, request_location=True)
 
         if isinstance(b, raw.types.KeyboardButtonSimpleWebView):
-            return KeyboardButton(text=b.text, web_app=types.WebAppInfo(url=b.url))
+            return KeyboardButton(
+                text=b.text, web_app=types.WebAppInfo(url=b.url)
+            )
 
         if isinstance(b, raw.types.KeyboardButtonRequestPeer):
-            if isinstance(b.peer_type, raw.types.RequestPeerTypeBroadcast):
+            if isinstance(
+                b.peer_type, raw.types.RequestPeerTypeBroadcast
+            ):
                 return KeyboardButton(
                     text=b.text,
                     request_chat=types.RequestPeerTypeChannel(
@@ -123,11 +130,17 @@ class KeyboardButton(Object):
 
     def write(self):
         if self.request_contact:
-            return raw.types.KeyboardButtonRequestPhone(text=self.text)
+            return raw.types.KeyboardButtonRequestPhone(
+                text=self.text
+            )
         elif self.request_location:
-            return raw.types.KeyboardButtonRequestGeoLocation(text=self.text)
+            return raw.types.KeyboardButtonRequestGeoLocation(
+                text=self.text
+            )
         elif self.request_chat:
-            if isinstance(self.request_chat, types.RequestPeerTypeChannel):
+            if isinstance(
+                self.request_chat, types.RequestPeerTypeChannel
+            ):
                 return raw.types.KeyboardButtonRequestPeer(
                     text=self.text,
                     button_id=0,
@@ -153,11 +166,14 @@ class KeyboardButton(Object):
                 text=self.text,
                 button_id=0,
                 peer_type=raw.types.RequestPeerTypeUser(
-                    bot=self.request_user.is_bot, premium=self.request_user.is_premium
+                    bot=self.request_user.is_bot,
+                    premium=self.request_user.is_premium,
                 ),
                 max_quantity=self.request_user.max,
             )
         elif self.web_app:
-            return raw.types.KeyboardButtonSimpleWebView(text=self.text, url=self.web_app.url)
+            return raw.types.KeyboardButtonSimpleWebView(
+                text=self.text, url=self.web_app.url
+            )
         else:
             return raw.types.KeyboardButton(text=self.text)

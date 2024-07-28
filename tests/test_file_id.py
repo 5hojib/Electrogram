@@ -18,7 +18,12 @@
 
 import pytest
 
-from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType
+from pyrogram.file_id import (
+    FileId,
+    FileType,
+    FileUniqueId,
+    FileUniqueType,
+)
 
 
 def check(file_id: str, expected_file_type: FileType):
@@ -28,7 +33,9 @@ def check(file_id: str, expected_file_type: FileType):
     assert decoded.encode() == file_id
 
 
-def check_unique(file_unique_id: str, expected_file_unique_type: FileUniqueType):
+def check_unique(
+    file_unique_id: str, expected_file_unique_type: FileUniqueType
+):
     decoded = FileUniqueId.decode(file_unique_id)
 
     assert decoded.file_unique_type == expected_file_unique_type
@@ -128,9 +135,13 @@ def test_photo():
 
 
 def test_chat_photo():
-    user_photo_small = "AQADAgADrKcxGylBBQAJIH3qihAAAwIAAylBBQAF7bDHYwABnc983KcAAh4E"
+    user_photo_small = (
+        "AQADAgADrKcxGylBBQAJIH3qihAAAwIAAylBBQAF7bDHYwABnc983KcAAh4E"
+    )
     user_photo_small_unique = "AQADIH3qihAAA9ynAAI"
-    user_photo_big = "AQADAgADrKcxGylBBQAJIH3qihAAAwMAAylBBQAF7bDHYwABnc983qcAAh4E"
+    user_photo_big = (
+        "AQADAgADrKcxGylBBQAJIH3qihAAAwMAAylBBQAF7bDHYwABnc983qcAAh4E"
+    )
     user_photo_big_unique = "AQADIH3qihAAA96nAAI"
 
     chat_photo_small = "AQADAgATIH3qihAAAwIAA3t3-P______AAjhngEAAR4E"
@@ -138,9 +149,13 @@ def test_chat_photo():
     chat_photo_big = "AQADAgATIH3qihAAAwMAA3t3-P______AAjjngEAAR4E"
     chat_photo_big_unique = "AQADIH3qihAAA-OeAQAB"
 
-    channel_photo_small = "AQADAgATIH3qihAAAwIAA-fFwCoX____MvARg8nvpc3RpwACHgQ"
+    channel_photo_small = (
+        "AQADAgATIH3qihAAAwIAA-fFwCoX____MvARg8nvpc3RpwACHgQ"
+    )
     channel_photo_small_unique = "AQADIH3qihAAA9GnAAI"
-    channel_photo_big = "AQADAgATIH3qihAAAwMAA-fFwCoX____MvARg8nvpc3TpwACHgQ"
+    channel_photo_big = (
+        "AQADAgATIH3qihAAAwMAA-fFwCoX____MvARg8nvpc3TpwACHgQ"
+    )
     channel_photo_big_unique = "AQADIH3qihAAA9OnAAI"
 
     check(user_photo_small, FileType.CHAT_PHOTO)
@@ -167,14 +182,19 @@ def test_old_file_id():
 def test_unknown_file_type():
     unknown = "RQACAgIAAx0CAAGgr9AAAgmPX7b4UxbjNoFEO_L0I4s6wrXNJA8AAgQAA4GkuUm9FFvIaOhXWR4E"
 
-    with pytest.raises(ValueError, match=r"Unknown file_type \d+ of file_id \w+"):
+    with pytest.raises(
+        ValueError, match=r"Unknown file_type \d+ of file_id \w+"
+    ):
         check(unknown, FileType.DOCUMENT)
 
 
 def test_unknown_thumbnail_source():
     unknown = "AAMCAgADHQIAAaCv0AACCY9ftvhTFuM2gUQ78vQjizrCtc0kDwACBAADgaS5Sb0UW8ho6FdZIH3qihAAA6QBAAIeBA"
 
-    with pytest.raises(ValueError, match=r"Unknown thumbnail_source \d+ of file_id \w+"):
+    with pytest.raises(
+        ValueError,
+        match=r"Unknown thumbnail_source \d+ of file_id \w+",
+    ):
         check(unknown, FileType.THUMBNAIL)
 
 

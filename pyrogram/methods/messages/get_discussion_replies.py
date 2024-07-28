@@ -18,7 +18,6 @@
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
 from collections.abc import AsyncGenerator
-from typing import Optional, Union
 
 import pyrogram
 from pyrogram import raw, types
@@ -27,10 +26,10 @@ from pyrogram import raw, types
 class GetDiscussionReplies:
     async def get_discussion_replies(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         message_id: int,
         limit: int = 0,
-    ) -> Optional[AsyncGenerator["types.Message", None]]:
+    ) -> AsyncGenerator["types.Message", None] | None:
         """Get the message replies of a discussion thread.
 
         .. include:: /_includes/usable-by/users.rst
@@ -81,7 +80,9 @@ class GetDiscussionReplies:
                 return
 
             for message in messages:
-                yield await types.Message._parse(self, message, users, chats, replies=0)
+                yield await types.Message._parse(
+                    self, message, users, chats, replies=0
+                )
 
                 current += 1
 

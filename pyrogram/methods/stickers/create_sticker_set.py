@@ -18,7 +18,7 @@
 
 import os
 import re
-from typing import Optional, Union
+from typing import Optional
 
 import pyrogram
 from pyrogram import raw, types
@@ -28,7 +28,7 @@ from pyrogram.file_id import FileId
 class CreateStickerSet:
     async def create_sticker_set(
         self: "pyrogram.Client",
-        user_id: Union[int, str],
+        user_id: int | str,
         title: str,
         short_name: str,
         sticker: str,
@@ -76,7 +76,9 @@ class CreateStickerSet:
         file = None
 
         if isinstance(sticker, str):
-            if os.path.isfile(sticker) or re.match("^https?://", sticker):
+            if os.path.isfile(sticker) or re.match(
+                "^https?://", sticker
+            ):
                 raise ValueError("file_id is invalid!")
             else:
                 decoded = FileId.decode(sticker)
@@ -93,7 +95,11 @@ class CreateStickerSet:
                 user_id=await self.resolve_peer(user_id),
                 title=title,
                 short_name=short_name,
-                stickers=[raw.types.InputStickerSetItem(document=media, emoji=emoji)],
+                stickers=[
+                    raw.types.InputStickerSetItem(
+                        document=media, emoji=emoji
+                    )
+                ],
                 masks=masks,
             )
         )

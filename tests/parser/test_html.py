@@ -30,7 +30,9 @@ def test_html_unparse_bold():
     entities = pyrogram.types.List(
         [
             pyrogram.types.MessageEntity(
-                type=pyrogram.enums.MessageEntityType.BOLD, offset=0, length=4
+                type=pyrogram.enums.MessageEntityType.BOLD,
+                offset=0,
+                length=4,
             )
         ]
     )
@@ -44,7 +46,9 @@ def test_html_unparse_italic():
     entities = pyrogram.types.List(
         [
             pyrogram.types.MessageEntity(
-                type=pyrogram.enums.MessageEntityType.ITALIC, offset=0, length=6
+                type=pyrogram.enums.MessageEntityType.ITALIC,
+                offset=0,
+                length=6,
             )
         ]
     )
@@ -58,7 +62,9 @@ def test_html_unparse_underline():
     entities = pyrogram.types.List(
         [
             pyrogram.types.MessageEntity(
-                type=pyrogram.enums.MessageEntityType.UNDERLINE, offset=0, length=9
+                type=pyrogram.enums.MessageEntityType.UNDERLINE,
+                offset=0,
+                length=9,
             )
         ]
     )
@@ -72,7 +78,9 @@ def test_html_unparse_strike():
     entities = pyrogram.types.List(
         [
             pyrogram.types.MessageEntity(
-                type=pyrogram.enums.MessageEntityType.STRIKETHROUGH, offset=0, length=6
+                type=pyrogram.enums.MessageEntityType.STRIKETHROUGH,
+                offset=0,
+                length=6,
             )
         ]
     )
@@ -86,7 +94,9 @@ def test_html_unparse_spoiler():
     entities = pyrogram.types.List(
         [
             pyrogram.types.MessageEntity(
-                type=pyrogram.enums.MessageEntityType.SPOILER, offset=0, length=7
+                type=pyrogram.enums.MessageEntityType.SPOILER,
+                offset=0,
+                length=7,
             )
         ]
     )
@@ -117,7 +127,9 @@ def test_html_unparse_code():
     entities = pyrogram.types.List(
         [
             pyrogram.types.MessageEntity(
-                type=pyrogram.enums.MessageEntityType.CODE, offset=0, length=4
+                type=pyrogram.enums.MessageEntityType.CODE,
+                offset=0,
+                length=4,
             )
         ]
     )
@@ -155,25 +167,39 @@ def test_html_unparse_mixed():
     entities = pyrogram.types.List(
         [
             pyrogram.types.MessageEntity(
-                type=pyrogram.enums.MessageEntityType.BOLD, offset=0, length=14
+                type=pyrogram.enums.MessageEntityType.BOLD,
+                offset=0,
+                length=14,
             ),
             pyrogram.types.MessageEntity(
-                type=pyrogram.enums.MessageEntityType.ITALIC, offset=7, length=7
+                type=pyrogram.enums.MessageEntityType.ITALIC,
+                offset=7,
+                length=7,
             ),
             pyrogram.types.MessageEntity(
-                type=pyrogram.enums.MessageEntityType.UNDERLINE, offset=10, length=4
+                type=pyrogram.enums.MessageEntityType.UNDERLINE,
+                offset=10,
+                length=4,
             ),
             pyrogram.types.MessageEntity(
-                type=pyrogram.enums.MessageEntityType.UNDERLINE, offset=14, length=9
+                type=pyrogram.enums.MessageEntityType.UNDERLINE,
+                offset=14,
+                length=9,
             ),
             pyrogram.types.MessageEntity(
-                type=pyrogram.enums.MessageEntityType.ITALIC, offset=14, length=9
+                type=pyrogram.enums.MessageEntityType.ITALIC,
+                offset=14,
+                length=9,
             ),
             pyrogram.types.MessageEntity(
-                type=pyrogram.enums.MessageEntityType.UNDERLINE, offset=23, length=10
+                type=pyrogram.enums.MessageEntityType.UNDERLINE,
+                offset=23,
+                length=10,
             ),
             pyrogram.types.MessageEntity(
-                type=pyrogram.enums.MessageEntityType.STRIKETHROUGH, offset=30, length=3
+                type=pyrogram.enums.MessageEntityType.STRIKETHROUGH,
+                offset=30,
+                length=3,
             ),
             pyrogram.types.MessageEntity(
                 type=pyrogram.enums.MessageEntityType.STRIKETHROUGH,
@@ -181,13 +207,19 @@ def test_html_unparse_mixed():
                 length=10,
             ),
             pyrogram.types.MessageEntity(
-                type=pyrogram.enums.MessageEntityType.SPOILER, offset=38, length=5
+                type=pyrogram.enums.MessageEntityType.SPOILER,
+                offset=38,
+                length=5,
             ),
             pyrogram.types.MessageEntity(
-                type=pyrogram.enums.MessageEntityType.SPOILER, offset=43, length=10
+                type=pyrogram.enums.MessageEntityType.SPOILER,
+                offset=43,
+                length=10,
             ),
             pyrogram.types.MessageEntity(
-                type=pyrogram.enums.MessageEntityType.CODE, offset=57, length=10
+                type=pyrogram.enums.MessageEntityType.CODE,
+                offset=57,
+                length=10,
             ),
         ]
     )
@@ -201,7 +233,9 @@ def test_html_unparse_escaped():
     entities = pyrogram.types.List(
         [
             pyrogram.types.MessageEntity(
-                type=pyrogram.enums.MessageEntityType.BOLD, offset=0, length=11
+                type=pyrogram.enums.MessageEntityType.BOLD,
+                offset=0,
+                length=11,
             )
         ]
     )
@@ -215,10 +249,14 @@ def test_html_unparse_escaped_nested():
     entities = pyrogram.types.List(
         [
             pyrogram.types.MessageEntity(
-                type=pyrogram.enums.MessageEntityType.BOLD, offset=0, length=33
+                type=pyrogram.enums.MessageEntityType.BOLD,
+                offset=0,
+                length=33,
             ),
             pyrogram.types.MessageEntity(
-                type=pyrogram.enums.MessageEntityType.UNDERLINE, offset=8, length=16
+                type=pyrogram.enums.MessageEntityType.UNDERLINE,
+                offset=8,
+                length=16,
             ),
         ]
     )

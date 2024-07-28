@@ -40,7 +40,13 @@ class ReactionCount(Object):
             Available for chosen reactions.
     """
 
-    def __init__(self, *, type: ReactionType, total_count: int, chosen_order: int):
+    def __init__(
+        self,
+        *,
+        type: ReactionType,
+        total_count: int,
+        chosen_order: int,
+    ):
         super().__init__()
         self.type = type
         self.total_count = total_count

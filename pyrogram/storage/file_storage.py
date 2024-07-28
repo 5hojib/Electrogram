@@ -58,7 +58,9 @@ class FileStorage(SQLiteStorage):
 
         if version == 2:
             with self.conn:
-                self.conn.execute("ALTER TABLE sessions ADD api_id INTEGER")
+                self.conn.execute(
+                    "ALTER TABLE sessions ADD api_id INTEGER"
+                )
 
             version += 1
 
@@ -74,7 +76,9 @@ class FileStorage(SQLiteStorage):
         path = self.database
         file_exists = path.is_file()
 
-        self.conn = sqlite3.connect(str(path), timeout=1, check_same_thread=False)
+        self.conn = sqlite3.connect(
+            str(path), timeout=1, check_same_thread=False
+        )
 
         if not file_exists:
             self.create()

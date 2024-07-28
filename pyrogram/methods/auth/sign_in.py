@@ -70,7 +70,9 @@ class SignIn:
 
         if isinstance(r, raw.types.auth.AuthorizationSignUpRequired):
             if r.terms_of_service:
-                return types.TermsOfService._parse(terms_of_service=r.terms_of_service)
+                return types.TermsOfService._parse(
+                    terms_of_service=r.terms_of_service
+                )
 
             return False
         else:

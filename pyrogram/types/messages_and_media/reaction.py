@@ -17,7 +17,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with PyroFork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional
 
 import pyrogram
 from pyrogram import raw
@@ -47,10 +46,10 @@ class Reaction(Object):
         self,
         *,
         client: "pyrogram.Client" = None,
-        emoji: Optional[str] = None,
-        custom_emoji_id: Optional[int] = None,
-        count: Optional[int] = None,
-        chosen_order: Optional[int] = None,
+        emoji: str | None = None,
+        custom_emoji_id: int | None = None,
+        count: int | None = None,
+        chosen_order: int | None = None,
     ):
         super().__init__(client)
 
@@ -60,16 +59,21 @@ class Reaction(Object):
         self.chosen_order = chosen_order
 
     @staticmethod
-    def _parse(client: "pyrogram.Client", reaction: "raw.base.Reaction") -> "Reaction":
+    def _parse(
+        client: "pyrogram.Client", reaction: "raw.base.Reaction"
+    ) -> "Reaction":
         if isinstance(reaction, raw.types.ReactionEmoji):
             return Reaction(client=client, emoji=reaction.emoticon)
 
         if isinstance(reaction, raw.types.ReactionCustomEmoji):
-            return Reaction(client=client, custom_emoji_id=reaction.document_id)
+            return Reaction(
+                client=client, custom_emoji_id=reaction.document_id
+            )
 
     @staticmethod
     def _parse_count(
-        client: "pyrogram.Client", reaction_count: "raw.base.ReactionCount"
+        client: "pyrogram.Client",
+        reaction_count: "raw.base.ReactionCount",
     ) -> "Reaction":
         reaction = Reaction._parse(client, reaction_count.reaction)
         reaction.count = reaction_count.count

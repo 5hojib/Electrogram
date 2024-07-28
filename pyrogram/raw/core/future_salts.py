@@ -32,7 +32,9 @@ class FutureSalts(TLObject):
 
     QUALNAME = "FutureSalts"
 
-    def __init__(self, req_msg_id: int, now: int, salts: list[FutureSalt]):
+    def __init__(
+        self, req_msg_id: int, now: int, salts: list[FutureSalt]
+    ):
         self.req_msg_id = req_msg_id
         self.now = now
         self.salts = salts

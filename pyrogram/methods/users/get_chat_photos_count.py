@@ -17,14 +17,15 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
 
 
 class GetChatPhotosCount:
-    async def get_chat_photos_count(self: "pyrogram.Client", chat_id: Union[int, str]) -> int:
+    async def get_chat_photos_count(
+        self: "pyrogram.Client", chat_id: int | str
+    ) -> int:
         """Get the total count of photos for a chat.
 
         .. include:: /_includes/usable-by/users-bots.rst
@@ -52,14 +53,18 @@ class GetChatPhotosCount:
             r = await self.invoke(
                 raw.functions.messages.GetSearchCounters(
                     peer=peer_id,
-                    filters=[raw.types.InputMessagesFilterChatPhotos()],
+                    filters=[
+                        raw.types.InputMessagesFilterChatPhotos()
+                    ],
                 )
             )
 
             return r[0].count
         else:
             r = await self.invoke(
-                raw.functions.photos.GetUserPhotos(user_id=peer_id, offset=0, max_id=0, limit=1)
+                raw.functions.photos.GetUserPhotos(
+                    user_id=peer_id, offset=0, max_id=0, limit=1
+                )
             )
 
             if isinstance(r, raw.types.photos.Photos):
