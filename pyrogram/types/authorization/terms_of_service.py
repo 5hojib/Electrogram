@@ -23,7 +23,7 @@ class TermsOfService(Object):
         *,
         id: str,
         text: str,
-        entities: list["types.MessageEntity"],
+        entities: list[types.MessageEntity],
     ) -> None:
         super().__init__()
 
@@ -33,8 +33,8 @@ class TermsOfService(Object):
 
     @staticmethod
     def _parse(
-        terms_of_service: "raw.types.help.TermsOfService",
-    ) -> "TermsOfService":
+        terms_of_service: raw.types.help.TermsOfService,
+    ) -> TermsOfService:
         return TermsOfService(
             id=terms_of_service.id.data,
             text=terms_of_service.text,

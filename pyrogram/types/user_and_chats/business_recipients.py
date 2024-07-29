@@ -47,9 +47,9 @@ class BusinessRecipients(Object):
     @staticmethod
     def _parse(
         client,
-        recipients: "raw.types.BusinessRecipients",
+        recipients: raw.types.BusinessRecipients,
         users: dict | None = None,
-    ) -> "BusinessRecipients":
+    ) -> BusinessRecipients:
         return BusinessRecipients(
             existing_chats=getattr(
                 recipients, "existing_chats", None

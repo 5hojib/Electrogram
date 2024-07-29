@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, utils
@@ -11,6 +11,9 @@ from pyrogram.file_id import (
     FileUniqueType,
 )
 from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class Voice(Object):
@@ -43,7 +46,7 @@ class Voice(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         file_id: str,
         file_unique_id: str,
         duration: int,
@@ -65,9 +68,9 @@ class Voice(Object):
     @staticmethod
     def _parse(
         client,
-        voice: "raw.types.Document",
-        attributes: "raw.types.DocumentAttributeAudio",
-    ) -> "Voice":
+        voice: raw.types.Document,
+        attributes: raw.types.DocumentAttributeAudio,
+    ) -> Voice:
         return Voice(
             file_id=FileId(
                 file_type=FileType.VOICE,

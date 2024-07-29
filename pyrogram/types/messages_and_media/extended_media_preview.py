@@ -26,7 +26,7 @@ class ExtendedMediaPreview(Object):
         *,
         width: int | None = None,
         height: int | None = None,
-        thumb: "types.Thumbnail" = None,
+        thumb: types.Thumbnail = None,
         video_duration: int | None = None,
     ) -> None:
         super().__init__()
@@ -38,8 +38,8 @@ class ExtendedMediaPreview(Object):
 
     @staticmethod
     def _parse(
-        client, media: "raw.types.MessageExtendedMediaPreview"
-    ) -> "ExtendedMediaPreview":
+        client, media: raw.types.MessageExtendedMediaPreview
+    ) -> ExtendedMediaPreview:
         thumb = None
         if media.thumb:
             thumb = types.StrippedThumbnail._parse(

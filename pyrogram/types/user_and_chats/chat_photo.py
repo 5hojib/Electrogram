@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Union
-
 import pyrogram
 from pyrogram import raw, types
 from pyrogram.file_id import (
@@ -48,14 +46,14 @@ class ChatPhoto(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         small_file_id: str,
         small_photo_unique_id: str,
         big_file_id: str,
         big_photo_unique_id: str,
         has_animation: bool,
         is_personal: bool,
-        minithumbnail: "types.StrippedThumbnail" = None,
+        minithumbnail: types.StrippedThumbnail = None,
     ) -> None:
         super().__init__(client)
 
@@ -70,9 +68,7 @@ class ChatPhoto(Object):
     @staticmethod
     def _parse(
         client,
-        chat_photo: Union[
-            "raw.types.UserProfilePhoto", "raw.types.ChatPhoto"
-        ],
+        chat_photo: raw.types.UserProfilePhoto | raw.types.ChatPhoto,
         peer_id: int,
         peer_access_hash: int,
     ):

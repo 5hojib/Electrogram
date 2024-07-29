@@ -25,9 +25,9 @@ class SentCode(Object):
     def __init__(
         self,
         *,
-        type: "enums.SentCodeType",
+        type: enums.SentCodeType,
         phone_code_hash: str,
-        next_type: "enums.NextCodeType" = None,
+        next_type: enums.NextCodeType = None,
         timeout: int | None = None,
     ) -> None:
         super().__init__()
@@ -38,7 +38,7 @@ class SentCode(Object):
         self.timeout = timeout
 
     @staticmethod
-    def _parse(sent_code: raw.types.auth.SentCode) -> "SentCode":
+    def _parse(sent_code: raw.types.auth.SentCode) -> SentCode:
         return SentCode(
             type=enums.SentCodeType(type(sent_code.type)),
             phone_code_hash=sent_code.phone_code_hash,

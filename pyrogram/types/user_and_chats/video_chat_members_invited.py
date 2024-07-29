@@ -13,7 +13,7 @@ class VideoChatMembersInvited(Object):
             New members that were invited to the voice chat.
     """
 
-    def __init__(self, *, users: list["types.User"]) -> None:
+    def __init__(self, *, users: list[types.User]) -> None:
         super().__init__()
 
         self.users = users
@@ -21,9 +21,9 @@ class VideoChatMembersInvited(Object):
     @staticmethod
     def _parse(
         client,
-        action: "raw.types.MessageActionInviteToGroupCall",
-        users: dict[int, "raw.types.User"],
-    ) -> "VideoChatMembersInvited":
+        action: raw.types.MessageActionInviteToGroupCall,
+        users: dict[int, raw.types.User],
+    ) -> VideoChatMembersInvited:
         users = [
             types.User._parse(client, users[i]) for i in action.users
         ]

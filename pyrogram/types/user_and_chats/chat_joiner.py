@@ -1,10 +1,13 @@
 from __future__ import annotations
 
-from datetime import datetime
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types, utils
 from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class ChatJoiner(Object):
@@ -30,12 +33,12 @@ class ChatJoiner(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client",
-        user: "types.User",
+        client: pyrogram.Client,
+        user: types.User,
         date: datetime | None = None,
         bio: str | None = None,
         pending: bool | None = None,
-        approved_by: "types.User" = None,
+        approved_by: types.User = None,
     ) -> None:
         super().__init__(client)
 
@@ -47,10 +50,10 @@ class ChatJoiner(Object):
 
     @staticmethod
     def _parse(
-        client: "pyrogram.Client",
-        joiner: "raw.base.ChatInviteImporter",
-        users: dict[int, "raw.base.User"],
-    ) -> "ChatJoiner":
+        client: pyrogram.Client,
+        joiner: raw.base.ChatInviteImporter,
+        users: dict[int, raw.base.User],
+    ) -> ChatJoiner:
         return ChatJoiner(
             user=types.User._parse(client, users[joiner.user_id]),
             date=utils.timestamp_to_datetime(joiner.date),

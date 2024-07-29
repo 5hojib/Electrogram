@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Union
-
 import pyrogram
 from pyrogram import raw
 from pyrogram.file_id import (
@@ -38,7 +36,7 @@ class Thumbnail(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         file_id: str,
         file_unique_id: str,
         width: int,
@@ -55,8 +53,8 @@ class Thumbnail(Object):
 
     @staticmethod
     def _parse(
-        client, media: Union["raw.types.Photo", "raw.types.Document"]
-    ) -> list["Thumbnail"] | None:
+        client, media: raw.types.Photo | raw.types.Document
+    ) -> list[Thumbnail] | None:
         if isinstance(media, raw.types.Photo):
             raw_thumbs = [
                 i

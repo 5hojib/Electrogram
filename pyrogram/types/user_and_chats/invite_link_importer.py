@@ -1,9 +1,12 @@
 from __future__ import annotations
 
-from datetime import datetime
+from typing import TYPE_CHECKING
 
 from pyrogram import raw, types, utils
 from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class InviteLinkImporter(Object):
@@ -17,7 +20,7 @@ class InviteLinkImporter(Object):
             The user that has used the given invite link
     """
 
-    def __init__(self, *, date: datetime, user: "types.User") -> None:
+    def __init__(self, *, date: datetime, user: types.User) -> None:
         super().__init__(None)
 
         self.date = date
@@ -26,7 +29,7 @@ class InviteLinkImporter(Object):
     @staticmethod
     def _parse(
         client,
-        invite_importers: "raw.types.messages.ChatInviteImporters",
+        invite_importers: raw.types.messages.ChatInviteImporters,
     ):
         importers = types.List()
 

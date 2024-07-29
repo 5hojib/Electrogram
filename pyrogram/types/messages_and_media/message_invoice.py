@@ -63,8 +63,8 @@ class MessageInvoice(Object):
 
     @staticmethod
     def _parse(
-        message_invoice: "raw.types.MessageMediaInvoice",
-    ) -> "MessageInvoice":
+        message_invoice: raw.types.MessageMediaInvoice,
+    ) -> MessageInvoice:
         return MessageInvoice(
             title=message_invoice.title,
             description=message_invoice.description,

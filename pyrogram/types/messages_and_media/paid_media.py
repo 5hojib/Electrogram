@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Union
-
 from pyrogram import raw, types
 from pyrogram.types.object import Object
 
@@ -22,12 +20,10 @@ class PaidMedia(Object):
         *,
         stars_amount: int,
         extended_media: list[
-            Union[
-                "types.Animation",
-                "types.ExtendedMediaPreview",
-                "types.Photo",
-                "types.Video",
-            ]
+            types.Animation
+            | types.ExtendedMediaPreview
+            | types.Photo
+            | types.Video
         ]
         | None = None,
     ) -> None:
@@ -38,8 +34,8 @@ class PaidMedia(Object):
 
     @staticmethod
     def _parse(
-        client, media: "raw.types.MessageMediaPaidMedia"
-    ) -> "PaidMedia":
+        client, media: raw.types.MessageMediaPaidMedia
+    ) -> PaidMedia:
         extended_media = []
         for m in media.extended_media:
             if isinstance(m, raw.types.MessageExtendedMediaPreview):

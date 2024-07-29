@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types, utils
@@ -11,6 +11,9 @@ from pyrogram.file_id import (
     FileUniqueType,
 )
 from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class Animation(Object):
@@ -52,7 +55,7 @@ class Animation(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         file_id: str,
         file_unique_id: str,
         width: int,
@@ -62,7 +65,7 @@ class Animation(Object):
         mime_type: str | None = None,
         file_size: int | None = None,
         date: datetime | None = None,
-        thumbs: list["types.Thumbnail"] | None = None,
+        thumbs: list[types.Thumbnail] | None = None,
     ) -> None:
         super().__init__(client)
 
@@ -80,10 +83,10 @@ class Animation(Object):
     @staticmethod
     def _parse(
         client,
-        animation: "raw.types.Document",
-        video_attributes: "raw.types.DocumentAttributeVideo",
+        animation: raw.types.Document,
+        video_attributes: raw.types.DocumentAttributeVideo,
         file_name: str,
-    ) -> "Animation":
+    ) -> Animation:
         return Animation(
             file_id=FileId(
                 file_type=FileType.ANIMATION,
@@ -109,8 +112,8 @@ class Animation(Object):
 
     @staticmethod
     def _parse_chat_animation(
-        client, video: "raw.types.Photo"
-    ) -> "Animation":
+        client, video: raw.types.Photo
+    ) -> Animation:
         if isinstance(video, raw.types.Photo):
             if not video.video_sizes:
                 return None

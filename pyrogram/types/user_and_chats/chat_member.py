@@ -1,11 +1,13 @@
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Union
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
 from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class ChatMember(Object):
@@ -59,20 +61,20 @@ class ChatMember(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
-        status: "enums.ChatMemberStatus",
-        user: "types.User" = None,
-        chat: "types.Chat" = None,
+        client: pyrogram.Client = None,
+        status: enums.ChatMemberStatus,
+        user: types.User = None,
+        chat: types.Chat = None,
         custom_title: str | None = None,
         until_date: datetime | None = None,
         joined_date: datetime | None = None,
-        invited_by: "types.User" = None,
-        promoted_by: "types.User" = None,
-        restricted_by: "types.User" = None,
+        invited_by: types.User = None,
+        promoted_by: types.User = None,
+        restricted_by: types.User = None,
         is_member: bool | None = None,
         can_be_edited: bool | None = None,
-        permissions: "types.ChatPermissions" = None,
-        privileges: "types.ChatPrivileges" = None,
+        permissions: types.ChatPermissions = None,
+        privileges: types.ChatPrivileges = None,
     ) -> None:
         super().__init__(client)
 
@@ -92,13 +94,12 @@ class ChatMember(Object):
 
     @staticmethod
     def _parse(
-        client: "pyrogram.Client",
-        member: Union[
-            "raw.base.ChatParticipant", "raw.base.ChannelParticipant"
-        ],
-        users: dict[int, "raw.base.User"],
-        chats: dict[int, "raw.base.Chat"],
-    ) -> "ChatMember":
+        client: pyrogram.Client,
+        member: raw.base.ChatParticipant
+        | raw.base.ChannelParticipant,
+        users: dict[int, raw.base.User],
+        chats: dict[int, raw.base.Chat],
+    ) -> ChatMember:
         # Chat participants
         if isinstance(member, raw.types.ChatParticipant):
             return ChatMember(

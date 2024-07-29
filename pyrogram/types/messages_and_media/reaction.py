@@ -26,7 +26,7 @@ class Reaction(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         emoji: str | None = None,
         custom_emoji_id: int | None = None,
         count: int | None = None,
@@ -41,8 +41,8 @@ class Reaction(Object):
 
     @staticmethod
     def _parse(
-        client: "pyrogram.Client", reaction: "raw.base.Reaction"
-    ) -> "Reaction":
+        client: pyrogram.Client, reaction: raw.base.Reaction
+    ) -> Reaction:
         if isinstance(reaction, raw.types.ReactionEmoji):
             return Reaction(client=client, emoji=reaction.emoticon)
 
@@ -54,9 +54,9 @@ class Reaction(Object):
 
     @staticmethod
     def _parse_count(
-        client: "pyrogram.Client",
-        reaction_count: "raw.base.ReactionCount",
-    ) -> "Reaction":
+        client: pyrogram.Client,
+        reaction_count: raw.base.ReactionCount,
+    ) -> Reaction:
         reaction = Reaction._parse(client, reaction_count.reaction)
         reaction.count = reaction_count.count
         reaction.chosen_order = reaction_count.chosen_order

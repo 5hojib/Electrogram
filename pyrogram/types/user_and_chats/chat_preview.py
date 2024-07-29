@@ -28,12 +28,12 @@ class ChatPreview(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         title: str,
         type: str,
         members_count: int,
-        photo: "types.Photo" = None,
-        members: list["types.User"] | None = None,
+        photo: types.Photo = None,
+        members: list[types.User] | None = None,
     ) -> None:
         super().__init__(client)
 
@@ -45,8 +45,8 @@ class ChatPreview(Object):
 
     @staticmethod
     def _parse(
-        client, chat_invite: "raw.types.ChatInvite"
-    ) -> "ChatPreview":
+        client, chat_invite: raw.types.ChatInvite
+    ) -> ChatPreview:
         return ChatPreview(
             title=chat_invite.title,
             type=(

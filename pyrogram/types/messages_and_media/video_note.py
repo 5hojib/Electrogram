@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types, utils
@@ -11,6 +11,9 @@ from pyrogram.file_id import (
     FileUniqueType,
 )
 from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class VideoNote(Object):
@@ -46,12 +49,12 @@ class VideoNote(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         file_id: str,
         file_unique_id: str,
         length: int,
         duration: int,
-        thumbs: list["types.Thumbnail"] | None = None,
+        thumbs: list[types.Thumbnail] | None = None,
         mime_type: str | None = None,
         file_size: int | None = None,
         date: datetime | None = None,
@@ -70,9 +73,9 @@ class VideoNote(Object):
     @staticmethod
     def _parse(
         client,
-        video_note: "raw.types.Document",
-        video_attributes: "raw.types.DocumentAttributeVideo",
-    ) -> "VideoNote":
+        video_note: raw.types.Document,
+        video_attributes: raw.types.DocumentAttributeVideo,
+    ) -> VideoNote:
         return VideoNote(
             file_id=FileId(
                 file_type=FileType.VIDEO_NOTE,

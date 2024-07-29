@@ -60,12 +60,12 @@ class Folder(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         id: int,
         title: str,
-        included_chats: list["types.Chat"] | None = None,
-        excluded_chats: list["types.Chat"] | None = None,
-        pinned_chats: list["types.Chat"] | None = None,
+        included_chats: list[types.Chat] | None = None,
+        excluded_chats: list[types.Chat] | None = None,
+        pinned_chats: list[types.Chat] | None = None,
         contacts: bool | None = None,
         non_contacts: bool | None = None,
         groups: bool | None = None,
@@ -75,7 +75,7 @@ class Folder(Object):
         exclude_read: bool | None = None,
         exclude_archived: bool | None = None,
         emoji: str | None = None,
-        color: "enums.FolderColor" = None,
+        color: enums.FolderColor = None,
         has_my_invites: bool | None = None,
     ) -> None:
         super().__init__(client)
@@ -99,8 +99,8 @@ class Folder(Object):
 
     @staticmethod
     def _parse(
-        client, folder: "raw.types.DialogFilter", users, chats
-    ) -> "Folder":
+        client, folder: raw.types.DialogFilter, users, chats
+    ) -> Folder:
         included_chats = []
         excluded_chats = []
         pinned_chats = []
@@ -187,7 +187,7 @@ class Folder(Object):
         exclude_read: bool | None = None,
         exclude_archived: bool | None = None,
         emoji: str | None = None,
-        color: "enums.FolderColor" = None,
+        color: enums.FolderColor = None,
     ):
         """Bound method *update_peers* of :obj:`~pyrogram.types.Folder`.
 
@@ -355,7 +355,7 @@ class Folder(Object):
             pinned_chats=[i.id for i in self.pinned_chats or []],
         )
 
-    async def update_color(self, color: "enums.FolderColor"):
+    async def update_color(self, color: enums.FolderColor):
         """Bound method *update_color* of :obj:`~pyrogram.types.Folder`.
 
         Use as a shortcut for:

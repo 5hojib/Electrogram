@@ -53,9 +53,9 @@ class GiftedPremium(Object):
     @staticmethod
     async def _parse(
         client,
-        gifted_premium: "raw.types.MessageActionGiftPremium",
+        gifted_premium: raw.types.MessageActionGiftPremium,
         gifter_user_id: int,
-    ) -> "GiftedPremium":
+    ) -> GiftedPremium:
         return GiftedPremium(
             gifter_user_id=gifter_user_id,
             currency=gifted_premium.currency,

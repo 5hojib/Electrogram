@@ -1,12 +1,14 @@
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Union
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
 from pyrogram.types.object import Object
 from pyrogram.types.update import Update
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class Poll(Object, Update):
@@ -68,24 +70,23 @@ class Poll(Object, Update):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         id: str,
         question: str,
-        options: list["types.PollOption"],
-        question_entities: list["types.MessageEntity"] | None = None,
+        options: list[types.PollOption],
+        question_entities: list[types.MessageEntity] | None = None,
         total_voter_count: int,
         is_closed: bool,
         is_anonymous: bool | None = None,
-        type: "enums.PollType" = None,
+        type: enums.PollType = None,
         allows_multiple_answers: bool | None = None,
         chosen_option_id: int | None = None,
         correct_option_id: int | None = None,
         explanation: str | None = None,
-        explanation_entities: list["types.MessageEntity"]
-        | None = None,
+        explanation_entities: list[types.MessageEntity] | None = None,
         open_period: int | None = None,
         close_date: datetime | None = None,
-        recent_voters: list["types.User"] | None = None,
+        recent_voters: list[types.User] | None = None,
     ) -> None:
         super().__init__(client)
 
@@ -109,12 +110,10 @@ class Poll(Object, Update):
     @staticmethod
     async def _parse(
         client,
-        media_poll: Union[
-            "raw.types.MessageMediaPoll",
-            "raw.types.UpdateMessagePoll",
-        ],
-        users: list["raw.base.User"],
-    ) -> "Poll":
+        media_poll: raw.types.MessageMediaPoll
+        | raw.types.UpdateMessagePoll,
+        users: list[raw.base.User],
+    ) -> Poll:
         poll: raw.types.Poll = media_poll.poll
         poll_results: raw.types.PollResults = media_poll.results
         results: list[raw.types.PollAnswerVoters] = (
@@ -207,9 +206,9 @@ class Poll(Object, Update):
     @staticmethod
     async def _parse_update(
         client,
-        update: "raw.types.UpdateMessagePoll",
-        users: list["raw.base.User"],
-    ) -> "Poll":
+        update: raw.types.UpdateMessagePoll,
+        users: list[raw.base.User],
+    ) -> Poll:
         if update.poll is not None:
             return await Poll._parse(client, update, users)
 
@@ -255,9 +254,9 @@ class Poll(Object, Update):
 
     async def stop(
         self,
-        reply_markup: "types.InlineKeyboardMarkup" = None,
+        reply_markup: types.InlineKeyboardMarkup = None,
         business_connection_id: str | None = None,
-    ) -> "types.Poll":
+    ) -> types.Poll:
         """Bound method *stop* of :obj:`~pyrogram.types.Poll`.
 
         Use as a shortcut for:

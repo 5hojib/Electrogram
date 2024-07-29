@@ -1,9 +1,12 @@
 from __future__ import annotations
 
-from datetime import datetime
+from typing import TYPE_CHECKING
 
 from pyrogram import raw, utils
 from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class VideoChatScheduled(Object):
@@ -21,8 +24,8 @@ class VideoChatScheduled(Object):
 
     @staticmethod
     def _parse(
-        action: "raw.types.MessageActionGroupCallScheduled",
-    ) -> "VideoChatScheduled":
+        action: raw.types.MessageActionGroupCallScheduled,
+    ) -> VideoChatScheduled:
         return VideoChatScheduled(
             start_date=utils.timestamp_to_datetime(
                 action.schedule_date

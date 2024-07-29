@@ -1,12 +1,14 @@
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Union
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types, utils
 from pyrogram.types.object import Object
 from pyrogram.types.update import Update
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class StorySkipped(Object, Update):
@@ -35,10 +37,10 @@ class StorySkipped(Object, Update):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         id: int,
-        from_user: "types.User" = None,
-        sender_chat: "types.Chat" = None,
+        from_user: types.User = None,
+        sender_chat: types.Chat = None,
         date: datetime,
         expire_date: datetime,
         close_friends: bool | None = None,
@@ -53,10 +55,10 @@ class StorySkipped(Object, Update):
         self.close_friends = close_friends
 
     async def _parse(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         stories: raw.base.StoryItem,
-        peer: Union["raw.types.PeerChannel", "raw.types.PeerUser"],
-    ) -> "StorySkipped":
+        peer: raw.types.PeerChannel | raw.types.PeerUser,
+    ) -> StorySkipped:
         from_user = None
         sender_chat = None
         if isinstance(peer, raw.types.PeerChannel):

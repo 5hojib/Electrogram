@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Union
-
 from pyrogram import raw, types
 from pyrogram.types.object import Object
 
@@ -77,7 +75,7 @@ class ForumTopic(Object):
         unread_count: int,
         unread_mentions_count: int,
         unread_reactions_count: int,
-        from_id: Union["types.PeerChannel", "types.PeerUser"],
+        from_id: types.PeerChannel | types.PeerUser,
         # notify_settings: "types.PeerNotifySettings", //todo
         my: bool | None = None,
         closed: bool | None = None,
@@ -108,7 +106,7 @@ class ForumTopic(Object):
         # self.draft = draft //todo
 
     @staticmethod
-    def _parse(forum_topic: "raw.types.forum_topic") -> "ForumTopic":
+    def _parse(forum_topic: raw.types.forum_topic) -> ForumTopic:
         from_id = forum_topic.from_id
         if isinstance(from_id, raw.types.PeerChannel):
             peer = types.PeerChannel._parse(from_id)

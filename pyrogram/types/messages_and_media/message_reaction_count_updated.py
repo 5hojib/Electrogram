@@ -1,11 +1,14 @@
 from __future__ import annotations
 
-from datetime import datetime
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types, utils
 from pyrogram.types.object import Object
 from pyrogram.types.update import Update
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class MessageReactionCountUpdated(Object, Update):
@@ -30,11 +33,11 @@ class MessageReactionCountUpdated(Object, Update):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
-        chat: "types.Chat",
+        client: pyrogram.Client = None,
+        chat: types.Chat,
         message_id: int,
         date: datetime,
-        reactions: list["types.ReactionCount"],
+        reactions: list[types.ReactionCount],
     ) -> None:
         super().__init__(client)
 
@@ -45,11 +48,11 @@ class MessageReactionCountUpdated(Object, Update):
 
     @staticmethod
     def _parse(
-        client: "pyrogram.Client",
-        update: "raw.types.UpdateBotMessageReactions",
-        users: dict[int, "raw.types.User"],
-        chats: dict[int, "raw.types.Chat"],
-    ) -> "MessageReactionCountUpdated":
+        client: pyrogram.Client,
+        update: raw.types.UpdateBotMessageReactions,
+        users: dict[int, raw.types.User],
+        chats: dict[int, raw.types.Chat],
+    ) -> MessageReactionCountUpdated:
         chat = None
         peer_id = utils.get_peer_id(update.peer)
         raw_peer_id = utils.get_raw_peer_id(update.peer)

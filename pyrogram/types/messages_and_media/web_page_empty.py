@@ -27,5 +27,5 @@ class WebPageEmpty(Object):
         self.url = url
 
     @staticmethod
-    def _parse(webpage: "raw.types.WebPageEmpty") -> "WebPageEmpty":
+    def _parse(webpage: raw.types.WebPageEmpty) -> WebPageEmpty:
         return WebPageEmpty(id=str(webpage.id), url=webpage.url)

@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import asyncio
-from datetime import datetime
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types, utils
 from pyrogram.errors import FloodWait
 from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class Giveaway(Object):
@@ -38,8 +41,8 @@ class Giveaway(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
-        chats: list["types.Chat"],
+        client: pyrogram.Client = None,
+        chats: list[types.Chat],
         quantity: int,
         months: int,
         expire_date: datetime,
@@ -58,9 +61,7 @@ class Giveaway(Object):
         self.private_channel_ids = private_channel_ids
 
     @staticmethod
-    async def _parse(
-        client, message: "raw.types.Message"
-    ) -> "Giveaway":
+    async def _parse(client, message: raw.types.Message) -> Giveaway:
         giveaway: raw.types.MessageMediaGiveaway = message.media
         chats = []
         private_ids = []

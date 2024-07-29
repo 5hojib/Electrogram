@@ -19,7 +19,7 @@ class Location(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         longitude: float,
         latitude: float,
     ) -> None:
@@ -29,7 +29,7 @@ class Location(Object):
         self.latitude = latitude
 
     @staticmethod
-    def _parse(client, geo_point: "raw.types.GeoPoint") -> "Location":
+    def _parse(client, geo_point: raw.types.GeoPoint) -> Location:
         if isinstance(geo_point, raw.types.GeoPoint):
             return Location(
                 longitude=geo_point.long,

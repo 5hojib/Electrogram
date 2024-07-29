@@ -41,8 +41,8 @@ class MediaAreaCoordinates(Object):
         self.rotation = rotation
 
     def _parse(
-        self: "raw.types.MediaAreaCoordinates",
-    ) -> "MediaAreaCoordinates":
+        self: raw.types.MediaAreaCoordinates,
+    ) -> MediaAreaCoordinates:
         return MediaAreaCoordinates(
             x=self.x,
             y=self.y,

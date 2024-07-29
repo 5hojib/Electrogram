@@ -14,15 +14,15 @@ class MediaArea(Object):
     """
 
     def __init__(
-        self, coordinates: "types.MediaAreaCoordinates"
+        self, coordinates: types.MediaAreaCoordinates
     ) -> None:
         super().__init__()
 
         self.coordinates = coordinates
 
     async def _parse(
-        self: "pyrogram.Client", media_area: "raw.base.MediaArea"
-    ) -> "MediaArea":
+        self: pyrogram.Client, media_area: raw.base.MediaArea
+    ) -> MediaArea:
         if isinstance(media_area, raw.types.MediaAreaChannelPost):
             return await types.MediaAreaChannelPost._parse(
                 self, media_area

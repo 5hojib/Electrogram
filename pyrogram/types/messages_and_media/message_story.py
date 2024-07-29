@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Union
-
 import pyrogram
 from pyrogram import raw, types, utils
 from pyrogram.types.object import Object
@@ -24,8 +22,8 @@ class MessageStory(Object):
     def __init__(
         self,
         *,
-        from_user: "types.User" = None,
-        sender_chat: "types.Chat" = None,
+        from_user: types.User = None,
+        sender_chat: types.Chat = None,
         story_id: int,
     ) -> None:
         super().__init__()
@@ -36,9 +34,9 @@ class MessageStory(Object):
 
     @staticmethod
     async def _parse(
-        client: "pyrogram.Client",
-        message_story: "raw.types.MessageMediaStory",
-    ) -> Union["MessageStory", "types.Story"]:
+        client: pyrogram.Client,
+        message_story: raw.types.MessageMediaStory,
+    ) -> MessageStory | types.Story:
         from_user = None
         sender_chat = None
         user_id = None

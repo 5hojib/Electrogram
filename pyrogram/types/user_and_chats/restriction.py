@@ -33,8 +33,8 @@ class Restriction(Object):
 
     @staticmethod
     def _parse(
-        restriction: "raw.types.RestrictionReason",
-    ) -> "Restriction":
+        restriction: raw.types.RestrictionReason,
+    ) -> Restriction:
         return Restriction(
             platform=restriction.platform,
             reason=restriction.reason,

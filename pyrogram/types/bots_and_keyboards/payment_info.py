@@ -1,7 +1,11 @@
 from __future__ import annotations
 
-from pyrogram import types
+from typing import TYPE_CHECKING
+
 from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    from pyrogram import types
 
 
 class PaymentInfo(Object):

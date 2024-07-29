@@ -29,9 +29,9 @@ class StoryForwardHeader(Object):
     def __init__(
         self,
         *,
-        user: "types.User" = None,
+        user: types.User = None,
         sender_name: str | None = None,
-        chat: "types.Chat" = None,
+        chat: types.Chat = None,
         story_id: int | None = None,
         is_modified: bool | None = None,
     ) -> None:
@@ -44,9 +44,9 @@ class StoryForwardHeader(Object):
         self.is_modified = is_modified
 
     async def _parse(
-        self: "pyrogram.Client",
-        fwd_header: "raw.types.StoryFwdHeader",
-    ) -> "StoryForwardHeader":
+        self: pyrogram.Client,
+        fwd_header: raw.types.StoryFwdHeader,
+    ) -> StoryForwardHeader:
         user = None
         chat = None
         if fwd_header.from_peer is not None:

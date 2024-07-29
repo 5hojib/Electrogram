@@ -1,11 +1,13 @@
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Union
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types, utils
 from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class GiveawayResult(Object):
@@ -46,12 +48,12 @@ class GiveawayResult(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
-        chat: "types.Chat" = None,
-        giveaway_message: "types.Message" = None,
+        client: pyrogram.Client = None,
+        chat: types.Chat = None,
+        giveaway_message: types.Message = None,
         quantity: int,
         unclaimed_quantity: int,
-        winners: list["types.User"] | None = None,
+        winners: list[types.User] | None = None,
         months: int | None = None,
         expire_date: datetime | None = None,
         new_subscribers: bool | None = None,
@@ -74,12 +76,10 @@ class GiveawayResult(Object):
     @staticmethod
     async def _parse(
         client,
-        giveaway_result: Union[
-            "raw.types.MessageActionGiveawayResults",
-            "raw.types.MessageMediaGiveawayResults",
-        ],
+        giveaway_result: raw.types.MessageActionGiveawayResults
+        | raw.types.MessageMediaGiveawayResults,
         hide_winners: bool = False,
-    ) -> "GiveawayResult":
+    ) -> GiveawayResult:
         chat = None
         giveaway_message = None
         expired_date = None

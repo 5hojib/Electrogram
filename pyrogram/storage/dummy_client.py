@@ -1,10 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, NoReturn, Union
+from typing import TYPE_CHECKING, Any, NoReturn, Union
 
-from bson.codec_options import CodecOptions
-from pymongo.client_session import TransactionOptions
-from pymongo.read_concern import ReadConcern
 from pymongo.read_preferences import (
     Nearest,
     Primary,
@@ -12,7 +9,12 @@ from pymongo.read_preferences import (
     Secondary,
     SecondaryPreferred,
 )
-from pymongo.write_concern import WriteConcern
+
+if TYPE_CHECKING:
+    from bson.codec_options import CodecOptions
+    from pymongo.client_session import TransactionOptions
+    from pymongo.read_concern import ReadConcern
+    from pymongo.write_concern import WriteConcern
 
 try:
     from typing import Protocol, runtime_checkable

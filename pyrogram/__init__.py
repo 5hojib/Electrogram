@@ -22,6 +22,7 @@ crypto_executor = ThreadPoolExecutor(
 
 # ruff: noqa: E402
 import asyncio
+
 import uvloop
 
 from . import enums, errors, filters, handlers, raw, types
