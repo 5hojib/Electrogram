@@ -9,7 +9,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout electrogram
+      uses: actions/checkout@v4
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -20,7 +21,7 @@ jobs:
     - name: Install dependencies
       run: rye sync
 
-    - name: Run ruff to format code in pyrogram directory
+    - name: Run ruff to format code
       run: |
         rye run ruff check . --fix --unsafe-fixes --exit-zero
         rye run ruff format .

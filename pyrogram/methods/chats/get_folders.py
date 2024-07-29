@@ -89,10 +89,9 @@ class GetFolders:
         if folder_ids:
             if is_iterable:
                 return folders
-            else:
-                for folder in folders:
-                    if folder.id == folder_ids:
-                        return folder
-                return None
+            for folder in folders:
+                if folder.id == folder_ids:
+                    return folder
+            return None
 
         return folders

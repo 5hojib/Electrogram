@@ -1,9 +1,11 @@
+from typing import ClassVar
+
 from .exceptions import *
 from .rpc_error import UnknownError
 
 
 class BadMsgNotification(Exception):
-    descriptions = {
+    descriptions: ClassVar = {
         16: "The msg_id is too low, the client time has to be synchronized.",
         17: "The msg_id is too high, the client time has to be synchronized.",
         18: "Incorrect two lower order of the msg_id bits, the server expects the client message "

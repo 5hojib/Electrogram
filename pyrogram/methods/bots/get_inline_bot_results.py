@@ -79,5 +79,4 @@ class GetInlineBotResults:
                 raise TimeoutError(
                     "The inline bot didn't answer in time"
                 ) from None
-            else:
-                raise e
+            raise e

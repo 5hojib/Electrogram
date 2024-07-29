@@ -7,7 +7,7 @@ import io
 import logging
 import math
 from hashlib import md5
-from pathlib import PurePath
+from pathlib import Path, PurePath
 from typing import TYPE_CHECKING, BinaryIO
 
 import pyrogram
@@ -98,7 +98,7 @@ class SaveFile:
             part_size = 512 * 1024
 
             if isinstance(path, str | PurePath):
-                fp = open(path, "rb")
+                fp = Path(path).open("rb")
             elif isinstance(path, io.IOBase):
                 fp = path
             else:
@@ -210,8 +210,7 @@ class SaveFile:
                         parts=file_total_parts,
                         name=file_name,
                     )
-                else:
-                    return raw.types.InputFile(
+                return raw.types.InputFile(
                         id=file_id,
                         parts=file_total_parts,
                         name=file_name,

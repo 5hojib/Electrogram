@@ -1145,8 +1145,7 @@ class chat(Filter, set):
                     )
                 )
             )
-        else:
-            return message.chat and (
+        return message.chat and (
                 message.chat.id in self
                 or (
                     message.chat.username

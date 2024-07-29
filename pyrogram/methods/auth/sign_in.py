@@ -57,8 +57,7 @@ class SignIn:
                 )
 
             return False
-        else:
-            await self.storage.user_id(r.user.id)
-            await self.storage.is_bot(False)
+        await self.storage.user_id(r.user.id)
+        await self.storage.is_bot(False)
 
-            return types.User._parse(self, r.user)
+        return types.User._parse(self, r.user)

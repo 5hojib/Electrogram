@@ -44,16 +44,15 @@ class JoinChat:
                 return types.Chat._parse_chat_chat(
                     self, chat.chats[0]
                 )
-            elif isinstance(chat.chats[0], raw.types.Channel):
+            if isinstance(chat.chats[0], raw.types.Channel):
                 return types.Chat._parse_channel_chat(
                     self, chat.chats[0]
                 )
             return None
-        else:
-            chat = await self.invoke(
+        chat = await self.invoke(
                 raw.functions.channels.JoinChannel(
                     channel=await self.resolve_peer(chat_id)
                 )
             )
 
-            return types.Chat._parse_channel_chat(self, chat.chats[0])
+        return types.Chat._parse_channel_chat(self, chat.chats[0])

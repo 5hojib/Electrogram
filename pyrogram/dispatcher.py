@@ -369,7 +369,7 @@ class Dispatcher:
                             | raw.types.updates.DifferenceTooLong,
                         ):
                             break
-                        elif isinstance(
+                        if isinstance(
                             diff, raw.types.updates.Difference
                         ):
                             local_pts = diff.state.pts
@@ -389,7 +389,7 @@ class Dispatcher:
                             | raw.types.updates.ChannelDifferenceTooLong,
                         ):
                             break
-                        elif isinstance(
+                        if isinstance(
                             diff, raw.types.updates.ChannelDifference
                         ):
                             local_pts = diff.pts

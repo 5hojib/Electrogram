@@ -20,8 +20,7 @@ class Handler:
         if callable(self.filters):
             if inspect.iscoroutinefunction(self.filters.__call__):
                 return await self.filters(client, update)
-            else:
-                return await client.loop.run_in_executor(
+            return await client.loop.run_in_executor(
                     client.executor, self.filters, client, update
                 )
 

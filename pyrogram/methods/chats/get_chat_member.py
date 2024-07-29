@@ -61,7 +61,7 @@ class GetChatMember:
                 elif member.user.id == user.user_id:
                     return member
             raise UserNotParticipant
-        elif isinstance(chat, raw.types.InputPeerChannel):
+        if isinstance(chat, raw.types.InputPeerChannel):
             r = await self.invoke(
                 raw.functions.channels.GetParticipant(
                     channel=chat, participant=user
@@ -74,7 +74,6 @@ class GetChatMember:
             return types.ChatMember._parse(
                 self, r.participant, users, chats
             )
-        else:
-            raise ValueError(
+        raise ValueError(
                 f'The chat_id "{chat_id}" belongs to a user'
             )
