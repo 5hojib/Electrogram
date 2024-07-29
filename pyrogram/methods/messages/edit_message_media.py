@@ -85,7 +85,10 @@ class EditMessageMedia:
             ).values()
 
         if isinstance(media, types.InputMediaPhoto):
-            if isinstance(media.media, io.BytesIO) or Path(media.media).is_file():
+            if (
+                isinstance(media.media, io.BytesIO)
+                or Path(media.media).is_file()
+            ):
                 uploaded_media = await self.invoke(
                     raw.functions.messages.UploadMedia(
                         peer=await self.resolve_peer(chat_id),
@@ -113,7 +116,10 @@ class EditMessageMedia:
                     media.media, FileType.PHOTO
                 )
         elif isinstance(media, types.InputMediaVideo):
-            if isinstance(media.media, io.BytesIO) or Path(media.media).is_file():
+            if (
+                isinstance(media.media, io.BytesIO)
+                or Path(media.media).is_file()
+            ):
                 uploaded_media = await self.invoke(
                     raw.functions.messages.UploadMedia(
                         peer=await self.resolve_peer(chat_id),
@@ -159,7 +165,10 @@ class EditMessageMedia:
                     media.media, FileType.VIDEO
                 )
         elif isinstance(media, types.InputMediaAudio):
-            if isinstance(media.media, io.BytesIO) or Path(media.media).is_file():
+            if (
+                isinstance(media.media, io.BytesIO)
+                or Path(media.media).is_file()
+            ):
                 media = await self.invoke(
                     raw.functions.messages.UploadMedia(
                         peer=await self.resolve_peer(chat_id),
@@ -201,7 +210,10 @@ class EditMessageMedia:
                     media.media, FileType.AUDIO
                 )
         elif isinstance(media, types.InputMediaAnimation):
-            if isinstance(media.media, io.BytesIO) or Path(media.media).is_file():
+            if (
+                isinstance(media.media, io.BytesIO)
+                or Path(media.media).is_file()
+            ):
                 uploaded_media = await self.invoke(
                     raw.functions.messages.UploadMedia(
                         peer=await self.resolve_peer(chat_id),

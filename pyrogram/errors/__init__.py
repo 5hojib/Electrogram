@@ -58,4 +58,5 @@ class CDNFileHashMismatch(SecurityError):
             else msg
         )
 
+
 __all__ = ["UnknownError"]

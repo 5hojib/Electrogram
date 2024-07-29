@@ -47,10 +47,10 @@ class AddStickerToSet:
                 raise ValueError("file_id is invalid!")
             decoded = FileId.decode(sticker)
             media = raw.types.InputDocument(
-                    id=decoded.media_id,
-                    access_hash=decoded.access_hash,
-                    file_reference=decoded.file_reference,
-                )
+                id=decoded.media_id,
+                access_hash=decoded.access_hash,
+                file_reference=decoded.file_reference,
+            )
         else:
             raise ValueError("file_id is invalid!")
 

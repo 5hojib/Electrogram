@@ -44,9 +44,9 @@ class GetChatPhotosCount:
             return r[0].count
         r = await self.invoke(
             raw.functions.photos.GetUserPhotos(
-                    user_id=peer_id, offset=0, max_id=0, limit=1
-                )
+                user_id=peer_id, offset=0, max_id=0, limit=1
             )
+        )
 
         if isinstance(r, raw.types.photos.Photos):
             return len(r.photos)

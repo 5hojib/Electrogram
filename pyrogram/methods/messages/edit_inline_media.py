@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import asyncio
 import io
-import os
 import re
 from pathlib import Path
 

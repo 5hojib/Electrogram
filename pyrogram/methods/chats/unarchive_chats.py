@@ -36,10 +36,11 @@ class UnarchiveChats:
             chat_ids = [chat_ids]
 
         folder_peers = [
-                raw.types.InputFolderPeer(
-                    peer=await self.resolve_peer(chat), folder_id=0
-                ) for chat in chat_ids
-            ]
+            raw.types.InputFolderPeer(
+                peer=await self.resolve_peer(chat), folder_id=0
+            )
+            for chat in chat_ids
+        ]
 
         await self.invoke(
             raw.functions.folders.EditPeerFolders(
