@@ -74,6 +74,4 @@ class GetChatMember:
             return types.ChatMember._parse(
                 self, r.participant, users, chats
             )
-        raise ValueError(
-                f'The chat_id "{chat_id}" belongs to a user'
-            )
+        raise ValueError(f'The chat_id "{chat_id}" belongs to a user')

@@ -43,6 +43,4 @@ class GetChatMembersCount:
             )
 
             return r.full_chat.participants_count
-        raise ValueError(
-                f'The chat_id "{chat_id}" belongs to a user'
-            )
+        raise ValueError(f'The chat_id "{chat_id}" belongs to a user')

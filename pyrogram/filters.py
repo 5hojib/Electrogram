@@ -1146,18 +1146,18 @@ class chat(Filter, set):
                 )
             )
         return message.chat and (
-                message.chat.id in self
-                or (
-                    message.chat.username
-                    and message.chat.username.lower() in self
-                )
-                or (
-                    "me" in self
-                    and message.from_user
-                    and message.from_user.is_self
-                    and not message.outgoing
-                )
+            message.chat.id in self
+            or (
+                message.chat.username
+                and message.chat.username.lower() in self
             )
+            or (
+                "me" in self
+                and message.from_user
+                and message.from_user.is_self
+                and not message.outgoing
+            )
+        )
 
 
 # noinspection PyPep8Naming

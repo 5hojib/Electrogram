@@ -50,9 +50,9 @@ class JoinChat:
                 )
             return None
         chat = await self.invoke(
-                raw.functions.channels.JoinChannel(
-                    channel=await self.resolve_peer(chat_id)
-                )
+            raw.functions.channels.JoinChannel(
+                channel=await self.resolve_peer(chat_id)
             )
+        )
 
         return types.Chat._parse_channel_chat(self, chat.chats[0])

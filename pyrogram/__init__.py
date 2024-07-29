@@ -4,7 +4,7 @@ __license__ = "MIT License"
 from concurrent.futures.thread import ThreadPoolExecutor
 
 
-class StopTransmission(Exception):  # noqa: N818
+class StopTransmission(Exception):
     pass
 
 

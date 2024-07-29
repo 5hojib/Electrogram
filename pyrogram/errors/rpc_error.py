@@ -1,16 +1,17 @@
 from __future__ import annotations
 
 import re
-
-from pathlib import Path
 from datetime import datetime
 from importlib import import_module
-from typing import NoReturn
+from pathlib import Path
+from typing import TYPE_CHECKING, NoReturn
 
 from pyrogram import __version__, raw
-from pyrogram.raw.core import TLObject
 
 from .exceptions.all import exceptions
+
+if TYPE_CHECKING:
+    from pyrogram.raw.core import TLObject
 
 
 class RPCError(Exception):
@@ -43,14 +44,14 @@ class RPCError(Exception):
             self.value = value
 
         if is_unknown:
-            with Path(
-                "unknown_errors.txt").open("a", encoding="utf-8"
+            with Path("unknown_errors.txt").open(
+                "a", encoding="utf-8"
             ) as f:
                 f.write(f"{datetime.now()}\t{value}\t{rpc_name}\n")
 
     @staticmethod
     def raise_it(
-        rpc_error: "raw.types.RpcError", rpc_type: type[TLObject]
+        rpc_error: raw.types.RpcError, rpc_type: type[TLObject]
     ) -> NoReturn:
         error_code = rpc_error.error_code
         is_signed = error_code < 0
