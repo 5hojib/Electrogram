@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING, BinaryIO, Optional
 
 from pyrogram.types.messages_and_media import MessageEntity

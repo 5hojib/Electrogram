@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pyrogram import raw
 from pyrogram.session.internals import MsgId
 from pyrogram.types.object import Object
