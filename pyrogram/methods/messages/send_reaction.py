@@ -6,14 +6,14 @@ from pyrogram import raw, types
 
 class SendReaction:
     async def send_reaction(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         message_id: int | None = None,
         story_id: int | None = None,
         emoji: int | str | list[int | str] | None = None,
         big: bool = False,
         add_to_recent: bool = False,
-    ) -> "types.MessageReactions":
+    ) -> types.MessageReactions:
         """Use this method to send reactions on a message/stories.
         Service messages can't be reacted to.
         Automatically forwarded messages from

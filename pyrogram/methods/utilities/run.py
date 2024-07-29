@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 
 class Run:
-    def run(self: "pyrogram.Client", coroutine=None) -> None:
+    def run(self: pyrogram.Client, coroutine=None) -> None:
         """Start the client, idle the main script and finally stop the client.
 
         When calling this method without any argument it acts as a convenience method that calls

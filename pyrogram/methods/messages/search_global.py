@@ -1,18 +1,21 @@
 from __future__ import annotations
 
-from collections.abc import AsyncGenerator
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
 
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator
+
 
 class SearchGlobal:
     async def search_global(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         query: str = "",
-        filter: "enums.MessagesFilter" = enums.MessagesFilter.EMPTY,
+        filter: enums.MessagesFilter = enums.MessagesFilter.EMPTY,
         limit: int = 0,
-    ) -> AsyncGenerator["types.Message", None] | None:
+    ) -> AsyncGenerator[types.Message, None] | None:
         """Search messages globally from all of your chats.
 
         If you want to get the messages count only, see :meth:`~pyrogram.Client.search_global_count`.

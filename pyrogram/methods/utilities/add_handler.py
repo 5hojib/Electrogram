@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 class AddHandler:
     def add_handler(
-        self: "pyrogram.Client", handler: "Handler", group: int = 0
+        self: pyrogram.Client, handler: Handler, group: int = 0
     ):
         """Register an update handler.
 

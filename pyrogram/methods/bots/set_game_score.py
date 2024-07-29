@@ -1,21 +1,19 @@
 from __future__ import annotations
 
-from typing import Union
-
 import pyrogram
 from pyrogram import raw, types
 
 
 class SetGameScore:
     async def set_game_score(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         user_id: int | str,
         score: int,
         force: bool | None = None,
         disable_edit_message: bool | None = None,
         chat_id: int | str | None = None,
         message_id: int | None = None,
-    ) -> Union["types.Message", bool]:
+    ) -> types.Message | bool:
         # inline_message_id: str = None):  TODO Add inline_message_id
         """Set the score of the specified user in a game.
 

@@ -5,7 +5,7 @@ from pyrogram import raw, types
 
 
 class GetMe:
-    async def get_me(self: "pyrogram.Client") -> "types.User":
+    async def get_me(self: pyrogram.Client) -> types.User:
         """Get your own user identity.
 
         .. include:: /_includes/usable-by/users-bots.rst

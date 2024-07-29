@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class UnpinAllChatMessages:
     async def unpin_all_chat_messages(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
     ) -> bool:
         """Use this method to clear the list of pinned messages in a chat.

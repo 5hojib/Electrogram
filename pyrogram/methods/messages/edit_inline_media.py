@@ -17,10 +17,10 @@ class EditInlineMedia:
     MAX_RETRIES = 3
 
     async def edit_inline_media(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         inline_message_id: str,
-        media: "types.InputMedia",
-        reply_markup: "types.InlineKeyboardMarkup" = None,
+        media: types.InputMedia,
+        reply_markup: types.InlineKeyboardMarkup = None,
     ) -> bool:
         """Edit inline animation, audio, document, photo or video messages.
 

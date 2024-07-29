@@ -6,10 +6,10 @@ from pyrogram import enums, raw
 
 class SearchMessagesCount:
     async def search_messages_count(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         query: str = "",
-        filter: "enums.MessagesFilter" = enums.MessagesFilter.EMPTY,
+        filter: enums.MessagesFilter = enums.MessagesFilter.EMPTY,
         from_user: int | str | None = None,
     ) -> int:
         """Get the count of messages resulting from a search inside a chat.

@@ -10,11 +10,11 @@ from pyrogram.file_id import FileId
 
 class AddStickerToSet:
     async def add_sticker_to_set(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         set_short_name: str,
         sticker: str,
         emoji: str = "🤔",
-    ) -> "types.StickerSet":
+    ) -> types.StickerSet:
         """Add a sticker to stickerset.
 
         .. include:: /_includes/usable-by/users-bots.rst

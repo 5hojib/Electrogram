@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class LeaveChat:
     async def leave_chat(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         delete: bool = False,
     ):

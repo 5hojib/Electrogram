@@ -1,18 +1,21 @@
 from __future__ import annotations
 
-from collections.abc import AsyncGenerator
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types
 
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator
+
 
 class GetChatInviteLinkJoiners:
     async def get_chat_invite_link_joiners(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         invite_link: str,
         limit: int = 0,
-    ) -> AsyncGenerator["types.ChatJoiner", None] | None:
+    ) -> AsyncGenerator[types.ChatJoiner, None] | None:
         """Get the members who joined the chat with the invite link.
 
         .. include:: /_includes/usable-by/users.rst

@@ -1,21 +1,24 @@
 from __future__ import annotations
 
-from collections.abc import AsyncGenerator
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types
 
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator
+
 
 class GetChatEventLog:
     async def get_chat_event_log(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         query: str = "",
         offset_id: int = 0,
         limit: int = 0,
-        filters: "types.ChatEventFilter" = None,
+        filters: types.ChatEventFilter = None,
         user_ids: list[int | str] | None = None,
-    ) -> AsyncGenerator["types.ChatEvent", None] | None:
+    ) -> AsyncGenerator[types.ChatEvent, None] | None:
         """Get the actions taken by chat members and administrators in the last 48h.
 
         Only available for supergroups and channels. Requires administrator rights.

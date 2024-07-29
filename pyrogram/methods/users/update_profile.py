@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class UpdateProfile:
     async def update_profile(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         first_name: str | None = None,
         last_name: str | None = None,
         bio: str | None = None,

@@ -6,8 +6,8 @@ from pyrogram import raw, types
 
 class DeleteBotCommands:
     async def delete_bot_commands(
-        self: "pyrogram.Client",
-        scope: "types.BotCommandScope" = types.BotCommandScopeDefault(),
+        self: pyrogram.Client,
+        scope: types.BotCommandScope = types.BotCommandScopeDefault(),
         language_code: str = "",
     ) -> bool:
         """Delete the list of the bot's commands for the given scope and user language.

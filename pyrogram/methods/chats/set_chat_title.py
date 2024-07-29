@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class SetChatTitle:
     async def set_chat_title(
-        self: "pyrogram.Client", chat_id: int | str, title: str
+        self: pyrogram.Client, chat_id: int | str, title: str
     ) -> bool:
         """Change the title of a chat.
         Titles can't be changed for private chats.

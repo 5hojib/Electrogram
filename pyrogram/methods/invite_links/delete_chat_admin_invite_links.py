@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class DeleteChatAdminInviteLinks:
     async def delete_chat_admin_invite_links(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         admin_id: int | str,
     ) -> bool:

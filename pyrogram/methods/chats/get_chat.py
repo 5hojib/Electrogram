@@ -1,15 +1,13 @@
 from __future__ import annotations
 
-from typing import Union
-
 import pyrogram
 from pyrogram import raw, types, utils
 
 
 class GetChat:
     async def get_chat(
-        self: "pyrogram.Client", chat_id: int | str
-    ) -> Union["types.Chat", "types.ChatPreview"]:
+        self: pyrogram.Client, chat_id: int | str
+    ) -> types.Chat | types.ChatPreview:
         """Get up to date information about a chat.
 
         Information include current name of the user for one-on-one conversations, current username of a user, group or

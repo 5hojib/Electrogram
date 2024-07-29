@@ -10,10 +10,10 @@ log = logging.getLogger(__name__)
 
 class ResendCode:
     async def resend_code(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         phone_number: str,
         phone_code_hash: str,
-    ) -> "types.SentCode":
+    ) -> types.SentCode:
         """Re-send the confirmation code using a different type.
 
         The type of the code to be re-sent is specified in the *next_type* attribute of the

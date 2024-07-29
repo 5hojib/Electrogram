@@ -6,12 +6,12 @@ from pyrogram import raw, types
 
 class EditMessageReplyMarkup:
     async def edit_message_reply_markup(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         message_id: int,
-        reply_markup: "types.InlineKeyboardMarkup" = None,
+        reply_markup: types.InlineKeyboardMarkup = None,
         business_connection_id: str | None = None,
-    ) -> "types.Message":
+    ) -> types.Message:
         """Edit only the reply markup of messages sent by the bot.
 
         .. include:: /_includes/usable-by/bots.rst

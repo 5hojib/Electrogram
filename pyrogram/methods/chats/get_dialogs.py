@@ -1,16 +1,19 @@
 from __future__ import annotations
 
-from collections.abc import AsyncGenerator
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types, utils
 from pyrogram.errors import ChannelPrivate
 
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator
+
 
 class GetDialogs:
     async def get_dialogs(
-        self: "pyrogram.Client", limit: int = 0
-    ) -> AsyncGenerator["types.Dialog", None] | None:
+        self: pyrogram.Client, limit: int = 0
+    ) -> AsyncGenerator[types.Dialog, None] | None:
         """Get a user's dialogs sequentially.
 
         .. include:: /_includes/usable-by/users.rst

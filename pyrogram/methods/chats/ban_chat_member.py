@@ -1,20 +1,22 @@
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Union
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types, utils
 
+if TYPE_CHECKING:
+    from datetime import datetime
+
 
 class BanChatMember:
     async def ban_chat_member(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         user_id: int | str,
         until_date: datetime = utils.zero_datetime(),
         revoke_messages: bool | None = None,
-    ) -> Union["types.Message", bool]:
+    ) -> types.Message | bool:
         """Ban a user from a group, a supergroup or a channel.
         In the case of supergroups and channels, the user will not be able to return to the group on their own using
         invite links, etc., unless unbanned first. You must be an administrator in the chat for this to work and must

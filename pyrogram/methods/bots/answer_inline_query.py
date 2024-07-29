@@ -1,16 +1,19 @@
 from __future__ import annotations
 
-from collections.abc import Iterable
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types
 
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+
 
 class AnswerInlineQuery:
     async def answer_inline_query(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         inline_query_id: str,
-        results: Iterable["types.InlineQueryResult"],
+        results: Iterable[types.InlineQueryResult],
         cache_time: int = 300,
         is_gallery: bool = False,
         is_personal: bool = False,

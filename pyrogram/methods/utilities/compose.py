@@ -10,7 +10,7 @@ from .idle import idle
 
 
 async def compose(
-    clients: list["pyrogram.Client"], sequential: bool = False
+    clients: list[pyrogram.Client], sequential: bool = False
 ) -> None:
     """Run multiple clients at once.
 

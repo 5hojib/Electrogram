@@ -1,18 +1,21 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import AsyncGenerator
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types
+
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator
 
 log = logging.getLogger(__name__)
 
 
 class GetAllStories:
     async def get_all_stories(
-        self: "pyrogram.Client",
-    ) -> AsyncGenerator["types.Story", None] | None:
+        self: pyrogram.Client,
+    ) -> AsyncGenerator[types.Story, None] | None:
         """Get all active stories.
 
         .. include:: /_includes/usable-by/users.rst

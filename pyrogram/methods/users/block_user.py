@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class BlockUser:
     async def block_user(
-        self: "pyrogram.Client", user_id: int | str
+        self: pyrogram.Client, user_id: int | str
     ) -> bool:
         """Block a user.
 

@@ -6,8 +6,8 @@ from pyrogram import raw, types, utils
 
 class GetNearbyChats:
     async def get_nearby_chats(
-        self: "pyrogram.Client", latitude: float, longitude: float
-    ) -> list["types.Chat"]:
+        self: pyrogram.Client, latitude: float, longitude: float
+    ) -> list[types.Chat]:
         """Get nearby chats.
 
         .. include:: /_includes/usable-by/users.rst

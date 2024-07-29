@@ -7,7 +7,7 @@ from pyrogram.errors import UnknownError
 
 class GetInlineBotResults:
     async def get_inline_bot_results(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         bot: int | str,
         query: str = "",
         offset: str = "",

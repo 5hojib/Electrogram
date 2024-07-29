@@ -11,7 +11,7 @@ from pyrogram.file_id import FileType
 
 class EditMessageMedia:
     async def edit_message_media(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         message_id: int,
         media: types.InputMedia,
@@ -20,7 +20,7 @@ class EditMessageMedia:
         parse_mode: enums.ParseMode | None = None,
         business_connection_id: str | None = None,
         invert_media: bool = False,
-    ) -> "types.Message":
+    ) -> types.Message:
         """Edit animation, audio, document, photo or video messages.
 
         If a message is a part of a message album, then it can be edited only to a photo or a video. Otherwise, the

@@ -10,8 +10,8 @@ log = logging.getLogger(__name__)
 
 class GetAvailableEffects:
     async def get_available_effects(
-        self: "pyrogram.Client",
-    ) -> list["types.AvailableEffect"]:
+        self: pyrogram.Client,
+    ) -> list[types.AvailableEffect]:
         """Get all available effects.
 
         .. include:: /_includes/usable-by/users.rst

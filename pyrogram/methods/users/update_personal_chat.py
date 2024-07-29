@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class UpdatePersonalChat:
     async def update_personal_chat(
-        self: "pyrogram.Client", chat_id: int | str
+        self: pyrogram.Client, chat_id: int | str
     ) -> bool:
         """Update your birthday details.
 

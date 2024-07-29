@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 
 class ResolvePeer:
     async def resolve_peer(
-        self: "pyrogram.Client", peer_id: int | str
+        self: pyrogram.Client, peer_id: int | str
     ) -> (
         raw.base.InputPeer
         | raw.base.InputUser

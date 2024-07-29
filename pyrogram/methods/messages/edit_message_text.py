@@ -1,24 +1,22 @@
 from __future__ import annotations
 
-from typing import Optional
-
 import pyrogram
 from pyrogram import enums, raw, types, utils
 
 
 class EditMessageText:
     async def edit_message_text(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         message_id: int,
         text: str,
-        parse_mode: Optional["enums.ParseMode"] = None,
-        entities: list["types.MessageEntity"] | None = None,
+        parse_mode: enums.ParseMode | None = None,
+        entities: list[types.MessageEntity] | None = None,
         disable_web_page_preview: bool | None = None,
         invert_media: bool | None = None,
-        reply_markup: "types.InlineKeyboardMarkup" = None,
+        reply_markup: types.InlineKeyboardMarkup = None,
         business_connection_id: str | None = None,
-    ) -> "types.Message":
+    ) -> types.Message:
         """Edit the text of messages.
 
         .. include:: /_includes/usable-by/users-bots.rst

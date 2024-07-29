@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class EditForumTopic:
     async def edit_forum_topic(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         topic_id: int,
         title: str | None = None,

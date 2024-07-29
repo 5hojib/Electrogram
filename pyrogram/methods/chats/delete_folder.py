@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class DeleteFolder:
     async def delete_folder(
-        self: "pyrogram.Client", folder_id: int
+        self: pyrogram.Client, folder_id: int
     ) -> bool:
         """Delete a user's folder.
 

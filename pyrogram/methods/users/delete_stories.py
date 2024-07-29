@@ -1,17 +1,20 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import Iterable
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 log = logging.getLogger(__name__)
 
 
 class DeleteStories:
     async def delete_stories(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         story_ids: int | Iterable[int],
         chat_id: int | str | None = None,
     ) -> bool:

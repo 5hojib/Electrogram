@@ -1,21 +1,23 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import Iterable
-from typing import Union
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 log = logging.getLogger(__name__)
 
 
 class GetStories:
     async def get_stories(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         story_ids: int | Iterable[int],
-    ) -> Union["types.Story", list["types.Story"]]:
+    ) -> types.Story | list[types.Story]:
         """Get one or more story from an user by using story identifiers.
 
         .. include:: /_includes/usable-by/users.rst

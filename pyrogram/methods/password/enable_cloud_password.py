@@ -9,7 +9,7 @@ from pyrogram.utils import btoi, compute_password_hash, itob
 
 class EnableCloudPassword:
     async def enable_cloud_password(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         password: str,
         hint: str = "",
         email: str | None = None,

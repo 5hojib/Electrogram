@@ -6,12 +6,12 @@ from pyrogram import raw, types, utils
 
 class SendInvoice:
     async def send_invoice(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         title: str,
         description: str,
         currency: str,
-        prices: list["types.LabeledPrice"],
+        prices: list[types.LabeledPrice],
         provider: str | None = None,
         provider_data: str | None = None,
         payload: str | None = None,
@@ -19,12 +19,12 @@ class SendInvoice:
         photo_size: int | None = None,
         photo_mime_type: str | None = None,
         start_parameter: str | None = None,
-        extended_media: "types.InputMedia" = None,
+        extended_media: types.InputMedia = None,
         reply_to_message_id: int | None = None,
         message_thread_id: int | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
-        reply_markup: "types.InlineKeyboardMarkup" = None,
+        quote_entities: list[types.MessageEntity] | None = None,
+        reply_markup: types.InlineKeyboardMarkup = None,
     ):
         """Use this method to send invoices.
 

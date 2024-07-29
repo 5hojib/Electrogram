@@ -1,14 +1,12 @@
 from __future__ import annotations
 
-from typing import Union
-
 import pyrogram
 from pyrogram import raw, types, utils
 
 
 class SendGame:
     async def send_game(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         game_short_name: str,
         disable_notification: bool | None = None,
@@ -17,13 +15,11 @@ class SendGame:
         reply_to_message_id: int | None = None,
         protect_content: bool | None = None,
         message_effect_id: int | None = None,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = None,
-    ) -> "types.Message":
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
+    ) -> types.Message:
         """Send a game.
 
         .. include:: /_includes/usable-by/bots.rst

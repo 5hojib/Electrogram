@@ -6,7 +6,7 @@ from pyrogram import enums, raw
 
 class UpdateFolder:
     async def update_folder(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         folder_id: int,
         title: str,
         included_chats: int | str | list[int | str] | None = None,
@@ -20,7 +20,7 @@ class UpdateFolder:
         exclude_muted: bool | None = None,
         exclude_read: bool | None = None,
         exclude_archived: bool | None = None,
-        color: "enums.FolderColor" = None,
+        color: enums.FolderColor = None,
         emoji: str | None = None,
     ) -> bool:
         """Create or update a user's folder.

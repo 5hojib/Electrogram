@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class SetSlowMode:
     async def set_slow_mode(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         seconds: int | None,
     ) -> bool:

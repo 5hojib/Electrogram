@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import logging
-from typing import Union
 
 import pyrogram
 from pyrogram import raw, types
@@ -11,11 +10,11 @@ log = logging.getLogger(__name__)
 
 class SignIn:
     async def sign_in(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         phone_number: str,
         phone_code_hash: str,
         phone_code: str,
-    ) -> Union["types.User", "types.TermsOfService", bool]:
+    ) -> types.User | types.TermsOfService | bool:
         """Authorize a user in Telegram with a valid confirmation code.
 
         .. include:: /_includes/usable-by/users.rst

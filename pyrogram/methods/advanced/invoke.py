@@ -1,18 +1,21 @@
 from __future__ import annotations
 
 import logging
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 from pyrogram.session import Session
+
+if TYPE_CHECKING:
+    from pyrogram.raw.core import TLObject
 
 log = logging.getLogger(__name__)
 
 
 class Invoke:
     async def invoke(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         query: TLObject,
         retries: int = Session.MAX_RETRIES,
         timeout: float = Session.WAIT_TIMEOUT,

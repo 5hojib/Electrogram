@@ -6,8 +6,8 @@ from pyrogram import raw, types
 
 class GetStickerSet:
     async def get_sticker_set(
-        self: "pyrogram.Client", set_short_name: str
-    ) -> "types.StickerSet":
+        self: pyrogram.Client, set_short_name: str
+    ) -> types.StickerSet:
         """Get info about a stickerset.
 
         .. include:: /_includes/usable-by/users-bots.rst

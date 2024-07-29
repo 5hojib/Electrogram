@@ -1,27 +1,28 @@
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Optional, Union
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
 
+if TYPE_CHECKING:
+    from datetime import datetime
+
 
 class SendPoll:
     async def send_poll(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         question: str,
-        options: list["types.PollOption"],
-        question_entities: list["types.MessageEntity"] | None = None,
+        options: list[types.PollOption],
+        question_entities: list[types.MessageEntity] | None = None,
         is_anonymous: bool = True,
-        type: "enums.PollType" = enums.PollType.REGULAR,
+        type: enums.PollType = enums.PollType.REGULAR,
         allows_multiple_answers: bool | None = None,
         correct_option_id: int | None = None,
         explanation: str | None = None,
-        explanation_parse_mode: "enums.ParseMode" = None,
-        explanation_entities: list["types.MessageEntity"]
-        | None = None,
+        explanation_parse_mode: enums.ParseMode = None,
+        explanation_entities: list[types.MessageEntity] | None = None,
         open_period: int | None = None,
         close_date: datetime | None = None,
         is_closed: bool | None = None,
@@ -32,17 +33,15 @@ class SendPoll:
         reply_to_message_id: int | None = None,
         reply_to_chat_id: int | str | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
-        parse_mode: Optional["enums.ParseMode"] = None,
+        quote_entities: list[types.MessageEntity] | None = None,
+        parse_mode: enums.ParseMode | None = None,
         schedule_date: datetime | None = None,
         message_effect_id: int | None = None,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = None,
-    ) -> "types.Message":
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
+    ) -> types.Message:
         """Send a new poll.
 
         .. include:: /_includes/usable-by/users-bots.rst

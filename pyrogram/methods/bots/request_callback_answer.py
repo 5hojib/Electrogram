@@ -6,7 +6,7 @@ from pyrogram import raw, utils
 
 class RequestCallbackAnswer:
     async def request_callback_answer(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         message_id: int,
         callback_data: str | bytes,

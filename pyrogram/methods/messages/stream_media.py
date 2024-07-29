@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import math
-from typing import BinaryIO, Union
+from typing import BinaryIO
 
 import pyrogram
 from pyrogram import types
@@ -10,8 +10,8 @@ from pyrogram.file_id import FileId
 
 class StreamMedia:
     async def stream_media(
-        self: "pyrogram.Client",
-        message: Union["types.Message", str],
+        self: pyrogram.Client,
+        message: types.Message | str,
         limit: int = 0,
         offset: int = 0,
     ) -> str | BinaryIO | None:

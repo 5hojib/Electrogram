@@ -1,9 +1,12 @@
 from __future__ import annotations
 
-from collections.abc import AsyncGenerator
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
+
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator
 
 
 # noinspection PyShadowingBuiltins
@@ -11,11 +14,11 @@ async def get_chunk(
     client,
     chat_id: int | str,
     query: str = "",
-    filter: "enums.MessagesFilter" = enums.MessagesFilter.EMPTY,
+    filter: enums.MessagesFilter = enums.MessagesFilter.EMPTY,
     offset: int = 0,
     limit: int = 100,
     from_user: int | str | None = None,
-) -> list["types.Message"]:
+) -> list[types.Message]:
     r = await client.invoke(
         raw.functions.messages.Search(
             peer=await client.resolve_peer(chat_id),
@@ -44,14 +47,14 @@ async def get_chunk(
 class SearchMessages:
     # noinspection PyShadowingBuiltins
     async def search_messages(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         query: str = "",
         offset: int = 0,
-        filter: "enums.MessagesFilter" = enums.MessagesFilter.EMPTY,
+        filter: enums.MessagesFilter = enums.MessagesFilter.EMPTY,
         limit: int = 0,
         from_user: int | str | None = None,
-    ) -> AsyncGenerator["types.Message", None] | None:
+    ) -> AsyncGenerator[types.Message, None] | None:
         """Search for text and media messages inside a specific chat.
 
         If you want to get the messages count only, see :meth:`~pyrogram.Client.search_messages_count`.

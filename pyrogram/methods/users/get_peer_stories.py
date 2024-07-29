@@ -1,18 +1,21 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import AsyncGenerator
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types
+
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator
 
 log = logging.getLogger(__name__)
 
 
 class GetPeerStories:
     async def get_peer_stories(
-        self: "pyrogram.Client", chat_id: int | str
-    ) -> AsyncGenerator["types.Story", None] | None:
+        self: pyrogram.Client, chat_id: int | str
+    ) -> AsyncGenerator[types.Story, None] | None:
         """Get all active stories from an user/channel by using user identifiers.
 
         .. include:: /_includes/usable-by/users.rst

@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class UnarchiveChats:
     async def unarchive_chats(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_ids: int | str | list[int | str],
     ) -> bool:
         """Unarchive one or more chats.

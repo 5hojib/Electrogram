@@ -14,7 +14,7 @@ from pyrogram.utils import (
 
 class ChangeCloudPassword:
     async def change_cloud_password(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         current_password: str,
         new_password: str,
         new_hint: str = "",

@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class SetChatDescription:
     async def set_chat_description(
-        self: "pyrogram.Client", chat_id: int | str, description: str
+        self: pyrogram.Client, chat_id: int | str, description: str
     ) -> bool:
         """Change the description of a supergroup or a channel.
         You must be an administrator in the chat for this to work and must have the appropriate admin rights.

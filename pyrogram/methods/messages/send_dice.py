@@ -1,15 +1,17 @@
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Optional, Union
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
 
+if TYPE_CHECKING:
+    from datetime import datetime
+
 
 class SendDice:
     async def send_dice(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         emoji: str = "🎲",
         disable_notification: bool | None = None,
@@ -19,18 +21,16 @@ class SendDice:
         reply_to_story_id: int | None = None,
         reply_to_chat_id: int | str | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
-        parse_mode: Optional["enums.ParseMode"] = None,
+        quote_entities: list[types.MessageEntity] | None = None,
+        parse_mode: enums.ParseMode | None = None,
         schedule_date: datetime | None = None,
         protect_content: bool | None = None,
         message_effect_id: int | None = None,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = None,
-    ) -> Optional["types.Message"]:
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
+    ) -> types.Message | None:
         """Send a dice with a random value from 1 to 6.
 
         .. include:: /_includes/usable-by/users-bots.rst

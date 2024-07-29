@@ -6,8 +6,8 @@ from pyrogram import raw, types
 
 class RetractVote:
     async def retract_vote(
-        self: "pyrogram.Client", chat_id: int | str, message_id: int
-    ) -> "types.Poll":
+        self: pyrogram.Client, chat_id: int | str, message_id: int
+    ) -> types.Poll:
         """Retract your vote in a poll.
 
         .. include:: /_includes/usable-by/users.rst

@@ -6,8 +6,8 @@ from pyrogram import raw, types
 
 class GetBusinessConnection:
     async def get_business_connection(
-        self: "pyrogram.Client", business_connection_id: str
-    ) -> "types.Message":
+        self: pyrogram.Client, business_connection_id: str
+    ) -> types.Message:
         """Use this method to get information about the connection of the bot with a business account.
 
         .. include:: /_includes/usable-by/bots.rst

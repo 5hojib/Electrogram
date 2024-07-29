@@ -10,12 +10,12 @@ log = logging.getLogger(__name__)
 
 class SignUp:
     async def sign_up(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         phone_number: str,
         phone_code_hash: str,
         first_name: str,
         last_name: str = "",
-    ) -> "types.User":
+    ) -> types.User:
         """Register a new user in Telegram.
 
         .. include:: /_includes/usable-by/users.rst

@@ -2,21 +2,23 @@ from __future__ import annotations
 
 import asyncio
 import os
-from collections.abc import Callable
 from datetime import datetime
-from typing import BinaryIO, Union
+from typing import TYPE_CHECKING, BinaryIO
 
 import pyrogram
 from pyrogram import types
 from pyrogram.file_id import PHOTO_TYPES, FileId, FileType
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 DEFAULT_DOWNLOAD_DIR = "downloads/"
 
 
 class DownloadMedia:
     async def download_media(
-        self: "pyrogram.Client",
-        message: Union["types.Message", "types.Story", str],
+        self: pyrogram.Client,
+        message: types.Message | types.Story | str,
         file_name: str = DEFAULT_DOWNLOAD_DIR,
         in_memory: bool = False,
         block: bool = True,

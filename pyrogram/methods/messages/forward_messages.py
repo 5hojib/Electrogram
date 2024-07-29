@@ -1,16 +1,18 @@
 from __future__ import annotations
 
-from collections.abc import Iterable
-from datetime import datetime
-from typing import Union
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types, utils
 
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+    from datetime import datetime
+
 
 class ForwardMessages:
     async def forward_messages(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         from_chat_id: int | str,
         message_ids: int | Iterable[int],
@@ -19,7 +21,7 @@ class ForwardMessages:
         schedule_date: datetime | None = None,
         protect_content: bool | None = None,
         drop_author: bool | None = None,
-    ) -> Union["types.Message", list["types.Message"]]:
+    ) -> types.Message | list[types.Message]:
         """Forward messages of any kind.
 
         .. include:: /_includes/usable-by/users-bots.rst

@@ -6,10 +6,10 @@ from pyrogram import raw, types
 
 class GetChatInviteLink:
     async def get_chat_invite_link(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         invite_link: str,
-    ) -> "types.ChatInviteLink":
+    ) -> types.ChatInviteLink:
         """Get detailed information about a chat invite link.
 
         .. include:: /_includes/usable-by/users-bots.rst

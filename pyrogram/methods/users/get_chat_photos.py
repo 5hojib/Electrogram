@@ -1,19 +1,22 @@
 from __future__ import annotations
 
-from collections.abc import AsyncGenerator
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types, utils
 
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator
+
 
 class GetChatPhotos:
     async def get_chat_photos(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         limit: int = 0,
     ) -> (
-        AsyncGenerator["types.Photo", None]
-        | AsyncGenerator["types.Animation", None]
+        AsyncGenerator[types.Photo, None]
+        | AsyncGenerator[types.Animation, None]
         | None
     ):
         """Get a chat or a user profile photos sequentially.

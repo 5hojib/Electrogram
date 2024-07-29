@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class AcceptTermsOfService:
     async def accept_terms_of_service(
-        self: "pyrogram.Client", terms_of_service_id: str
+        self: pyrogram.Client, terms_of_service_id: str
     ) -> bool:
         """Accept the given terms of service.
 

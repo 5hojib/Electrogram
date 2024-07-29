@@ -1,18 +1,20 @@
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Iterable
-from typing import Union
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types
 
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+
 
 class GetUsers:
     async def get_users(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         user_ids: int | str | Iterable[int | str],
-    ) -> Union["types.User", list["types.User"]]:
+    ) -> types.User | list[types.User]:
         """Get information about a user.
         You can retrieve up to 200 users at once.
 

@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class AddChatMembers:
     async def add_chat_members(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         user_ids: int | str | list[int | str],
         forward_limit: int = 100,

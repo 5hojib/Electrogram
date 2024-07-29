@@ -6,10 +6,10 @@ from pyrogram import raw, types
 
 class RevokeChatInviteLink:
     async def revoke_chat_invite_link(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         invite_link: str,
-    ) -> "types.ChatInviteLink":
+    ) -> types.ChatInviteLink:
         """Revoke a previously created invite link.
 
         If the primary link is revoked, a new link is automatically generated.

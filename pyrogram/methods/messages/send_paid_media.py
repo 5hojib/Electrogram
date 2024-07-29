@@ -2,8 +2,7 @@ from __future__ import annotations
 
 import os
 import re
-from datetime import datetime
-from typing import Optional, Union
+from typing import TYPE_CHECKING
 
 from pymediainfo import MediaInfo
 
@@ -11,27 +10,28 @@ import pyrogram
 from pyrogram import enums, raw, types, utils
 from pyrogram.file_id import FileType
 
+if TYPE_CHECKING:
+    from datetime import datetime
+
 
 class SendPaidMedia:
     async def send_paid_media(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         stars_amount: int,
         media: list[
-            Union[
-                "types.InputMediaAnimation",
-                "types.InputMediaPhoto",
-                "types.InputMediaVideo",
-            ]
+            types.InputMediaAnimation
+            | types.InputMediaPhoto
+            | types.InputMediaVideo
         ],
         caption: str = "",
-        caption_entities: list["types.MessageEntity"] | None = None,
-        parse_mode: Optional["enums.ParseMode"] = None,
+        caption_entities: list[types.MessageEntity] | None = None,
+        parse_mode: enums.ParseMode | None = None,
         disable_notification: bool | None = None,
         schedule_date: datetime | None = None,
         protect_content: bool | None = None,
         invert_media: bool | None = None,
-    ) -> "types.Message":
+    ) -> types.Message:
         """Send paid media.
         Only for channels.
 

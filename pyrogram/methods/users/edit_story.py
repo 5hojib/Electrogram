@@ -13,10 +13,10 @@ class EditStory:
         return message, entities
 
     async def edit_story(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         story_id: int,
         chat_id: int | None = None,
-        privacy: "enums.StoriesPrivacyRules" = None,
+        privacy: enums.StoriesPrivacyRules = None,
         allowed_users: list[int] | None = None,
         denied_users: list[int] | None = None,
         # allowed_chats: list[int] = None,
@@ -25,10 +25,10 @@ class EditStory:
         photo: str | None = None,
         video: str | None = None,
         caption: str | None = None,
-        parse_mode: "enums.ParseMode" = None,
-        caption_entities: list["types.MessageEntity"] | None = None,
-        media_areas: list["types.InputMediaArea"] | None = None,
-    ) -> "types.Story":
+        parse_mode: enums.ParseMode = None,
+        caption_entities: list[types.MessageEntity] | None = None,
+        media_areas: list[types.InputMediaArea] | None = None,
+    ) -> types.Story:
         """Edit story.
 
         .. include:: /_includes/usable-by/users.rst

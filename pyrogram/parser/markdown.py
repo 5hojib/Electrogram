@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import html
 import re
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from pyrogram.enums import MessageEntityType
 
@@ -52,7 +52,7 @@ CODE_TAG_RE = re.compile(r"<code>.*?</code>")
 
 
 class Markdown:
-    def __init__(self, client: Optional["pyrogram.Client"]) -> None:
+    def __init__(self, client: pyrogram.Client | None) -> None:
         self.html = HTML(client)
 
     def blockquote_parser(self, text):

@@ -6,21 +6,23 @@ import inspect
 import io
 import logging
 import math
-from collections.abc import Callable
 from hashlib import md5
 from pathlib import PurePath
-from typing import BinaryIO
+from typing import TYPE_CHECKING, BinaryIO
 
 import pyrogram
 from pyrogram import StopTransmission, raw
 from pyrogram.session import Session
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 log = logging.getLogger(__name__)
 
 
 class SaveFile:
     async def save_file(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         path: str | BinaryIO,
         file_id: int | None = None,
         file_part: int = 0,

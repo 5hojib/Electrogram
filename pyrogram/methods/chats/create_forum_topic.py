@@ -6,12 +6,12 @@ from pyrogram import raw, types
 
 class CreateForumTopic:
     async def create_forum_topic(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         title: str,
         icon_color: int | None = None,
         icon_emoji_id: int | None = None,
-    ) -> "types.ForumTopicCreated":
+    ) -> types.ForumTopicCreated:
         """Create a new forum topic.
 
         .. include:: /_includes/usable-by/users-bots.rst

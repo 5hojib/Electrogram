@@ -6,8 +6,8 @@ from pyrogram import raw, types
 
 class CreateChannel:
     async def create_channel(
-        self: "pyrogram.Client", title: str, description: str = ""
-    ) -> "types.Chat":
+        self: pyrogram.Client, title: str, description: str = ""
+    ) -> types.Chat:
         """Create a new broadcast channel.
 
         .. include:: /_includes/usable-by/users.rst

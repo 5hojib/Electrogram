@@ -1,16 +1,14 @@
 from __future__ import annotations
 
-from typing import Union
-
 import pyrogram
 from pyrogram import enums, raw
 
 
 class UpdateColor:
     async def update_color(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
-        color: Union["enums.ReplyColor", "enums.ProfileColor"],
+        color: enums.ReplyColor | enums.ProfileColor,
         background_emoji_id: int | None = None,
     ) -> bool:
         """Update color

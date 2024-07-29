@@ -6,9 +6,9 @@ from pyrogram import raw, types
 
 class SetBotCommands:
     async def set_bot_commands(
-        self: "pyrogram.Client",
-        commands: list["types.BotCommand"],
-        scope: "types.BotCommandScope" = types.BotCommandScopeDefault(),
+        self: pyrogram.Client,
+        commands: list[types.BotCommand],
+        scope: types.BotCommandScope = types.BotCommandScopeDefault(),
         language_code: str = "",
     ) -> bool:
         """Set the list of the bot's commands.

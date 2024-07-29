@@ -1,19 +1,21 @@
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Optional, Union
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
 
+if TYPE_CHECKING:
+    from datetime import datetime
+
 
 class SendMessage:
     async def send_message(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         text: str,
-        parse_mode: Optional["enums.ParseMode"] = None,
-        entities: list["types.MessageEntity"] | None = None,
+        parse_mode: enums.ParseMode | None = None,
+        entities: list[types.MessageEntity] | None = None,
         disable_web_page_preview: bool | None = None,
         disable_notification: bool | None = None,
         message_thread_id: int | None = None,
@@ -22,18 +24,16 @@ class SendMessage:
         reply_to_story_id: int | None = None,
         reply_to_chat_id: int | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
+        quote_entities: list[types.MessageEntity] | None = None,
         schedule_date: datetime | None = None,
         protect_content: bool | None = None,
         invert_media: bool | None = None,
         message_effect_id: int | None = None,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = None,
-    ) -> "types.Message":
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
+    ) -> types.Message:
         """Send text messages.
 
         .. include:: /_includes/usable-by/users-bots.rst

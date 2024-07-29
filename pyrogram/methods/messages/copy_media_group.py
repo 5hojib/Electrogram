@@ -1,14 +1,17 @@
 from __future__ import annotations
 
-from datetime import datetime
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types, utils
 
+if TYPE_CHECKING:
+    from datetime import datetime
+
 
 class CopyMediaGroup:
     async def copy_media_group(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         from_chat_id: int | str,
         message_id: int,
@@ -18,7 +21,7 @@ class CopyMediaGroup:
         reply_to_message_id: int | None = None,
         schedule_date: datetime | None = None,
         protect_content: bool | None = None,
-    ) -> list["types.Message"]:
+    ) -> list[types.Message]:
         """Copy a media group by providing one of the message ids.
 
         .. include:: /_includes/usable-by/users-bots.rst

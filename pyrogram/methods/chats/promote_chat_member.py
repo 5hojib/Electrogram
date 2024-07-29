@@ -6,10 +6,10 @@ from pyrogram import errors, raw, types
 
 class PromoteChatMember:
     async def promote_chat_member(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         user_id: int | str,
-        privileges: "types.ChatPrivileges" = None,
+        privileges: types.ChatPrivileges = None,
         title: str | None = "",
     ) -> bool:
         """Promote or demote a user in a supergroup or a channel.

@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 class Connect:
     async def connect(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
     ) -> bool:
         """
         Connect the client to Telegram servers.

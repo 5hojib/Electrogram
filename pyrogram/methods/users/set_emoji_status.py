@@ -1,15 +1,13 @@
 from __future__ import annotations
 
-from typing import Optional
-
 import pyrogram
 from pyrogram import raw, types
 
 
 class SetEmojiStatus:
     async def set_emoji_status(
-        self: "pyrogram.Client",
-        emoji_status: Optional["types.EmojiStatus"] = None,
+        self: pyrogram.Client,
+        emoji_status: types.EmojiStatus | None = None,
     ) -> bool:
         """Set the emoji status.
 

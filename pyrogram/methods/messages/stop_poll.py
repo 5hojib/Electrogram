@@ -6,12 +6,12 @@ from pyrogram import raw, types
 
 class StopPoll:
     async def stop_poll(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         message_id: int,
-        reply_markup: "types.InlineKeyboardMarkup" = None,
+        reply_markup: types.InlineKeyboardMarkup = None,
         business_connection_id: str | None = None,
-    ) -> "types.Poll":
+    ) -> types.Poll:
         """Stop a poll which was sent by you.
 
         Stopped polls can't be reopened and nobody will be able to vote in it anymore.

@@ -6,10 +6,10 @@ from pyrogram import raw, types
 
 class SetChatPermissions:
     async def set_chat_permissions(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
-        permissions: "types.ChatPermissions",
-    ) -> "types.Chat":
+        permissions: types.ChatPermissions,
+    ) -> types.Chat:
         """Set default chat permissions for all members.
 
         You must be an administrator in the group or a supergroup for this to work and must have the

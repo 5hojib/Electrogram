@@ -1,14 +1,17 @@
 from __future__ import annotations
 
-from collections.abc import Iterable
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw
 
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+
 
 class DeleteMessages:
     async def delete_messages(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         message_ids: int | Iterable[int],
         revoke: bool = True,

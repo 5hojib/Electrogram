@@ -1,15 +1,13 @@
 from __future__ import annotations
 
-from typing import Union
-
 import pyrogram
 from pyrogram import raw, types
 
 
 class DeleteContacts:
     async def delete_contacts(
-        self: "pyrogram.Client", user_ids: int | str | list[int | str]
-    ) -> Union["types.User", list["types.User"], None]:
+        self: pyrogram.Client, user_ids: int | str | list[int | str]
+    ) -> types.User | list[types.User] | None:
         """Delete contacts from your Telegram address book.
 
         .. include:: /_includes/usable-by/users.rst

@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class UnblockUser:
     async def unblock_user(
-        self: "pyrogram.Client", user_id: int | str
+        self: pyrogram.Client, user_id: int | str
     ) -> bool:
         """Unblock a user.
 

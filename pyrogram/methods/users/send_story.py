@@ -14,7 +14,7 @@ class SendStory:
         return message, entities
 
     async def _upload_video(
-        self: "pyrogram.Client", file_name: str, video: str | BinaryIO
+        self: pyrogram.Client, file_name: str, video: str | BinaryIO
     ):
         file = await self.save_file(video)
         return raw.types.InputMediaUploadedDocument(
@@ -29,9 +29,9 @@ class SendStory:
         )
 
     async def send_story(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str | None = None,
-        privacy: "enums.StoriesPrivacyRules" = None,
+        privacy: enums.StoriesPrivacyRules = None,
         allowed_users: list[int] | None = None,
         denied_users: list[int] | None = None,
         # allowed_chats: list[int] = None,
@@ -42,13 +42,13 @@ class SendStory:
         pinned: bool | None = None,
         protect_content: bool | None = None,
         caption: str | None = None,
-        parse_mode: "enums.ParseMode" = None,
-        caption_entities: list["types.MessageEntity"] | None = None,
+        parse_mode: enums.ParseMode = None,
+        caption_entities: list[types.MessageEntity] | None = None,
         period: int | None = None,
         forward_from_chat_id: int | str | None = None,
         forward_from_story_id: int | None = None,
-        media_areas: list["types.InputMediaArea"] | None = None,
-    ) -> "types.Story":
+        media_areas: list[types.InputMediaArea] | None = None,
+    ) -> types.Story:
         """Send new story.
 
         .. include:: /_includes/usable-by/users.rst

@@ -6,7 +6,7 @@ from pyrogram import raw, types
 
 class AddContact:
     async def add_contact(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         user_id: int | str,
         first_name: str,
         last_name: str = "",

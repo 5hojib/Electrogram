@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class GetChatMembersCount:
     async def get_chat_members_count(
-        self: "pyrogram.Client", chat_id: int | str
+        self: pyrogram.Client, chat_id: int | str
     ) -> int:
         """Get the number of members in a chat.
 

@@ -1,19 +1,22 @@
 from __future__ import annotations
 
-from datetime import datetime
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types, utils
 
+if TYPE_CHECKING:
+    from datetime import datetime
+
 
 class RestrictChatMember:
     async def restrict_chat_member(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         user_id: int | str,
-        permissions: "types.ChatPermissions",
+        permissions: types.ChatPermissions,
         until_date: datetime = utils.zero_datetime(),
-    ) -> "types.Chat":
+    ) -> types.Chat:
         """Restrict a user in a supergroup.
 
         You must be an administrator in the supergroup for this to work and must have the appropriate admin rights.

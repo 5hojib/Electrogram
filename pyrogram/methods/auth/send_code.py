@@ -12,8 +12,8 @@ log = logging.getLogger(__name__)
 
 class SendCode:
     async def send_code(
-        self: "pyrogram.Client", phone_number: str
-    ) -> "types.SentCode":
+        self: pyrogram.Client, phone_number: str
+    ) -> types.SentCode:
         """Send the confirmation code to the given phone number.
 
         .. include:: /_includes/usable-by/users.rst

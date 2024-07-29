@@ -1,17 +1,19 @@
 from __future__ import annotations
 
-from collections.abc import Iterable
-from typing import Union
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types, utils
 
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+
 
 class GetFolders:
     async def get_folders(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         folder_ids: int | Iterable[int] | None = None,
-    ) -> Union["types.Folder", list["types.Folder"]]:
+    ) -> types.Folder | list[types.Folder]:
         """Get one or more folders by using folder identifiers.
 
         .. include:: /_includes/usable-by/users.rst

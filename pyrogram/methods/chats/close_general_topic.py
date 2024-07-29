@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class CloseGeneralTopic:
     async def close_general_topic(
-        self: "pyrogram.Client", chat_id: int | str
+        self: pyrogram.Client, chat_id: int | str
     ) -> bool:
         """Close a forum topic.
 

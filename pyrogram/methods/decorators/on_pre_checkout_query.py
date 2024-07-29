@@ -1,15 +1,17 @@
 from __future__ import annotations
 
-from collections.abc import Callable
-from typing import Union
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram.filters import Filter
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
 
 class OnPreCheckoutQuery:
     def on_pre_checkout_query(
-        self: Union["OnPreCheckoutQuery", Filter, None] = None,
+        self: OnPreCheckoutQuery | Filter | None = None,
         filters: Filter | None = None,
         group: int = 0,
     ) -> Callable:

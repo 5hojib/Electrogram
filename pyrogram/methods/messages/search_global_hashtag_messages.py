@@ -1,20 +1,23 @@
 from __future__ import annotations
 
-from collections.abc import AsyncGenerator
-from datetime import datetime
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types, utils
 
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator
+    from datetime import datetime
+
 
 class SearchGlobalHashtagMessages:
     async def search_global_hashtag_messages(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         hashtag: str = "",
         offset_id: int = 0,
         offset_date: datetime = utils.zero_datetime(),
         limit: int = 0,
-    ) -> AsyncGenerator["types.Message", None]:
+    ) -> AsyncGenerator[types.Message, None]:
         """Searches for public channel posts with the given hashtag. For optimal performance, the number of returned messages is chosen by Telegram Server and can be smaller than the specified limit.
 
         If you want to get the posts count only, see :meth:`~pyrogram.Client.search_public_hashtag_messages_count`.

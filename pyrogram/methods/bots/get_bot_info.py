@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class GetBotInfo:
     async def get_bot_info(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         lang_code: str,
         bot: int | str | None = None,
     ) -> pyrogram.types.BotInfo:

@@ -1,19 +1,22 @@
 from __future__ import annotations
 
-from collections.abc import AsyncGenerator
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types
 
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator
+
 
 class GetChatAdminInviteLinks:
     async def get_chat_admin_invite_links(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         admin_id: int | str,
         revoked: bool = False,
         limit: int = 0,
-    ) -> AsyncGenerator["types.ChatInviteLink", None] | None:
+    ) -> AsyncGenerator[types.ChatInviteLink, None] | None:
         """Get the invite links created by an administrator in a chat.
 
         .. note::

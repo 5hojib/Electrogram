@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 
 class LogOut:
     async def log_out(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
     ) -> bool:
         """Log out from Telegram and delete the *\\*.session* file.
 

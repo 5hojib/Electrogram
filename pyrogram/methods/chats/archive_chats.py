@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class ArchiveChats:
     async def archive_chats(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_ids: int | str | list[int | str],
     ) -> bool:
         """Archive one or more chats.

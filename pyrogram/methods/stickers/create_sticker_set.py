@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import os
 import re
-from typing import Optional
 
 import pyrogram
 from pyrogram import raw, types
@@ -11,14 +10,14 @@ from pyrogram.file_id import FileId
 
 class CreateStickerSet:
     async def create_sticker_set(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         user_id: int | str,
         title: str,
         short_name: str,
         sticker: str,
         emoji: str = "🤔",
         masks: bool | None = None,
-    ) -> Optional["types.Message"]:
+    ) -> types.Message | None:
         """Create a new stickerset.
 
         .. include:: /_includes/usable-by/users-bots.rst

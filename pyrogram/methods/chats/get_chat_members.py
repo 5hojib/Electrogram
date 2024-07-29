@@ -1,19 +1,22 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import AsyncGenerator
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import enums, raw, types
+
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator
 
 log = logging.getLogger(__name__)
 
 
 async def get_chunk(
-    client: "pyrogram.Client",
+    client: pyrogram.Client,
     chat_id: int | str,
     offset: int,
-    filter: "enums.ChatMembersFilter",
+    filter: enums.ChatMembersFilter,
     limit: int,
     query: str,
 ):
@@ -48,12 +51,12 @@ async def get_chunk(
 
 class GetChatMembers:
     async def get_chat_members(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         query: str = "",
         limit: int = 0,
-        filter: "enums.ChatMembersFilter" = enums.ChatMembersFilter.SEARCH,
-    ) -> AsyncGenerator["types.ChatMember", None] | None:
+        filter: enums.ChatMembersFilter = enums.ChatMembersFilter.SEARCH,
+    ) -> AsyncGenerator[types.ChatMember, None] | None:
         """Get the members list of a chat.
 
         A chat can be either a basic group, a supergroup or a channel.

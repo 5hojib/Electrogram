@@ -7,10 +7,10 @@ from pyrogram.errors import UserNotParticipant
 
 class GetChatMember:
     async def get_chat_member(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         user_id: int | str,
-    ) -> "types.ChatMember":
+    ) -> types.ChatMember:
         """Get information about one member of a chat.
 
         .. include:: /_includes/usable-by/users-bots.rst

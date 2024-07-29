@@ -6,7 +6,7 @@ from pyrogram import raw, types
 
 class UpdateBirthday:
     async def update_birthday(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         day: int,
         month: int,
         year: int | None = None,

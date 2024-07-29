@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 import pyrogram
 from pyrogram import enums
 
@@ -10,7 +8,7 @@ from .markdown import Markdown
 
 
 class Parser:
-    def __init__(self, client: Optional["pyrogram.Client"]) -> None:
+    def __init__(self, client: pyrogram.Client | None) -> None:
         self.client = client
         self.html = HTML(client)
         self.markdown = Markdown(client)

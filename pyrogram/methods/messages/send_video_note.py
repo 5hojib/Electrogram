@@ -1,19 +1,21 @@
 from __future__ import annotations
 
 import os
-from collections.abc import Callable
-from datetime import datetime
-from typing import BinaryIO, Optional, Union
+from typing import TYPE_CHECKING, BinaryIO
 
 import pyrogram
 from pyrogram import StopTransmission, enums, raw, types, utils
 from pyrogram.errors import FilePartMissing
 from pyrogram.file_id import FileType
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from datetime import datetime
+
 
 class SendVideoNote:
     async def send_video_note(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         video_note: str | BinaryIO,
         duration: int = 0,
@@ -26,21 +28,19 @@ class SendVideoNote:
         reply_to_story_id: int | None = None,
         reply_to_chat_id: int | str | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
-        parse_mode: Optional["enums.ParseMode"] = None,
+        quote_entities: list[types.MessageEntity] | None = None,
+        parse_mode: enums.ParseMode | None = None,
         schedule_date: datetime | None = None,
         protect_content: bool | None = None,
         ttl_seconds: int | None = None,
         message_effect_id: int | None = None,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
         progress: Callable | None = None,
         progress_args: tuple = (),
-    ) -> Optional["types.Message"]:
+    ) -> types.Message | None:
         """Send video messages.
 
         .. include:: /_includes/usable-by/users-bots.rst

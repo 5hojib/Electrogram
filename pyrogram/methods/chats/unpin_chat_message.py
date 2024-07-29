@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class UnpinChatMessage:
     async def unpin_chat_message(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         message_id: int = 0,
     ) -> bool:

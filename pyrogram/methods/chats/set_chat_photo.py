@@ -10,7 +10,7 @@ from pyrogram.file_id import FileType
 
 class SetChatPhoto:
     async def set_chat_photo(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         *,
         photo: str | BinaryIO | None = None,

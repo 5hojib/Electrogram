@@ -1,18 +1,21 @@
 from __future__ import annotations
 
-from collections.abc import AsyncGenerator
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types
 
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator
+
 
 class GetDiscussionReplies:
     async def get_discussion_replies(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         message_id: int,
         limit: int = 0,
-    ) -> AsyncGenerator["types.Message", None] | None:
+    ) -> AsyncGenerator[types.Message, None] | None:
         """Get the message replies of a discussion thread.
 
         .. include:: /_includes/usable-by/users.rst

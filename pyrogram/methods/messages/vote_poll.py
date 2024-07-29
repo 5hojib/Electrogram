@@ -6,11 +6,11 @@ from pyrogram import raw, types
 
 class VotePoll:
     async def vote_poll(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         message_id: id,
         options: int | list[int],
-    ) -> "types.Poll":
+    ) -> types.Poll:
         """Vote a poll.
 
         .. include:: /_includes/usable-by/users.rst

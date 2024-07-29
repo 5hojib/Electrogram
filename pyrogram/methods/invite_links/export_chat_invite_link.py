@@ -6,9 +6,9 @@ from pyrogram import raw, types
 
 class ExportChatInviteLink:
     async def export_chat_invite_link(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
-    ) -> "types.ChatInviteLink":
+    ) -> types.ChatInviteLink:
         """Generate a new primary invite link for a chat; any previously generated primary link is revoked.
 
         You must be an administrator in the chat for this to work and must have the appropriate admin rights.

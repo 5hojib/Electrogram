@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class UnhideGeneralTopic:
     async def unhide_general_topic(
-        self: "pyrogram.Client", chat_id: int | str
+        self: pyrogram.Client, chat_id: int | str
     ) -> bool:
         """unhide a general forum topic.
 

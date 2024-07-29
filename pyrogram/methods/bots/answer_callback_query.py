@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class AnswerCallbackQuery:
     async def answer_callback_query(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         callback_query_id: str,
         text: str | None = None,
         show_alert: bool | None = None,

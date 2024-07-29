@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class GetChatAdminInviteLinksCount:
     async def get_chat_admin_invite_links_count(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         admin_id: int | str,
         revoked: bool = False,

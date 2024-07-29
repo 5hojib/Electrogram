@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class DeclineChatJoinRequest:
     async def decline_chat_join_request(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         user_id: int,
     ) -> bool:

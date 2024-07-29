@@ -2,24 +2,26 @@ from __future__ import annotations
 
 import os
 import re
-from collections.abc import Callable
-from datetime import datetime
-from typing import BinaryIO, Optional, Union
+from typing import TYPE_CHECKING, BinaryIO
 
 import pyrogram
 from pyrogram import StopTransmission, enums, raw, types, utils
 from pyrogram.errors import FilePartMissing
 from pyrogram.file_id import FileType
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from datetime import datetime
+
 
 class SendAudio:
     async def send_audio(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         audio: str | BinaryIO,
         caption: str = "",
-        parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] | None = None,
+        parse_mode: enums.ParseMode | None = None,
+        caption_entities: list[types.MessageEntity] | None = None,
         duration: int = 0,
         performer: str | None = None,
         title: str | None = None,
@@ -32,19 +34,17 @@ class SendAudio:
         reply_to_story_id: int | None = None,
         reply_to_chat_id: int | str | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
+        quote_entities: list[types.MessageEntity] | None = None,
         message_effect_id: int | None = None,
         schedule_date: datetime | None = None,
         protect_content: bool | None = None,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
         progress: Callable | None = None,
         progress_args: tuple = (),
-    ) -> Optional["types.Message"]:
+    ) -> types.Message | None:
         """Send audio files.
 
         For sending voice messages, use the :meth:`~pyrogram.Client.send_voice` method instead.

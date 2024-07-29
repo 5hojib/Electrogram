@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-from collections.abc import Callable
-from typing import Any, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
 
 from pyrogram import utils
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 class RunSync:

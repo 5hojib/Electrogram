@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 
 class Terminate:
     async def terminate(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
     ) -> None:
         """Terminate the client by shutting down workers.
 

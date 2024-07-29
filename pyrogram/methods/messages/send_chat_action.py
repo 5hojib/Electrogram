@@ -9,14 +9,14 @@ from pyrogram import enums, raw
 
 class SendChatAction:
     async def send_chat_action(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
-        action: "enums.ChatAction",
+        action: enums.ChatAction,
         message_thread_id: int | None = None,
         business_connection_id: str | None = None,
         emoji: str | None = None,
         emoji_message_id: int | None = None,
-        emoji_message_interaction: "raw.types.DataJSON" = None,
+        emoji_message_interaction: raw.types.DataJSON = None,
     ) -> bool:
         """Tell the other party that something is happening on your side.
 

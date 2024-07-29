@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 
 
 class Restart:
-    async def restart(self: "pyrogram.Client", block: bool = True):
+    async def restart(self: pyrogram.Client, block: bool = True):
         """Restart the Client.
 
         This method will first call :meth:`~pyrogram.Client.stop` and then :meth:`~pyrogram.Client.start` in a row in

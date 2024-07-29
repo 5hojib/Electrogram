@@ -7,7 +7,7 @@ from pyrogram.utils import compute_password_check
 
 class RemoveCloudPassword:
     async def remove_cloud_password(
-        self: "pyrogram.Client", password: str
+        self: pyrogram.Client, password: str
     ) -> bool:
         """Turn off the Two-Step Verification security feature (Cloud Password) on your account.
 

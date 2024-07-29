@@ -6,10 +6,10 @@ from pyrogram import raw, types
 
 class CreateGroup:
     async def create_group(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         title: str,
         users: int | str | list[int | str],
-    ) -> "types.Chat":
+    ) -> types.Chat:
         """Create a new basic group.
 
         .. note::

@@ -1,16 +1,14 @@
 from __future__ import annotations
 
-from typing import Union
-
 import pyrogram
 from pyrogram import raw, types
 
 
 class GetCustomEmojiStickers:
     async def get_custom_emoji_stickers(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         custom_emoji_ids: int | list[int],
-    ) -> Union["types.Sticker", list["types.Sticker"]]:
+    ) -> types.Sticker | list[types.Sticker]:
         """Get information about custom emoji stickers by their identifiers.
 
         .. include:: /_includes/usable-by/users-bots.rst

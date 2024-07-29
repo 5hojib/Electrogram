@@ -6,10 +6,10 @@ from pyrogram import raw, types
 
 class GetCollectibleItemInfo:
     async def get_collectible_item_info(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         username: str | None = None,
         phone_number: str | None = None,
-    ) -> "types.CollectibleInfo":
+    ) -> types.CollectibleInfo:
         """Returns information about a given collectible item that was purchased at https://fragment.com
         .. include:: /_includes/usable-by/users.rst
         You must use exactly one of ``username`` OR ``phone_number``.

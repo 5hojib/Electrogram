@@ -1,20 +1,23 @@
 from __future__ import annotations
 
-from datetime import datetime
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types, utils
 
+if TYPE_CHECKING:
+    from datetime import datetime
+
 
 class CreateChatInviteLink:
     async def create_chat_invite_link(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         name: str | None = None,
         expire_date: datetime | None = None,
         member_limit: int | None = None,
         creates_join_request: bool | None = None,
-    ) -> "types.ChatInviteLink":
+    ) -> types.ChatInviteLink:
         """Create an additional invite link for a chat.
 
         You must be an administrator in the chat for this to work and must have the appropriate admin rights.

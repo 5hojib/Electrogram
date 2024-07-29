@@ -6,10 +6,10 @@ from pyrogram import raw, types
 
 class GetDiscussionMessage:
     async def get_discussion_message(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         message_id: int,
-    ) -> "types.Message":
+    ) -> types.Message:
         """Get the first discussion message of a channel post or a discussion thread in a group.
 
         Reply to the returned message to leave a comment on the linked channel post or to continue

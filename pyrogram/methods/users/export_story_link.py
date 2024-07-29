@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 
 class ExportStoryLink:
     async def export_story_link(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         story_id: int,
     ) -> types.ExportedStoryLink:

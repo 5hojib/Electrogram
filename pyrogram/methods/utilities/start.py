@@ -9,7 +9,7 @@ log = logging.getLogger(__name__)
 
 
 class Start:
-    async def start(self: "pyrogram.Client"):
+    async def start(self: pyrogram.Client):
         """Start the client.
 
         This method connects the client to Telegram and, in case of new sessions, automatically manages the

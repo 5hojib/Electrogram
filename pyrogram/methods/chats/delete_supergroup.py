@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class DeleteSupergroup:
     async def delete_supergroup(
-        self: "pyrogram.Client", chat_id: int | str
+        self: pyrogram.Client, chat_id: int | str
     ) -> bool:
         """Delete a supergroup.
 

@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class SetAdministratorTitle:
     async def set_administrator_title(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         user_id: int | str,
         title: str,

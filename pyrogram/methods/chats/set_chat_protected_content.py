@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class SetChatProtectedContent:
     async def set_chat_protected_content(
-        self: "pyrogram.Client", chat_id: int | str, enabled: bool
+        self: pyrogram.Client, chat_id: int | str, enabled: bool
     ) -> bool:
         """Set the chat protected content setting.
 

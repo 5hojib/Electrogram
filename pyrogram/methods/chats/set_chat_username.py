@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class SetChatUsername:
     async def set_chat_username(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         username: str | None,
     ) -> bool:

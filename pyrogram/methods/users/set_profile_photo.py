@@ -8,7 +8,7 @@ from pyrogram import raw
 
 class SetProfilePhoto:
     async def set_profile_photo(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         *,
         photo: str | BinaryIO | None = None,
         video: str | BinaryIO | None = None,

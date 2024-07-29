@@ -6,8 +6,8 @@ from pyrogram import raw, types
 
 class GetDefaultEmojiStatuses:
     async def get_default_emoji_statuses(
-        self: "pyrogram.Client",
-    ) -> list["types.EmojiStatus"]:
+        self: pyrogram.Client,
+    ) -> list[types.EmojiStatus]:
         """Get the default emoji statuses.
 
         .. include:: /_includes/usable-by/users-bots.rst

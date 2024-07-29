@@ -6,8 +6,8 @@ from pyrogram import raw, types
 
 class GetSendAsChats:
     async def get_send_as_chats(
-        self: "pyrogram.Client", chat_id: int | str
-    ) -> list["types.Chat"]:
+        self: pyrogram.Client, chat_id: int | str
+    ) -> list[types.Chat]:
         """Get the list of "send_as" chats available.
 
         .. include:: /_includes/usable-by/users.rst

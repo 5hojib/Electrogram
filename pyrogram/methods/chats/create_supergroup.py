@@ -6,8 +6,8 @@ from pyrogram import raw, types
 
 class CreateSupergroup:
     async def create_supergroup(
-        self: "pyrogram.Client", title: str, description: str = ""
-    ) -> "types.Chat":
+        self: pyrogram.Client, title: str, description: str = ""
+    ) -> types.Chat:
         """Create a new supergroup.
 
         .. note::

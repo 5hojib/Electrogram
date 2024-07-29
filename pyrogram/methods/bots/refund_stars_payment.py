@@ -6,7 +6,7 @@ from pyrogram import raw
 
 class RefundStarPayment:
     async def refund_star_payment(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         user_id: int | str,
         telegram_payment_charge_id: str,
     ) -> bool:
