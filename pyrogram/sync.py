@@ -49,13 +49,11 @@ def async_to_sync(obj, name) -> None:
         ):
             if loop.is_running():
                 return coroutine
-            else:
-                if inspect.iscoroutine(coroutine):
-                    return loop.run_until_complete(coroutine)
-
-                if inspect.isasyncgen(coroutine):
-                    return async_to_sync_gen(coroutine, loop, True)
-                return None
+            if inspect.iscoroutine(coroutine):
+                return loop.run_until_complete(coroutine)
+            if inspect.isasyncgen(coroutine):
+                return async_to_sync_gen(coroutine, loop, True)
+            return None
         else:
             if inspect.iscoroutine(coroutine):
                 if loop.is_running():
@@ -68,18 +66,16 @@ def async_to_sync(obj, name) -> None:
                         )
 
                     return coro_wrapper()
-                else:
-                    return asyncio.run_coroutine_threadsafe(
-                        coroutine, main_loop
-                    ).result()
+                return asyncio.run_coroutine_threadsafe(
+                    coroutine, main_loop
+                ).result()
 
             if inspect.isasyncgen(coroutine):
                 if loop.is_running():
                     return coroutine
-                else:
-                    return async_to_sync_gen(
-                        coroutine, main_loop, False
-                    )
+                return async_to_sync_gen(
+                    coroutine, main_loop, False
+                )
             return None
 
     setattr(obj, name, async_to_sync_wrap)

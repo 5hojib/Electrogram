@@ -284,15 +284,14 @@ def unpack_inline_message_id(
         return raw.types.InputBotInlineMessageID(
             dc_id=unpacked[0], id=unpacked[1], access_hash=unpacked[2]
         )
-    else:
-        unpacked = struct.unpack("<iqiq", decoded)
+    unpacked = struct.unpack("<iqiq", decoded)
 
-        return raw.types.InputBotInlineMessageID64(
-            dc_id=unpacked[0],
-            owner_id=unpacked[1],
-            id=unpacked[2],
-            access_hash=unpacked[3],
-        )
+    return raw.types.InputBotInlineMessageID64(
+        dc_id=unpacked[0],
+        owner_id=unpacked[1],
+        id=unpacked[2],
+        access_hash=unpacked[3],
+    )
 
 
 MIN_CHANNEL_ID = -1007852516352

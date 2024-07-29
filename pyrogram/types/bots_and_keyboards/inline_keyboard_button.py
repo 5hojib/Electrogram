@@ -121,8 +121,7 @@ class InlineKeyboardButton(Object):
                     text=b.text,
                     switch_inline_query_current_chat=b.query,
                 )
-            else:
-                return InlineKeyboardButton(
+            return InlineKeyboardButton(
                     text=b.text, switch_inline_query=b.query
                 )
 
