@@ -3,6 +3,7 @@ from __future__ import annotations
 import io
 import os
 import re
+from pathlib import Path
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
@@ -76,8 +77,6 @@ class EditMessageMedia:
                     InputMediaAudio("new_audio.mp3"))
         """
         caption = media.caption
-        parse_mode = parse_mode
-
         message, entities = None, None
 
         if caption is not None:
@@ -86,9 +85,7 @@ class EditMessageMedia:
             ).values()
 
         if isinstance(media, types.InputMediaPhoto):
-            if isinstance(media.media, io.BytesIO) or os.path.isfile(
-                media.media
-            ):
+            if isinstance(media.media, io.BytesIO) or Path(media.media).is_file():
                 uploaded_media = await self.invoke(
                     raw.functions.messages.UploadMedia(
                         peer=await self.resolve_peer(chat_id),
@@ -116,9 +113,7 @@ class EditMessageMedia:
                     media.media, FileType.PHOTO
                 )
         elif isinstance(media, types.InputMediaVideo):
-            if isinstance(media.media, io.BytesIO) or os.path.isfile(
-                media.media
-            ):
+            if isinstance(media.media, io.BytesIO) or Path(media.media).is_file():
                 uploaded_media = await self.invoke(
                     raw.functions.messages.UploadMedia(
                         peer=await self.resolve_peer(chat_id),
@@ -140,7 +135,7 @@ class EditMessageMedia:
                                 ),
                                 raw.types.DocumentAttributeFilename(
                                     file_name=file_name
-                                    or os.path.basename(media.media)
+                                    or Path(media.media).name)
                                 ),
                             ],
                         ),
@@ -164,9 +159,7 @@ class EditMessageMedia:
                     media.media, FileType.VIDEO
                 )
         elif isinstance(media, types.InputMediaAudio):
-            if isinstance(media.media, io.BytesIO) or os.path.isfile(
-                media.media
-            ):
+            if isinstance(media.media, io.BytesIO) or Path(media.media).is_file():
                 media = await self.invoke(
                     raw.functions.messages.UploadMedia(
                         peer=await self.resolve_peer(chat_id),
@@ -185,7 +178,7 @@ class EditMessageMedia:
                                 ),
                                 raw.types.DocumentAttributeFilename(
                                     file_name=file_name
-                                    or os.path.basename(media.media)
+                                    or Path(media.media).name
                                 ),
                             ],
                         ),
@@ -208,9 +201,7 @@ class EditMessageMedia:
                     media.media, FileType.AUDIO
                 )
         elif isinstance(media, types.InputMediaAnimation):
-            if isinstance(media.media, io.BytesIO) or os.path.isfile(
-                media.media
-            ):
+            if isinstance(media.media, io.BytesIO) or Path(media.media).is_file():
                 uploaded_media = await self.invoke(
                     raw.functions.messages.UploadMedia(
                         peer=await self.resolve_peer(chat_id),

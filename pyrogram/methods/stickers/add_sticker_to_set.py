@@ -45,9 +45,8 @@ class AddStickerToSet:
                 "^https?://", sticker
             ):
                 raise ValueError("file_id is invalid!")
-            else:
-                decoded = FileId.decode(sticker)
-                media = raw.types.InputDocument(
+            decoded = FileId.decode(sticker)
+            media = raw.types.InputDocument(
                     id=decoded.media_id,
                     access_hash=decoded.access_hash,
                     file_reference=decoded.file_reference,
