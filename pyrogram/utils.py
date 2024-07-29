@@ -295,11 +295,9 @@ def unpack_inline_message_id(
         )
 
 
-MIN_CHANNEL_ID_OLD = -1002147483647
-MIN_CHANNEL_ID = -100999999999999
+MIN_CHANNEL_ID = -1007852516352
 MAX_CHANNEL_ID = -1000000000000
 MIN_CHAT_ID = -999999999999
-MAX_USER_ID_OLD = 2147483647
 MAX_USER_ID = 999999999999
 
 
@@ -456,10 +454,9 @@ async def parse_text_entities(
         for entity in entities:
             entity._client = client
 
-        text, entities = (
-            text,
-            [await entity.write() for entity in entities] or None,
-        )
+        entities = [
+            await entity.write() for entity in entities
+        ] or None
     else:
         text, entities = (
             await client.parser.parse(text, parse_mode)
