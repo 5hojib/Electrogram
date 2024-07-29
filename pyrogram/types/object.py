@@ -10,10 +10,10 @@ if typing.TYPE_CHECKING:
 
 
 class Object:
-    def __init__(self, client: "pyrogram.Client" = None) -> None:
+    def __init__(self, client: pyrogram.Client = None) -> None:
         self._client = client
 
-    def bind(self, client: "pyrogram.Client") -> None:
+    def bind(self, client: pyrogram.Client) -> None:
         """Bind a Client instance to this and to all nested Pyrogram objects.
 
         Parameters:
@@ -30,7 +30,7 @@ class Object:
                 o.bind(client)
 
     @staticmethod
-    def default(obj: "Object"):
+    def default(obj: Object):
         if isinstance(obj, bytes):
             return repr(obj)
 
@@ -80,7 +80,7 @@ class Object:
             ),
         )
 
-    def __eq__(self, other: "Object") -> bool:
+    def __eq__(self, other: Object) -> bool:
         for attr in self.__dict__:
             try:
                 if attr.startswith("_"):

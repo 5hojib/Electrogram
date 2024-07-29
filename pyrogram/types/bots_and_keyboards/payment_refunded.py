@@ -35,7 +35,7 @@ class PaymentRefunded(Object):
     def __init__(
         self,
         *,
-        user: "types.User",
+        user: types.User,
         currency: str,
         total_amount: str,
         telegram_payment_charge_id: str,
@@ -51,9 +51,9 @@ class PaymentRefunded(Object):
 
     @staticmethod
     async def _parse(
-        client: "pyrogram.Client",
-        payment_refunded: "raw.types.MessageActionPaymentRefunded",
-    ) -> "PaymentRefunded":
+        client: pyrogram.Client,
+        payment_refunded: raw.types.MessageActionPaymentRefunded,
+    ) -> PaymentRefunded:
         try:
             payload = payment_refunded.payload.decode()
         except (UnicodeDecodeError, AttributeError):

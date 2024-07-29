@@ -13,6 +13,6 @@ class BotCommandScopeAllPrivateChats(BotCommandScope):
         super().__init__("all_private_chats")
 
     async def write(
-        self, client: "pyrogram.Client"
-    ) -> "raw.base.BotCommandScope":
+        self, client: pyrogram.Client
+    ) -> raw.base.BotCommandScope:
         return raw.types.BotCommandScopeUsers()

@@ -39,11 +39,11 @@ class ChosenInlineResult(Object, Update):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         result_id: str,
-        from_user: "types.User",
+        from_user: types.User,
         query: str,
-        location: "types.Location" = None,
+        location: types.Location = None,
         inline_message_id: str | None = None,
     ) -> None:
         super().__init__(client)
@@ -59,7 +59,7 @@ class ChosenInlineResult(Object, Update):
         client,
         chosen_inline_result: raw.types.UpdateBotInlineSend,
         users,
-    ) -> "ChosenInlineResult":
+    ) -> ChosenInlineResult:
         inline_message_id = None
 
         if isinstance(

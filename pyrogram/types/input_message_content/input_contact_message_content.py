@@ -42,7 +42,7 @@ class InputContactMessageContent(InputMessageContent):
         self.last_name = last_name
         self.vcard = vcard
 
-    async def write(self, client: "pyrogram.Client", reply_markup):
+    async def write(self, client: pyrogram.Client, reply_markup):
         return raw.types.InputBotInlineMessageMediaContact(
             phone_number=self.phone_number,
             first_name=self.first_name,

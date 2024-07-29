@@ -58,6 +58,6 @@ class BotCommandScope(Object):
         self.type = type
 
     async def write(
-        self, client: "pyrogram.Client"
-    ) -> "raw.base.BotCommandScope":
+        self, client: pyrogram.Client
+    ) -> raw.base.BotCommandScope:
         raise NotImplementedError

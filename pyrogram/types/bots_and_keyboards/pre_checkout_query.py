@@ -35,14 +35,14 @@ class PreCheckoutQuery(Object, Update):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         id: str,
-        from_user: "types.User",
+        from_user: types.User,
         currency: str,
         total_amount: int,
         payload: str,
         shipping_option_id: str | None = None,
-        payment_info: "types.PaymentInfo" = None,
+        payment_info: types.PaymentInfo = None,
     ) -> None:
         super().__init__(client)
 
@@ -56,8 +56,8 @@ class PreCheckoutQuery(Object, Update):
 
     @staticmethod
     async def _parse(
-        client: "pyrogram.Client", pre_checkout_query, users
-    ) -> "PreCheckoutQuery":
+        client: pyrogram.Client, pre_checkout_query, users
+    ) -> PreCheckoutQuery:
         # Try to decode pre-checkout query payload into string. If that fails, fallback to bytes instead of decoding by
         # ignoring/replacing errors, this way, button clicks will still work.
         try:

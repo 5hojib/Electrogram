@@ -19,7 +19,7 @@ class InputReplyToStory(Object):
     def __init__(
         self,
         *,
-        peer: "raw.types.InputPeer" = None,
+        peer: raw.types.InputPeer = None,
         story_id: int | None = None,
     ) -> None:
         super().__init__()

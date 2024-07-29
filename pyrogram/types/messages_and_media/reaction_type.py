@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 from pyrogram import enums, raw
 from pyrogram.types.object import Object
 
@@ -34,8 +32,8 @@ class ReactionType(Object):
 
     @staticmethod
     def _parse(
-        update: "raw.types.Reaction",
-    ) -> Optional["ReactionType"]:
+        update: raw.types.Reaction,
+    ) -> ReactionType | None:
         if isinstance(update, raw.types.ReactionEmpty):
             return None
         elif isinstance(update, raw.types.ReactionEmoji):

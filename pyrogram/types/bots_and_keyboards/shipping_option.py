@@ -20,7 +20,7 @@ class ShippingOption(Object):
     """
 
     def __init__(
-        self, id: str, title: str, prices: "types.LabeledPrice"
+        self, id: str, title: str, prices: types.LabeledPrice
     ) -> None:
         super().__init__()
 
@@ -30,8 +30,8 @@ class ShippingOption(Object):
 
     @staticmethod
     def _parse(
-        shipping_option: "raw.types.ShippingOption",
-    ) -> "ShippingOption":
+        shipping_option: raw.types.ShippingOption,
+    ) -> ShippingOption:
         if isinstance(shipping_option, raw.types.ShippingOption):
             return ShippingOption(
                 id=shipping_option.id,

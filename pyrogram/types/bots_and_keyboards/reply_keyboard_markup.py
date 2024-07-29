@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Union
-
 import pyrogram
 from pyrogram import raw, types
 from pyrogram.types.object import Object
@@ -41,7 +39,7 @@ class ReplyKeyboardMarkup(Object):
 
     def __init__(
         self,
-        keyboard: list[list[Union["types.KeyboardButton", str]]],
+        keyboard: list[list[types.KeyboardButton | str]],
         is_persistent: bool | None = None,
         resize_keyboard: bool | None = None,
         one_time_keyboard: bool | None = None,
@@ -58,7 +56,7 @@ class ReplyKeyboardMarkup(Object):
         self.placeholder = placeholder
 
     @staticmethod
-    def read(kb: "raw.base.ReplyMarkup"):
+    def read(kb: raw.base.ReplyMarkup):
         keyboard = []
 
         for i in kb.rows:
@@ -79,7 +77,7 @@ class ReplyKeyboardMarkup(Object):
         )
 
     # TODO: Implement KeyboardButtonBuy.write method
-    async def write(self, _: "pyrogram.Client"):
+    async def write(self, _: pyrogram.Client):
         return raw.types.ReplyKeyboardMarkup(
             rows=[
                 raw.types.KeyboardButtonRow(

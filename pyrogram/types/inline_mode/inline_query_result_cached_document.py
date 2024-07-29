@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 import pyrogram
 from pyrogram import enums, raw, types, utils
 from pyrogram.file_id import FileId
@@ -53,10 +51,10 @@ class InlineQueryResultCachedDocument(InlineQueryResult):
         id: str | None = None,
         description: str | None = None,
         caption: str = "",
-        parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] | None = None,
-        reply_markup: "types.InlineKeyboardMarkup" = None,
-        input_message_content: "types.InputMessageContent" = None,
+        parse_mode: enums.ParseMode | None = None,
+        caption_entities: list[types.MessageEntity] | None = None,
+        reply_markup: types.InlineKeyboardMarkup = None,
+        input_message_content: types.InputMessageContent = None,
     ) -> None:
         super().__init__(
             "file", id, input_message_content, reply_markup
@@ -71,7 +69,7 @@ class InlineQueryResultCachedDocument(InlineQueryResult):
         self.reply_markup = reply_markup
         self.input_message_content = input_message_content
 
-    async def write(self, client: "pyrogram.Client"):
+    async def write(self, client: pyrogram.Client):
         message, entities = (
             await utils.parse_text_entities(
                 client,

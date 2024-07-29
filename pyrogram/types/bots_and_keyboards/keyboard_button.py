@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Union
-
 from pyrogram import raw, types
 from pyrogram.types.object import Object
 
@@ -44,12 +42,10 @@ class KeyboardButton(Object):
         text: str,
         request_contact: bool | None = None,
         request_location: bool | None = None,
-        request_chat: Union[
-            "types.RequestPeerTypeChat",
-            "types.RequestPeerTypeChannel",
-        ] = None,
-        request_user: "types.RequestPeerTypeUser" = None,
-        web_app: "types.WebAppInfo" = None,
+        request_chat: types.RequestPeerTypeChat
+        | types.RequestPeerTypeChannel = None,
+        request_user: types.RequestPeerTypeUser = None,
+        web_app: types.WebAppInfo = None,
     ) -> None:
         super().__init__()
 

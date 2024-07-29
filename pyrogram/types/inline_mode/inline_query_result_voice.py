@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 import pyrogram
 from pyrogram import enums, raw, types, utils
 
@@ -53,10 +51,10 @@ class InlineQueryResultVoice(InlineQueryResult):
         id: str | None = None,
         voice_duration: int = 0,
         caption: str = "",
-        parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] | None = None,
-        reply_markup: "types.InlineKeyboardMarkup" = None,
-        input_message_content: "types.InputMessageContent" = None,
+        parse_mode: enums.ParseMode | None = None,
+        caption_entities: list[types.MessageEntity] | None = None,
+        reply_markup: types.InlineKeyboardMarkup = None,
+        input_message_content: types.InputMessageContent = None,
     ) -> None:
         super().__init__(
             "voice", id, input_message_content, reply_markup
@@ -69,7 +67,7 @@ class InlineQueryResultVoice(InlineQueryResult):
         self.parse_mode = parse_mode
         self.caption_entities = caption_entities
 
-    async def write(self, client: "pyrogram.Client"):
+    async def write(self, client: pyrogram.Client):
         audio = raw.types.InputWebDocument(
             url=self.voice_url,
             size=0,

@@ -52,7 +52,7 @@ class InputLocationMessageContent(InputMessageContent):
         self.heading = heading
         self.proximity_alert_radius = proximity_alert_radius
 
-    async def write(self, client: "pyrogram.Client", reply_markup):
+    async def write(self, client: pyrogram.Client, reply_markup):
         return raw.types.InputBotInlineMessageMediaGeo(
             geo_point=raw.types.InputGeoPoint(
                 lat=self.latitude,

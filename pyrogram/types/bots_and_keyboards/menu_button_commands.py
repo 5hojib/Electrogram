@@ -13,6 +13,6 @@ class MenuButtonCommands(MenuButton):
         super().__init__("commands")
 
     async def write(
-        self, client: "pyrogram.Client"
-    ) -> "raw.types.BotMenuButtonCommands":
+        self, client: pyrogram.Client
+    ) -> raw.types.BotMenuButtonCommands:
         return raw.types.BotMenuButtonCommands()

@@ -24,5 +24,5 @@ class InlineKeyboardButtonBuy(Object):
     def read(b):
         return InlineKeyboardButtonBuy(text=b.text)
 
-    async def write(self, _: "pyrogram.Client"):
+    async def write(self, _: pyrogram.Client):
         return raw.types.KeyboardButtonBuy(text=self.text)

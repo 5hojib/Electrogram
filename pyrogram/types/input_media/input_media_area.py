@@ -19,7 +19,7 @@ class InputMediaArea(Object):
     # TODO: InputMediaAreaVenue
 
     def __init__(
-        self, coordinates: "types.MediaAreaCoordinates"
+        self, coordinates: types.MediaAreaCoordinates
     ) -> None:
         super().__init__()
 

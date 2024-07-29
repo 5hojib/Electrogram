@@ -42,11 +42,11 @@ class InlineQueryResultArticle(InlineQueryResult):
     def __init__(
         self,
         title: str,
-        input_message_content: "types.InputMessageContent",
+        input_message_content: types.InputMessageContent,
         id: str | None = None,
         url: str | None = None,
         description: str | None = None,
-        reply_markup: "types.InlineKeyboardMarkup" = None,
+        reply_markup: types.InlineKeyboardMarkup = None,
         thumb_url: str | None = None,
         thumb_width: int = 0,
         thumb_height: int = 0,
@@ -62,7 +62,7 @@ class InlineQueryResultArticle(InlineQueryResult):
         self.thumb_width = thumb_width
         self.thumb_height = thumb_height
 
-    async def write(self, client: "pyrogram.Client"):
+    async def write(self, client: pyrogram.Client):
         return raw.types.InputBotInlineResult(
             id=self.id,
             type=self.type,

@@ -22,8 +22,8 @@ class GameHighScore(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
-        user: "types.User",
+        client: pyrogram.Client = None,
+        user: types.User,
         score: int,
         position: int | None = None,
     ) -> None:
@@ -36,7 +36,7 @@ class GameHighScore(Object):
     @staticmethod
     def _parse(
         client, game_high_score: raw.types.HighScore, users: dict
-    ) -> "GameHighScore":
+    ) -> GameHighScore:
         users = {i.id: i for i in users}
 
         return GameHighScore(

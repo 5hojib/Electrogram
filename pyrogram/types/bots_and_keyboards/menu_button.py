@@ -29,6 +29,6 @@ class MenuButton(Object):
         self.type = type
 
     async def write(
-        self, client: "pyrogram.Client"
-    ) -> "raw.base.BotMenuButton":
+        self, client: pyrogram.Client
+    ) -> raw.base.BotMenuButton:
         raise NotImplementedError

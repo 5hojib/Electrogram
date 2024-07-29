@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Union
-
 import pyrogram
 from pyrogram import raw, types
 from pyrogram.types.object import Object
@@ -21,10 +19,8 @@ class InlineKeyboardMarkup(Object):
         self,
         inline_keyboard: list[
             list[
-                Union[
-                    "types.InlineKeyboardButton",
-                    "types.InlineKeyboardButtonBuy",
-                ]
+                types.InlineKeyboardButton
+                | types.InlineKeyboardButtonBuy
             ]
         ],
     ) -> None:
@@ -46,7 +42,7 @@ class InlineKeyboardMarkup(Object):
 
         return InlineKeyboardMarkup(inline_keyboard=inline_keyboard)
 
-    async def write(self, client: "pyrogram.Client"):
+    async def write(self, client: pyrogram.Client):
         rows = []
 
         for r in self.inline_keyboard:

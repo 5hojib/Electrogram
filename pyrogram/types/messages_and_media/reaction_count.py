@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from pyrogram.types.object import Object
 
@@ -40,8 +40,8 @@ class ReactionCount(Object):
 
     @staticmethod
     def _parse(
-        update: "raw.types.ReactionCount",
-    ) -> Optional["ReactionCount"]:
+        update: raw.types.ReactionCount,
+    ) -> ReactionCount | None:
         return ReactionCount(
             type=ReactionType._parse(update.reaction),
             total_count=update.count,

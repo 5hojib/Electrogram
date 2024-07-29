@@ -39,7 +39,7 @@ class SuccessfulPayment(Object):
         telegram_payment_charge_id: str,
         provider_payment_charge_id: str,
         shipping_option_id: str | None = None,
-        payment_info: "types.PaymentInfo" = None,
+        payment_info: types.PaymentInfo = None,
     ) -> None:
         super().__init__()
 
@@ -53,8 +53,8 @@ class SuccessfulPayment(Object):
 
     @staticmethod
     def _parse(
-        client: "pyrogram.Client", successful_payment
-    ) -> "SuccessfulPayment":
+        client: pyrogram.Client, successful_payment
+    ) -> SuccessfulPayment:
         payload = None
         telegram_payment_charge_id = None
         provider_payment_charge_id = None

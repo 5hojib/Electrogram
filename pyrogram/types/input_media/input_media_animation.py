@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, BinaryIO, Optional
-
-from pyrogram.types.messages_and_media import MessageEntity
+from typing import TYPE_CHECKING, BinaryIO
 
 from .input_media import InputMedia
 
 if TYPE_CHECKING:
     from pyrogram import enums
+    from pyrogram.types.messages_and_media import MessageEntity
 
 
 class InputMediaAnimation(InputMedia):
@@ -56,7 +55,7 @@ class InputMediaAnimation(InputMedia):
         media: str | BinaryIO,
         thumb: str | None = None,
         caption: str = "",
-        parse_mode: Optional["enums.ParseMode"] = None,
+        parse_mode: enums.ParseMode | None = None,
         caption_entities: list[MessageEntity] | None = None,
         width: int = 0,
         height: int = 0,

@@ -27,11 +27,11 @@ class ShippingQuery(Object, Update):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         id: str,
-        from_user: "types.User",
+        from_user: types.User,
         invoice_payload: str,
-        shipping_address: "types.ShippingAddress" = None,
+        shipping_address: types.ShippingAddress = None,
     ) -> None:
         super().__init__(client)
 
@@ -42,10 +42,10 @@ class ShippingQuery(Object, Update):
 
     @staticmethod
     async def _parse(
-        client: "pyrogram.Client",
-        shipping_query: "raw.types.updateBotShippingQuery",
+        client: pyrogram.Client,
+        shipping_query: raw.types.updateBotShippingQuery,
         users: dict,
-    ) -> "ShippingQuery":
+    ) -> ShippingQuery:
         # Try to decode pre-checkout query payload into string. If that fails, fallback to bytes instead of decoding by
         # ignoring/replacing errors, this way, button clicks will still work.
         try:
@@ -73,7 +73,7 @@ class ShippingQuery(Object, Update):
     async def answer(
         self,
         ok: bool,
-        shipping_options: "types.ShippingOptions" = None,
+        shipping_options: types.ShippingOptions = None,
         error_message: str | None = None,
     ):
         """Bound method *answer* of :obj:`~pyrogram.types.ShippingQuery`.

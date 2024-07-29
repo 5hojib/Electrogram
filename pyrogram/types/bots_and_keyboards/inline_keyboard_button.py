@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 import pyrogram
 from pyrogram import raw, types
 from pyrogram.types.object import Object
@@ -62,12 +60,12 @@ class InlineKeyboardButton(Object):
         text: str,
         callback_data: str | bytes | None = None,
         url: str | None = None,
-        web_app: Optional["types.WebAppInfo"] = None,
-        login_url: Optional["types.LoginUrl"] = None,
+        web_app: types.WebAppInfo | None = None,
+        login_url: types.LoginUrl | None = None,
         user_id: int | None = None,
         switch_inline_query: str | None = None,
         switch_inline_query_current_chat: str | None = None,
-        callback_game: Optional["types.CallbackGame"] = None,
+        callback_game: types.CallbackGame | None = None,
         requires_password: bool | None = None,
     ) -> None:
         super().__init__()
@@ -87,7 +85,7 @@ class InlineKeyboardButton(Object):
         # self.pay = pay
 
     @staticmethod
-    def read(b: "raw.base.KeyboardButton"):
+    def read(b: raw.base.KeyboardButton):
         if isinstance(b, raw.types.KeyboardButtonCallback):
             # Try decode data to keep it as string, but if fails, fallback to bytes so we don't lose any information,
             # instead of decoding by ignoring/replacing errors.
@@ -142,7 +140,7 @@ class InlineKeyboardButton(Object):
             return types.InlineKeyboardButtonBuy.read(b)
         return None
 
-    async def write(self, client: "pyrogram.Client"):
+    async def write(self, client: pyrogram.Client):
         if self.callback_data is not None:
             # Telegram only wants bytes, but we are allowed to pass strings too, for convenience.
             data = (

@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 import pyrogram
 from pyrogram import raw, types
 from pyrogram.types.object import Object
@@ -23,10 +21,10 @@ class ChatReactions(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         all_are_enabled: bool | None = None,
         allow_custom_emoji: bool | None = None,
-        reactions: list["types.Reaction"] | None = None,
+        reactions: list[types.Reaction] | None = None,
     ) -> None:
         super().__init__(client)
 
@@ -36,8 +34,8 @@ class ChatReactions(Object):
 
     @staticmethod
     def _parse(
-        client, chat_reactions: "raw.base.ChatReactions"
-    ) -> Optional["ChatReactions"]:
+        client, chat_reactions: raw.base.ChatReactions
+    ) -> ChatReactions | None:
         if isinstance(chat_reactions, raw.types.ChatReactionsAll):
             return ChatReactions(
                 client=client,

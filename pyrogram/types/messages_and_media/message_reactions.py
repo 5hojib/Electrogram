@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 import pyrogram
 from pyrogram import raw, types
 from pyrogram.types.object import Object
@@ -18,8 +16,8 @@ class MessageReactions(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
-        reactions: list["types.Reaction"] | None = None,
+        client: pyrogram.Client = None,
+        reactions: list[types.Reaction] | None = None,
     ) -> None:
         super().__init__(client)
 
@@ -27,11 +25,9 @@ class MessageReactions(Object):
 
     @staticmethod
     def _parse(
-        client: "pyrogram.Client",
-        message_reactions: Optional[
-            "raw.base.MessageReactions"
-        ] = None,
-    ) -> Optional["MessageReactions"]:
+        client: pyrogram.Client,
+        message_reactions: raw.base.MessageReactions | None = None,
+    ) -> MessageReactions | None:
         if not message_reactions:
             return None
 

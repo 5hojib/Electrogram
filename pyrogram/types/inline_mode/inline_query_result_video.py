@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 import pyrogram
 from pyrogram import enums, raw, types, utils
 
@@ -75,10 +73,10 @@ class InlineQueryResultVideo(InlineQueryResult):
         video_duration: int = 0,
         description: str | None = None,
         caption: str = "",
-        parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] | None = None,
-        reply_markup: "types.InlineKeyboardMarkup" = None,
-        input_message_content: "types.InputMessageContent" = None,
+        parse_mode: enums.ParseMode | None = None,
+        caption_entities: list[types.MessageEntity] | None = None,
+        reply_markup: types.InlineKeyboardMarkup = None,
+        input_message_content: types.InputMessageContent = None,
     ) -> None:
         super().__init__(
             "video", id, input_message_content, reply_markup
@@ -96,7 +94,7 @@ class InlineQueryResultVideo(InlineQueryResult):
         self.caption_entities = caption_entities
         self.mime_type = mime_type
 
-    async def write(self, client: "pyrogram.Client"):
+    async def write(self, client: pyrogram.Client):
         video = raw.types.InputWebDocument(
             url=self.video_url,
             size=0,

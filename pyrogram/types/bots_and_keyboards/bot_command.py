@@ -22,14 +22,14 @@ class BotCommand(Object):
         self.command = command
         self.description = description
 
-    def write(self) -> "raw.types.BotCommand":
+    def write(self) -> raw.types.BotCommand:
         return raw.types.BotCommand(
             command=self.command,
             description=self.description,
         )
 
     @staticmethod
-    def read(c: "raw.types.BotCommand") -> "BotCommand":
+    def read(c: raw.types.BotCommand) -> BotCommand:
         return BotCommand(
             command=c.command, description=c.description
         )

@@ -22,7 +22,7 @@ class InputMediaAreaChannelPost(InputMediaArea):
 
     def __init__(
         self,
-        coordinates: "types.MediaAreaCoordinates",
+        coordinates: types.MediaAreaCoordinates,
         chat_id: int | str,
         message_id: int,
     ) -> None:
@@ -32,7 +32,7 @@ class InputMediaAreaChannelPost(InputMediaArea):
         self.chat_id = chat_id
         self.message_id = message_id
 
-    async def write(self, client: "pyrogram.Client"):
+    async def write(self, client: pyrogram.Client):
         return raw.types.InputMediaAreaChannelPost(
             coordinates=self.coordinates,
             channel=await client.resolve_peer(self.chat_id),

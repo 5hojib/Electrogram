@@ -15,6 +15,6 @@ class BotCommandScopeDefault(BotCommandScope):
         super().__init__("default")
 
     async def write(
-        self, client: "pyrogram.Client"
-    ) -> "raw.base.BotCommandScope":
+        self, client: pyrogram.Client
+    ) -> raw.base.BotCommandScope:
         return raw.types.BotCommandScopeDefault()

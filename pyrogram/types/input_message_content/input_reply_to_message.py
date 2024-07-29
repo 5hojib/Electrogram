@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Union
-
 from pyrogram import raw
 from pyrogram.types.object import Object
 
@@ -36,11 +34,10 @@ class InputReplyToMessage(Object):
         *,
         reply_to_message_id: int | None = None,
         message_thread_id: int | None = None,
-        reply_to_chat: Union[
-            "raw.types.InputPeerChannel", "raw.types.InputPeerUser"
-        ] = None,
+        reply_to_chat: raw.types.InputPeerChannel
+        | raw.types.InputPeerUser = None,
         quote_text: str | None = None,
-        quote_entities: list["raw.base.MessageEntity"] | None = None,
+        quote_entities: list[raw.base.MessageEntity] | None = None,
     ) -> None:
         super().__init__()
 

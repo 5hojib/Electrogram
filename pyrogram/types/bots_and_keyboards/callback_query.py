@@ -1,12 +1,14 @@
 from __future__ import annotations
 
-from re import Match
-from typing import Optional, Union
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
 from pyrogram.types.object import Object
 from pyrogram.types.update import Update
+
+if TYPE_CHECKING:
+    from re import Match
 
 
 class CallbackQuery(Object, Update):
@@ -48,11 +50,11 @@ class CallbackQuery(Object, Update):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         id: str,
-        from_user: "types.User",
+        from_user: types.User,
         chat_instance: str,
-        message: "types.Message" = None,
+        message: types.Message = None,
         inline_message_id: str | None = None,
         data: str | bytes | None = None,
         game_short_name: str | None = None,
@@ -71,8 +73,8 @@ class CallbackQuery(Object, Update):
 
     @staticmethod
     async def _parse(
-        client: "pyrogram.Client", callback_query, users
-    ) -> "CallbackQuery":
+        client: pyrogram.Client, callback_query, users
+    ) -> CallbackQuery:
         message = None
         inline_message_id = None
 
@@ -183,11 +185,11 @@ class CallbackQuery(Object, Update):
     async def edit_message_text(
         self,
         text: str,
-        parse_mode: Optional["enums.ParseMode"] = None,
+        parse_mode: enums.ParseMode | None = None,
         disable_web_page_preview: bool | None = None,
-        reply_markup: "types.InlineKeyboardMarkup" = None,
+        reply_markup: types.InlineKeyboardMarkup = None,
         business_connection_id: str | None = None,
-    ) -> Union["types.Message", bool]:
+    ) -> types.Message | bool:
         """Edit the text of messages attached to callback queries.
 
         Bound method *edit_message_text* of :obj:`~pyrogram.types.CallbackQuery`.
@@ -241,10 +243,10 @@ class CallbackQuery(Object, Update):
     async def edit_message_caption(
         self,
         caption: str,
-        parse_mode: Optional["enums.ParseMode"] = None,
-        reply_markup: "types.InlineKeyboardMarkup" = None,
+        parse_mode: enums.ParseMode | None = None,
+        reply_markup: types.InlineKeyboardMarkup = None,
         business_connection_id: str | None = None,
-    ) -> Union["types.Message", bool]:
+    ) -> types.Message | bool:
         """Edit the caption of media messages attached to callback queries.
 
         Bound method *edit_message_caption* of :obj:`~pyrogram.types.CallbackQuery`.
@@ -284,10 +286,10 @@ class CallbackQuery(Object, Update):
 
     async def edit_message_media(
         self,
-        media: "types.InputMedia",
-        reply_markup: "types.InlineKeyboardMarkup" = None,
+        media: types.InputMedia,
+        reply_markup: types.InlineKeyboardMarkup = None,
         business_connection_id: str | None = None,
-    ) -> Union["types.Message", bool]:
+    ) -> types.Message | bool:
         """Edit animation, audio, document, photo or video messages attached to callback queries.
 
         Bound method *edit_message_media* of :obj:`~pyrogram.types.CallbackQuery`.
@@ -331,9 +333,9 @@ class CallbackQuery(Object, Update):
 
     async def edit_message_reply_markup(
         self,
-        reply_markup: "types.InlineKeyboardMarkup" = None,
+        reply_markup: types.InlineKeyboardMarkup = None,
         business_connection_id: str | None = None,
-    ) -> Union["types.Message", bool]:
+    ) -> types.Message | bool:
         """Edit only the reply markup of messages attached to callback queries.
 
         Bound method *edit_message_reply_markup* of :obj:`~pyrogram.types.CallbackQuery`.

@@ -1,9 +1,12 @@
 from __future__ import annotations
 
-from datetime import datetime
+from typing import TYPE_CHECKING
 
 from pyrogram import raw, utils
 from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class CollectibleItemInfo(Object):
@@ -45,8 +48,8 @@ class CollectibleItemInfo(Object):
 
     @staticmethod
     def _parse(
-        collectible_info: "raw.types.fragment.CollectibleInfo",
-    ) -> "CollectibleItemInfo":
+        collectible_info: raw.types.fragment.CollectibleInfo,
+    ) -> CollectibleItemInfo:
         return CollectibleItemInfo(
             purchase_date=utils.timestamp_to_datetime(
                 collectible_info.purchase_date

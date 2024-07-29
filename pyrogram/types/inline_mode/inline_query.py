@@ -1,11 +1,14 @@
 from __future__ import annotations
 
-from re import Match
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import enums, raw, types
 from pyrogram.types.object import Object
 from pyrogram.types.update import Update
+
+if TYPE_CHECKING:
+    from re import Match
 
 
 class InlineQuery(Object, Update):
@@ -40,13 +43,13 @@ class InlineQuery(Object, Update):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         id: str,
-        from_user: "types.User",
+        from_user: types.User,
         query: str,
         offset: str,
-        chat_type: "enums.ChatType",
-        location: "types.Location" = None,
+        chat_type: enums.ChatType,
+        location: types.Location = None,
         matches: list[Match] | None = None,
     ) -> None:
         super().__init__(client)
@@ -64,7 +67,7 @@ class InlineQuery(Object, Update):
         client,
         inline_query: raw.types.UpdateBotInlineQuery,
         users: dict,
-    ) -> "InlineQuery":
+    ) -> InlineQuery:
         peer_type = inline_query.peer_type
         chat_type = None
 
@@ -105,7 +108,7 @@ class InlineQuery(Object, Update):
 
     async def answer(
         self,
-        results: list["types.InlineQueryResult"],
+        results: list[types.InlineQueryResult],
         cache_time: int = 300,
         is_gallery: bool = False,
         is_personal: bool = False,

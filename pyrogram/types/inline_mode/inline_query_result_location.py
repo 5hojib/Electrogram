@@ -66,8 +66,8 @@ class InlineQueryResultLocation(InlineQueryResult):
         heading: int | None = None,
         proximity_alert_radius: int | None = None,
         id: str | None = None,
-        reply_markup: "types.InlineKeyboardMarkup" = None,
-        input_message_content: "types.InputMessageContent" = None,
+        reply_markup: types.InlineKeyboardMarkup = None,
+        input_message_content: types.InputMessageContent = None,
         thumb_url: str | None = None,
         thumb_width: int = 0,
         thumb_height: int = 0,
@@ -87,7 +87,7 @@ class InlineQueryResultLocation(InlineQueryResult):
         self.thumb_width = thumb_width
         self.thumb_height = thumb_height
 
-    async def write(self, client: "pyrogram.Client"):
+    async def write(self, client: pyrogram.Client):
         return raw.types.InputBotInlineResult(
             id=self.id,
             type=self.type,

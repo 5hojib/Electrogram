@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 import pyrogram
 from pyrogram import enums, raw, types, utils
 
@@ -29,8 +27,8 @@ class InputTextMessageContent(InputMessageContent):
     def __init__(
         self,
         message_text: str,
-        parse_mode: Optional["enums.ParseMode"] = None,
-        entities: list["types.MessageEntity"] | None = None,
+        parse_mode: enums.ParseMode | None = None,
+        entities: list[types.MessageEntity] | None = None,
         disable_web_page_preview: bool | None = None,
     ) -> None:
         super().__init__()
@@ -40,7 +38,7 @@ class InputTextMessageContent(InputMessageContent):
         self.entities = entities
         self.disable_web_page_preview = disable_web_page_preview
 
-    async def write(self, client: "pyrogram.Client", reply_markup):
+    async def write(self, client: pyrogram.Client, reply_markup):
         message, entities = (
             await utils.parse_text_entities(
                 client,

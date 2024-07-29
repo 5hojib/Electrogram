@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-from typing import BinaryIO
+from typing import TYPE_CHECKING, BinaryIO
 
-from pyrogram.types.messages_and_media import MessageEntity
 from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    from pyrogram.types.messages_and_media import MessageEntity
 
 
 class InputMedia(Object):
