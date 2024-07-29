@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 import pyrogram
 from pyrogram import raw, types
 from pyrogram.types.object import Object
@@ -36,8 +34,8 @@ class BotApp(Object):
         short_name: str,
         title: str,
         description: str,
-        photo: "types.Photo",
-        document: Optional["types.Document"] = None,
+        photo: types.Photo,
+        document: types.Document | None = None,
     ) -> None:
         super().__init__()
 
@@ -50,8 +48,8 @@ class BotApp(Object):
 
     @staticmethod
     def _parse(
-        client: "pyrogram.Client", bot_app: "raw.types.BotApp"
-    ) -> "BotApp":
+        client: pyrogram.Client, bot_app: raw.types.BotApp
+    ) -> BotApp:
         document = None
         if isinstance(bot_app.document, raw.types.Document):
             attributes = {

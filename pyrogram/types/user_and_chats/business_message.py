@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Optional, Union
+from typing import TYPE_CHECKING
 
 from pyrogram import enums, raw, types, utils
 from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class BusinessMessage(Object):
@@ -47,8 +49,8 @@ class BusinessMessage(Object):
         is_away: bool | None = None,
         no_activity_days: int | None = None,
         offline_only: bool | None = None,
-        recipients: list["types.User"] | None = None,
-        schedule: "enums.BusinessSchedule" = None,
+        recipients: list[types.User] | None = None,
+        schedule: enums.BusinessSchedule = None,
         start_date: datetime | None = None,
         end_date: datetime | None = None,
     ) -> None:
@@ -65,12 +67,10 @@ class BusinessMessage(Object):
     @staticmethod
     def _parse(
         client,
-        message: Union[
-            "raw.types.BusinessGreetingMessage",
-            "raw.types.BusinessAwayMessage",
-        ] = None,
+        message: raw.types.BusinessGreetingMessage
+        | raw.types.BusinessAwayMessage = None,
         users: dict | None = None,
-    ) -> Optional["BusinessMessage"]:
+    ) -> BusinessMessage | None:
         if not message:
             return None
 

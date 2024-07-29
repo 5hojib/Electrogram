@@ -1,14 +1,15 @@
 from __future__ import annotations
 
 import html
-
-from datetime import datetime
-from typing import Optional
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
 from pyrogram.types.object import Object
 from pyrogram.types.update import Update
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class Link(str):
@@ -158,7 +159,7 @@ class User(Object, Update):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         id: int,
         is_self: bool | None = None,
         is_contact: bool | None = None,
@@ -175,19 +176,19 @@ class User(Object, Update):
         is_bot_business: bool | None = None,
         first_name: str | None = None,
         last_name: str | None = None,
-        status: "enums.UserStatus" = None,
+        status: enums.UserStatus = None,
         last_online_date: datetime | None = None,
         next_offline_date: datetime | None = None,
         username: str | None = None,
-        usernames: list["types.Username"] | None = None,
+        usernames: list[types.Username] | None = None,
         language_code: str | None = None,
-        emoji_status: Optional["types.EmojiStatus"] = None,
+        emoji_status: types.EmojiStatus | None = None,
         dc_id: int | None = None,
         phone_number: str | None = None,
-        photo: "types.ChatPhoto" = None,
-        restrictions: list["types.Restriction"] | None = None,
-        reply_color: "types.ChatColor" = None,
-        profile_color: "types.ChatColor" = None,
+        photo: types.ChatPhoto = None,
+        restrictions: list[types.Restriction] | None = None,
+        reply_color: types.ChatColor = None,
+        profile_color: types.ChatColor = None,
     ) -> None:
         super().__init__(client)
 
@@ -237,7 +238,7 @@ class User(Object, Update):
         )
 
     @staticmethod
-    def _parse(client, user: "raw.base.User") -> Optional["User"]:
+    def _parse(client, user: raw.base.User) -> User | None:
         if user is None or isinstance(user, raw.types.UserEmpty):
             return None
         user_name = user.username
@@ -305,7 +306,7 @@ class User(Object, Update):
 
     @staticmethod
     def _parse_status(
-        user_status: "raw.base.UserStatus", is_bot: bool = False
+        user_status: raw.base.UserStatus, is_bot: bool = False
     ):
         if isinstance(user_status, raw.types.UserStatusOnline):
             status, date = (
@@ -346,7 +347,7 @@ class User(Object, Update):
 
     @staticmethod
     def _parse_user_status(
-        client, user_status: "raw.types.UpdateUserStatus"
+        client, user_status: raw.types.UpdateUserStatus
     ):
         return User(
             id=user_status.user_id,

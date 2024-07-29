@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 from pyrogram import raw, types
 from pyrogram.types.object import Object
 
@@ -38,7 +36,7 @@ class AvailableEffect(Object):
         id: int,
         emoji: str,
         effect_sticker_id: int,
-        sticker: Optional["types.Sticker"] = None,
+        sticker: types.Sticker | None = None,
         is_premium: bool | None = None,
         static_icon_id: int | None = None,
         effect_animation_id: int | None = None,
@@ -56,9 +54,9 @@ class AvailableEffect(Object):
     @staticmethod
     async def _parse(
         client,
-        effect: "raw.types.AvailableEffect",
-        document: "raw.types.Document" = None,
-    ) -> "AvailableEffect":
+        effect: raw.types.AvailableEffect,
+        document: raw.types.Document = None,
+    ) -> AvailableEffect:
         sticker = None
 
         if document:

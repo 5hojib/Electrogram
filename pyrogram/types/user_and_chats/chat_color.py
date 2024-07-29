@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional, Union
-
 from pyrogram import enums, raw
 from pyrogram.types.object import Object
 
@@ -20,7 +18,7 @@ class ChatColor(Object):
     def __init__(
         self,
         *,
-        color: Union["enums.ReplyColor", "enums.ProfileColor"] = None,
+        color: enums.ReplyColor | enums.ProfileColor = None,
         background_emoji_id: int | None = None,
     ) -> None:
         self.color = color
@@ -28,8 +26,8 @@ class ChatColor(Object):
 
     @staticmethod
     def _parse(
-        color: "raw.types.PeerColor" = None,
-    ) -> Optional["ChatColor"]:
+        color: raw.types.PeerColor = None,
+    ) -> ChatColor | None:
         if not color:
             return None
 
@@ -44,8 +42,8 @@ class ChatColor(Object):
 
     @staticmethod
     def _parse_profile_color(
-        color: "raw.types.PeerColor" = None,
-    ) -> Optional["ChatColor"]:
+        color: raw.types.PeerColor = None,
+    ) -> ChatColor | None:
         if not color:
             return None
 

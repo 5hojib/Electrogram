@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import logging
-from datetime import datetime
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from datetime import datetime
+
     import pyrogram
     from pyrogram import enums, types
 
@@ -13,13 +14,13 @@ log = logging.getLogger(__name__)
 
 class CopyMessage:
     async def copy_message(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         from_chat_id: int | str,
         message_id: int,
         caption: str | None = None,
-        parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] | None = None,
+        parse_mode: enums.ParseMode | None = None,
+        caption_entities: list[types.MessageEntity] | None = None,
         has_spoiler: bool | None = None,
         disable_notification: bool | None = None,
         message_thread_id: int | None = None,
@@ -27,13 +28,11 @@ class CopyMessage:
         schedule_date: datetime | None = None,
         protect_content: bool | None = None,
         invert_media: bool = False,
-        reply_markup: Union[
-            "types.InlineKeyboardMarkup",
-            "types.ReplyKeyboardMarkup",
-            "types.ReplyKeyboardRemove",
-            "types.ForceReply",
-        ] = None,
-    ) -> "types.Message":
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
+    ) -> types.Message:
         """Copy messages of any kind.
 
         The method is analogous to the method :meth:`~Client.forward_messages`, but the copied message doesn't have a

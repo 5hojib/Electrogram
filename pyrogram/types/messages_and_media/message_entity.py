@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 import pyrogram
 from pyrogram import enums, raw, types
 from pyrogram.types.object import Object
@@ -42,12 +40,12 @@ class MessageEntity(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
-        type: "enums.MessageEntityType",
+        client: pyrogram.Client = None,
+        type: enums.MessageEntityType,
         offset: int,
         length: int,
         url: str | None = None,
-        user: "types.User" = None,
+        user: types.User = None,
         language: str | None = None,
         custom_emoji_id: int | None = None,
         collapsed: bool | None = None,
@@ -65,8 +63,8 @@ class MessageEntity(Object):
 
     @staticmethod
     def _parse(
-        client, entity: "raw.base.MessageEntity", users: dict
-    ) -> Optional["MessageEntity"]:
+        client, entity: raw.base.MessageEntity, users: dict
+    ) -> MessageEntity | None:
         # Special case for InputMessageEntityMentionName -> MessageEntityType.TEXT_MENTION
         # This happens in case of UpdateShortSentMessage inside send_message() where entities are parsed from the input
         if isinstance(

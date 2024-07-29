@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 from pyrogram import raw, types
 from pyrogram.types.object import Object
 
@@ -24,7 +22,7 @@ class BusinessWorkingHours(Object):
         self,
         *,
         timezone: str,
-        working_hours: list["types.BusinessWeeklyOpen"],
+        working_hours: list[types.BusinessWeeklyOpen],
         is_open_now: bool | None = None,
     ) -> None:
         self.timezone = timezone
@@ -33,8 +31,8 @@ class BusinessWorkingHours(Object):
 
     @staticmethod
     def _parse(
-        work_hours: "raw.types.BusinessWorkHours" = None,
-    ) -> Optional["BusinessWorkingHours"]:
+        work_hours: raw.types.BusinessWorkHours = None,
+    ) -> BusinessWorkingHours | None:
         if not work_hours:
             return None
 

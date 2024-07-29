@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     import pyrogram
@@ -9,11 +9,11 @@ if TYPE_CHECKING:
 
 class EditInlineCaption:
     async def edit_inline_caption(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         inline_message_id: str,
         caption: str,
-        parse_mode: Optional["enums.ParseMode"] = None,
-        reply_markup: "types.InlineKeyboardMarkup" = None,
+        parse_mode: enums.ParseMode | None = None,
+        reply_markup: types.InlineKeyboardMarkup = None,
     ) -> bool:
         """Edit the caption of inline media messages.
 

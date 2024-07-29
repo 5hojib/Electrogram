@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 import pyrogram
 from pyrogram import enums, raw, types, utils
 
@@ -10,12 +8,12 @@ from .inline_session import get_session
 
 class EditInlineText:
     async def edit_inline_text(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         inline_message_id: str,
         text: str,
-        parse_mode: Optional["enums.ParseMode"] = None,
+        parse_mode: enums.ParseMode | None = None,
         disable_web_page_preview: bool | None = None,
-        reply_markup: "types.InlineKeyboardMarkup" = None,
+        reply_markup: types.InlineKeyboardMarkup = None,
     ) -> bool:
         """Edit the text of inline messages.
 

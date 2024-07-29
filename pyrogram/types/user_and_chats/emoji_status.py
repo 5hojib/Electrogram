@@ -1,11 +1,13 @@
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Optional
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, utils
 from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class EmojiStatus(Object):
@@ -22,7 +24,7 @@ class EmojiStatus(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         custom_emoji_id: int,
         until_date: datetime | None = None,
     ) -> None:
@@ -33,8 +35,8 @@ class EmojiStatus(Object):
 
     @staticmethod
     def _parse(
-        client, emoji_status: "raw.base.EmojiStatus"
-    ) -> Optional["EmojiStatus"]:
+        client, emoji_status: raw.base.EmojiStatus
+    ) -> EmojiStatus | None:
         if isinstance(emoji_status, raw.types.EmojiStatus):
             return EmojiStatus(
                 client=client,

@@ -1,14 +1,12 @@
 from __future__ import annotations
 
-from typing import Optional
-
 import pyrogram
 from pyrogram import enums, raw, types, utils
 
 
 class SendInlineBotResult:
     async def send_inline_bot_result(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         chat_id: int | str,
         query_id: int,
         result_id: str,
@@ -16,9 +14,9 @@ class SendInlineBotResult:
         message_thread_id: int | None = None,
         reply_to_message_id: int | None = None,
         quote_text: str | None = None,
-        quote_entities: list["types.MessageEntity"] | None = None,
-        parse_mode: Optional["enums.ParseMode"] = None,
-    ) -> "raw.base.Updates":
+        quote_entities: list[types.MessageEntity] | None = None,
+        parse_mode: enums.ParseMode | None = None,
+    ) -> raw.base.Updates:
         """Send an inline bot result.
         Bot results can be retrieved using :meth:`~pyrogram.Client.get_inline_bot_results`
 

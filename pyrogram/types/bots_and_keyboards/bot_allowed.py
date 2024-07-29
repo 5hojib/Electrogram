@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 import pyrogram
 from pyrogram import raw, types
 from pyrogram.types.object import Object
@@ -30,7 +28,7 @@ class BotAllowed(Object):
         attach_menu: bool | None = None,
         from_request: bool | None = None,
         domain: str | None = None,
-        app: Optional["types.BotApp"] = None,
+        app: types.BotApp | None = None,
     ) -> None:
         super().__init__()
 
@@ -41,8 +39,8 @@ class BotAllowed(Object):
 
     @staticmethod
     def _parse(
-        client: "pyrogram.Client", bot_allowed: "raw.types.BotAllowed"
-    ) -> "BotAllowed":
+        client: pyrogram.Client, bot_allowed: raw.types.BotAllowed
+    ) -> BotAllowed:
         bot_app = getattr(bot_allowed, "app", None)
         return BotAllowed(
             attach_menu=getattr(bot_allowed, "attach_menu", None),

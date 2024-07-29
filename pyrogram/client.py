@@ -1091,7 +1091,7 @@ class Client(Methods):
             BytesIO()
             if in_memory
             else Path(temp_file_path).open("wb")
-        )  # noqa: SIM115 file is closed manually
+        )  # file is closed manually
 
         try:
             async for chunk in self.get_file(

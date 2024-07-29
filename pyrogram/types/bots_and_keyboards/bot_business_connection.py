@@ -36,11 +36,11 @@ class BotBusinessConnection(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         bot_connection_id: str,
-        user: "pyrogram.types.User",
+        user: pyrogram.types.User,
         dc_id: int,
-        date: "datetime.datetime",
+        date: datetime.datetime,
         can_reply: bool | None = None,
         is_disabled: bool | None = None,
     ) -> None:
@@ -55,9 +55,9 @@ class BotBusinessConnection(Object):
 
     @staticmethod
     async def _parse(
-        client: "pyrogram.Client",
-        bot_connection: "raw.types.BotBusinessConnection",
-    ) -> "BotBusinessConnection":
+        client: pyrogram.Client,
+        bot_connection: raw.types.BotBusinessConnection,
+    ) -> BotBusinessConnection:
         return BotBusinessConnection(
             bot_connection_id=bot_connection.connection_id,
             user=await client.get_users(bot_connection.user_id),

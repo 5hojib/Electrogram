@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 from pyrogram import raw, types
 from pyrogram.types.object import Object
 
@@ -30,10 +28,10 @@ class BusinessInfo(Object):
         self,
         *,
         address: str | None = None,
-        location: "types.Location" = None,
-        greeting_message: "types.BusinessMessage" = None,
-        away_message: "types.BusinessMessage" = None,
-        working_hours: "types.BusinessWorkingHours" = None,
+        location: types.Location = None,
+        greeting_message: types.BusinessMessage = None,
+        away_message: types.BusinessMessage = None,
+        working_hours: types.BusinessWorkingHours = None,
     ) -> None:
         self.address = address
         self.location = location
@@ -44,9 +42,9 @@ class BusinessInfo(Object):
     @staticmethod
     def _parse(
         client,
-        user: "raw.types.UserFull" = None,
+        user: raw.types.UserFull = None,
         users: dict | None = None,
-    ) -> Optional["BusinessInfo"]:
+    ) -> BusinessInfo | None:
         working_hours = getattr(user, "business_work_hours", None)
         location = getattr(user, "business_location", None)
         greeting_message = getattr(

@@ -6,11 +6,10 @@ import functools
 import hashlib
 import os
 import struct
-from collections.abc import Callable
 from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime, timezone
 from getpass import getpass
-from typing import Any, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar
 
 import pyrogram
 from pyrogram import enums, raw, types
@@ -20,6 +19,9 @@ from pyrogram.file_id import (
     FileId,
     FileType,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 async def ainput(prompt: str = "", *, hide: bool = False):
@@ -35,9 +37,7 @@ def get_input_media_from_file_id(
     file_id: str,
     expected_file_type: FileType = None,
     ttl_seconds: int | None = None,
-) -> Union[
-    "raw.types.InputMediaPhoto", "raw.types.InputMediaDocument"
-]:
+) -> raw.types.InputMediaPhoto | raw.types.InputMediaDocument:
     try:
         decoded = FileId.decode(file_id)
     except Exception:
@@ -86,10 +86,10 @@ def get_input_media_from_file_id(
 
 async def parse_messages(
     client,
-    messages: "raw.types.messages.Messages",
+    messages: raw.types.messages.Messages,
     replies: int = 1,
     business_connection_id: str | None = None,
-) -> list["types.Message"]:
+) -> list[types.Message]:
     users = {i.id: i for i in messages.users}
     chats = {i.id: i for i in messages.chats}
     if hasattr(messages, "topics"):
@@ -224,7 +224,7 @@ async def parse_messages(
 
 def parse_deleted_messages(
     client, update, business_connection_id: str | None = None
-) -> list["types.Message"]:
+) -> list[types.Message]:
     messages = update.messages
     channel_id = getattr(update, "channel_id", None)
 
@@ -250,7 +250,7 @@ def parse_deleted_messages(
 
 
 def pack_inline_message_id(
-    msg_id: "raw.base.InputBotInlineMessageID",
+    msg_id: raw.base.InputBotInlineMessageID,
 ):
     if isinstance(msg_id, raw.types.InputBotInlineMessageID):
         inline_message_id_packed = struct.pack(
@@ -274,7 +274,7 @@ def pack_inline_message_id(
 
 def unpack_inline_message_id(
     inline_message_id: str,
-) -> "raw.base.InputBotInlineMessageID":
+) -> raw.base.InputBotInlineMessageID:
     padded = inline_message_id + "=" * (-len(inline_message_id) % 4)
     decoded = base64.urlsafe_b64decode(padded)
 
@@ -446,10 +446,10 @@ def compute_password_check(
 
 
 async def parse_text_entities(
-    client: "pyrogram.Client",
+    client: pyrogram.Client,
     text: str,
     parse_mode: enums.ParseMode,
-    entities: list["types.MessageEntity"],
+    entities: list[types.MessageEntity],
 ) -> dict[str, str | list[raw.base.MessageEntity]]:
     if entities:
         # Inject the client instance because parsing user mentions requires it
@@ -490,15 +490,15 @@ async def run_sync(
 
 
 async def get_reply_to(
-    client: "pyrogram.Client",
+    client: pyrogram.Client,
     chat_id: int | str | None = None,
     reply_to_message_id: int | None = None,
     reply_to_story_id: int | None = None,
     message_thread_id: int | None = None,
     reply_to_chat_id: int | str | None = None,
     quote_text: str | None = None,
-    quote_entities: list["types.MessageEntity"] | None = None,
-    parse_mode: "enums.ParseMode" = None,
+    quote_entities: list[types.MessageEntity] | None = None,
+    parse_mode: enums.ParseMode = None,
 ):
     reply_to = None
     reply_to_chat = None

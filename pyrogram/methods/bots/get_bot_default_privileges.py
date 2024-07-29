@@ -1,15 +1,13 @@
 from __future__ import annotations
 
-from typing import Optional
-
 import pyrogram
 from pyrogram import raw, types
 
 
 class GetBotDefaultPrivileges:
     async def get_bot_default_privileges(
-        self: "pyrogram.Client", for_channels: bool | None = None
-    ) -> Optional["types.ChatPrivileges"]:
+        self: pyrogram.Client, for_channels: bool | None = None
+    ) -> types.ChatPrivileges | None:
         """Get the current default privileges of the bot.
 
         .. include:: /_includes/usable-by/bots.rst

@@ -1,11 +1,13 @@
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Optional
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types, utils
 from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class ChatInviteLink(Object):
@@ -58,7 +60,7 @@ class ChatInviteLink(Object):
         date: datetime,
         is_primary: bool | None = None,
         is_revoked: bool | None = None,
-        creator: "types.User" = None,
+        creator: types.User = None,
         name: str | None = None,
         creates_join_request: bool | None = None,
         start_date: datetime | None = None,
@@ -84,10 +86,10 @@ class ChatInviteLink(Object):
 
     @staticmethod
     def _parse(
-        client: "pyrogram.Client",
-        invite: "raw.base.ExportedChatInvite",
-        users: dict[int, "raw.types.User"] | None = None,
-    ) -> Optional["ChatInviteLink"]:
+        client: pyrogram.Client,
+        invite: raw.base.ExportedChatInvite,
+        users: dict[int, raw.types.User] | None = None,
+    ) -> ChatInviteLink | None:
         if not isinstance(invite, raw.types.ChatInviteExported):
             return None
 
