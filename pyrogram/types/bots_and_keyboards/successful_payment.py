@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pyrogram
+
 from pyrogram import raw, types
 from pyrogram.types.object import Object
 

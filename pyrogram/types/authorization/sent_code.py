@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pyrogram import enums, raw
 from pyrogram.types.object import Object
 

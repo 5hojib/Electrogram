@@ -1,9 +1,9 @@
-name: format code
+name: format code with ruff
 
 on: 
   push:
     branches:
-      - dev
+      - err
 
 jobs:
   build:

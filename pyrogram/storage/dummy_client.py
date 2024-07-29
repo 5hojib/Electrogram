@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Any, NoReturn, Union
 
 from bson.codec_options import CodecOptions

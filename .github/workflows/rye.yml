@@ -1,4 +1,4 @@
-name: Rye test
+name: Package test with rye
 
 on: [pull_request]
 
