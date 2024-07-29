@@ -459,8 +459,8 @@ class Chat(Object):
         if isinstance(peer, raw.types.PeerChat):
             return Chat._parse_chat_chat(client, chats[peer.chat_id])
         return Chat._parse_channel_chat(
-                client, chats[peer.channel_id]
-            )
+            client, chats[peer.channel_id]
+        )
 
     @staticmethod
     async def _parse_full(

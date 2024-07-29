@@ -69,7 +69,9 @@ class GetForumTopicsByID:
         r = await self.invoke(rpc, sleep_threshold=-1)
 
         if is_iterable:
-            topic_list = [types.ForumTopic._parse(topic) for topic in r.topics]
+            topic_list = [
+                types.ForumTopic._parse(topic) for topic in r.topics
+            ]
             topics = types.List(topic_list)
         else:
             topics = types.ForumTopic._parse(r.topics[0])

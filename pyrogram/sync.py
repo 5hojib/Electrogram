@@ -73,9 +73,7 @@ def async_to_sync(obj, name) -> None:
             if inspect.isasyncgen(coroutine):
                 if loop.is_running():
                     return coroutine
-                return async_to_sync_gen(
-                    coroutine, main_loop, False
-                )
+                return async_to_sync_gen(coroutine, main_loop, False)
             return None
 
     setattr(obj, name, async_to_sync_wrap)

@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-import os
-from typing import BinaryIO
 from pathlib import Path
+from typing import BinaryIO
 
 import pyrogram
 from pyrogram import raw, utils
