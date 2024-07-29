@@ -1,0 +1,6 @@
+# Pyrogram generated code
+pyrogram/errors/exceptions/
+pyrogram/raw/functions/
+pyrogram/raw/types/
+pyrogram/raw/base/
+pyrogram/raw/all.py
