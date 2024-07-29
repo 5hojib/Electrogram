@@ -135,7 +135,7 @@ class EditMessageMedia:
                                 ),
                                 raw.types.DocumentAttributeFilename(
                                     file_name=file_name
-                                    or Path(media.media).name)
+                                    or Path(media.media).name
                                 ),
                             ],
                         ),
