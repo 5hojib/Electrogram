@@ -3,10 +3,9 @@ import bisect
 import contextlib
 import logging
 import os
-from typing import ClassVar
 from hashlib import sha1
 from io import BytesIO
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 import pyrogram
 from pyrogram import raw

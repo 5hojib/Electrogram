@@ -17,7 +17,10 @@ class DataCenter:
         203: "91.105.192.100",
     }
 
-    PROD_MEDIA: ClassVar[dict[int, str]] = {2: "149.154.167.151", 4: "149.154.164.250"}
+    PROD_MEDIA: ClassVar[dict[int, str]] = {
+        2: "149.154.167.151",
+        4: "149.154.164.250",
+    }
 
     TEST_IPV6: ClassVar[dict[int, str]] = {
         1: "2001:b28:f23d:f001::e",
