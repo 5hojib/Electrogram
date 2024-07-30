@@ -154,7 +154,7 @@ class SendPaidMedia:
             ):
                 if isinstance(i.media, str):
                     is_animation = False
-                    if os.path.isfile(i.media):
+                    if Path(i.media).is_file():
                         try:
                             videoInfo = MediaInfo.parse(i.media)
                         except OSError:

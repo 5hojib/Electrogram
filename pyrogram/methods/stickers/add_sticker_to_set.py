@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import re
+from pathlib import Path
 
 import pyrogram
 from pyrogram import raw, types
@@ -41,7 +42,7 @@ class AddStickerToSet:
         """
 
         if isinstance(sticker, str):
-            if os.path.isfile(sticker) or re.match(
+            if Path(sticker).is_file() or re.match(
                 "^https?://", sticker
             ):
                 raise ValueError("file_id is invalid!")

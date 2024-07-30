@@ -152,7 +152,7 @@ class SendStory:
 
         if photo:
             if isinstance(photo, str):
-                if os.path.isfile(photo):
+                if Path(photo).is_file():
                     file = await self.save_file(photo)
                     media = raw.types.InputMediaUploadedPhoto(
                         file=file

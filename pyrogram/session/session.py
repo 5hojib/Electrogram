@@ -3,6 +3,7 @@ import bisect
 import contextlib
 import logging
 import os
+from typing import ClassVar
 from hashlib import sha1
 from io import BytesIO
 from typing import TYPE_CHECKING
@@ -47,7 +48,7 @@ class Session:
     PING_INTERVAL = 5
     STORED_MSG_IDS_MAX_SIZE = 500
 
-    TRANSPORT_ERRORS = {
+    TRANSPORT_ERRORS: ClassVar[dict[int, str]] = {
         404: "auth key not found",
         429: "transport flood",
         444: "invalid DC",
