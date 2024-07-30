@@ -1,18 +1,18 @@
-__version__ = "v2.184.2"
+__version__ = "v2.184.3"
 __license__ = "MIT License"
 
 from concurrent.futures.thread import ThreadPoolExecutor
 
 
-class StopTransmission(Exception):
+class StopTransmissionError(Exception):
     pass
 
 
-class StopPropagation(StopAsyncIteration):
+class StopPropagationError(StopAsyncIteration):
     pass
 
 
-class ContinuePropagation(StopAsyncIteration):
+class ContinuePropagationError(StopAsyncIteration):
     pass
 
 
@@ -34,9 +34,9 @@ asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 __all__ = [
     "Client",
-    "ContinuePropagation",
-    "StopPropagation",
-    "StopTransmission",
+    "ContinuePropagationError",
+    "StopPropagationError",
+    "StopTransmissionError",
     "compose",
     "crypto_executor",
     "enums",

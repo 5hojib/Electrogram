@@ -542,15 +542,15 @@ class Dispatcher:
                                         self.client,
                                         *args,
                                     )
-                            except pyrogram.StopPropagation:
+                            except pyrogram.StopPropagationError:
                                 raise
-                            except pyrogram.ContinuePropagation:
+                            except pyrogram.ContinuePropagationError:
                                 continue
                             except Exception as e:
                                 log.exception(e)
 
                             break
-            except pyrogram.StopPropagation:
+            except pyrogram.StopPropagationError:
                 pass
             except Exception as e:
                 log.exception(e)

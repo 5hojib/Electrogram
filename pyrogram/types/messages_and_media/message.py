@@ -4646,15 +4646,15 @@ class Message(Object, Update):
             media (:obj:`~pyrogram.types.InputMedia`):
                 One of the InputMedia objects describing an animation, audio, document, photo or video.
 
-            parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
-                By default, texts are parsed using both Markdown and HTML styles.
-                You can combine both syntaxes together.
-
             invert_media (``bool``, *optional*):
                 Inverts the position of the media and caption.
 
             reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup`, *optional*):
                 An InlineKeyboardMarkup object.
+
+            parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+                By default, texts are parsed using both Markdown and HTML styles.
+                You can combine both syntaxes together.
 
             business_connection_id (``str``, *optional*):
                 Unique identifier of the business connection.
@@ -4967,7 +4967,7 @@ class Message(Object, Update):
                     message_thread_id=message_thread_id,
                     schedule_date=schedule_date,
                 )
-            if self.location:
+            elif self.location:
                 return await self._client.send_location(
                     chat_id,
                     latitude=self.location.latitude,
@@ -4976,7 +4976,7 @@ class Message(Object, Update):
                     message_thread_id=message_thread_id,
                     schedule_date=schedule_date,
                 )
-            if self.venue:
+            elif self.venue:
                 return await self._client.send_venue(
                     chat_id,
                     latitude=self.venue.location.latitude,
@@ -4989,7 +4989,7 @@ class Message(Object, Update):
                     message_thread_id=message_thread_id,
                     schedule_date=schedule_date,
                 )
-            if self.poll:
+            elif self.poll:
                 return await self._client.send_poll(
                     chat_id,
                     question=self.poll.question,
@@ -5003,14 +5003,14 @@ class Message(Object, Update):
                     message_thread_id=message_thread_id,
                     schedule_date=schedule_date,
                 )
-            if self.game:
+            elif self.game:
                 return await self._client.send_game(
                     chat_id,
                     game_short_name=self.game.short_name,
                     disable_notification=disable_notification,
                     message_thread_id=message_thread_id,
                 )
-            if self.web_page_preview:
+            elif self.web_page_preview:
                 return await self._client.send_web_page(
                     chat_id,
                     url=self.web_page_preview.webpage.url,
@@ -5030,11 +5030,10 @@ class Message(Object, Update):
                     if reply_markup is object
                     else reply_markup,
                 )
-            raise ValueError("Unknown media type")
+            else:
+                raise ValueError("Unknown media type")
 
-            if (
-                self.sticker or self.video_note
-            ):  # Sticker and VideoNote should have no caption
+            if self.sticker or self.video_note:
                 return await send_media(
                     file_id=file_id,
                     message_thread_id=message_thread_id,

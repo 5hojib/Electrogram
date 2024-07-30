@@ -6,8 +6,8 @@ import pyrogram
 class Update:
     @staticmethod
     def stop_propagation() -> NoReturn:
-        raise pyrogram.StopPropagation
+        raise pyrogram.StopPropagationError
 
     @staticmethod
     def continue_propagation() -> NoReturn:
-        raise pyrogram.ContinuePropagation
+        raise pyrogram.ContinuePropagationError
