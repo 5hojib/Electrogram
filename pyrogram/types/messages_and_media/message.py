@@ -5030,7 +5030,8 @@ class Message(Object, Update):
                     if reply_markup is object
                     else reply_markup,
                 )
-            raise ValueError("Unknown media type")
+            else:
+                raise ValueError("Unknown media type")
 
             if (
                 self.sticker or self.video_note
@@ -5051,7 +5052,8 @@ class Message(Object, Update):
                 has_spoiler=has_spoiler,
                 message_thread_id=message_thread_id,
             )
-        raise ValueError("Can't copy this message")
+        else:
+            raise ValueError("Can't copy this message")
 
     async def delete(self, revoke: bool = True):
         """Bound method *delete* of :obj:`~pyrogram.types.Message`.
