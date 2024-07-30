@@ -5038,17 +5038,17 @@ class Message(Object, Update):
                     message_thread_id=message_thread_id,
                 )
             if caption is None:
-                    caption = self.caption or ""
-                    caption_entities = self.caption_entities
+                caption = self.caption or ""
+                caption_entities = self.caption_entities
 
             return await send_media(
-                    file_id=file_id,
-                    caption=caption,
-                    parse_mode=parse_mode,
-                    caption_entities=caption_entities,
-                    has_spoiler=has_spoiler,
-                    message_thread_id=message_thread_id,
-                )
+                file_id=file_id,
+                caption=caption,
+                parse_mode=parse_mode,
+                caption_entities=caption_entities,
+                has_spoiler=has_spoiler,
+                message_thread_id=message_thread_id,
+            )
         raise ValueError("Can't copy this message")
 
     async def delete(self, revoke: bool = True):
