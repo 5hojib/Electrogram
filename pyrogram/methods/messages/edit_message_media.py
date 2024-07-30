@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import io
-import os
 import re
 from pathlib import Path
 
@@ -259,7 +258,10 @@ class EditMessageMedia:
                     media.media, FileType.ANIMATION
                 )
         elif isinstance(media, types.InputMediaDocument):
-            if isinstance(media.media, io.BytesIO) or Path(media.media).is_file():
+            if (
+                isinstance(media.media, io.BytesIO)
+                or Path(media.media).is_file()
+            ):
                 media = await self.invoke(
                     raw.functions.messages.UploadMedia(
                         peer=await self.resolve_peer(chat_id),
