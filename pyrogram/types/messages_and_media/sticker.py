@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import ClassVar, TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types, utils
@@ -108,7 +108,7 @@ class Sticker(Object):
         self.thumbs = thumbs
         # self.mask_position = mask_position
 
-    cache = {}
+    cache: ClassVar[dict] = {}
 
     @staticmethod
     async def _get_sticker_set_name(invoke, input_sticker_set_id):

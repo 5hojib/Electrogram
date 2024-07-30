@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from contextlib import suppress
 from typing import TYPE_CHECKING
 
 import pyrogram
@@ -112,10 +113,9 @@ class CallbackQuery(Object, Update):
         # ignoring/replacing errors, this way, button clicks will still work.
         data = getattr(callback_query, "data", None)
         if data:
-            try:
+            with suppress(UnicodeDecodeError, AttributeError):
                 data = data.decode()
-            except (UnicodeDecodeError, AttributeError):
-                data = data
+                
 
         return CallbackQuery(
             id=str(callback_query.query_id),
@@ -231,8 +231,7 @@ class CallbackQuery(Object, Update):
                     self.message, "business_connection_id", None
                 ),
             )
-        else:
-            return await self._client.edit_inline_text(
+        return await self._client.edit_inline_text(
                 inline_message_id=self.inline_message_id,
                 text=text,
                 parse_mode=parse_mode,

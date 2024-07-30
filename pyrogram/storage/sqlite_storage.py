@@ -160,21 +160,19 @@ class SQLiteStorage(Storage):
             return self.conn.execute(
                 "SELECT id, pts, qts, date, seq FROM update_state"
             ).fetchall()
-        else:
-            with self.conn:
-                if isinstance(value, int):
-                    self.conn.execute(
-                        "DELETE FROM update_state WHERE id = ?",
-                        (value,),
-                    )
-                    return None
-                else:
-                    self.conn.execute(
+        with self.conn:
+            if isinstance(value, int):
+                self.conn.execute(
+                    "DELETE FROM update_state WHERE id = ?",
+                    (value,),
+                )
+                return None
+            self.conn.execute(
                         "REPLACE INTO update_state (id, pts, qts, date, seq)"
                         "VALUES (?, ?, ?, ?, ?)",
                         value,
                     )
-                    return None
+            return None
 
     async def remove_state(self, chat_id) -> None:
         self.conn.execute(
@@ -209,7 +207,7 @@ class SQLiteStorage(Storage):
                 raise KeyError(f"Username not found: {username}")
             if abs(time.time() - r2[1]) > self.USERNAME_TTL:
                 raise KeyError(f"Username expired: {username}")
-            r = r = self.conn.execute(
+            r = self.conn.execute(
                 "SELECT id, access_hash, type, last_update_on FROM peers WHERE id = ?"
                 "ORDER BY last_update_on DESC",
                 (r2[0],),
@@ -277,9 +275,8 @@ class SQLiteStorage(Storage):
             return self.conn.execute(
                 "SELECT number FROM version"
             ).fetchone()[0]
-        else:
-            with self.conn:
-                self.conn.execute(
-                    "UPDATE version SET number = ?", (value,)
-                )
-                return None
+        with self.conn:
+            self.conn.execute(
+                "UPDATE version SET number = ?", (value,)
+            )
+            return None
