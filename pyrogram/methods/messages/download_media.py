@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import os
 from datetime import datetime
+from pathlib import Path
 from typing import TYPE_CHECKING, BinaryIO
 
 import pyrogram
@@ -147,7 +148,7 @@ class DownloadMedia:
         directory, file_name = os.path.split(file_name)
         file_name = file_name or media_file_name or ""
 
-        if not os.path.isabs(file_name):
+        if not Path(file_name).is_absolute():
             directory = self.PARENT_DIR / (
                 directory or DEFAULT_DOWNLOAD_DIR
             )
@@ -197,6 +198,5 @@ class DownloadMedia:
 
         if block:
             return await downloader
-        else:
-            asyncio.get_event_loop().create_task(downloader)
-            return None
+        asyncio.get_event_loop().create_task(downloader)
+        return None

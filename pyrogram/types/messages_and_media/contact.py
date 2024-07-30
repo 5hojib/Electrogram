@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from pyrogram.types.object import Object
@@ -30,7 +32,7 @@ class Contact(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         phone_number: str,
         first_name: str,
         last_name: str | None = None,
@@ -47,9 +49,9 @@ class Contact(Object):
 
     @staticmethod
     def _parse(
-        client: "pyrogram.Client",
-        contact: "raw.types.MessageMediaContact",
-    ) -> "Contact":
+        client: pyrogram.Client,
+        contact: raw.types.MessageMediaContact,
+    ) -> Contact:
         return Contact(
             phone_number=contact.phone_number,
             first_name=contact.first_name,

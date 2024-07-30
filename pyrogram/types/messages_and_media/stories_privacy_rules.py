@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pyrogram import enums, raw
 from pyrogram.types.object import Object
 
@@ -10,7 +12,7 @@ class StoriesPrivacyRules(Object):
             Story privacy type.
     """
 
-    def __init__(self, *, type: "enums.StoriesPrivacyRules") -> None:
+    def __init__(self, *, type: enums.StoriesPrivacyRules) -> None:
         super().__init__()
         self.type = type
 

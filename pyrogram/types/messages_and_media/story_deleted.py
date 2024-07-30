@@ -1,4 +1,4 @@
-from typing import Union
+from __future__ import annotations
 
 import pyrogram
 from pyrogram import raw, types
@@ -23,10 +23,10 @@ class StoryDeleted(Object, Update):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         id: int,
-        from_user: "types.User" = None,
-        sender_chat: "types.Chat" = None,
+        from_user: types.User = None,
+        sender_chat: types.Chat = None,
     ) -> None:
         super().__init__(client)
 
@@ -35,10 +35,10 @@ class StoryDeleted(Object, Update):
         self.sender_chat = sender_chat
 
     async def _parse(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         stories: raw.base.StoryItem,
-        peer: Union["raw.types.PeerChannel", "raw.types.PeerUser"],
-    ) -> "StoryDeleted":
+        peer: raw.types.PeerChannel | raw.types.PeerUser,
+    ) -> StoryDeleted:
         from_user = None
         sender_chat = None
         if isinstance(peer, raw.types.PeerChannel):

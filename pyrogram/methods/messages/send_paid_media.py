@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import os
 import re
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from pymediainfo import MediaInfo
@@ -86,7 +86,7 @@ class SendPaidMedia:
         for i in media:
             if isinstance(i, types.InputMediaPhoto):
                 if isinstance(i.media, str):
-                    if os.path.isfile(i.media):
+                    if Path(i.media).is_file():
                         media = await self.invoke(
                             raw.functions.messages.UploadMedia(
                                 peer=await self.resolve_peer(chat_id),
@@ -153,7 +153,7 @@ class SendPaidMedia:
             ):
                 if isinstance(i.media, str):
                     is_animation = False
-                    if os.path.isfile(i.media):
+                    if Path(i.media).is_file():
                         try:
                             videoInfo = MediaInfo.parse(i.media)
                         except OSError:
@@ -178,7 +178,7 @@ class SendPaidMedia:
                                 h=i.height,
                             ),
                             raw.types.DocumentAttributeFilename(
-                                file_name=os.path.basename(i.media)
+                                file_name=Path(i.media).name
                             ),
                         ]
                         if is_animation:

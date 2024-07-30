@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import pyrogram
 from pyrogram.types.object import Object
 
@@ -23,11 +25,11 @@ class PollOption(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         text: str,
         voter_count: int = 0,
         data: bytes | None = None,
-        entities: list["pyrogram.types.MessageEntity"] | None = None,
+        entities: list[pyrogram.types.MessageEntity] | None = None,
     ) -> None:
         super().__init__(client)
 

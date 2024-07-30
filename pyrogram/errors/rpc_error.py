@@ -6,11 +6,10 @@ from importlib import import_module
 from pathlib import Path
 from typing import TYPE_CHECKING, NoReturn
 
-from pyrogram import __version__, raw
-
 from .exceptions.all import exceptions
 
 if TYPE_CHECKING:
+    from pyrogram import raw
     from pyrogram.raw.core import TLObject
 
 
@@ -26,15 +25,14 @@ class RPCError(Exception):
         rpc_name: str | None = None,
         is_unknown: bool = False,
         is_signed: bool = False,
-    ) -> None:
+    ):
         super().__init__(
-            "Telegram says: [{}{} {}] {} Pyrogram {} thinks: {}".format(
+            "Telegram says: [{}{} {}] - {} {}".format(
                 "-" if is_signed else "",
                 self.CODE,
                 self.ID or self.NAME,
-                f'(caused by "{rpc_name}")' if rpc_name else "",
-                __version__,
                 self.MESSAGE.format(value=value),
+                f'(caused by "{rpc_name}")' if rpc_name else "",
             )
         )
 
@@ -83,7 +81,7 @@ class RPCError(Exception):
             )
 
         value = re.search(r"_(\d+)", error_message)
-        value = value.group(1) if value is not None else value
+        value = value[1] if value is not None else value
 
         raise getattr(
             import_module("pyrogram.errors"),

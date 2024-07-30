@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from pyrogram.types.object import Object
@@ -36,8 +38,8 @@ class ForumTopicEdited(Object):
 
     @staticmethod
     def _parse(
-        action: "raw.types.MessageActionTopicEdit",
-    ) -> "ForumTopicEdited":
+        action: raw.types.MessageActionTopicEdit,
+    ) -> ForumTopicEdited:
         return ForumTopicEdited(
             title=getattr(action, "title", None),
             icon_color=getattr(action, "icon_color", None),

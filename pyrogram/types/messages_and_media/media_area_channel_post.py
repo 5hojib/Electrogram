@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import pyrogram
 from pyrogram import raw, types, utils
 
@@ -20,8 +22,8 @@ class MediaAreaChannelPost(MediaArea):
 
     def __init__(
         self,
-        coordinates: "types.MediaAreaCoordinates",
-        chat: "types.Chat",
+        coordinates: types.MediaAreaCoordinates,
+        chat: types.Chat,
         message_id: int,
     ) -> None:
         super().__init__(coordinates=coordinates)
@@ -31,9 +33,9 @@ class MediaAreaChannelPost(MediaArea):
         self.message_id = message_id
 
     async def _parse(
-        self: "pyrogram.Client",
-        media_area: "raw.types.MediaAreaChannelPost",
-    ) -> "MediaAreaChannelPost":
+        self: pyrogram.Client,
+        media_area: raw.types.MediaAreaChannelPost,
+    ) -> MediaAreaChannelPost:
         channel_id = utils.get_channel_id(media_area.channel_id)
         chat = types.Chat._parse_chat(
             self,

@@ -1,8 +1,13 @@
-from typing import Any, NoReturn, Union
+from __future__ import annotations
 
-from bson.codec_options import CodecOptions
-from pymongo.client_session import TransactionOptions
-from pymongo.read_concern import ReadConcern
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    NoReturn,
+    Protocol,
+    runtime_checkable,
+)
+
 from pymongo.read_preferences import (
     Nearest,
     Primary,
@@ -10,16 +15,21 @@ from pymongo.read_preferences import (
     Secondary,
     SecondaryPreferred,
 )
-from pymongo.write_concern import WriteConcern
 
-try:
-    from typing import Protocol, runtime_checkable
-except ImportError:
-    from typing_extensions import Protocol, runtime_checkable
+if TYPE_CHECKING:
+    from bson.codec_options import CodecOptions
+    from pymongo.client_session import TransactionOptions
+    from pymongo.read_concern import ReadConcern
+    from pymongo.write_concern import WriteConcern
 
-ReadPreferences = Union[
-    Primary, PrimaryPreferred, Secondary, SecondaryPreferred, Nearest
-]
+
+ReadPreferences = (
+    Primary
+    | PrimaryPreferred
+    | Secondary
+    | SecondaryPreferred
+    | Nearest
+)
 
 
 @runtime_checkable

@@ -1,4 +1,6 @@
-from datetime import datetime
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, ClassVar
 
 import pyrogram
 from pyrogram import raw, types, utils
@@ -10,6 +12,9 @@ from pyrogram.file_id import (
     FileUniqueType,
 )
 from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class Sticker(Object):
@@ -69,7 +74,7 @@ class Sticker(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         file_id: str,
         file_unique_id: str,
         width: int,
@@ -83,7 +88,7 @@ class Sticker(Object):
         date: datetime | None = None,
         emoji: str | None = None,
         set_name: str | None = None,
-        thumbs: list["types.Thumbnail"] | None = None,
+        thumbs: list[types.Thumbnail] | None = None,
     ) -> None:
         super().__init__(client)
 
@@ -103,7 +108,7 @@ class Sticker(Object):
         self.thumbs = thumbs
         # self.mask_position = mask_position
 
-    cache = {}
+    cache: ClassVar[dict] = {}
 
     @staticmethod
     async def _get_sticker_set_name(invoke, input_sticker_set_id):
@@ -140,12 +145,12 @@ class Sticker(Object):
     @staticmethod
     async def _parse(
         client,
-        sticker: "raw.types.Document",
+        sticker: raw.types.Document,
         document_attributes: dict[
-            type["raw.base.DocumentAttribute"],
-            "raw.base.DocumentAttribute",
+            type[raw.base.DocumentAttribute],
+            raw.base.DocumentAttribute,
         ],
-    ) -> "Sticker":
+    ) -> Sticker:
         sticker_attributes = (
             document_attributes[raw.types.DocumentAttributeSticker]
             if raw.types.DocumentAttributeSticker

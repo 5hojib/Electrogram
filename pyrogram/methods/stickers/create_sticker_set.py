@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import os
 import re
+from pathlib import Path
 
 import pyrogram
 from pyrogram import raw, types
@@ -58,17 +58,16 @@ class CreateStickerSet:
         """
 
         if isinstance(sticker, str):
-            if os.path.isfile(sticker) or re.match(
+            if Path(sticker).is_file() or re.match(
                 "^https?://", sticker
             ):
                 raise ValueError("file_id is invalid!")
-            else:
-                decoded = FileId.decode(sticker)
-                media = raw.types.InputDocument(
-                    id=decoded.media_id,
-                    access_hash=decoded.access_hash,
-                    file_reference=decoded.file_reference,
-                )
+            decoded = FileId.decode(sticker)
+            media = raw.types.InputDocument(
+                id=decoded.media_id,
+                access_hash=decoded.access_hash,
+                file_reference=decoded.file_reference,
+            )
         else:
             raise ValueError("file_id is invalid!")
 

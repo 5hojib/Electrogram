@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import os
 import re
+from pathlib import Path
 from typing import TYPE_CHECKING, BinaryIO
 
 import pyrogram
@@ -210,7 +210,7 @@ class SendAnimation:
 
         try:
             if isinstance(animation, str):
-                if os.path.isfile(animation):
+                if Path(animation).is_file():
                     thumb = await self.save_file(thumb)
                     file = await self.save_file(
                         animation,
@@ -232,7 +232,7 @@ class SendAnimation:
                             ),
                             raw.types.DocumentAttributeFilename(
                                 file_name=file_name
-                                or os.path.basename(animation)
+                                or Path(animation).name
                             ),
                             raw.types.DocumentAttributeAnimated(),
                         ],

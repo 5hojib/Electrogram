@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import os
 import re
+from pathlib import Path
 from typing import BinaryIO
 
 import pyrogram
@@ -151,7 +151,7 @@ class SendStory:
 
         if photo:
             if isinstance(photo, str):
-                if os.path.isfile(photo):
+                if Path(photo).is_file():
                     file = await self.save_file(photo)
                     media = raw.types.InputMediaUploadedPhoto(
                         file=file
@@ -169,7 +169,7 @@ class SendStory:
                 media = raw.types.InputMediaUploadedPhoto(file=file)
         elif video:
             if isinstance(video, str):
-                if os.path.isfile(video):
+                if Path(video).is_file():
                     file = await self.save_file(video)
                     media = raw.types.InputMediaUploadedDocument(
                         mime_type=self.guess_mime_type(video)

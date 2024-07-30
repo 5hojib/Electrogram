@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import os
 import re
+from pathlib import Path
 from typing import TYPE_CHECKING, BinaryIO
 
 import pyrogram
@@ -188,7 +188,7 @@ class SendPhoto:
 
         try:
             if isinstance(photo, str):
-                if os.path.isfile(photo):
+                if Path(photo).is_file():
                     file = await self.save_file(
                         photo,
                         progress=progress,

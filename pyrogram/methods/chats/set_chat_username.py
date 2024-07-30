@@ -46,7 +46,6 @@ class SetChatUsername:
                     )
                 )
             )
-        else:
-            raise ValueError(
-                f'The chat_id "{chat_id}" belongs to a user or chat'
-            )
+        raise ValueError(
+            f'The chat_id "{chat_id}" belongs to a user or chat'
+        )

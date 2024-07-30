@@ -94,23 +94,19 @@ class ForwardMessages:
             )
         )
 
-        forwarded_messages = []
-
         users = {i.id: i for i in r.users}
         chats = {i.id: i for i in r.chats}
 
-        for i in r.updates:
+        forwarded_messages = [
+            await types.Message._parse(self, i.message, users, chats)
+            for i in r.updates
             if isinstance(
                 i,
                 raw.types.UpdateNewMessage
                 | raw.types.UpdateNewChannelMessage
                 | raw.types.UpdateNewScheduledMessage,
-            ):
-                forwarded_messages.append(
-                    await types.Message._parse(
-                        self, i.message, users, chats
-                    )
-                )
+            )
+        ]
 
         return (
             types.List(forwarded_messages)

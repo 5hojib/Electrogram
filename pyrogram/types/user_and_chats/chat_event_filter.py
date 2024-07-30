@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pyrogram import raw
 from pyrogram.types.object import Object
 
@@ -82,7 +84,7 @@ class ChatEventFilter(Object):
         self.leaving_members = leaving_members
         self.video_chats = video_chats
 
-    def write(self) -> "raw.base.ChannelAdminLogEventsFilter":
+    def write(self) -> raw.base.ChannelAdminLogEventsFilter:
         join = False
         leave = False
         invite = False

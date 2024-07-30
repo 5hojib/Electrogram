@@ -36,11 +36,11 @@ class ReactionType(Object):
     ) -> ReactionType | None:
         if isinstance(update, raw.types.ReactionEmpty):
             return None
-        elif isinstance(update, raw.types.ReactionEmoji):
+        if isinstance(update, raw.types.ReactionEmoji):
             return ReactionType(
                 type=enums.ReactionType.EMOJI, emoji=update.emoticon
             )
-        elif isinstance(update, raw.types.ReactionCustomEmoji):
+        if isinstance(update, raw.types.ReactionCustomEmoji):
             return ReactionType(
                 type=enums.ReactionType.CUSTOM_EMOJI,
                 custom_emoji_id=update.document_id,

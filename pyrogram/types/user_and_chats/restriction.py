@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from pyrogram.types.object import Object
@@ -31,8 +33,8 @@ class Restriction(Object):
 
     @staticmethod
     def _parse(
-        restriction: "raw.types.RestrictionReason",
-    ) -> "Restriction":
+        restriction: raw.types.RestrictionReason,
+    ) -> Restriction:
         return Restriction(
             platform=restriction.platform,
             reason=restriction.reason,

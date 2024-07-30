@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from contextlib import suppress
 from typing import TYPE_CHECKING
 
 import pyrogram
@@ -112,10 +113,8 @@ class CallbackQuery(Object, Update):
         # ignoring/replacing errors, this way, button clicks will still work.
         data = getattr(callback_query, "data", None)
         if data:
-            try:
+            with suppress(UnicodeDecodeError, AttributeError):
                 data = data.decode()
-            except (UnicodeDecodeError, AttributeError):
-                data = data
 
         return CallbackQuery(
             id=str(callback_query.query_id),
@@ -231,14 +230,13 @@ class CallbackQuery(Object, Update):
                     self.message, "business_connection_id", None
                 ),
             )
-        else:
-            return await self._client.edit_inline_text(
-                inline_message_id=self.inline_message_id,
-                text=text,
-                parse_mode=parse_mode,
-                disable_web_page_preview=disable_web_page_preview,
-                reply_markup=reply_markup,
-            )
+        return await self._client.edit_inline_text(
+            inline_message_id=self.inline_message_id,
+            text=text,
+            parse_mode=parse_mode,
+            disable_web_page_preview=disable_web_page_preview,
+            reply_markup=reply_markup,
+        )
 
     async def edit_message_caption(
         self,
@@ -324,12 +322,11 @@ class CallbackQuery(Object, Update):
                 if business_connection_id is None
                 else business_connection_id,
             )
-        else:
-            return await self._client.edit_inline_media(
-                inline_message_id=self.inline_message_id,
-                media=media,
-                reply_markup=reply_markup,
-            )
+        return await self._client.edit_inline_media(
+            inline_message_id=self.inline_message_id,
+            media=media,
+            reply_markup=reply_markup,
+        )
 
     async def edit_message_reply_markup(
         self,
@@ -366,8 +363,7 @@ class CallbackQuery(Object, Update):
                 if business_connection_id is None
                 else business_connection_id,
             )
-        else:
-            return await self._client.edit_inline_reply_markup(
-                inline_message_id=self.inline_message_id,
-                reply_markup=reply_markup,
-            )
+        return await self._client.edit_inline_reply_markup(
+            inline_message_id=self.inline_message_id,
+            reply_markup=reply_markup,
+        )

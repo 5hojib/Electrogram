@@ -1,9 +1,14 @@
-from datetime import datetime
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types, utils
 from pyrogram.types.object import Object
 from pyrogram.types.update import Update
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class MessageReactionUpdated(Object, Update):
@@ -40,14 +45,14 @@ class MessageReactionUpdated(Object, Update):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         id: int,
-        from_user: "types.User",
-        actor_chat: "types.Chat",
+        from_user: types.User,
+        actor_chat: types.Chat,
         date: datetime,
-        chat: "types.Chat",
-        old_reaction: list["types.ReactionType"],
-        new_reaction: list["types.ReactionType"],
+        chat: types.Chat,
+        old_reaction: list[types.ReactionType],
+        new_reaction: list[types.ReactionType],
     ) -> None:
         super().__init__(client)
 
@@ -61,11 +66,11 @@ class MessageReactionUpdated(Object, Update):
 
     @staticmethod
     def _parse(
-        client: "pyrogram.Client",
-        update: "raw.types.UpdateBotMessageReaction",
-        users: dict[int, "raw.types.User"],
-        chats: dict[int, "raw.types.Chat"],
-    ) -> "MessageReactionUpdated":
+        client: pyrogram.Client,
+        update: raw.types.UpdateBotMessageReaction,
+        users: dict[int, raw.types.User],
+        chats: dict[int, raw.types.Chat],
+    ) -> MessageReactionUpdated:
         chat = None
         peer_id = utils.get_peer_id(update.peer)
         raw_peer_id = utils.get_raw_peer_id(update.peer)

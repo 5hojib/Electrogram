@@ -1,4 +1,6 @@
-from datetime import datetime
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types, utils
@@ -10,6 +12,9 @@ from pyrogram.file_id import (
     ThumbnailSource,
 )
 from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class Photo(Object):
@@ -45,7 +50,7 @@ class Photo(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         file_id: str,
         file_unique_id: str,
         width: int,
@@ -53,7 +58,7 @@ class Photo(Object):
         file_size: int,
         date: datetime,
         ttl_seconds: int | None = None,
-        thumbs: list["types.Thumbnail"] | None = None,
+        thumbs: list[types.Thumbnail] | None = None,
     ) -> None:
         super().__init__(client)
 
@@ -69,9 +74,9 @@ class Photo(Object):
     @staticmethod
     def _parse(
         client,
-        photo: "raw.types.Photo",
+        photo: raw.types.Photo,
         ttl_seconds: int | None = None,
-    ) -> "Photo":
+    ) -> Photo:
         if isinstance(photo, raw.types.Photo):
             photos: list[raw.types.PhotoSize] = []
 

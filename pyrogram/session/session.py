@@ -5,7 +5,7 @@ import logging
 import os
 from hashlib import sha1
 from io import BytesIO
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 import pyrogram
 from pyrogram import raw
@@ -47,7 +47,7 @@ class Session:
     PING_INTERVAL = 5
     STORED_MSG_IDS_MAX_SIZE = 500
 
-    TRANSPORT_ERRORS = {
+    TRANSPORT_ERRORS: ClassVar[dict[int, str]] = {
         404: "auth key not found",
         429: "transport flood",
         444: "invalid DC",
@@ -218,8 +218,7 @@ class Session:
             if msg.seq_no % 2 != 0:
                 if msg.msg_id in self.pending_acks:
                     continue
-                else:
-                    self.pending_acks.add(msg.msg_id)
+                self.pending_acks.add(msg.msg_id)
 
             try:
                 if (

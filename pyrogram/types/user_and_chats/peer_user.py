@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from pyrogram.types.object import Object
@@ -21,5 +23,5 @@ class PeerUser(Object):
         self.user_id = user_id
 
     @staticmethod
-    def _parse(action: "raw.types.PeerUser") -> "PeerUser":
+    def _parse(action: raw.types.PeerUser) -> PeerUser:
         return PeerUser(user_id=getattr(action, "user_id", None))

@@ -101,7 +101,7 @@ class SendReaction:
                         self, i.reactions
                     )
             return None
-        elif story_id is not None:
+        if story_id is not None:
             await self.invoke(
                 raw.functions.stories.SendReaction(
                     peer=await self.resolve_peer(chat_id),
@@ -113,5 +113,4 @@ class SendReaction:
                 )
             )
             return True
-        else:
-            raise ValueError("You need to pass one of message_id!")
+        raise ValueError("You need to pass one of message_id!")

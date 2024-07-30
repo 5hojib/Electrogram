@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import os
 import re
+from pathlib import Path
 from typing import TYPE_CHECKING, BinaryIO
 
 import pyrogram
@@ -200,7 +200,7 @@ class SendAudio:
 
         try:
             if isinstance(audio, str):
-                if os.path.isfile(audio):
+                if Path(audio).is_file():
                     thumb = await self.save_file(thumb)
                     file = await self.save_file(
                         audio,
@@ -220,7 +220,7 @@ class SendAudio:
                             ),
                             raw.types.DocumentAttributeFilename(
                                 file_name=file_name
-                                or os.path.basename(audio)
+                                or Path(audio).name
                             ),
                         ],
                     )

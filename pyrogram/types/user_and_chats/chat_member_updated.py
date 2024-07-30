@@ -1,10 +1,14 @@
-from datetime import datetime
-from typing import Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
 from pyrogram.types.object import Object
 from pyrogram.types.update import Update
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class ChatMemberUpdated(Object, Update):
@@ -36,13 +40,13 @@ class ChatMemberUpdated(Object, Update):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
-        chat: "types.Chat",
-        from_user: "types.User",
+        client: pyrogram.Client = None,
+        chat: types.Chat,
+        from_user: types.User,
         date: datetime,
-        old_chat_member: "types.ChatMember",
-        new_chat_member: "types.ChatMember",
-        invite_link: "types.ChatInviteLink" = None,
+        old_chat_member: types.ChatMember,
+        new_chat_member: types.ChatMember,
+        invite_link: types.ChatInviteLink = None,
         via_join_request: bool | None = None,
     ) -> None:
         super().__init__(client)
@@ -57,15 +61,13 @@ class ChatMemberUpdated(Object, Update):
 
     @staticmethod
     def _parse(
-        client: "pyrogram.Client",
-        update: Union[
-            "raw.types.UpdateChatParticipant",
-            "raw.types.UpdateChannelParticipant",
-            "raw.types.UpdateBotStopped",
-        ],
-        users: dict[int, "raw.types.User"],
-        chats: dict[int, "raw.types.Chat"],
-    ) -> "ChatMemberUpdated":
+        client: pyrogram.Client,
+        update: raw.types.UpdateChatParticipant
+        | raw.types.UpdateChannelParticipant
+        | raw.types.UpdateBotStopped,
+        users: dict[int, raw.types.User],
+        chats: dict[int, raw.types.Chat],
+    ) -> ChatMemberUpdated:
         if isinstance(update, raw.types.UpdateBotStopped):
             from_user = types.User._parse(
                 client, users[update.user_id]

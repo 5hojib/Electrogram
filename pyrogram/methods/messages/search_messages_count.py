@@ -63,5 +63,4 @@ class SearchMessagesCount:
 
         if hasattr(r, "count"):
             return r.count
-        else:
-            return len(r.messages)
+        return len(r.messages)

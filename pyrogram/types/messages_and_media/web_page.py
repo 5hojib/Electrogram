@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import pyrogram
 from pyrogram import raw, types
 from pyrogram.types.object import Object
@@ -68,7 +70,7 @@ class WebPage(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         id: str,
         url: str,
         display_url: str,
@@ -76,11 +78,11 @@ class WebPage(Object):
         site_name: str | None = None,
         title: str | None = None,
         description: str | None = None,
-        audio: "types.Audio" = None,
-        document: "types.Document" = None,
-        photo: "types.Photo" = None,
-        animation: "types.Animation" = None,
-        video: "types.Video" = None,
+        audio: types.Audio = None,
+        document: types.Document = None,
+        photo: types.Photo = None,
+        animation: types.Animation = None,
+        video: types.Video = None,
         embed_url: str | None = None,
         embed_type: str | None = None,
         embed_width: int | None = None,
@@ -110,7 +112,7 @@ class WebPage(Object):
         self.author = author
 
     @staticmethod
-    def _parse(client, webpage: "raw.types.WebPage") -> "WebPage":
+    def _parse(client, webpage: raw.types.WebPage) -> WebPage:
         audio = None
         document = None
         photo = None

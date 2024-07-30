@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import pyrogram
 from pyrogram import raw, types
 from pyrogram.types.object import Object
@@ -20,7 +22,7 @@ class ChatAdminWithInviteLinks(Object):
     def __init__(
         self,
         *,
-        admin: "types.User",
+        admin: types.User,
         chat_invite_links_count: int,
         revoked_chat_invite_links_count: int | None = None,
     ) -> None:
@@ -34,10 +36,10 @@ class ChatAdminWithInviteLinks(Object):
 
     @staticmethod
     def _parse(
-        client: "pyrogram.Client",
-        admin: "raw.types.ChatAdminWithInvites",
-        users: dict[int, "raw.types.User"] | None = None,
-    ) -> "ChatAdminWithInviteLinks":
+        client: pyrogram.Client,
+        admin: raw.types.ChatAdminWithInvites,
+        users: dict[int, raw.types.User] | None = None,
+    ) -> ChatAdminWithInviteLinks:
         return ChatAdminWithInviteLinks(
             admin=types.User._parse(client, users[admin.admin_id]),
             chat_invite_links_count=admin.invites_count,

@@ -35,14 +35,12 @@ class ArchiveChats:
         if not isinstance(chat_ids, list):
             chat_ids = [chat_ids]
 
-        folder_peers = []
-
-        for chat in chat_ids:
-            folder_peers.append(
-                raw.types.InputFolderPeer(
-                    peer=await self.resolve_peer(chat), folder_id=1
-                )
+        folder_peers = [
+            raw.types.InputFolderPeer(
+                peer=await self.resolve_peer(chat), folder_id=1
             )
+            for chat in chat_ids
+        ]
 
         await self.invoke(
             raw.functions.folders.EditPeerFolders(

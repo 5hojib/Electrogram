@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from pyrogram.types.object import Object
@@ -40,7 +42,7 @@ class ForumTopicCreated(Object):
         self.icon_emoji_id = icon_emoji_id
 
     @staticmethod
-    def _parse(message: "raw.base.Message") -> "ForumTopicCreated":
+    def _parse(message: raw.base.Message) -> ForumTopicCreated:
         return ForumTopicCreated(
             id=getattr(message, "id", None),
             title=getattr(message.action, "title", None),

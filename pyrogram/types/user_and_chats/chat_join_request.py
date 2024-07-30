@@ -1,9 +1,14 @@
-from datetime import datetime
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types, utils
 from pyrogram.types.object import Object
 from pyrogram.types.update import Update
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class ChatJoinRequest(Object, Update):
@@ -29,12 +34,12 @@ class ChatJoinRequest(Object, Update):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
-        chat: "types.Chat",
-        from_user: "types.User",
+        client: pyrogram.Client = None,
+        chat: types.Chat,
+        from_user: types.User,
         date: datetime,
         bio: str | None = None,
-        invite_link: "types.ChatInviteLink" = None,
+        invite_link: types.ChatInviteLink = None,
     ) -> None:
         super().__init__(client)
 
@@ -46,11 +51,11 @@ class ChatJoinRequest(Object, Update):
 
     @staticmethod
     def _parse(
-        client: "pyrogram.Client",
-        update: "raw.types.UpdateBotChatInviteRequester",
-        users: dict[int, "raw.types.User"],
-        chats: dict[int, "raw.types.Chat"],
-    ) -> "ChatJoinRequest":
+        client: pyrogram.Client,
+        update: raw.types.UpdateBotChatInviteRequester,
+        users: dict[int, raw.types.User],
+        chats: dict[int, raw.types.Chat],
+    ) -> ChatJoinRequest:
         chat_id = utils.get_raw_peer_id(update.peer)
 
         return ChatJoinRequest(

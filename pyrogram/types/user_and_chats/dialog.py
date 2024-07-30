@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import pyrogram
 from pyrogram import raw, types, utils
 from pyrogram.types.object import Object
@@ -29,9 +31,9 @@ class Dialog(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
-        chat: "types.Chat",
-        top_message: "types.Message",
+        client: pyrogram.Client = None,
+        chat: types.Chat,
+        top_message: types.Message,
         unread_messages_count: int,
         unread_mentions_count: int,
         unread_mark: bool,
@@ -48,8 +50,8 @@ class Dialog(Object):
 
     @staticmethod
     def _parse(
-        client, dialog: "raw.types.Dialog", messages, users, chats
-    ) -> "Dialog":
+        client, dialog: raw.types.Dialog, messages, users, chats
+    ) -> Dialog:
         return Dialog(
             chat=types.Chat._parse_dialog(
                 client, dialog.peer, users, chats

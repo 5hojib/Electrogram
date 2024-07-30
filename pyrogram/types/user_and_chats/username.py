@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from pyrogram.types.object import Object
@@ -35,7 +37,7 @@ class Username(Object):
         self.active = active
 
     @staticmethod
-    def _parse(action: "raw.types.Username") -> "Username":
+    def _parse(action: raw.types.Username) -> Username:
         return Username(
             username=getattr(action, "username", None),
             editable=getattr(action, "editable", None),

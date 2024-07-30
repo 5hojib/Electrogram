@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import os
 import re
+from pathlib import Path
 from typing import TYPE_CHECKING, BinaryIO
 
 import pyrogram
@@ -215,7 +215,7 @@ class SendVideo:
 
         try:
             if isinstance(video, str):
-                if os.path.isfile(video):
+                if Path(video).is_file():
                     thumb = await self.save_file(thumb)
                     file = await self.save_file(
                         video,
@@ -239,7 +239,7 @@ class SendVideo:
                             ),
                             raw.types.DocumentAttributeFilename(
                                 file_name=file_name
-                                or os.path.basename(video)
+                                or Path(video).name
                             ),
                         ],
                     )

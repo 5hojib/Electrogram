@@ -3,7 +3,7 @@ name: Auto Tag Workflow
 on:
   push:
     branches:
-      - main
+      - dev
 
 jobs:
   tag:

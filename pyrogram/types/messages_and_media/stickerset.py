@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from pyrogram.types.object import Object
@@ -57,7 +59,7 @@ class StickerSet(Object):
         self.emojis = emojis
 
     @staticmethod
-    def _parse(stickerset: "raw.types.StickerSet") -> "StickerSet":
+    def _parse(stickerset: raw.types.StickerSet) -> StickerSet:
         return StickerSet(
             id=getattr(stickerset, "id", None),
             title=getattr(stickerset, "title", None),

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pyrogram import raw
 from pyrogram.types.object import Object
 
@@ -147,8 +149,8 @@ class ChatPermissions(Object):
 
     @staticmethod
     def _parse(
-        denied_permissions: "raw.base.ChatBannedRights",
-    ) -> "ChatPermissions":
+        denied_permissions: raw.base.ChatBannedRights,
+    ) -> ChatPermissions:
         if isinstance(denied_permissions, raw.types.ChatBannedRights):
             all_permissions = None
             all_params = [

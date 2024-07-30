@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import os
 import re
+from pathlib import Path
 from typing import TYPE_CHECKING, BinaryIO
 
 import pyrogram
@@ -187,7 +187,7 @@ class SendDocument:
 
         try:
             if isinstance(document, str):
-                if os.path.isfile(document):
+                if Path(document).is_file():
                     thumb = await self.save_file(thumb)
                     file = await self.save_file(
                         document,
@@ -203,7 +203,7 @@ class SendDocument:
                         attributes=[
                             raw.types.DocumentAttributeFilename(
                                 file_name=file_name
-                                or os.path.basename(document)
+                                or Path(document).name
                             )
                         ],
                     )

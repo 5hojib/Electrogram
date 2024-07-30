@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import logging
-import os
 import re
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from pymediainfo import MediaInfo
@@ -139,7 +139,7 @@ class SendMediaGroup:
         for i in media:
             if isinstance(i, types.InputMediaPhoto):
                 if isinstance(i.media, str):
-                    if os.path.isfile(i.media):
+                    if Path(i.media).is_file():
                         media = await self.invoke(
                             raw.functions.messages.UploadMedia(
                                 peer=await self.resolve_peer(chat_id),
@@ -206,7 +206,7 @@ class SendMediaGroup:
             ):
                 if isinstance(i.media, str):
                     is_animation = False
-                    if os.path.isfile(i.media):
+                    if Path(i.media).is_file():
                         try:
                             videoInfo = MediaInfo.parse(i.media)
                         except OSError:
@@ -231,7 +231,7 @@ class SendMediaGroup:
                                 h=i.height,
                             ),
                             raw.types.DocumentAttributeFilename(
-                                file_name=os.path.basename(i.media)
+                                file_name=Path(i.media).name
                             ),
                         ]
                         if is_animation:
@@ -333,7 +333,7 @@ class SendMediaGroup:
                     )
             elif isinstance(i, types.InputMediaAudio):
                 if isinstance(i.media, str):
-                    if os.path.isfile(i.media):
+                    if Path(i.media).is_file():
                         media = await self.invoke(
                             raw.functions.messages.UploadMedia(
                                 peer=await self.resolve_peer(chat_id),
@@ -355,9 +355,9 @@ class SendMediaGroup:
                                             title=i.title,
                                         ),
                                         raw.types.DocumentAttributeFilename(
-                                            file_name=os.path.basename(
+                                            file_name=Path(
                                                 i.media
-                                            )
+                                            ).name
                                         ),
                                     ],
                                 ),
@@ -432,7 +432,7 @@ class SendMediaGroup:
                     )
             elif isinstance(i, types.InputMediaDocument):
                 if isinstance(i.media, str):
-                    if os.path.isfile(i.media):
+                    if Path(i.media).is_file():
                         media = await self.invoke(
                             raw.functions.messages.UploadMedia(
                                 peer=await self.resolve_peer(chat_id),
@@ -449,9 +449,9 @@ class SendMediaGroup:
                                     ),
                                     attributes=[
                                         raw.types.DocumentAttributeFilename(
-                                            file_name=os.path.basename(
+                                            file_name=Path(
                                                 i.media
-                                            )
+                                            ).name
                                         )
                                     ],
                                 ),

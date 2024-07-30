@@ -1,4 +1,4 @@
-from typing import Union
+from __future__ import annotations
 
 from pyrogram import raw, types
 from pyrogram.types.object import Object
@@ -24,7 +24,7 @@ class WebPagePreview(Object):
     def __init__(
         self,
         *,
-        webpage: Union["types.WebPage", "types.WebPageEmpty"],
+        webpage: types.WebPage | types.WebPageEmpty,
         force_large_media: bool | None = None,
         force_small_media: bool | None = None,
         invert_media: bool | None = None,
@@ -41,9 +41,7 @@ class WebPagePreview(Object):
     @staticmethod
     def _parse(
         client,
-        web_page_preview: Union[
-            "raw.types.WebPage", "raw.types.WebPageEmpty"
-        ],
+        web_page_preview: raw.types.WebPage | raw.types.WebPageEmpty,
         invert_media: bool | None = None,
     ):
         if isinstance(web_page_preview.webpage, raw.types.WebPage):

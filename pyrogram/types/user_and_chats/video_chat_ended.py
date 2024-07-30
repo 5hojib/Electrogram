@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from pyrogram.types.object import Object
@@ -21,6 +23,6 @@ class VideoChatEnded(Object):
 
     @staticmethod
     def _parse(
-        action: "raw.types.MessageActionGroupCall",
-    ) -> "VideoChatEnded":
+        action: raw.types.MessageActionGroupCall,
+    ) -> VideoChatEnded:
         return VideoChatEnded(duration=action.duration)

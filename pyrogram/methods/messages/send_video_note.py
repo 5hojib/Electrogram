@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import os
+from pathlib import Path
 from typing import TYPE_CHECKING, BinaryIO
 
 import pyrogram
@@ -180,7 +180,7 @@ class SendVideoNote:
 
         try:
             if isinstance(video_note, str):
-                if os.path.isfile(video_note):
+                if Path(video_note).is_file():
                     thumb = await self.save_file(thumb)
                     file = await self.save_file(
                         video_note,

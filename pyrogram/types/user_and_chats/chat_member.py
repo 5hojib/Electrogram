@@ -1,9 +1,13 @@
-from datetime import datetime
-from typing import Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
 from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class ChatMember(Object):
@@ -57,20 +61,20 @@ class ChatMember(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
-        status: "enums.ChatMemberStatus",
-        user: "types.User" = None,
-        chat: "types.Chat" = None,
+        client: pyrogram.Client = None,
+        status: enums.ChatMemberStatus,
+        user: types.User = None,
+        chat: types.Chat = None,
         custom_title: str | None = None,
         until_date: datetime | None = None,
         joined_date: datetime | None = None,
-        invited_by: "types.User" = None,
-        promoted_by: "types.User" = None,
-        restricted_by: "types.User" = None,
+        invited_by: types.User = None,
+        promoted_by: types.User = None,
+        restricted_by: types.User = None,
         is_member: bool | None = None,
         can_be_edited: bool | None = None,
-        permissions: "types.ChatPermissions" = None,
-        privileges: "types.ChatPrivileges" = None,
+        permissions: types.ChatPermissions = None,
+        privileges: types.ChatPrivileges = None,
     ) -> None:
         super().__init__(client)
 
@@ -90,13 +94,12 @@ class ChatMember(Object):
 
     @staticmethod
     def _parse(
-        client: "pyrogram.Client",
-        member: Union[
-            "raw.base.ChatParticipant", "raw.base.ChannelParticipant"
-        ],
-        users: dict[int, "raw.base.User"],
-        chats: dict[int, "raw.base.Chat"],
-    ) -> "ChatMember":
+        client: pyrogram.Client,
+        member: raw.base.ChatParticipant
+        | raw.base.ChannelParticipant,
+        users: dict[int, raw.base.User],
+        chats: dict[int, raw.base.Chat],
+    ) -> ChatMember:
         # Chat participants
         if isinstance(member, raw.types.ChatParticipant):
             return ChatMember(
@@ -108,7 +111,7 @@ class ChatMember(Object):
                 ),
                 client=client,
             )
-        elif isinstance(member, raw.types.ChatParticipantAdmin):
+        if isinstance(member, raw.types.ChatParticipantAdmin):
             return ChatMember(
                 status=enums.ChatMemberStatus.ADMINISTRATOR,
                 user=types.User._parse(client, users[member.user_id]),
@@ -118,7 +121,7 @@ class ChatMember(Object):
                 ),
                 client=client,
             )
-        elif isinstance(member, raw.types.ChatParticipantCreator):
+        if isinstance(member, raw.types.ChatParticipantCreator):
             return ChatMember(
                 status=enums.ChatMemberStatus.OWNER,
                 user=types.User._parse(client, users[member.user_id]),
@@ -133,7 +136,7 @@ class ChatMember(Object):
                 joined_date=utils.timestamp_to_datetime(member.date),
                 client=client,
             )
-        elif isinstance(member, raw.types.ChannelParticipantAdmin):
+        if isinstance(member, raw.types.ChannelParticipantAdmin):
             return ChatMember(
                 status=enums.ChatMemberStatus.ADMINISTRATOR,
                 user=types.User._parse(client, users[member.user_id]),
@@ -155,7 +158,7 @@ class ChatMember(Object):
                 ),
                 client=client,
             )
-        elif isinstance(member, raw.types.ChannelParticipantBanned):
+        if isinstance(member, raw.types.ChannelParticipantBanned):
             peer = member.peer
             peer_id = utils.get_raw_peer_id(peer)
 
@@ -192,7 +195,7 @@ class ChatMember(Object):
                 ),
                 client=client,
             )
-        elif isinstance(member, raw.types.ChannelParticipantCreator):
+        if isinstance(member, raw.types.ChannelParticipantCreator):
             return ChatMember(
                 status=enums.ChatMemberStatus.OWNER,
                 user=types.User._parse(client, users[member.user_id]),
@@ -202,7 +205,7 @@ class ChatMember(Object):
                 ),
                 client=client,
             )
-        elif isinstance(member, raw.types.ChannelParticipantLeft):
+        if isinstance(member, raw.types.ChannelParticipantLeft):
             peer = member.peer
             peer_id = utils.get_raw_peer_id(peer)
 
@@ -224,7 +227,7 @@ class ChatMember(Object):
                 chat=chat,
                 client=client,
             )
-        elif isinstance(member, raw.types.ChannelParticipantSelf):
+        if isinstance(member, raw.types.ChannelParticipantSelf):
             return ChatMember(
                 status=enums.ChatMemberStatus.MEMBER,
                 user=types.User._parse(client, users[member.user_id]),

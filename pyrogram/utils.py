@@ -99,20 +99,18 @@ async def parse_messages(
     if not messages.messages:
         return types.List()
 
-    parsed_messages = []
-
-    for message in messages.messages:
-        parsed_messages.append(
-            await types.Message._parse(
-                client,
-                message,
-                users,
-                chats,
-                topics,
-                replies=0,
-                business_connection_id=business_connection_id,
-            )
+    parsed_messages = [
+        await types.Message._parse(
+            client,
+            message,
+            users,
+            chats,
+            topics,
+            replies=0,
+            business_connection_id=business_connection_id,
         )
+        for message in messages.messages
+    ]
 
     if replies:
         messages_with_replies = {
@@ -228,23 +226,21 @@ def parse_deleted_messages(
     messages = update.messages
     channel_id = getattr(update, "channel_id", None)
 
-    parsed_messages = []
-
-    for message in messages:
-        parsed_messages.append(
-            types.Message(
-                id=message,
-                chat=types.Chat(
-                    id=get_channel_id(channel_id),
-                    type=enums.ChatType.CHANNEL,
-                    client=client,
-                )
-                if channel_id is not None
-                else None,
-                business_connection_id=business_connection_id,
+    parsed_messages = [
+        types.Message(
+            id=message,
+            chat=types.Chat(
+                id=get_channel_id(channel_id),
+                type=enums.ChatType.CHANNEL,
                 client=client,
             )
+            if channel_id is not None
+            else None,
+            business_connection_id=business_connection_id,
+            client=client,
         )
+        for message in messages
+    ]
 
     return types.List(parsed_messages)
 
@@ -284,15 +280,14 @@ def unpack_inline_message_id(
         return raw.types.InputBotInlineMessageID(
             dc_id=unpacked[0], id=unpacked[1], access_hash=unpacked[2]
         )
-    else:
-        unpacked = struct.unpack("<iqiq", decoded)
+    unpacked = struct.unpack("<iqiq", decoded)
 
-        return raw.types.InputBotInlineMessageID64(
-            dc_id=unpacked[0],
-            owner_id=unpacked[1],
-            id=unpacked[2],
-            access_hash=unpacked[3],
-        )
+    return raw.types.InputBotInlineMessageID64(
+        dc_id=unpacked[0],
+        owner_id=unpacked[1],
+        id=unpacked[2],
+        access_hash=unpacked[3],
+    )
 
 
 MIN_CHANNEL_ID = -1007852516352

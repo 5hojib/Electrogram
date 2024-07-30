@@ -699,23 +699,24 @@ class Message(Object, Update):
         peer_id = utils.get_raw_peer_id(message.peer_id)
         user_id = from_id or peer_id
 
-        if isinstance(
-            message.from_id, raw.types.PeerUser
-        ) and isinstance(message.peer_id, raw.types.PeerUser):
-            if from_id not in users or peer_id not in users:
-                try:
-                    r = await client.invoke(
-                        raw.functions.users.GetUsers(
-                            id=[
-                                await client.resolve_peer(from_id),
-                                await client.resolve_peer(peer_id),
-                            ]
-                        )
+        if (
+            isinstance(message.from_id, raw.types.PeerUser)
+            and isinstance(message.peer_id, raw.types.PeerUser)
+            and (from_id not in users or peer_id not in users)
+        ):
+            try:
+                r = await client.invoke(
+                    raw.functions.users.GetUsers(
+                        id=[
+                            await client.resolve_peer(from_id),
+                            await client.resolve_peer(peer_id),
+                        ]
                     )
-                except PeerIdInvalid:
-                    pass
-                else:
-                    users.update({i.id: i for i in r})
+                )
+            except PeerIdInvalid:
+                pass
+            else:
+                users.update({i.id: i for i in r})
 
         if isinstance(message, raw.types.MessageService):
             message_thread_id = None
@@ -1682,8 +1683,7 @@ class Message(Object, Update):
             and self.chat.username
         ):
             return f"https://t.me/{self.chat.username}/{self.id}"
-        else:
-            return f"https://t.me/c/{utils.get_channel_id(self.chat.id)}/{self.id}"
+        return f"https://t.me/c/{utils.get_channel_id(self.chat.id)}/{self.id}"
 
     async def get_media_group(self) -> list[types.Message]:
         """Bound method *get_media_group* of :obj:`~pyrogram.types.Message`.
@@ -4896,17 +4896,17 @@ class Message(Object, Update):
                 self.id,
             )
             return None
-        elif self.game and not await self._client.storage.is_bot():
+        if self.game and not await self._client.storage.is_bot():
             log.warning(
                 "Users cannot send messages with Game media type. chat_id: %s, message_id: %s",
                 self.chat.id,
                 self.id,
             )
             return None
-        elif self.empty:
+        if self.empty:
             log.warning("Empty messages cannot be copied.")
             return None
-        elif self.text:
+        if self.text:
             return await self._client.send_message(
                 chat_id,
                 text=self.text,
@@ -4924,7 +4924,7 @@ class Message(Object, Update):
                 if reply_markup is object
                 else reply_markup,
             )
-        elif self.media:
+        if self.media:
             send_media = partial(
                 self._client.send_cached_media,
                 chat_id=chat_id,
@@ -4967,7 +4967,7 @@ class Message(Object, Update):
                     message_thread_id=message_thread_id,
                     schedule_date=schedule_date,
                 )
-            elif self.location:
+            if self.location:
                 return await self._client.send_location(
                     chat_id,
                     latitude=self.location.latitude,
@@ -4976,7 +4976,7 @@ class Message(Object, Update):
                     message_thread_id=message_thread_id,
                     schedule_date=schedule_date,
                 )
-            elif self.venue:
+            if self.venue:
                 return await self._client.send_venue(
                     chat_id,
                     latitude=self.venue.location.latitude,
@@ -4989,7 +4989,7 @@ class Message(Object, Update):
                     message_thread_id=message_thread_id,
                     schedule_date=schedule_date,
                 )
-            elif self.poll:
+            if self.poll:
                 return await self._client.send_poll(
                     chat_id,
                     question=self.poll.question,
@@ -5003,14 +5003,14 @@ class Message(Object, Update):
                     message_thread_id=message_thread_id,
                     schedule_date=schedule_date,
                 )
-            elif self.game:
+            if self.game:
                 return await self._client.send_game(
                     chat_id,
                     game_short_name=self.game.short_name,
                     disable_notification=disable_notification,
                     message_thread_id=message_thread_id,
                 )
-            elif self.web_page_preview:
+            if self.web_page_preview:
                 return await self._client.send_web_page(
                     chat_id,
                     url=self.web_page_preview.webpage.url,
@@ -5030,8 +5030,7 @@ class Message(Object, Update):
                     if reply_markup is object
                     else reply_markup,
                 )
-            else:
-                raise ValueError("Unknown media type")
+            raise ValueError("Unknown media type")
 
             if (
                 self.sticker or self.video_note
@@ -5040,21 +5039,19 @@ class Message(Object, Update):
                     file_id=file_id,
                     message_thread_id=message_thread_id,
                 )
-            else:
-                if caption is None:
-                    caption = self.caption or ""
-                    caption_entities = self.caption_entities
+            if caption is None:
+                caption = self.caption or ""
+                caption_entities = self.caption_entities
 
-                return await send_media(
-                    file_id=file_id,
-                    caption=caption,
-                    parse_mode=parse_mode,
-                    caption_entities=caption_entities,
-                    has_spoiler=has_spoiler,
-                    message_thread_id=message_thread_id,
-                )
-        else:
-            raise ValueError("Can't copy this message")
+            return await send_media(
+                file_id=file_id,
+                caption=caption,
+                parse_mode=parse_mode,
+                caption_entities=caption_entities,
+                has_spoiler=has_spoiler,
+                message_thread_id=message_thread_id,
+            )
+        raise ValueError("Can't copy this message")
 
     async def delete(self, revoke: bool = True):
         """Bound method *delete* of :obj:`~pyrogram.types.Message`.
@@ -5229,7 +5226,7 @@ class Message(Object, Update):
                     callback_data=button.callback_data,
                     timeout=timeout,
                 )
-            elif button.requires_password:
+            if button.requires_password:
                 if password is None:
                     raise ValueError(
                         "This button requires a password"
@@ -5242,9 +5239,9 @@ class Message(Object, Update):
                     password=password,
                     timeout=timeout,
                 )
-            elif button.url:
+            if button.url:
                 return button.url
-            elif button.web_app:
+            if button.web_app:
                 web_app = button.web_app
 
                 bot_peer_id = (
@@ -5276,19 +5273,17 @@ class Message(Object, Update):
                     )
                 )
                 return r.url
-            elif button.user_id:
+            if button.user_id:
                 return await self._client.get_chat(
                     button.user_id, force_full=False
                 )
-            elif button.switch_inline_query:
+            if button.switch_inline_query:
                 return button.switch_inline_query
-            elif button.switch_inline_query_current_chat:
+            if button.switch_inline_query_current_chat:
                 return button.switch_inline_query_current_chat
-            else:
-                raise ValueError("This button is not supported yet")
-        else:
-            await self.reply(text=button, quote=quote)
-            return None
+            raise ValueError("This button is not supported yet")
+        await self.reply(text=button, quote=quote)
+        return None
 
     async def react(
         self,

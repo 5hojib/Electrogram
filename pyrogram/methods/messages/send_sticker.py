@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import os
 import re
+from pathlib import Path
 from typing import TYPE_CHECKING, BinaryIO
 
 import pyrogram
@@ -157,7 +157,7 @@ class SendSticker:
 
         try:
             if isinstance(sticker, str):
-                if os.path.isfile(sticker):
+                if Path(sticker).is_file():
                     file = await self.save_file(
                         sticker,
                         progress=progress,
@@ -169,7 +169,7 @@ class SendSticker:
                         file=file,
                         attributes=[
                             raw.types.DocumentAttributeFilename(
-                                file_name=os.path.basename(sticker)
+                                file_name=Path(sticker).name
                             )
                         ],
                     )

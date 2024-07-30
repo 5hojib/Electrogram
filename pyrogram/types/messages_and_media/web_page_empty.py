@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from pyrogram.types.object import Object
@@ -25,5 +27,5 @@ class WebPageEmpty(Object):
         self.url = url
 
     @staticmethod
-    def _parse(webpage: "raw.types.WebPageEmpty") -> "WebPageEmpty":
+    def _parse(webpage: raw.types.WebPageEmpty) -> WebPageEmpty:
         return WebPageEmpty(id=str(webpage.id), url=webpage.url)

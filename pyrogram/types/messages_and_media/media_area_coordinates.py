@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pyrogram import raw
 from pyrogram.types.object import Object
 
@@ -39,8 +41,8 @@ class MediaAreaCoordinates(Object):
         self.rotation = rotation
 
     def _parse(
-        self: "raw.types.MediaAreaCoordinates",
-    ) -> "MediaAreaCoordinates":
+        self: raw.types.MediaAreaCoordinates,
+    ) -> MediaAreaCoordinates:
         return MediaAreaCoordinates(
             x=self.x,
             y=self.y,

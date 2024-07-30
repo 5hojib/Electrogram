@@ -156,25 +156,23 @@ class SQLiteStorage(Storage):
     async def update_state(
         self, value: tuple[int, int, int, int, int] = object
     ):
-        if value == object:
+        if value is object:
             return self.conn.execute(
                 "SELECT id, pts, qts, date, seq FROM update_state"
             ).fetchall()
-        else:
-            with self.conn:
-                if isinstance(value, int):
-                    self.conn.execute(
-                        "DELETE FROM update_state WHERE id = ?",
-                        (value,),
-                    )
-                    return None
-                else:
-                    self.conn.execute(
-                        "REPLACE INTO update_state (id, pts, qts, date, seq)"
-                        "VALUES (?, ?, ?, ?, ?)",
-                        value,
-                    )
-                    return None
+        with self.conn:
+            if isinstance(value, int):
+                self.conn.execute(
+                    "DELETE FROM update_state WHERE id = ?",
+                    (value,),
+                )
+                return None
+            self.conn.execute(
+                "REPLACE INTO update_state (id, pts, qts, date, seq)"
+                "VALUES (?, ?, ?, ?, ?)",
+                value,
+            )
+            return None
 
     async def remove_state(self, chat_id) -> None:
         self.conn.execute(
@@ -209,7 +207,7 @@ class SQLiteStorage(Storage):
                 raise KeyError(f"Username not found: {username}")
             if abs(time.time() - r2[1]) > self.USERNAME_TTL:
                 raise KeyError(f"Username expired: {username}")
-            r = r = self.conn.execute(
+            r = self.conn.execute(
                 "SELECT id, access_hash, type, last_update_on FROM peers WHERE id = ?"
                 "ORDER BY last_update_on DESC",
                 (r2[0],),
@@ -249,7 +247,7 @@ class SQLiteStorage(Storage):
             )
 
     def _accessor(self, value: Any = object):
-        return self._get() if value == object else self._set(value)
+        return self._get() if value is object else self._set(value)
 
     async def dc_id(self, value: int = object):
         return self._accessor(value)
@@ -273,13 +271,12 @@ class SQLiteStorage(Storage):
         return self._accessor(value)
 
     def version(self, value: int = object):
-        if value == object:
+        if value is object:
             return self.conn.execute(
                 "SELECT number FROM version"
             ).fetchone()[0]
-        else:
-            with self.conn:
-                self.conn.execute(
-                    "UPDATE version SET number = ?", (value,)
-                )
-                return None
+        with self.conn:
+            self.conn.execute(
+                "UPDATE version SET number = ?", (value,)
+            )
+            return None
