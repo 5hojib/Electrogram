@@ -3,7 +3,6 @@ import bisect
 import contextlib
 import logging
 import os
-
 from hashlib import sha1
 from io import BytesIO
 from typing import TYPE_CHECKING

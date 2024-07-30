@@ -1,7 +1,12 @@
 from __future__ import annotations
 
-from typing import Protocol, runtime_checkable
-from typing import TYPE_CHECKING, Any, NoReturn
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    NoReturn,
+    Protocol,
+    runtime_checkable,
+)
 
 from pymongo.read_preferences import (
     Nearest,
@@ -18,7 +23,13 @@ if TYPE_CHECKING:
     from pymongo.write_concern import WriteConcern
 
 
-ReadPreferences = Primary | PrimaryPreferred | Secondary | SecondaryPreferred | Nearest
+ReadPreferences = (
+    Primary
+    | PrimaryPreferred
+    | Secondary
+    | SecondaryPreferred
+    | Nearest
+)
 
 
 @runtime_checkable

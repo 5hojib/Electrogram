@@ -33,7 +33,9 @@ class InlineKeyboardMarkup(Object):
         inline_keyboard = []
 
         for i in o.rows:
-            row = [types.InlineKeyboardButton.read(j) for j in i.buttons]
+            row = [
+                types.InlineKeyboardButton.read(j) for j in i.buttons
+            ]
 
             inline_keyboard.append(row)
 
