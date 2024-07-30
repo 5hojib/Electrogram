@@ -5037,12 +5037,11 @@ class Message(Object, Update):
                     file_id=file_id,
                     message_thread_id=message_thread_id,
                 )
-            else:
-                if caption is None:
+            if caption is None:
                     caption = self.caption or ""
                     caption_entities = self.caption_entities
 
-                return await send_media(
+            return await send_media(
                     file_id=file_id,
                     caption=caption,
                     parse_mode=parse_mode,
@@ -5050,8 +5049,7 @@ class Message(Object, Update):
                     has_spoiler=has_spoiler,
                     message_thread_id=message_thread_id,
                 )
-        else:
-            raise ValueError("Can't copy this message")
+        raise ValueError("Can't copy this message")
 
     async def delete(self, revoke: bool = True):
         """Bound method *delete* of :obj:`~pyrogram.types.Message`.
@@ -5282,9 +5280,8 @@ class Message(Object, Update):
             if button.switch_inline_query_current_chat:
                 return button.switch_inline_query_current_chat
             raise ValueError("This button is not supported yet")
-        else:
-            await self.reply(text=button, quote=quote)
-            return None
+        await self.reply(text=button, quote=quote)
+        return None
 
     async def react(
         self,
