@@ -5,11 +5,10 @@ import threading
 
 from pyrogram import types
 from pyrogram.methods import Methods
-from pyrogram.methods.utilities import compose as compose_module
-from pyrogram.methods.utilities import idle as idle_module
+from pyrogram.methods.utilities import idle as idle_module, compose as compose_module
 
 
-def async_to_sync(obj, name) -> None:
+def async_to_sync(obj, name):
     function = getattr(obj, name)
     main_loop = asyncio.get_event_loop()
 
@@ -51,29 +50,22 @@ def async_to_sync(obj, name) -> None:
                 return coroutine
             if inspect.iscoroutine(coroutine):
                 return loop.run_until_complete(coroutine)
+
             if inspect.isasyncgen(coroutine):
                 return async_to_sync_gen(coroutine, loop, True)
-            return None
-        if inspect.iscoroutine(coroutine):
-            if loop.is_running():
+        else:
+            if inspect.iscoroutine(coroutine):
+                if loop.is_running():
+                    async def coro_wrapper():
+                        return await asyncio.wrap_future(asyncio.run_coroutine_threadsafe(coroutine, main_loop))
 
-                async def coro_wrapper():
-                    return await asyncio.wrap_future(
-                        asyncio.run_coroutine_threadsafe(
-                            coroutine, main_loop
-                        )
-                    )
+                    return coro_wrapper()
+                return asyncio.run_coroutine_threadsafe(coroutine, main_loop).result()
 
-                return coro_wrapper()
-            return asyncio.run_coroutine_threadsafe(
-                coroutine, main_loop
-            ).result()
-
-        if inspect.isasyncgen(coroutine):
-            if loop.is_running():
-                return coroutine
-            return async_to_sync_gen(coroutine, main_loop, False)
-        return None
+            if inspect.isasyncgen(coroutine):
+                if loop.is_running():
+                    return coroutine
+                return async_to_sync_gen(coroutine, main_loop, False)
 
     setattr(obj, name, async_to_sync_wrap)
 
