@@ -1682,8 +1682,7 @@ class Message(Object, Update):
             and self.chat.username
         ):
             return f"https://t.me/{self.chat.username}/{self.id}"
-        else:
-            return f"https://t.me/c/{utils.get_channel_id(self.chat.id)}/{self.id}"
+        return f"https://t.me/c/{utils.get_channel_id(self.chat.id)}/{self.id}"
 
     async def get_media_group(self) -> list[types.Message]:
         """Bound method *get_media_group* of :obj:`~pyrogram.types.Message`.
@@ -4896,17 +4895,17 @@ class Message(Object, Update):
                 self.id,
             )
             return None
-        elif self.game and not await self._client.storage.is_bot():
+        if self.game and not await self._client.storage.is_bot():
             log.warning(
                 "Users cannot send messages with Game media type. chat_id: %s, message_id: %s",
                 self.chat.id,
                 self.id,
             )
             return None
-        elif self.empty:
+        if self.empty:
             log.warning("Empty messages cannot be copied.")
             return None
-        elif self.text:
+        if self.text:
             return await self._client.send_message(
                 chat_id,
                 text=self.text,
@@ -4924,7 +4923,7 @@ class Message(Object, Update):
                 if reply_markup is object
                 else reply_markup,
             )
-        elif self.media:
+        if self.media:
             send_media = partial(
                 self._client.send_cached_media,
                 chat_id=chat_id,
@@ -5035,7 +5034,7 @@ class Message(Object, Update):
 
             if (
                 self.sticker or self.video_note
-            ):  # Sticker and VideoNote should have no caption
+            ):
                 return await send_media(
                     file_id=file_id,
                     message_thread_id=message_thread_id,
