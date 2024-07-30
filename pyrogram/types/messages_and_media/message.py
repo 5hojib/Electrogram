@@ -5229,7 +5229,7 @@ class Message(Object, Update):
                     callback_data=button.callback_data,
                     timeout=timeout,
                 )
-            elif button.requires_password:
+            if button.requires_password:
                 if password is None:
                     raise ValueError(
                         "This button requires a password"
@@ -5242,9 +5242,9 @@ class Message(Object, Update):
                     password=password,
                     timeout=timeout,
                 )
-            elif button.url:
+            if button.url:
                 return button.url
-            elif button.web_app:
+            if button.web_app:
                 web_app = button.web_app
 
                 bot_peer_id = (
@@ -5276,16 +5276,15 @@ class Message(Object, Update):
                     )
                 )
                 return r.url
-            elif button.user_id:
+            if button.user_id:
                 return await self._client.get_chat(
                     button.user_id, force_full=False
                 )
-            elif button.switch_inline_query:
+            if button.switch_inline_query:
                 return button.switch_inline_query
-            elif button.switch_inline_query_current_chat:
+            if button.switch_inline_query_current_chat:
                 return button.switch_inline_query_current_chat
-            else:
-                raise ValueError("This button is not supported yet")
+            raise ValueError("This button is not supported yet")
         else:
             await self.reply(text=button, quote=quote)
             return None
