@@ -23,13 +23,12 @@ crypto_executor = ThreadPoolExecutor(
 # ruff: noqa: E402
 import asyncio
 
-#import uvloop
-
+# import uvloop
 from . import enums, errors, filters, handlers, raw, types
 from .client import Client
 from .sync import compose, idle
 
-#asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+# asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 
 __all__ = [
