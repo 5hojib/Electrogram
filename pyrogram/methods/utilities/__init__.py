@@ -6,7 +6,7 @@ from .run import Run
 from .run_sync import RunSync
 from .start import Start
 from .stop import Stop
-from .stop_transmission import StopTransmission
+from .stop_transmission import StopTransmissionError
 
 
 class Utilities(
@@ -18,6 +18,6 @@ class Utilities(
     RunSync,
     Start,
     Stop,
-    StopTransmission,
+    StopTransmissionError,
 ):
     pass

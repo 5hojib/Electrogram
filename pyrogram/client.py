@@ -285,6 +285,7 @@ class Client(Methods):
         self.workers = workers
         self.workdir = Path(workdir)
         self.plugins = plugins
+        self.file_lock = asyncio.Lock()
         self.parse_mode = parse_mode
         self.no_updates = no_updates
         self.skip_updates = skip_updates
@@ -1374,7 +1375,7 @@ class Client(Methods):
                         raise e
                     finally:
                         await cdn_session.stop()
-            except pyrogram.StopTransmission:
+            except pyrogram.StopTransmissionError:
                 raise
             except pyrogram.errors.FloodWait:
                 raise

@@ -289,5 +289,5 @@ class SendPhoto:
                                 ),
                                 business_connection_id=business_connection_id,
                             )
-        except pyrogram.StopTransmission:
+        except pyrogram.StopTransmissionError:
             return None

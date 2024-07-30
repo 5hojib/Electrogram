@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, BinaryIO
 
 import pyrogram
-from pyrogram import StopTransmission, enums, raw, types, utils
+from pyrogram import StopTransmissionError, enums, raw, types, utils
 from pyrogram.errors import FilePartMissing
 from pyrogram.file_id import FileType
 
@@ -341,5 +341,5 @@ class SendVideo:
                                 ),
                                 business_connection_id=business_connection_id,
                             )
-        except StopTransmission:
+        except StopTransmissionError:
             return None

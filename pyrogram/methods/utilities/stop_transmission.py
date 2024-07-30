@@ -5,7 +5,7 @@ from typing import NoReturn
 import pyrogram
 
 
-class StopTransmission:
+class StopTransmissionError:
     @staticmethod
     def stop_transmission() -> NoReturn:
         """Stop downloading or uploading a file.
@@ -27,4 +27,4 @@ class StopTransmission:
                         progress=progress,
                         progress_args=(app,))
         """
-        raise pyrogram.StopTransmission
+        raise pyrogram.StopTransmissionError
