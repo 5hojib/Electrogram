@@ -115,7 +115,6 @@ class CallbackQuery(Object, Update):
         if data:
             with suppress(UnicodeDecodeError, AttributeError):
                 data = data.decode()
-                
 
         return CallbackQuery(
             id=str(callback_query.query_id),
@@ -232,12 +231,12 @@ class CallbackQuery(Object, Update):
                 ),
             )
         return await self._client.edit_inline_text(
-                inline_message_id=self.inline_message_id,
-                text=text,
-                parse_mode=parse_mode,
-                disable_web_page_preview=disable_web_page_preview,
-                reply_markup=reply_markup,
-            )
+            inline_message_id=self.inline_message_id,
+            text=text,
+            parse_mode=parse_mode,
+            disable_web_page_preview=disable_web_page_preview,
+            reply_markup=reply_markup,
+        )
 
     async def edit_message_caption(
         self,

@@ -100,16 +100,17 @@ async def parse_messages(
         return types.List()
 
     parsed_messages = [
-            await types.Message._parse(
-                client,
-                message,
-                users,
-                chats,
-                topics,
-                replies=0,
-                business_connection_id=business_connection_id,
-            ) for message in messages.messages
-        ]
+        await types.Message._parse(
+            client,
+            message,
+            users,
+            chats,
+            topics,
+            replies=0,
+            business_connection_id=business_connection_id,
+        )
+        for message in messages.messages
+    ]
 
     if replies:
         messages_with_replies = {

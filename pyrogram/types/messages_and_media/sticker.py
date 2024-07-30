@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import ClassVar, TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 import pyrogram
 from pyrogram import raw, types, utils

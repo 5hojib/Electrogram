@@ -4,7 +4,7 @@ import re
 from datetime import datetime
 from importlib import import_module
 from pathlib import Path
-from typing import NoReturn, TYPE_CHECKING
+from typing import TYPE_CHECKING, NoReturn
 
 from .exceptions.all import exceptions
 

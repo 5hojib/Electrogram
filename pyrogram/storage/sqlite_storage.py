@@ -168,10 +168,10 @@ class SQLiteStorage(Storage):
                 )
                 return None
             self.conn.execute(
-                        "REPLACE INTO update_state (id, pts, qts, date, seq)"
-                        "VALUES (?, ?, ?, ?, ?)",
-                        value,
-                    )
+                "REPLACE INTO update_state (id, pts, qts, date, seq)"
+                "VALUES (?, ?, ?, ?, ?)",
+                value,
+            )
             return None
 
     async def remove_state(self, chat_id) -> None:
