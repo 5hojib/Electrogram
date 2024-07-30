@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from functools import partial
-from typing import TYPE_CHECKING, BinaryIO, Union, Optional
+from typing import TYPE_CHECKING, BinaryIO
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
@@ -1732,13 +1732,13 @@ class Message(Object, Update):
         self,
         text: str,
         quote: bool | None = None,
-        parse_mode: Optional[enums.ParseMode] = None,
+        parse_mode: enums.ParseMode | None = None,
         entities: list[types.MessageEntity] | None = None,
         disable_web_page_preview: bool | None = None,
         disable_notification: bool | None = None,
         reply_to_message_id: int | None = None,
         business_connection_id: str | None = None,
-        reply_in_chat_id: Union[int, str] = None,
+        reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
         schedule_date: datetime | None = None,
@@ -1878,28 +1878,26 @@ class Message(Object, Update):
 
     async def reply_animation(
         self,
-        animation: Union[str, BinaryIO],
+        animation: str | BinaryIO,
         quote: bool | None = None,
         caption: str = "",
-        parse_mode: Optional[enums.ParseMode] = None,
+        parse_mode: enums.ParseMode | None = None,
         caption_entities: list[types.MessageEntity] | None = None,
         has_spoiler: bool | None = None,
         duration: int = 0,
         width: int = 0,
         height: int = 0,
-        thumb: Union[str, BinaryIO] = None,
+        thumb: str | BinaryIO | None = None,
         file_name: str | None = None,
         disable_notification: bool | None = None,
         invert_media: bool | None = None,
-        reply_markup: Union[
-            types.InlineKeyboardMarkup,
-            types.ReplyKeyboardMarkup,
-            types.ReplyKeyboardRemove,
-            types.ForceReply,
-        ] = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
         reply_to_message_id: int | None = None,
         business_connection_id: str | None = None,
-        reply_in_chat_id: Union[int, str] = None,
+        reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
         progress: Callable | None = None,
@@ -2075,28 +2073,26 @@ class Message(Object, Update):
 
     async def reply_audio(
         self,
-        audio: Union[str, BinaryIO],
+        audio: str | BinaryIO,
         quote: bool | None = None,
         caption: str = "",
-        parse_mode: Optional[enums.ParseMode] = None,
+        parse_mode: enums.ParseMode | None = None,
         caption_entities: list[types.MessageEntity] | None = None,
         duration: int = 0,
         performer: str | None = None,
         title: str | None = None,
-        thumb: Union[str, BinaryIO] = None,
+        thumb: str | BinaryIO | None = None,
         file_name: str | None = None,
         disable_notification: bool | None = None,
         reply_to_message_id: int | None = None,
         business_connection_id: str | None = None,
-        reply_in_chat_id: Union[int, str] = None,
+        reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
-        reply_markup: Union[
-            types.InlineKeyboardMarkup,
-            types.ReplyKeyboardMarkup,
-            types.ReplyKeyboardRemove,
-            types.ForceReply,
-        ] = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
         progress: Callable | None = None,
         progress_args: tuple = (),
     ) -> Message:
@@ -2264,19 +2260,17 @@ class Message(Object, Update):
         file_id: str,
         quote: bool | None = None,
         caption: str = "",
-        parse_mode: Optional[enums.ParseMode] = None,
+        parse_mode: enums.ParseMode | None = None,
         caption_entities: list[types.MessageEntity] | None = None,
         disable_notification: bool | None = None,
         reply_to_message_id: int | None = None,
-        reply_in_chat_id: Union[int, str] = None,
+        reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
-        reply_markup: Union[
-            types.InlineKeyboardMarkup,
-            types.ReplyKeyboardMarkup,
-            types.ReplyKeyboardRemove,
-            types.ForceReply,
-        ] = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
     ) -> Message:
         """Bound method *reply_cached_media* of :obj:`~pyrogram.types.Message`.
 
@@ -2451,16 +2445,14 @@ class Message(Object, Update):
         disable_notification: bool | None = None,
         reply_to_message_id: int | None = None,
         business_connection_id: str | None = None,
-        reply_in_chat_id: Union[int, str] = None,
+        reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
-        parse_mode: Optional[enums.ParseMode] = None,
-        reply_markup: Union[
-            types.InlineKeyboardMarkup,
-            types.ReplyKeyboardMarkup,
-            types.ReplyKeyboardRemove,
-            types.ForceReply,
-        ] = None,
+        parse_mode: enums.ParseMode | None = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
     ) -> Message:
         """Bound method *reply_contact* of :obj:`~pyrogram.types.Message`.
 
@@ -2576,27 +2568,25 @@ class Message(Object, Update):
 
     async def reply_document(
         self,
-        document: Union[str, BinaryIO],
+        document: str | BinaryIO,
         quote: bool | None = None,
-        thumb: Union[str, BinaryIO] = None,
+        thumb: str | BinaryIO | None = None,
         caption: str = "",
-        parse_mode: Optional[enums.ParseMode] = None,
+        parse_mode: enums.ParseMode | None = None,
         caption_entities: list[types.MessageEntity] | None = None,
         file_name: str | None = None,
         force_document: bool | None = None,
         disable_notification: bool | None = None,
         reply_to_message_id: int | None = None,
         business_connection_id: str | None = None,
-        reply_in_chat_id: Union[int, str] = None,
+        reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
         schedule_date: datetime | None = None,
-        reply_markup: Union[
-            types.InlineKeyboardMarkup,
-            types.ReplyKeyboardMarkup,
-            types.ReplyKeyboardRemove,
-            types.ForceReply,
-        ] = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
         progress: Callable | None = None,
         progress_args: tuple = (),
     ) -> Message:
@@ -2764,12 +2754,10 @@ class Message(Object, Update):
         disable_notification: bool | None = None,
         reply_to_message_id: int | None = None,
         business_connection_id: str | None = None,
-        reply_markup: Union[
-            types.InlineKeyboardMarkup,
-            types.ReplyKeyboardMarkup,
-            types.ReplyKeyboardRemove,
-            types.ForceReply,
-        ] = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
     ) -> Message:
         """Bound method *reply_game* of :obj:`~pyrogram.types.Message`.
 
@@ -2852,7 +2840,7 @@ class Message(Object, Update):
         reply_to_message_id: int | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
-        parse_mode: Optional[enums.ParseMode] = None,
+        parse_mode: enums.ParseMode | None = None,
     ) -> Message:
         """Bound method *reply_inline_bot_result* of :obj:`~pyrogram.types.Message`.
 
@@ -2934,16 +2922,14 @@ class Message(Object, Update):
         disable_notification: bool | None = None,
         reply_to_message_id: int | None = None,
         business_connection_id: str | None = None,
-        reply_in_chat_id: Union[int, str] = None,
+        reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
-        parse_mode: Optional[enums.ParseMode] = None,
-        reply_markup: Union[
-            types.InlineKeyboardMarkup,
-            types.ReplyKeyboardMarkup,
-            types.ReplyKeyboardRemove,
-            types.ForceReply,
-        ] = None,
+        parse_mode: enums.ParseMode | None = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
     ) -> Message:
         """Bound method *reply_location* of :obj:`~pyrogram.types.Message`.
 
@@ -3056,21 +3042,19 @@ class Message(Object, Update):
     async def reply_media_group(
         self,
         media: list[
-            Union[
-                types.InputMediaPhoto,
-                types.InputMediaVideo,
-                types.InputMediaAudio,
-                types.InputMediaDocument,
-            ]
+            types.InputMediaPhoto
+            | types.InputMediaVideo
+            | types.InputMediaAudio
+            | types.InputMediaDocument
         ],
         quote: bool | None = None,
         disable_notification: bool | None = None,
         reply_to_message_id: int | None = None,
-        reply_in_chat_id: Union[int, str] = None,
+        reply_in_chat_id: int | str | None = None,
         business_connection_id: str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
-        parse_mode: Optional[enums.ParseMode] = None,
+        parse_mode: enums.ParseMode | None = None,
         invert_media: bool | None = None,
     ) -> list[types.Message]:
         """Bound method *reply_media_group* of :obj:`~pyrogram.types.Message`.
@@ -3169,27 +3153,25 @@ class Message(Object, Update):
 
     async def reply_photo(
         self,
-        photo: Union[str, BinaryIO],
+        photo: str | BinaryIO,
         quote: bool | None = None,
         caption: str = "",
-        parse_mode: Optional[enums.ParseMode] = None,
+        parse_mode: enums.ParseMode | None = None,
         caption_entities: list[types.MessageEntity] | None = None,
         has_spoiler: bool | None = None,
         ttl_seconds: int | None = None,
         disable_notification: bool | None = None,
         reply_to_message_id: int | None = None,
         business_connection_id: str | None = None,
-        reply_in_chat_id: Union[int, str] = None,
+        reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
         view_once: bool | None = None,
         invert_media: bool | None = None,
-        reply_markup: Union[
-            types.InlineKeyboardMarkup,
-            types.ReplyKeyboardMarkup,
-            types.ReplyKeyboardRemove,
-            types.ForceReply,
-        ] = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
         progress: Callable | None = None,
         progress_args: tuple = (),
     ) -> Message:
@@ -3366,17 +3348,15 @@ class Message(Object, Update):
         protect_content: bool | None = None,
         reply_to_message_id: int | None = None,
         business_connection_id: str | None = None,
-        reply_in_chat_id: Union[int, str] = None,
+        reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
-        parse_mode: Optional[enums.ParseMode] = None,
+        parse_mode: enums.ParseMode | None = None,
         schedule_date: datetime | None = None,
-        reply_markup: Union[
-            types.InlineKeyboardMarkup,
-            types.ReplyKeyboardMarkup,
-            types.ReplyKeyboardRemove,
-            types.ForceReply,
-        ] = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
     ) -> Message:
         """Bound method *reply_poll* of :obj:`~pyrogram.types.Message`.
 
@@ -3542,21 +3522,19 @@ class Message(Object, Update):
 
     async def reply_sticker(
         self,
-        sticker: Union[str, BinaryIO],
+        sticker: str | BinaryIO,
         quote: bool | None = None,
         disable_notification: bool | None = None,
         reply_to_message_id: int | None = None,
         business_connection_id: str | None = None,
-        reply_in_chat_id: Union[int, str] = None,
+        reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
-        parse_mode: Optional[enums.ParseMode] = None,
-        reply_markup: Union[
-            types.InlineKeyboardMarkup,
-            types.ReplyKeyboardMarkup,
-            types.ReplyKeyboardRemove,
-            types.ForceReply,
-        ] = None,
+        parse_mode: enums.ParseMode | None = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
         progress: Callable | None = None,
         progress_args: tuple = (),
     ) -> Message:
@@ -3701,16 +3679,14 @@ class Message(Object, Update):
         disable_notification: bool | None = None,
         reply_to_message_id: int | None = None,
         business_connection_id: str | None = None,
-        reply_in_chat_id: Union[int, str] = None,
+        reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
-        parse_mode: Optional[enums.ParseMode] = None,
-        reply_markup: Union[
-            types.InlineKeyboardMarkup,
-            types.ReplyKeyboardMarkup,
-            types.ReplyKeyboardRemove,
-            types.ForceReply,
-        ] = None,
+        parse_mode: enums.ParseMode | None = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
     ) -> Message:
         """Bound method *reply_venue* of :obj:`~pyrogram.types.Message`.
 
@@ -3837,32 +3813,30 @@ class Message(Object, Update):
 
     async def reply_video(
         self,
-        video: Union[str, BinaryIO],
+        video: str | BinaryIO,
         quote: bool | None = None,
         caption: str = "",
-        parse_mode: Optional[enums.ParseMode] = None,
+        parse_mode: enums.ParseMode | None = None,
         caption_entities: list[types.MessageEntity] | None = None,
         has_spoiler: bool | None = None,
         ttl_seconds: int | None = None,
         duration: int = 0,
         width: int = 0,
         height: int = 0,
-        thumb: Union[str, BinaryIO] = None,
+        thumb: str | BinaryIO | None = None,
         file_name: str | None = None,
         supports_streaming: bool = True,
         disable_notification: bool | None = None,
         reply_to_message_id: int | None = None,
         business_connection_id: str | None = None,
-        reply_in_chat_id: Union[int, str] = None,
+        reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
         invert_media: bool | None = None,
-        reply_markup: Union[
-            types.InlineKeyboardMarkup,
-            types.ReplyKeyboardMarkup,
-            types.ReplyKeyboardRemove,
-            types.ForceReply,
-        ] = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
         progress: Callable | None = None,
         progress_args: tuple = (),
     ) -> Message:
@@ -4045,26 +4019,24 @@ class Message(Object, Update):
 
     async def reply_video_note(
         self,
-        video_note: Union[str, BinaryIO],
+        video_note: str | BinaryIO,
         quote: bool | None = None,
         duration: int = 0,
         length: int = 1,
-        thumb: Union[str, BinaryIO] = None,
+        thumb: str | BinaryIO | None = None,
         disable_notification: bool | None = None,
         reply_to_message_id: int | None = None,
         business_connection_id: str | None = None,
-        reply_in_chat_id: Union[int, str] = None,
+        reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
-        parse_mode: Optional[enums.ParseMode] = None,
+        parse_mode: enums.ParseMode | None = None,
         protect_content: bool | None = None,
         ttl_seconds: int | None = None,
-        reply_markup: Union[
-            types.InlineKeyboardMarkup,
-            types.ReplyKeyboardMarkup,
-            types.ReplyKeyboardRemove,
-            types.ForceReply,
-        ] = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
         progress: Callable | None = None,
         progress_args: tuple = (),
     ) -> Message:
@@ -4218,24 +4190,22 @@ class Message(Object, Update):
 
     async def reply_voice(
         self,
-        voice: Union[str, BinaryIO],
+        voice: str | BinaryIO,
         quote: bool | None = None,
         caption: str = "",
-        parse_mode: Optional[enums.ParseMode] = None,
+        parse_mode: enums.ParseMode | None = None,
         caption_entities: list[types.MessageEntity] | None = None,
         duration: int = 0,
         disable_notification: bool | None = None,
         reply_to_message_id: int | None = None,
         business_connection_id: str | None = None,
-        reply_in_chat_id: Union[int, str] = None,
+        reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
-        reply_markup: Union[
-            types.InlineKeyboardMarkup,
-            types.ReplyKeyboardMarkup,
-            types.ReplyKeyboardRemove,
-            types.ForceReply,
-        ] = None,
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = None,
         progress: Callable | None = None,
         progress_args: tuple = (),
     ) -> Message:
@@ -4383,14 +4353,14 @@ class Message(Object, Update):
         url: str,
         text: str = "",
         quote: bool | None = None,
-        parse_mode: Optional[enums.ParseMode] = None,
+        parse_mode: enums.ParseMode | None = None,
         entities: list[types.MessageEntity] | None = None,
         large_media: bool | None = None,
         invert_media: bool | None = None,
         disable_notification: bool | None = None,
         reply_to_message_id: int | None = None,
         business_connection_id: str | None = None,
-        reply_in_chat_id: Union[int, str] = None,
+        reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
         schedule_date: datetime | None = None,
@@ -4524,7 +4494,7 @@ class Message(Object, Update):
     async def edit_text(
         self,
         text: str,
-        parse_mode: Optional[enums.ParseMode] = None,
+        parse_mode: enums.ParseMode | None = None,
         entities: list[types.MessageEntity] | None = None,
         disable_web_page_preview: bool | None = None,
         invert_media: bool | None = None,
@@ -4599,7 +4569,7 @@ class Message(Object, Update):
     async def edit_caption(
         self,
         caption: str,
-        parse_mode: Optional[enums.ParseMode] = None,
+        parse_mode: enums.ParseMode | None = None,
         caption_entities: list[types.MessageEntity] | None = None,
         invert_media: bool | None = None,
         reply_markup: types.InlineKeyboardMarkup = None,
@@ -4765,13 +4735,13 @@ class Message(Object, Update):
 
     async def forward(
         self,
-        chat_id: Union[int, str],
+        chat_id: int | str,
         message_thread_id: int | None = None,
         disable_notification: bool | None = None,
         schedule_date: datetime | None = None,
         protect_content: bool | None = None,
         drop_author: bool | None = None,
-    ) -> Union[types.Message, list[types.Message]]:
+    ) -> types.Message | list[types.Message]:
         """Bound method *forward* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -4831,9 +4801,9 @@ class Message(Object, Update):
 
     async def copy(
         self,
-        chat_id: Union[int, str],
+        chat_id: int | str,
         caption: str | None = None,
-        parse_mode: Optional[enums.ParseMode] = None,
+        parse_mode: enums.ParseMode | None = None,
         caption_entities: list[types.MessageEntity] | None = None,
         has_spoiler: bool | None = None,
         disable_notification: bool | None = None,
@@ -4844,13 +4814,11 @@ class Message(Object, Update):
         schedule_date: datetime | None = None,
         protect_content: bool | None = None,
         invert_media: bool | None = None,
-        reply_markup: Union[
-            types.InlineKeyboardMarkup,
-            types.ReplyKeyboardMarkup,
-            types.ReplyKeyboardRemove,
-            types.ForceReply,
-        ] = object,
-    ) -> Union[types.Message, list[types.Message]]:
+        reply_markup: types.InlineKeyboardMarkup
+        | types.ReplyKeyboardMarkup
+        | types.ReplyKeyboardRemove
+        | types.ForceReply = object,
+    ) -> types.Message | list[types.Message]:
         """Bound method *copy* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
