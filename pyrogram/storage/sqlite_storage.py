@@ -156,7 +156,7 @@ class SQLiteStorage(Storage):
     async def update_state(
         self, value: tuple[int, int, int, int, int] = object
     ):
-        if value == object:
+        if value is object:
             return self.conn.execute(
                 "SELECT id, pts, qts, date, seq FROM update_state"
             ).fetchall()
@@ -247,7 +247,7 @@ class SQLiteStorage(Storage):
             )
 
     def _accessor(self, value: Any = object):
-        return self._get() if value == object else self._set(value)
+        return self._get() if value is object else self._set(value)
 
     async def dc_id(self, value: int = object):
         return self._accessor(value)
@@ -271,7 +271,7 @@ class SQLiteStorage(Storage):
         return self._accessor(value)
 
     def version(self, value: int = object):
-        if value == object:
+        if value is object:
             return self.conn.execute(
                 "SELECT number FROM version"
             ).fetchone()[0]

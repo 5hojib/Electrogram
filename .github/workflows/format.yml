@@ -6,7 +6,7 @@ on:
       - err
 
 jobs:
-  build:
+  code-format:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout electrogram

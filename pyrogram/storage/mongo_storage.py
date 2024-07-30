@@ -155,7 +155,7 @@ class MongoStorage(Storage):
     async def update_state(
         self, value: tuple[int, int, int, int, int] = object
     ):
-        if value == object:
+        if value is object:
             states = [
                 [
                     state["_id"],
@@ -167,11 +167,10 @@ class MongoStorage(Storage):
                 async for state in self._states.find()
             ]
             return states if len(states) > 0 else None
-        elif isinstance(value, int):
+        if isinstance(value, int):
             await self._states.delete_one({"_id": value})
             return None
-        else:
-            await self._states.update_one(
+        await self._states.update_one(
                 {"_id": value[0]},
                 {
                     "$set": {
@@ -183,7 +182,7 @@ class MongoStorage(Storage):
                 },
                 upsert=True,
             )
-            return None
+        return None
 
     async def remove_state(self, chat_id) -> None:
         await self._states.delete_one({"_id": chat_id})
@@ -265,7 +264,7 @@ class MongoStorage(Storage):
     async def _accessor(self, value: Any = object):
         return (
             await self._get()
-            if value == object
+            if value is object
             else await self._set(value)
         )
 
