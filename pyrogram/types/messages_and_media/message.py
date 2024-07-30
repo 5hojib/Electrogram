@@ -1355,21 +1355,6 @@ class Message(Object, Update):
                             media_type = (
                                 enums.MessageMediaType.DOCUMENT
                             )
-                elif isinstance(media, raw.types.MessageMediaWebPage):
-                    if isinstance(
-                        media.webpage,
-                        raw.types.WebPage | raw.types.WebPageEmpty,
-                    ):
-                        web_page_preview = (
-                            types.WebPagePreview._parse(
-                                client, media, message.invert_media
-                            )
-                        )
-                        media_type = (
-                            enums.MessageMediaType.WEB_PAGE_PREVIEW
-                        )
-                    else:
-                        media = None
                 elif isinstance(media, raw.types.MessageMediaPoll):
                     poll = await types.Poll._parse(
                         client, media, users
@@ -4375,14 +4360,14 @@ class Message(Object, Update):
 
             await client.send_web_page(
                 chat_id=message.chat.id,
-                url="https://github.com/Mayuri-Chan/pyrofork",
+                url="https://github.com",
                 reply_to_message_id=message.id
             )
 
         Example:
             .. code-block:: python
 
-                await message.reply_web_page("https://github.com/Mayuri-Chan/pyrofork")
+                await message.reply_web_page("https://github.com")
 
         Parameters:
             url (``str``):
@@ -4637,6 +4622,7 @@ class Message(Object, Update):
         media: types.InputMedia,
         invert_media: bool | None = None,
         reply_markup: types.InlineKeyboardMarkup = None,
+        parse_mode: enums.ParseMode | None = None,
         business_connection_id: str | None = None,
     ) -> Message:
         """Bound method *edit_media* of :obj:`~pyrogram.types.Message`.
@@ -4666,6 +4652,10 @@ class Message(Object, Update):
             reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup`, *optional*):
                 An InlineKeyboardMarkup object.
 
+            parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+                By default, texts are parsed using both Markdown and HTML styles.
+                You can combine both syntaxes together.
+
             business_connection_id (``str``, *optional*):
                 Unique identifier of the business connection.
                 for business bots only.
@@ -4682,6 +4672,7 @@ class Message(Object, Update):
             media=media,
             invert_media=invert_media,
             reply_markup=reply_markup,
+            parse_mode=parse_mode,
             business_connection_id=self.business_connection_id
             if business_connection_id is None
             else business_connection_id,
