@@ -5032,9 +5032,7 @@ class Message(Object, Update):
             else:
                 raise ValueError("Unknown media type")
 
-            if (
-                self.sticker or self.video_note
-            ):
+            if self.sticker or self.video_note:
                 return await send_media(
                     file_id=file_id,
                     message_thread_id=message_thread_id,
