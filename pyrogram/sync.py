@@ -9,7 +9,7 @@ from pyrogram.methods.utilities import compose as compose_module
 from pyrogram.methods.utilities import idle as idle_module
 
 
-def async_to_sync(obj, name) -> None:
+def async_to_sync(obj, name):
     function = getattr(obj, name)
     main_loop = asyncio.get_event_loop()
 
@@ -51,6 +51,7 @@ def async_to_sync(obj, name) -> None:
                 return coroutine
             if inspect.iscoroutine(coroutine):
                 return loop.run_until_complete(coroutine)
+
             if inspect.isasyncgen(coroutine):
                 return async_to_sync_gen(coroutine, loop, True)
             return None
