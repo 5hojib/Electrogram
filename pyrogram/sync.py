@@ -5,7 +5,8 @@ import threading
 
 from pyrogram import types
 from pyrogram.methods import Methods
-from pyrogram.methods.utilities import idle as idle_module, compose as compose_module
+from pyrogram.methods.utilities import compose as compose_module
+from pyrogram.methods.utilities import idle as idle_module
 
 
 def async_to_sync(obj, name):
@@ -53,19 +54,28 @@ def async_to_sync(obj, name):
 
             if inspect.isasyncgen(coroutine):
                 return async_to_sync_gen(coroutine, loop, True)
+            return None
         else:
             if inspect.iscoroutine(coroutine):
                 if loop.is_running():
+
                     async def coro_wrapper():
-                        return await asyncio.wrap_future(asyncio.run_coroutine_threadsafe(coroutine, main_loop))
+                        return await asyncio.wrap_future(
+                            asyncio.run_coroutine_threadsafe(
+                                coroutine, main_loop
+                            )
+                        )
 
                     return coro_wrapper()
-                return asyncio.run_coroutine_threadsafe(coroutine, main_loop).result()
+                return asyncio.run_coroutine_threadsafe(
+                    coroutine, main_loop
+                ).result()
 
             if inspect.isasyncgen(coroutine):
                 if loop.is_running():
                     return coroutine
                 return async_to_sync_gen(coroutine, main_loop, False)
+            return None
 
     setattr(obj, name, async_to_sync_wrap)
 
