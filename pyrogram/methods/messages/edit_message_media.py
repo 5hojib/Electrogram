@@ -234,7 +234,7 @@ class EditMessageMedia:
                                 ),
                                 raw.types.DocumentAttributeFilename(
                                     file_name=file_name
-                                    or os.path.basename(media.media)
+                                    or Path(media.media).name
                                 ),
                                 raw.types.DocumentAttributeAnimated(),
                             ],
@@ -259,9 +259,7 @@ class EditMessageMedia:
                     media.media, FileType.ANIMATION
                 )
         elif isinstance(media, types.InputMediaDocument):
-            if isinstance(media.media, io.BytesIO) or os.path.isfile(
-                media.media
-            ):
+            if isinstance(media.media, io.BytesIO) or Path(media.media).is_file():
                 media = await self.invoke(
                     raw.functions.messages.UploadMedia(
                         peer=await self.resolve_peer(chat_id),
@@ -275,7 +273,7 @@ class EditMessageMedia:
                             attributes=[
                                 raw.types.DocumentAttributeFilename(
                                     file_name=file_name
-                                    or os.path.basename(media.media)
+                                    or Path(media.media).name
                                 )
                             ],
                         ),
