@@ -171,17 +171,17 @@ class MongoStorage(Storage):
             await self._states.delete_one({"_id": value})
             return None
         await self._states.update_one(
-                {"_id": value[0]},
-                {
-                    "$set": {
-                        "pts": value[1],
-                        "qts": value[2],
-                        "date": value[3],
-                        "seq": value[4],
-                    }
-                },
-                upsert=True,
-            )
+            {"_id": value[0]},
+            {
+                "$set": {
+                    "pts": value[1],
+                    "qts": value[2],
+                    "date": value[3],
+                    "seq": value[4],
+                }
+            },
+            upsert=True,
+        )
         return None
 
     async def remove_state(self, chat_id) -> None:

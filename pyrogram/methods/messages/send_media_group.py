@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import logging
-import os
 import re
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -356,7 +355,9 @@ class SendMediaGroup:
                                             title=i.title,
                                         ),
                                         raw.types.DocumentAttributeFilename(
-                                            file_name=Path(i.media).name
+                                            file_name=Path(
+                                                i.media
+                                            ).name
                                         ),
                                     ],
                                 ),
@@ -448,7 +449,9 @@ class SendMediaGroup:
                                     ),
                                     attributes=[
                                         raw.types.DocumentAttributeFilename(
-                                            file_name=Path(i.media).name
+                                            file_name=Path(
+                                                i.media
+                                            ).name
                                         )
                                     ],
                                 ),
