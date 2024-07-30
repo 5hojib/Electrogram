@@ -1,8 +1,4 @@
-MAJOR = 2
-MINOR = 4
-MTPROTO = 184
-
-__version__ = f"v{MAJOR}.{MTPROTO}.{MINOR}"
+__version__ = "v2.184.4"
 __license__ = "MIT License"
 
 from concurrent.futures.thread import ThreadPoolExecutor
