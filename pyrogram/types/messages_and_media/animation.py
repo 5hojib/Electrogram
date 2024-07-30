@@ -118,11 +118,7 @@ class Animation(Object):
         if isinstance(video, raw.types.Photo):
             if not video.video_sizes:
                 return None
-            video_sizes: list[raw.types.VideoSize] = []
-            for p in video.video_sizes:
-                if isinstance(p, raw.types.VideoSize):
-                    video_sizes.append(p)
-                # TODO: VideoSizeEmojiMarkup
+            video_sizes: list[raw.types.VideoSize] = [p for p in video.video_sizes if isinstance(p, raw.types.VideoSize)]
             video_sizes.sort(key=lambda p: p.size)
             video_size = video_sizes[-1]
             return Animation(

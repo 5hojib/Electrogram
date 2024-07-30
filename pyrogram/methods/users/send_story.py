@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import re
 from typing import BinaryIO
+from pathlib import Path
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
@@ -169,7 +170,7 @@ class SendStory:
                 media = raw.types.InputMediaUploadedPhoto(file=file)
         elif video:
             if isinstance(video, str):
-                if os.path.isfile(video):
+                if Path(video).is_file():
                     file = await self.save_file(video)
                     media = raw.types.InputMediaUploadedDocument(
                         mime_type=self.guess_mime_type(video)

@@ -106,8 +106,7 @@ class Auth:
                         log.debug("Using fingerprint: %s", i)
                         public_key_fingerprint = i
                         break
-                    else:
-                        log.debug("Fingerprint unknown: %s", i)
+                    log.debug("Fingerprint unknown: %s", i)
                 else:
                     raise Exception("Public key not found")
 

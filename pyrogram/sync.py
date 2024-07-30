@@ -82,10 +82,7 @@ def wrap(source) -> None:
     for name in dir(source):
         method = getattr(source, name)
 
-        if not name.startswith("_"):
-            if inspect.iscoroutinefunction(
-                method
-            ) or inspect.isasyncgenfunction(method):
+        if not name.startswith("_") and (inspect.iscoroutinefunction(method) or inspect.isasyncgenfunction(method)):
                 async_to_sync(source, name)
 
 

@@ -3,6 +3,7 @@ import bisect
 import contextlib
 import logging
 import os
+
 from hashlib import sha1
 from io import BytesIO
 from typing import TYPE_CHECKING
@@ -218,8 +219,7 @@ class Session:
             if msg.seq_no % 2 != 0:
                 if msg.msg_id in self.pending_acks:
                     continue
-                else:
-                    self.pending_acks.add(msg.msg_id)
+                self.pending_acks.add(msg.msg_id)
 
             try:
                 if (

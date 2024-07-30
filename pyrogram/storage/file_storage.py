@@ -70,4 +70,4 @@ class FileStorage(SQLiteStorage):
             self.conn.execute("VACUUM")
 
     async def delete(self) -> None:
-        os.remove(self.database)
+        Path(self.database).unlink()
