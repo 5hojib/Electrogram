@@ -6,7 +6,7 @@ from pyrogram.raw.core.tl_object import TLObject
 
 class Bytes(bytes, TLObject):
     @classmethod
-    def read(cls, data: BytesIO, *args: Any) -> bytes:
+    def read(cls, data: BytesIO, *args: Any) -> bytes:  # noqa: ARG003
         length = int.from_bytes(data.read(1), "little")
 
         if length <= 253:

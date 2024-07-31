@@ -187,7 +187,6 @@ class CallbackQuery(Object, Update):
         parse_mode: enums.ParseMode | None = None,
         disable_web_page_preview: bool | None = None,
         reply_markup: types.InlineKeyboardMarkup = None,
-        business_connection_id: str | None = None,
     ) -> types.Message | bool:
         """Edit the text of messages attached to callback queries.
 
@@ -206,10 +205,6 @@ class CallbackQuery(Object, Update):
 
             reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup`, *optional*):
                 An InlineKeyboardMarkup object.
-
-            business_connection_id (``str``, *optional*):
-                Unique identifier of the business connection.
-                for business bots only.
 
         Returns:
             :obj:`~pyrogram.types.Message` | ``bool``: On success, if the edited message was sent by the bot, the edited

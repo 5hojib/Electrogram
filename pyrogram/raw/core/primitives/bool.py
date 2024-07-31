@@ -9,7 +9,7 @@ class BoolFalse(bytes, TLObject):
     value = False
 
     @classmethod
-    def read(cls, *args: Any) -> bool:
+    def read(cls, *args: Any) -> bool:  # noqa: ARG003
         return cls.value
 
     def __new__(cls) -> bytes:  # type: ignore

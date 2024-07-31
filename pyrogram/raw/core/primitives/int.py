@@ -10,7 +10,7 @@ class Int(bytes, TLObject):
     @classmethod
     def read(
         cls, data: BytesIO, signed: bool = True, *args: Any
-    ) -> int:
+    ) -> int:  # noqa: ARG003
         return int.from_bytes(
             data.read(cls.SIZE), "little", signed=signed
         )
