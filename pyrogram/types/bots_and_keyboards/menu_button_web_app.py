@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import pyrogram
 from pyrogram import raw, types
 
 from .menu_button import MenuButton
@@ -25,9 +24,7 @@ class MenuButtonWebApp(MenuButton):
         self.text = text
         self.web_app = web_app
 
-    async def write(
-        self
-    ) -> raw.types.BotMenuButton:
+    async def write(self) -> raw.types.BotMenuButton:
         return raw.types.BotMenuButton(
             text=self.text, url=self.web_app.url
         )

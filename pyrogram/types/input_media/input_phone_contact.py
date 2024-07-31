@@ -7,9 +7,9 @@ from pyrogram.types.object import Object
 
 class InputPhoneContact(Object):
     """A Phone Contact to be added to your Telegram address book.
-    
+
     Intended to be used with :meth:`~pyrogram.Client.add_contacts()`.
-    
+
     Parameters:
         phone (``str``):
             Contact's phone number

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import pyrogram
 from pyrogram import raw
 
 from .bot_command_scope import BotCommandScope
@@ -12,7 +11,5 @@ class BotCommandScopeAllChatAdministrators(BotCommandScope):
     def __init__(self) -> None:
         super().__init__("all_chat_administrators")
 
-    async def write(
-        self
-    ) -> raw.base.BotCommandScope:
+    async def write(self) -> raw.base.BotCommandScope:
         return raw.types.BotCommandScopeChatAdmins()
