@@ -276,6 +276,7 @@ class Chat(Object):
         self.business_info = business_info
         self.birthday = birthday
         self.personal_chat = personal_chat
+        self.max_reaction_count = max_reaction_count
 
     @property
     def full_name(self) -> str:

@@ -130,7 +130,7 @@ def remove_whitespaces(source: str) -> str:
     return "\n".join(lines)
 
 
-def start(format: bool = False) -> None:
+def start() -> None:
     shutil.rmtree(DESTINATION_PATH / "types", ignore_errors=True)
     shutil.rmtree(DESTINATION_PATH / "functions", ignore_errors=True)
     shutil.rmtree(DESTINATION_PATH / "base", ignore_errors=True)
@@ -550,4 +550,4 @@ def start(format: bool = False) -> None:
 
 
 if __name__ == "__main__":
-    start(format=False)
+    start()

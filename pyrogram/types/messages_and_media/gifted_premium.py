@@ -52,7 +52,6 @@ class GiftedPremium(Object):
 
     @staticmethod
     async def _parse(
-        client,
         gifted_premium: raw.types.MessageActionGiftPremium,
         gifter_user_id: int,
     ) -> GiftedPremium:

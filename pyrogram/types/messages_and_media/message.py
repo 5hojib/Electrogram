@@ -2871,6 +2871,11 @@ class Message(Object, Update):
                 List of special entities that appear in quote_text, which can be specified instead of *parse_mode*.
                 for reply_to_message only.
 
+            parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+                By default, quote_text are parsed using both Markdown and HTML styles.
+                You can combine both syntaxes together.
+                For quote_text.
+
         Returns:
             On success, the sent Message is returned.
 
@@ -2895,6 +2900,8 @@ class Message(Object, Update):
             message_thread_id=message_thread_id,
             reply_to_message_id=reply_to_message_id,
             quote_text=quote_text,
+            quote_entities=quote_entities,
+            parse_mode=parse_mode,
         )
 
     async def reply_location(
@@ -3133,6 +3140,8 @@ class Message(Object, Update):
             business_connection_id=business_connection_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
+            quote_entities=quote_entities,
+            parse_mode=parse_mode,
             invert_media=invert_media,
         )
 
@@ -5092,7 +5101,7 @@ class Message(Object, Update):
         y: int | None = None,
         quote: bool | None = None,
         timeout: int = 10,
-        request_write_access: bool = True,
+        # NextTime request_write_access: bool = True,
         password: str | None = None,
     ):
         """Bound method *click* of :obj:`~pyrogram.types.Message`.
@@ -5332,6 +5341,7 @@ class Message(Object, Update):
             message_id=self.id,
             emoji=emoji,
             big=big,
+            add_to_recent=add_to_recent,
         )
 
     async def retract_vote(

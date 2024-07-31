@@ -112,7 +112,6 @@ class Poll(Object, Update):
         client,
         media_poll: raw.types.MessageMediaPoll
         | raw.types.UpdateMessagePoll,
-        users: list[raw.base.User],
     ) -> Poll:
         poll: raw.types.Poll = media_poll.poll
         poll_results: raw.types.PollResults = media_poll.results
