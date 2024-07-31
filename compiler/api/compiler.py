@@ -57,7 +57,6 @@ class Combinator(NamedTuple):
 
 
 def snake(s: str):
-    # https://stackoverflow.com/q/1175208
     s = re.sub(r"(.)([A-Z][a-z]+)", r"\1_\2", s)
     return re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", s).lower()
 
@@ -84,7 +83,7 @@ def get_type_hint(type: str) -> str:
             type = "str"
         elif type in {"Bool", "true"}:
             type = "bool"
-        else:  # bytes and object
+        else:
             type = "bytes"
 
     if type in {"Object", "!X"}:
@@ -185,7 +184,6 @@ def start() -> None:
 
             args = ARGS_RE.findall(line)
 
-            # Fix arg name being "self" or "from" (reserved python keywords)
             for i, item in enumerate(args):
                 if item[0] == "self":
                     args[i] = ("is_self", item[1])

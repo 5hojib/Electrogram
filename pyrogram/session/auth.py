@@ -232,20 +232,11 @@ class Auth:
                     )
                 )
 
-                # TODO: Handle "auth_key_aux_hash" if the previous step fails
-
-                # Step 7; Step 8
                 g_a = int.from_bytes(server_dh_inner_data.g_a, "big")
                 auth_key = pow(g_a, b, dh_prime).to_bytes(256, "big")
                 server_nonce = server_nonce.to_bytes(
                     16, "little", signed=True
                 )
-
-                # TODO: Handle errors
-
-                #######################
-                # Security checks
-                #######################
 
                 SecurityCheckMismatch.check(
                     dh_prime == prime.CURRENT_DH_PRIME,
@@ -253,7 +244,6 @@ class Auth:
                 )
                 log.debug("DH parameters check: OK")
 
-                # https://core.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
                 g_b = int.from_bytes(g_b, "big")
                 SecurityCheckMismatch.check(
                     1 < g < dh_prime - 1, "1 < g < dh_prime - 1"
@@ -278,7 +268,6 @@ class Auth:
                 )
                 log.debug("g_a and g_b validation: OK")
 
-                # https://core.telegram.org/mtproto/security_guidelines#checking-sha1-hash-values
                 answer = (
                     server_dh_inner_data.write()
                 )  # Call .write() to remove padding
@@ -288,8 +277,6 @@ class Auth:
                 )
                 log.debug("SHA1 hash values check: OK")
 
-                # https://core.telegram.org/mtproto/security_guidelines#checking-nonce-server-nonce-and-new-nonce-fields
-                # 1st message
                 SecurityCheckMismatch.check(
                     nonce == res_pq.nonce, "nonce == res_pq.nonce"
                 )
