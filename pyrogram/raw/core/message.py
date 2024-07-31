@@ -21,7 +21,7 @@ class Message(TLObject):
         self.body = body
 
     @staticmethod
-    def read(data: BytesIO, *args: Any) -> "Message":
+    def read(data: BytesIO, *args: Any) -> "Message":  # noqa: ARG004
         msg_id = Long.read(data)
         seq_no = Int.read(data)
         length = Int.read(data)
@@ -31,7 +31,7 @@ class Message(TLObject):
             TLObject.read(BytesIO(body)), msg_id, seq_no, length
         )
 
-    def write(self, *args: Any) -> bytes:
+    def write(self, *args: Any) -> bytes:  # noqa: ARG002
         b = BytesIO()
 
         b.write(Long(self.msg_id))

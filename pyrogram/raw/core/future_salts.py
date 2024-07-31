@@ -21,7 +21,7 @@ class FutureSalts(TLObject):
         self.salts = salts
 
     @staticmethod
-    def read(data: BytesIO, *args: Any) -> "FutureSalts":
+    def read(data: BytesIO, *args: Any) -> "FutureSalts":  # noqa: ARG004
         req_msg_id = Long.read(data)
         now = Int.read(data)
 
@@ -30,7 +30,7 @@ class FutureSalts(TLObject):
 
         return FutureSalts(req_msg_id, now, salts)
 
-    def write(self, *args: Any) -> bytes:
+    def write(self, *args: Any) -> bytes:  # noqa: ARG002
         b = BytesIO()
 
         b.write(Int(self.ID, False))

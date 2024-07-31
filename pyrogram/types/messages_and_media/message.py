@@ -25,7 +25,7 @@ log = logging.getLogger(__name__)
 
 
 class Str(str):
-    def __init__(self, *args) -> None:
+    def __init__(self, *args) -> None:  # noqa: ARG002
         super().__init__()
 
         self.entities = None

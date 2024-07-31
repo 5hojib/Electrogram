@@ -20,14 +20,14 @@ class FutureSalt(TLObject):
         self.salt = salt
 
     @staticmethod
-    def read(data: BytesIO, *args: Any) -> "FutureSalt":
+    def read(data: BytesIO, *args: Any) -> "FutureSalt":  # noqa: ARG004
         valid_since = Int.read(data)
         valid_until = Int.read(data)
         salt = Long.read(data)
 
         return FutureSalt(valid_since, valid_until, salt)
 
-    def write(self, *args: Any) -> bytes:
+    def write(self, *args: Any) -> bytes:  # noqa: ARG002
         b = BytesIO()
 
         b.write(Int(self.valid_since))
