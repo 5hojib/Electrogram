@@ -1,3 +1,4 @@
+# ruff: noqa: ARG002
 import logging
 import os
 from struct import pack, unpack

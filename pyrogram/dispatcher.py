@@ -1,3 +1,4 @@
+# ruff: noqa: ARG001
 import asyncio
 import inspect
 import logging

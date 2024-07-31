@@ -1,3 +1,4 @@
+# ruff: noqa: ARG002
 import logging
 
 from .tcp import TCP, Proxy

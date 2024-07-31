@@ -1,3 +1,4 @@
+# ruff: noqa: ARG002
 from enum import Enum
 
 

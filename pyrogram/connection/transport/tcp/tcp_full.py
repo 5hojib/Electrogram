@@ -1,3 +1,4 @@
+# ruff: noqa: ARG002
 import logging
 from binascii import crc32
 from struct import pack, unpack

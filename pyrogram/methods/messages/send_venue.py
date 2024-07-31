@@ -19,8 +19,6 @@ class SendVenue:
         address: str,
         foursquare_id: str = "",
         foursquare_type: str = "",
-        google_place_id: str = "",
-        google_place_type: str = "",
         disable_notification: bool | None = None,
         message_thread_id: int | None = None,
         business_connection_id: str | None = None,
