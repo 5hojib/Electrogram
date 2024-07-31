@@ -90,7 +90,7 @@ class ActiveSession(Object):
         can_accept_secret_chats: bool | None = None,
         can_accept_calls: bool | None = None,
         is_official_application: bool | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.id = id
