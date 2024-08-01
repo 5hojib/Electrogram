@@ -78,7 +78,7 @@ class Message(Object, Update):
         chat (:obj:`~pyrogram.types.Chat`, *optional*):
             Conversation the message belongs to.
 
-        topics (:obj:`~pyrogram.types.ForumTopic`, *optional*):
+        topic (:obj:`~pyrogram.types.ForumTopic`, *optional*):
             Topic the message belongs to.
             only returned using when client.get_messages.
 
@@ -339,11 +339,8 @@ class Message(Object, Update):
         bot_allowed (:obj:`~pyrogram.types.BotAllowed`, *optional*):
             Contains information about a allowed bot.
 
-        chat_shared (List of ``int``, *optional*):
-            Service message: chat/channel shared
-
-        user_shared (List of ``int``, *optional*):
-            Service message: user shared
+        chats_shared (List of :obj:`~pyrogram.types.RequestedChats`, *optional*):
+            Service message: chats shared
 
         forum_topic_created (:obj:`~pyrogram.types.ForumTopicCreated`, *optional*):
             Service message: forum topic created
@@ -433,7 +430,7 @@ class Message(Object, Update):
         sender_business_bot: types.User = None,
         date: datetime | None = None,
         chat: types.Chat = None,
-        topics: types.ForumTopic = None,
+        topic: types.ForumTopic = None,
         forward_from: types.User = None,
         forward_sender_name: str | None = None,
         forward_from_chat: types.Chat = None,
@@ -509,8 +506,7 @@ class Message(Object, Update):
         matches: list[Match] | None = None,
         command: list[str] | None = None,
         bot_allowed: types.BotAllowed = None,
-        chat_shared: list[int] | None = None,
-        user_shared: list[int] | None = None,
+        chats_shared: list[types.RequestedChats] = None,
         forum_topic_created: types.ForumTopicCreated = None,
         forum_topic_closed: types.ForumTopicClosed = None,
         forum_topic_reopened: types.ForumTopicReopened = None,
@@ -543,7 +539,7 @@ class Message(Object, Update):
         self.sender_business_bot = sender_business_bot
         self.date = date
         self.chat = chat
-        self.topics = topics
+        self.topic = topic
         self.forward_from = forward_from
         self.forward_sender_name = forward_sender_name
         self.forward_from_chat = forward_from_chat
@@ -621,8 +617,7 @@ class Message(Object, Update):
         self.command = command
         self.reply_markup = reply_markup
         self.bot_allowed = bot_allowed
-        self.chat_shared = chat_shared
-        self.user_shared = user_shared
+        self.chats_shared = chats_shared
         self.forum_topic_created = forum_topic_created
         self.forum_topic_closed = forum_topic_closed
         self.forum_topic_reopened = forum_topic_reopened
@@ -685,7 +680,7 @@ class Message(Object, Update):
         message: raw.base.Message,
         users: dict,
         chats: dict,
-        topics: dict | None = None,
+        topic: dict | None = None,
         is_scheduled: bool = False,
         business_connection_id: str | None = None,
         replies: int = 1,
@@ -733,8 +728,7 @@ class Message(Object, Update):
             channel_chat_created = None
             new_chat_photo = None
             bot_allowed = None
-            chat_shared = None
-            user_shared = None
+            chats_shared = None
             is_topic_message = None
             forum_topic_created = None
             forum_topic_closed = None
@@ -858,33 +852,8 @@ class Message(Object, Update):
                 raw.types.MessageActionRequestedPeer
                 | raw.types.MessageActionRequestedPeerSentMe,
             ):
-                chat_shared = []
-                user_shared = []
-                for peer in action.peers:
-                    if isinstance(
-                        peer,
-                        raw.types.PeerChannel
-                        | raw.types.RequestedPeerChannel
-                        | raw.types.PeerChat
-                        | raw.types.RequestedPeerChat,
-                    ):
-                        chat_shared.append(
-                            utils.get_channel_id(
-                                utils.get_raw_peer_id(peer)
-                            )
-                        )
-                        service_type = (
-                            enums.MessageServiceType.ChannelShared
-                        )
-                    elif isinstance(
-                        peer,
-                        raw.types.PeerUser
-                        | raw.types.RequestedPeerUser,
-                    ):
-                        user_shared.append(peer.user_id)
-                        service_type = (
-                            enums.MessageServiceType.UserShared
-                        )
+                chats_shared = await types.RequestedChats._parse(client, action)
+                service_type = enums.MessageServiceType.ChatShared
             elif isinstance(
                 action, raw.types.MessageActionTopicCreate
             ):
@@ -1017,7 +986,7 @@ class Message(Object, Update):
                 chat=types.Chat._parse(
                     client, message, users, chats, is_chat=True
                 ),
-                topics=None,
+                topic=None,
                 from_user=from_user,
                 service=service_type,
                 new_chat_members=new_chat_members,
@@ -1037,12 +1006,7 @@ class Message(Object, Update):
                 group_chat_created=group_chat_created,
                 bot_allowed=bot_allowed,
                 channel_chat_created=channel_chat_created,
-                chat_shared=chat_shared
-                if chat_shared is not None and len(chat_shared) > 0
-                else None,
-                user_shared=user_shared
-                if user_shared is not None and len(user_shared) > 0
-                else None,
+                chats_shared=chats_shared,
                 is_topic_message=is_topic_message,
                 forum_topic_created=forum_topic_created,
                 forum_topic_closed=forum_topic_closed,
@@ -1430,7 +1394,7 @@ class Message(Object, Update):
                 chat=types.Chat._parse(
                     client, message, users, chats, is_chat=True
                 ),
-                topics=None,
+                topic=None,
                 from_user=from_user,
                 sender_business_bot=sender_business_bot,
                 text=(
@@ -1542,10 +1506,10 @@ class Message(Object, Update):
                             )
                         parsed_message.message_thread_id = thread_id
                         parsed_message.is_topic_message = True
-                        if topics:
-                            parsed_message.topics = (
+                        if topic:
+                            parsed_message.topic = (
                                 types.ForumTopic._parse(
-                                    topics[thread_id]
+                                    topic[thread_id]
                                 )
                             )
                         else:
@@ -1553,8 +1517,8 @@ class Message(Object, Update):
                                 msg = await client.get_messages(
                                     parsed_message.chat.id, message.id
                                 )
-                                if getattr(msg, "topics"):
-                                    parsed_message.topics = msg.topics
+                                if getattr(msg, "topic"):
+                                    parsed_message.topic = msg.topic
                             except Exception:
                                 pass
                     else:
@@ -1868,6 +1832,7 @@ class Message(Object, Update):
         caption: str = "",
         parse_mode: enums.ParseMode | None = None,
         caption_entities: list[types.MessageEntity] | None = None,
+        message_effect_id: int = None,
         has_spoiler: bool | None = None,
         duration: int = 0,
         width: int = 0,
@@ -1971,6 +1936,9 @@ class Message(Object, Update):
             quote_entities (List of :obj:`~pyrogram.types.MessageEntity`, *optional*):
                 List of special entities that appear in quote_text, which can be specified instead of *parse_mode*.
                 for reply_to_message only.
+            
+            message_effect_id (``int`` ``64-bit``, *optional*):
+                Unique identifier of the message effect to be added to the message; for private chats only.
 
             invert_media (``bool``, *optional*):
                 True to invert the animation and caption position..
@@ -2050,6 +2018,7 @@ class Message(Object, Update):
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
+            message_effect_id=message_effect_id,
             invert_media=invert_media,
             reply_markup=reply_markup,
             progress=progress,
@@ -2063,6 +2032,7 @@ class Message(Object, Update):
         caption: str = "",
         parse_mode: enums.ParseMode | None = None,
         caption_entities: list[types.MessageEntity] | None = None,
+        message_effect_id: int = None,
         duration: int = 0,
         performer: str | None = None,
         title: str | None = None,
@@ -2160,6 +2130,9 @@ class Message(Object, Update):
             quote_entities (List of :obj:`~pyrogram.types.MessageEntity`, *optional*):
                 List of special entities that appear in quote_text, which can be specified instead of *parse_mode*.
                 for reply_to_message only.
+                
+            message_effect_id (``int`` ``64-bit``, *optional*):
+                Unique identifier of the message effect to be added to the message; for private chats only.
 
             reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup` | :obj:`~pyrogram.types.ReplyKeyboardMarkup` | :obj:`~pyrogram.types.ReplyKeyboardRemove` | :obj:`~pyrogram.types.ForceReply`, *optional*):
                 Additional interface options. An object for an inline keyboard, custom reply keyboard,
@@ -2235,6 +2208,7 @@ class Message(Object, Update):
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
+            message_effect_id=message_effect_id,
             reply_markup=reply_markup,
             progress=progress,
             progress_args=progress_args,
@@ -2567,6 +2541,7 @@ class Message(Object, Update):
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
+        message_effect_id: int = None,
         schedule_date: datetime | None = None,
         reply_markup: types.InlineKeyboardMarkup
         | types.ReplyKeyboardMarkup
@@ -2650,6 +2625,9 @@ class Message(Object, Update):
             quote_entities (List of :obj:`~pyrogram.types.MessageEntity`, *optional*):
                 List of special entities that appear in quote_text, which can be specified instead of *parse_mode*.
                 for reply_to_message only.
+                
+            message_effect_id (``int`` ``64-bit``, *optional*):
+                Unique identifier of the message effect to be added to the message; for private chats only.
 
             schedule_date (:py:obj:`~datetime.datetime`, *optional*):
                 Date when the message will be automatically sent.
@@ -2726,6 +2704,7 @@ class Message(Object, Update):
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
+            message_effect_id=message_effect_id,
             schedule_date=schedule_date,
             reply_markup=reply_markup,
             progress=progress,
@@ -3160,6 +3139,7 @@ class Message(Object, Update):
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
+        message_effect_id: int = None,
         view_once: bool | None = None,
         invert_media: bool | None = None,
         reply_markup: types.InlineKeyboardMarkup
@@ -3244,6 +3224,9 @@ class Message(Object, Update):
             quote_entities (List of :obj:`~pyrogram.types.MessageEntity`, *optional*):
                 List of special entities that appear in quote_text, which can be specified instead of *parse_mode*.
                 for reply_to_message only.
+            
+            message_effect_id (``int`` ``64-bit``, *optional*):
+                Unique identifier of the message effect to be added to the message; for private chats only.
 
             reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup` | :obj:`~pyrogram.types.ReplyKeyboardMarkup` | :obj:`~pyrogram.types.ReplyKeyboardRemove` | :obj:`~pyrogram.types.ForceReply`, *optional*):
                 Additional interface options. An object for an inline keyboard, custom reply keyboard,
@@ -3316,6 +3299,7 @@ class Message(Object, Update):
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
+            message_effect_id=message_effect_id,
             view_once=view_once,
             invert_media=invert_media,
             reply_markup=reply_markup,
@@ -3524,6 +3508,7 @@ class Message(Object, Update):
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
+        message_effect_id: int = None,
         parse_mode: enums.ParseMode | None = None,
         reply_markup: types.InlineKeyboardMarkup
         | types.ReplyKeyboardMarkup
@@ -3582,6 +3567,9 @@ class Message(Object, Update):
             quote_entities (List of :obj:`~pyrogram.types.MessageEntity`, *optional*):
                 List of special entities that appear in quote_text, which can be specified instead of *parse_mode*.
                 for reply_to_message only.
+            
+            message_effect_id (``int`` ``64-bit``, *optional*):
+                Unique identifier of the message effect to be added to the message; for private chats only.
 
             parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
                 By default, quote_text are parsed using both Markdown and HTML styles.
@@ -3654,6 +3642,7 @@ class Message(Object, Update):
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
+            message_effect_id=message_effect_id,
             parse_mode=parse_mode,
             reply_markup=reply_markup,
             progress=progress,
@@ -3826,6 +3815,7 @@ class Message(Object, Update):
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
+        message_effect_id: int = None,
         invert_media: bool | None = None,
         reply_markup: types.InlineKeyboardMarkup
         | types.ReplyKeyboardMarkup
@@ -3924,6 +3914,9 @@ class Message(Object, Update):
             quote_entities (List of :obj:`~pyrogram.types.MessageEntity`, *optional*):
                 List of special entities that appear in quote_text, which can be specified instead of *parse_mode*.
                 for reply_to_message only.
+                
+            message_effect_id (``int`` ``64-bit``, *optional*):
+                Unique identifier of the message effect to be added to the message; for private chats only.
 
             invert_media (``bool``, *optional*):
                 Pass True to invert the video and caption position.
@@ -4005,6 +3998,7 @@ class Message(Object, Update):
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
+            message_effect_id=message_effect_id,
             invert_media=invert_media,
             reply_markup=reply_markup,
             progress=progress,
@@ -4026,6 +4020,7 @@ class Message(Object, Update):
         quote_entities: list[types.MessageEntity] | None = None,
         parse_mode: enums.ParseMode | None = None,
         protect_content: bool | None = None,
+        message_effect_id: int = None,
         ttl_seconds: int | None = None,
         reply_markup: types.InlineKeyboardMarkup
         | types.ReplyKeyboardMarkup
@@ -4099,6 +4094,9 @@ class Message(Object, Update):
 
             protect_content (``bool``, *optional*):
                 Protects the contents of the sent message from forwarding and saving.
+
+            message_effect_id (``int`` ``64-bit``, *optional*):
+                Unique identifier of the message effect to be added to the message; for private chats only.
 
             ttl_seconds (``int``, *optional*):
                 Self-Destruct Timer.
@@ -4175,6 +4173,7 @@ class Message(Object, Update):
             quote_text=quote_text,
             quote_entities=quote_entities,
             protect_content=protect_content,
+            message_effect_id=message_effect_id,
             ttl_seconds=ttl_seconds,
             parse_mode=parse_mode,
             reply_markup=reply_markup,
@@ -4196,6 +4195,7 @@ class Message(Object, Update):
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
+        message_effect_id: int = None,
         reply_markup: types.InlineKeyboardMarkup
         | types.ReplyKeyboardMarkup
         | types.ReplyKeyboardRemove
@@ -4267,6 +4267,9 @@ class Message(Object, Update):
                 List of special entities that appear in quote_text, which can be specified instead of *parse_mode*.
                 for reply_to_message only.
 
+            message_effect_id (``int`` ``64-bit``, *optional*):
+                Unique identifier of the message effect to be added to the message; for private chats only.
+
             reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup` | :obj:`~pyrogram.types.ReplyKeyboardMarkup` | :obj:`~pyrogram.types.ReplyKeyboardRemove` | :obj:`~pyrogram.types.ForceReply`, *optional*):
                 Additional interface options. An object for an inline keyboard, custom reply keyboard,
                 instructions to remove reply keyboard or to force a reply from the user.
@@ -4337,6 +4340,7 @@ class Message(Object, Update):
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
+            message_effect_id=message_effect_id,
             reply_markup=reply_markup,
             progress=progress,
             progress_args=progress_args,
@@ -4359,6 +4363,7 @@ class Message(Object, Update):
         quote_entities: list[types.MessageEntity] | None = None,
         schedule_date: datetime | None = None,
         protect_content: bool | None = None,
+        message_effect_id: int = None,
         reply_markup=None,
     ) -> Message:
         """Bound method *reply_web_page* of :obj:`~pyrogram.types.Message`.
@@ -4432,6 +4437,9 @@ class Message(Object, Update):
             protect_content (``bool``, *optional*):
                 Protects the contents of the sent message from forwarding and saving.
 
+            message_effect_id (``int`` ``64-bit``, *optional*):
+                Unique identifier of the message effect to be added to the message; for private chats only.
+
             reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup` | :obj:`~pyrogram.types.ReplyKeyboardMarkup` | :obj:`~pyrogram.types.ReplyKeyboardRemove` | :obj:`~pyrogram.types.ForceReply`, *optional*):
                 Additional interface options. An object for an inline keyboard, custom reply keyboard,
                 instructions to remove reply keyboard or to force a reply from the user.
@@ -4482,6 +4490,7 @@ class Message(Object, Update):
             quote_entities=quote_entities,
             schedule_date=schedule_date,
             protect_content=protect_content,
+            message_effect_id=message_effect_id,
             reply_markup=reply_markup,
         )
 

@@ -41,6 +41,9 @@ from .reply_keyboard_remove import ReplyKeyboardRemove
 from .request_peer_type_channel import RequestPeerTypeChannel
 from .request_peer_type_chat import RequestPeerTypeChat
 from .request_peer_type_user import RequestPeerTypeUser
+from .requested_chat import RequestedChat
+from .requested_chats import RequestedChats
+from .requested_user import RequestedUser
 from .sent_web_app_message import SentWebAppMessage
 from .shipping_address import ShippingAddress
 from .shipping_option import ShippingOption
@@ -66,6 +69,9 @@ __all__ = [
     "RequestPeerTypeChannel",
     "RequestPeerTypeChat",
     "RequestPeerTypeUser",
+    "RequestedChats",
+    "RequestedChat",
+    "RequestedUser",
     "LoginUrl",
     "BotCommand",
     "BotCommandScope",
