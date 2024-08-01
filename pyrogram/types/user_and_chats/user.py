@@ -192,7 +192,7 @@ class User(Object, Update):
         restrictions: list[types.Restriction] | None = None,
         reply_color: types.ChatColor = None,
         profile_color: types.ChatColor = None,
-        active_users: int = None,
+        active_users: int | None = None,
     ) -> None:
         super().__init__(client)
 

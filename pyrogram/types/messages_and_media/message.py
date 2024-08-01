@@ -506,7 +506,7 @@ class Message(Object, Update):
         matches: list[Match] | None = None,
         command: list[str] | None = None,
         bot_allowed: types.BotAllowed = None,
-        chats_shared: list[types.RequestedChats] = None,
+        chats_shared: list[types.RequestedChats] | None = None,
         forum_topic_created: types.ForumTopicCreated = None,
         forum_topic_closed: types.ForumTopicClosed = None,
         forum_topic_reopened: types.ForumTopicReopened = None,
@@ -852,7 +852,9 @@ class Message(Object, Update):
                 raw.types.MessageActionRequestedPeer
                 | raw.types.MessageActionRequestedPeerSentMe,
             ):
-                chats_shared = await types.RequestedChats._parse(client, action)
+                chats_shared = await types.RequestedChats._parse(
+                    client, action
+                )
                 service_type = enums.MessageServiceType.ChatShared
             elif isinstance(
                 action, raw.types.MessageActionTopicCreate
@@ -1832,7 +1834,7 @@ class Message(Object, Update):
         caption: str = "",
         parse_mode: enums.ParseMode | None = None,
         caption_entities: list[types.MessageEntity] | None = None,
-        message_effect_id: int = None,
+        message_effect_id: int | None = None,
         has_spoiler: bool | None = None,
         duration: int = 0,
         width: int = 0,
@@ -1936,7 +1938,7 @@ class Message(Object, Update):
             quote_entities (List of :obj:`~pyrogram.types.MessageEntity`, *optional*):
                 List of special entities that appear in quote_text, which can be specified instead of *parse_mode*.
                 for reply_to_message only.
-            
+
             message_effect_id (``int`` ``64-bit``, *optional*):
                 Unique identifier of the message effect to be added to the message; for private chats only.
 
@@ -2032,7 +2034,7 @@ class Message(Object, Update):
         caption: str = "",
         parse_mode: enums.ParseMode | None = None,
         caption_entities: list[types.MessageEntity] | None = None,
-        message_effect_id: int = None,
+        message_effect_id: int | None = None,
         duration: int = 0,
         performer: str | None = None,
         title: str | None = None,
@@ -2130,7 +2132,7 @@ class Message(Object, Update):
             quote_entities (List of :obj:`~pyrogram.types.MessageEntity`, *optional*):
                 List of special entities that appear in quote_text, which can be specified instead of *parse_mode*.
                 for reply_to_message only.
-                
+
             message_effect_id (``int`` ``64-bit``, *optional*):
                 Unique identifier of the message effect to be added to the message; for private chats only.
 
@@ -2541,7 +2543,7 @@ class Message(Object, Update):
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
-        message_effect_id: int = None,
+        message_effect_id: int | None = None,
         schedule_date: datetime | None = None,
         reply_markup: types.InlineKeyboardMarkup
         | types.ReplyKeyboardMarkup
@@ -2625,7 +2627,7 @@ class Message(Object, Update):
             quote_entities (List of :obj:`~pyrogram.types.MessageEntity`, *optional*):
                 List of special entities that appear in quote_text, which can be specified instead of *parse_mode*.
                 for reply_to_message only.
-                
+
             message_effect_id (``int`` ``64-bit``, *optional*):
                 Unique identifier of the message effect to be added to the message; for private chats only.
 
@@ -3139,7 +3141,7 @@ class Message(Object, Update):
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
-        message_effect_id: int = None,
+        message_effect_id: int | None = None,
         view_once: bool | None = None,
         invert_media: bool | None = None,
         reply_markup: types.InlineKeyboardMarkup
@@ -3224,7 +3226,7 @@ class Message(Object, Update):
             quote_entities (List of :obj:`~pyrogram.types.MessageEntity`, *optional*):
                 List of special entities that appear in quote_text, which can be specified instead of *parse_mode*.
                 for reply_to_message only.
-            
+
             message_effect_id (``int`` ``64-bit``, *optional*):
                 Unique identifier of the message effect to be added to the message; for private chats only.
 
@@ -3508,7 +3510,7 @@ class Message(Object, Update):
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
-        message_effect_id: int = None,
+        message_effect_id: int | None = None,
         parse_mode: enums.ParseMode | None = None,
         reply_markup: types.InlineKeyboardMarkup
         | types.ReplyKeyboardMarkup
@@ -3567,7 +3569,7 @@ class Message(Object, Update):
             quote_entities (List of :obj:`~pyrogram.types.MessageEntity`, *optional*):
                 List of special entities that appear in quote_text, which can be specified instead of *parse_mode*.
                 for reply_to_message only.
-            
+
             message_effect_id (``int`` ``64-bit``, *optional*):
                 Unique identifier of the message effect to be added to the message; for private chats only.
 
@@ -3815,7 +3817,7 @@ class Message(Object, Update):
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
-        message_effect_id: int = None,
+        message_effect_id: int | None = None,
         invert_media: bool | None = None,
         reply_markup: types.InlineKeyboardMarkup
         | types.ReplyKeyboardMarkup
@@ -3914,7 +3916,7 @@ class Message(Object, Update):
             quote_entities (List of :obj:`~pyrogram.types.MessageEntity`, *optional*):
                 List of special entities that appear in quote_text, which can be specified instead of *parse_mode*.
                 for reply_to_message only.
-                
+
             message_effect_id (``int`` ``64-bit``, *optional*):
                 Unique identifier of the message effect to be added to the message; for private chats only.
 
@@ -4020,7 +4022,7 @@ class Message(Object, Update):
         quote_entities: list[types.MessageEntity] | None = None,
         parse_mode: enums.ParseMode | None = None,
         protect_content: bool | None = None,
-        message_effect_id: int = None,
+        message_effect_id: int | None = None,
         ttl_seconds: int | None = None,
         reply_markup: types.InlineKeyboardMarkup
         | types.ReplyKeyboardMarkup
@@ -4195,7 +4197,7 @@ class Message(Object, Update):
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
-        message_effect_id: int = None,
+        message_effect_id: int | None = None,
         reply_markup: types.InlineKeyboardMarkup
         | types.ReplyKeyboardMarkup
         | types.ReplyKeyboardRemove
@@ -4363,7 +4365,7 @@ class Message(Object, Update):
         quote_entities: list[types.MessageEntity] | None = None,
         schedule_date: datetime | None = None,
         protect_content: bool | None = None,
-        message_effect_id: int = None,
+        message_effect_id: int | None = None,
         reply_markup=None,
     ) -> Message:
         """Bound method *reply_web_page* of :obj:`~pyrogram.types.Message`.

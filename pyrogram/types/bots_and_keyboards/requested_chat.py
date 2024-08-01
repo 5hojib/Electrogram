@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from ..object import Object
 from pyrogram import enums, raw, types, utils
-from typing import Union
+from pyrogram.types.object import Object
+
 
 class RequestedChat(Object):
     """Contains information about a requested chat.
@@ -23,13 +23,14 @@ class RequestedChat(Object):
         photo (``types.ChatPhoto``, *optional*):
             Chat photo.
     """
+
     def __init__(
         self,
         chat_id: int,
         chat_type: enums.ChatType,
-        name: str = None,
-        username: str = None,
-        photo: "types.ChatPhoto" = None,
+        name: str | None = None,
+        username: str | None = None,
+        photo: types.ChatPhoto = None,
     ):
         super().__init__()
 
@@ -42,23 +43,28 @@ class RequestedChat(Object):
     @staticmethod
     async def _parse(
         client,
-        request: Union[
-            "raw.types.RequestedPeerChat",
-            "raw.types.RequestedPeerChannel",
-            "raw.types.PeerChat",
-            "raw.types.PeerChannel"
-        ]
-    ) -> "RequestedChat":
-        if isinstance(request, raw.types.RequestedPeerChannel) or isinstance(request, raw.types.PeerChannel):
+        request: raw.types.RequestedPeerChat
+        | raw.types.RequestedPeerChannel
+        | raw.types.PeerChat
+        | raw.types.PeerChannel,
+    ) -> RequestedChat:
+        if isinstance(
+            request,
+            raw.types.RequestedPeerChannel | raw.types.PeerChannel,
+        ):
             type = enums.ChatType.CHANNEL
         else:
             type = enums.ChatType.GROUP
         photo = None
-        if getattr(request,"photo", None):
-            photo = types.Photo._parse(client, getattr(request,"photo", None), 0)
+        if getattr(request, "photo", None):
+            photo = types.Photo._parse(
+                client, getattr(request, "photo", None), 0
+            )
 
         return RequestedChat(
-            chat_id=utils.get_channel_id(utils.get_raw_peer_id(request)),
+            chat_id=utils.get_channel_id(
+                utils.get_raw_peer_id(request)
+            ),
             chat_type=type,
             name=getattr(request, "title", None),
             username=getattr(request, "username", None),

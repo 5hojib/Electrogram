@@ -29,7 +29,7 @@ class SendWebPage:
         quote_entities: list[types.MessageEntity] | None = None,
         schedule_date: datetime | None = None,
         protect_content: bool | None = None,
-        message_effect_id: int = None,
+        message_effect_id: int | None = None,
         reply_markup: types.InlineKeyboardMarkup
         | types.ReplyKeyboardMarkup
         | types.ReplyKeyboardRemove

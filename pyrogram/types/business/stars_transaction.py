@@ -1,8 +1,13 @@
 from __future__ import annotations
 
-from datetime import datetime
+from typing import TYPE_CHECKING
+
 from pyrogram import raw, types, utils
-from ..object import Object
+from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    from datetime import datetime
+
 
 class StarsTransaction(Object):
     """Contains information about stars transaction.
@@ -46,23 +51,24 @@ class StarsTransaction(Object):
 
         message_id (``int``, *optional*):
             Identifier of the message where the transaction was made.
-    """ # TODO photo, extended_media
+    """  # TODO photo, extended_media
+
     def __init__(
         self,
         *,
         id: int,
         stars: int,
         date: datetime,
-        chat: "types.Chat",
-        is_refund: bool = None,
-        is_pending: bool = None,
-        is_failed: bool = None,
-        title: str = None,
-        description: str = None,
-        transaction_date: datetime = None,
-        transaction_url: str = None,
-        payload: str = None,
-        message_id: int = None
+        chat: types.Chat,
+        is_refund: bool | None = None,
+        is_pending: bool | None = None,
+        is_failed: bool | None = None,
+        title: str | None = None,
+        description: str | None = None,
+        transaction_date: datetime | None = None,
+        transaction_url: str | None = None,
+        payload: str | None = None,
+        message_id: int | None = None,
     ):
         super().__init__()
 
@@ -79,15 +85,13 @@ class StarsTransaction(Object):
         self.transaction_url = transaction_url
         self.payload = payload
         self.message_id = message_id
-    
+
     @staticmethod
     def _parse(
-        client,
-        transaction: "raw.types.StarsTransaction",
-        users: dict
-    ) -> "StarsTransaction":
+        client, transaction: raw.types.StarsTransaction, users: dict
+    ) -> StarsTransaction:
         chat_id = utils.get_raw_peer_id(transaction.peer.peer)
-        chat = types.User._parse(client, users.get(chat_id, None))
+        chat = types.User._parse(client, users.get(chat_id))
         try:
             payload = transaction.bot_payload.decode()
         except (UnicodeDecodeError, AttributeError):
@@ -102,8 +106,10 @@ class StarsTransaction(Object):
             is_failed=transaction.failed,
             title=transaction.title,
             description=transaction.description,
-            transaction_date=utils.timestamp_to_datetime(transaction.transaction_date),
+            transaction_date=utils.timestamp_to_datetime(
+                transaction.transaction_date
+            ),
             transaction_url=transaction.transaction_url,
             payload=payload,
-            message_id=transaction.msg_id
-    )
+            message_id=transaction.msg_id,
+        )

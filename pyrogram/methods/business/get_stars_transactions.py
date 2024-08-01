@@ -1,21 +1,19 @@
 from __future__ import annotations
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
-from typing import Union
+from pyrogram import raw, types
 
 
 class GetStarsTransactions:
     async def get_stars_transactions(
-        self: "pyrogram.Client",
-        chat_id: Union[int, str] = "me",
+        self: pyrogram.Client,
+        chat_id: int | str = "me",
         limit: int = 0,
         offset: str = "",
-        is_inbound: bool = None,
-        is_outbound: bool = None,
-        is_ascending: bool = None
-    ) -> "types.StarsStatus":
+        is_inbound: bool | None = None,
+        is_outbound: bool | None = None,
+        is_ascending: bool | None = None,
+    ) -> types.StarsStatus:
         """Get stars transactions.
 
         .. include:: /_includes/usable-by/users-bots.rst
@@ -69,7 +67,7 @@ class GetStarsTransactions:
                 offset=offset,
                 inbound=is_inbound,
                 outbound=is_outbound,
-                ascending=is_ascending
+                ascending=is_ascending,
             )
         )
         return types.StarsStatus._parse(self, r)

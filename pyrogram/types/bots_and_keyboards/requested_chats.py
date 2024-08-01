@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from ..object import Object
-from pyrogram import enums, raw, types
-from typing import Union
+from pyrogram import raw, types
+from pyrogram.types.object import Object
+
 
 class RequestedChats(Object):
     """Contains information about a requested chats.
@@ -17,11 +17,12 @@ class RequestedChats(Object):
         users (List of :obj:`~pyrogram.types.RequestedUser` *optional*):
             List of users.
     """
+
     def __init__(
         self,
         button_id: int,
-        chats: list["types.RequestedChat"] = None,
-        users: list["types.RequestedUser"] = None
+        chats: list[types.RequestedChat] | None = None,
+        users: list[types.RequestedUser] | None = None,
     ):
         super().__init__()
 
@@ -32,30 +33,32 @@ class RequestedChats(Object):
     @staticmethod
     async def _parse(
         client,
-        request: Union[
-            "raw.types.MessageActionRequestedPeer",
-            "raw.types.MessageActionRequestedPeerSentMe"
-        ]
-    ) -> "RequestedChats":
+        request: raw.types.MessageActionRequestedPeer
+        | raw.types.MessageActionRequestedPeerSentMe,
+    ) -> RequestedChats:
         button_id = request.button_id
         chats = []
         users = []
         for chat in request.peers:
-            if (
-                isinstance(chat, raw.types.RequestedPeerChat)
-                or isinstance(chat, raw.types.RequestedPeerChannel)
-                or isinstance(chat, raw.types.PeerChat)
-                or isinstance(chat, raw.types.PeerChannel)
+            if isinstance(
+                chat,
+                raw.types.RequestedPeerChat
+                | raw.types.RequestedPeerChannel
+                | raw.types.PeerChat
+                | raw.types.PeerChannel,
             ):
-                chats.append(await types.RequestedChat._parse(client, chat))
-            elif (
-                isinstance(chat, raw.types.RequestedPeerUser)
-                or isinstance(chat, raw.types.PeerUser)
+                chats.append(
+                    await types.RequestedChat._parse(client, chat)
+                )
+            elif isinstance(
+                chat, raw.types.RequestedPeerUser | raw.types.PeerUser
             ):
-                users.append(await types.RequestedUser._parse(client, chat))
+                users.append(
+                    await types.RequestedUser._parse(client, chat)
+                )
 
         return RequestedChats(
             button_id,
             chats if len(chats) > 0 else None,
-            users if len(users) > 0 else None
+            users if len(users) > 0 else None,
         )

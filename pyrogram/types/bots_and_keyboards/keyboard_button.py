@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from pyrogram import raw, types
-from ..object import Object
-from typing import Union
+from pyrogram.types.object import Object
+
 
 class KeyboardButton(Object):
     """One button of the reply keyboard.
@@ -40,11 +40,12 @@ class KeyboardButton(Object):
     def __init__(
         self,
         text: str,
-        request_contact: bool = None,
-        request_location: bool = None,
-        request_chat: Union["types.RequestPeerTypeChat","types.RequestPeerTypeChannel"] = None,
-        request_user: "types.RequestPeerTypeUser" = None,
-        web_app: "types.WebAppInfo" = None
+        request_contact: bool | None = None,
+        request_location: bool | None = None,
+        request_chat: types.RequestPeerTypeChat
+        | types.RequestPeerTypeChannel = None,
+        request_user: types.RequestPeerTypeUser = None,
+        web_app: types.WebAppInfo = None,
     ):
         super().__init__()
 
@@ -83,8 +84,8 @@ class KeyboardButton(Object):
                         max=b.max_quantity,
                         is_name_requested=b.name_requested,
                         is_username_requested=b.username_requested,
-                        is_photo_requested=b.photo_requested
-                    )
+                        is_photo_requested=b.photo_requested,
+                    ),
                 )
             if isinstance(b.peer_type, raw.types.RequestPeerTypeChat):
                 return KeyboardButton(
@@ -97,8 +98,8 @@ class KeyboardButton(Object):
                         max=b.max_quantity,
                         is_name_requested=b.name_requested,
                         is_username_requested=b.username_requested,
-                        is_photo_requested=b.photo_requested
-                    )
+                        is_photo_requested=b.photo_requested,
+                    ),
                 )
 
             if isinstance(b.peer_type, raw.types.RequestPeerTypeUser):
@@ -110,9 +111,11 @@ class KeyboardButton(Object):
                         max=b.max_quantity,
                         is_name_requested=b.name_requested,
                         is_username_requested=b.username_requested,
-                        is_photo_requested=b.photo_requested
-                    )
+                        is_photo_requested=b.photo_requested,
+                    ),
                 )
+            return None
+        return None
 
     def write(self):
         if self.request_contact:
@@ -124,7 +127,9 @@ class KeyboardButton(Object):
                 text=self.text
             )
         if self.request_chat:
-            if isinstance(self.request_chat, types.RequestPeerTypeChannel):
+            if isinstance(
+                self.request_chat, types.RequestPeerTypeChannel
+            ):
                 return raw.types.InputKeyboardButtonRequestPeer(
                     text=self.text,
                     button_id=self.request_chat.button_id,
@@ -135,7 +140,7 @@ class KeyboardButton(Object):
                     max_quantity=self.request_chat.max,
                     name_requested=self.request_chat.is_name_requested,
                     username_requested=self.request_chat.is_username_requested,
-                    photo_requested=self.request_chat.is_photo_requested
+                    photo_requested=self.request_chat.is_photo_requested,
                 )
             return raw.types.InputKeyboardButtonRequestPeer(
                 text=self.text,
@@ -149,7 +154,7 @@ class KeyboardButton(Object):
                 max_quantity=self.request_chat.max,
                 name_requested=self.request_chat.is_name_requested,
                 username_requested=self.request_chat.is_username_requested,
-                photo_requested=self.request_chat.is_photo_requested
+                photo_requested=self.request_chat.is_photo_requested,
             )
         if self.request_user:
             return raw.types.InputKeyboardButtonRequestPeer(
@@ -162,7 +167,7 @@ class KeyboardButton(Object):
                 max_quantity=self.request_user.max,
                 name_requested=self.request_user.is_name_requested,
                 username_requested=self.request_user.is_username_requested,
-                photo_requested=self.request_user.is_photo_requested
+                photo_requested=self.request_user.is_photo_requested,
             )
         if self.web_app:
             return raw.types.KeyboardButtonSimpleWebView(

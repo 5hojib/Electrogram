@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class RequestPeerTypeChannel(Object):
@@ -31,17 +31,17 @@ class RequestPeerTypeChannel(Object):
         is_photo_requested (``bool``, *optional*):
             If True, Channel photo is requested.
             default True.
-    """ # TODO user_admin_rights, bot_admin_rights
+    """  # TODO user_admin_rights, bot_admin_rights
 
     def __init__(
         self,
-        button_id: int=0,
-        is_creator: bool=None,
-        is_username: bool=None,
-        max: int=1,
-        is_name_requested: bool=True,
-        is_username_requested: bool=True,
-        is_photo_requested: bool=True
+        button_id: int = 0,
+        is_creator: bool | None = None,
+        is_username: bool | None = None,
+        max: int = 1,
+        is_name_requested: bool = True,
+        is_username_requested: bool = True,
+        is_photo_requested: bool = True,
     ):
         super().__init__()
 

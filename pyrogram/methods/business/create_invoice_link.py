@@ -1,38 +1,37 @@
 from __future__ import annotations
 
 import logging
-from typing import List, Optional, Union
 
 import pyrogram
-from pyrogram import enums, raw, utils, types
+from pyrogram import raw, types
 
 log = logging.getLogger(__name__)
 
 
 class CreateInvoiceLink:
     async def create_invoice_link(
-        self: "pyrogram.Client",
+        self: pyrogram.Client,
         title: str,
         description: str,
-        payload: Union[str, bytes],
+        payload: str | bytes,
         currency: str,
-        prices: List["types.LabeledPrice"],
-        provider_token: str = None,
-        max_tip_amount: int = None,
-        suggested_tip_amounts: List[int] = None,
-        start_parameter: str = None,
-        provider_data: str = None,
-        photo_url: str = None,
-        photo_size: int = None,
-        photo_width: int = None,
-        photo_height: int = None,
-        need_name: bool = None,
-        need_phone_number: bool = None,
-        need_email: bool = None,
-        need_shipping_address: bool = None,
-        send_phone_number_to_provider: bool = None,
-        send_email_to_provider: bool = None,
-        is_flexible: bool = None
+        prices: list[types.LabeledPrice],
+        provider_token: str | None = None,
+        max_tip_amount: int | None = None,
+        suggested_tip_amounts: list[int] | None = None,
+        start_parameter: str | None = None,
+        provider_data: str | None = None,
+        photo_url: str | None = None,
+        photo_size: int | None = None,
+        photo_width: int | None = None,
+        photo_height: int | None = None,
+        need_name: bool | None = None,
+        need_phone_number: bool | None = None,
+        need_email: bool | None = None,
+        need_shipping_address: bool | None = None,
+        send_phone_number_to_provider: bool | None = None,
+        send_email_to_provider: bool | None = None,
+        is_flexible: bool | None = None,
     ) -> str:
         """Use this method to create a link for an invoice.
 
@@ -117,11 +116,12 @@ class CreateInvoiceLink:
                     size=photo_size,
                     attributes=[
                         raw.types.DocumentAttributeImageSize(
-                            w=photo_width,
-                            h=photo_height
+                            w=photo_width, h=photo_height
                         )
-                    ]
-                ) if photo_url else None,
+                    ],
+                )
+                if photo_url
+                else None,
                 invoice=raw.types.Invoice(
                     currency=currency,
                     prices=[i.write() for i in prices],
@@ -132,14 +132,16 @@ class CreateInvoiceLink:
                     shipping_address_requested=need_shipping_address,
                     flexible=is_flexible,
                     phone_to_provider=send_phone_number_to_provider,
-                    email_to_provider=send_email_to_provider
+                    email_to_provider=send_email_to_provider,
                 ),
-                payload=payload.encode() if isinstance(payload, str) else payload,
+                payload=payload.encode()
+                if isinstance(payload, str)
+                else payload,
                 provider=provider_token,
                 provider_data=raw.types.DataJSON(
                     data=provider_data if provider_data else "{}"
                 ),
-                start_param=start_parameter
+                start_param=start_parameter,
             )
         )
         r = await self.invoke(rpc)

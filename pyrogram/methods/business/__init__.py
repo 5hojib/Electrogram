@@ -8,6 +8,6 @@ class TelegramBusiness(
     CreateInvoiceLink,
     GetBusinessConnection,
     GetStarsTransactions,
-    GetStarsTransactionsById
+    GetStarsTransactionsById,
 ):
     pass

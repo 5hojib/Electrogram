@@ -8,7 +8,7 @@ class GetChatMembersCount:
     async def get_chat_members_count(
         self: pyrogram.Client,
         chat_id: int | str,
-        join_request: bool = False
+        join_request: bool = False,
     ) -> int:
         """Get the number of members in a chat.
 
