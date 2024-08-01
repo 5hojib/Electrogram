@@ -81,7 +81,7 @@ towncrier = { cmd = "towncrier build --yes" }
 towncrier-draft = { cmd = "towncrier build --draft" }
 
 [tool.ruff]
-line-length = 70
+line-length = 85
 target-version = "py310"
 
 [tool.ruff.lint]
