@@ -38,9 +38,7 @@ class InviteLinkImporter(Object):
             importers.append(
                 InviteLinkImporter(
                     date=utils.timestamp_to_datetime(j.date),
-                    user=types.User._parse(
-                        client=None, user=d[j.user_id]
-                    ),
+                    user=types.User._parse(client=None, user=d[j.user_id]),
                 )
             )
 

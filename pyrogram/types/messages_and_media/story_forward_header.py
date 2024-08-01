@@ -50,22 +50,14 @@ class StoryForwardHeader(Object):
         user = None
         chat = None
         if fwd_header.from_peer is not None:
-            if isinstance(
-                fwd_header.from_peer, raw.types.PeerChannel
-            ):
+            if isinstance(fwd_header.from_peer, raw.types.PeerChannel):
                 chat = await self.get_chat(
-                    utils.get_channel_id(
-                        fwd_header.from_peer.channel_id
-                    )
+                    utils.get_channel_id(fwd_header.from_peer.channel_id)
                 )
-            elif isinstance(
-                fwd_header.from_peer, raw.types.InputPeerSelf
-            ):
+            elif isinstance(fwd_header.from_peer, raw.types.InputPeerSelf):
                 user = self.me
             else:
-                user = await self.get_users(
-                    fwd_header.from_peer.user_id
-                )
+                user = await self.get_users(fwd_header.from_peer.user_id)
 
         return StoryForwardHeader(
             user=user,

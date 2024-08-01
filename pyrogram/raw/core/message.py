@@ -27,9 +27,7 @@ class Message(TLObject):
         length = Int.read(data)
         body = data.read(length)
 
-        return Message(
-            TLObject.read(BytesIO(body)), msg_id, seq_no, length
-        )
+        return Message(TLObject.read(BytesIO(body)), msg_id, seq_no, length)
 
     def write(self, *args: Any) -> bytes:  # noqa: ARG002
         b = BytesIO()

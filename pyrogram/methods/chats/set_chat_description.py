@@ -39,13 +39,9 @@ class SetChatDescription:
             raw.types.InputPeerChannel | raw.types.InputPeerChat,
         ):
             await self.invoke(
-                raw.functions.messages.EditChatAbout(
-                    peer=peer, about=description
-                )
+                raw.functions.messages.EditChatAbout(peer=peer, about=description)
             )
         else:
-            raise ValueError(
-                f'The chat_id "{chat_id}" belongs to a user'
-            )
+            raise ValueError(f'The chat_id "{chat_id}" belongs to a user')
 
         return True

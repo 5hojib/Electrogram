@@ -153,20 +153,15 @@ class Sticker(Object):
     ) -> Sticker:
         sticker_attributes = (
             document_attributes[raw.types.DocumentAttributeSticker]
-            if raw.types.DocumentAttributeSticker
-            in document_attributes
-            else document_attributes[
-                raw.types.DocumentAttributeCustomEmoji
-            ]
+            if raw.types.DocumentAttributeSticker in document_attributes
+            else document_attributes[raw.types.DocumentAttributeCustomEmoji]
         )
 
         image_size_attributes = document_attributes.get(
             raw.types.DocumentAttributeImageSize, None
         )
         file_name = getattr(
-            document_attributes.get(
-                raw.types.DocumentAttributeFilename, None
-            ),
+            document_attributes.get(raw.types.DocumentAttributeFilename, None),
             "file_name",
             None,
         )
@@ -187,9 +182,7 @@ class Sticker(Object):
         else:
             set_name = None
 
-        if isinstance(
-            sticker_attributes, raw.types.DocumentAttributeCustomEmoji
-        ):
+        if isinstance(sticker_attributes, raw.types.DocumentAttributeCustomEmoji):
             needs_repainting = sticker_attributes.text_color
         else:
             needs_repainting = None
@@ -220,8 +213,7 @@ class Sticker(Object):
                 if video_attributes
                 else 512
             ),
-            is_animated=sticker.mime_type
-            == "application/x-tgsticker",
+            is_animated=sticker.mime_type == "application/x-tgsticker",
             is_video=sticker.mime_type == "video/webm",
             needs_repainting=needs_repainting,
             # TODO: mask_position

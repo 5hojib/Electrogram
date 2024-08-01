@@ -50,9 +50,7 @@ class RequestedUser(Object):
     ) -> RequestedUser:
         photo = None
         if getattr(request, "photo", None):
-            photo = types.Photo._parse(
-                client, getattr(request, "photo", None), 0
-            )
+            photo = types.Photo._parse(client, getattr(request, "photo", None), 0)
 
         return RequestedUser(
             user_id=getattr(request, "user_id", None),
@@ -64,7 +62,4 @@ class RequestedUser(Object):
 
     @property
     def full_name(self) -> str:
-        return (
-            " ".join(filter(None, [self.first_name, self.last_name]))
-            or None
-        )
+        return " ".join(filter(None, [self.first_name, self.last_name])) or None

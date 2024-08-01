@@ -74,9 +74,7 @@ class ForwardMessages:
         """
 
         is_iterable = not isinstance(message_ids, int)
-        message_ids = (
-            list(message_ids) if is_iterable else [message_ids]
-        )
+        message_ids = list(message_ids) if is_iterable else [message_ids]
 
         r = await self.invoke(
             raw.functions.messages.ForwardMessages(
@@ -86,9 +84,7 @@ class ForwardMessages:
                 top_msg_id=message_thread_id,
                 silent=disable_notification or None,
                 random_id=[self.rnd_id() for _ in message_ids],
-                schedule_date=utils.datetime_to_timestamp(
-                    schedule_date
-                ),
+                schedule_date=utils.datetime_to_timestamp(schedule_date),
                 noforwards=protect_content,
                 drop_author=drop_author,
             )
@@ -109,7 +105,5 @@ class ForwardMessages:
         ]
 
         return (
-            types.List(forwarded_messages)
-            if is_iterable
-            else forwarded_messages[0]
+            types.List(forwarded_messages) if is_iterable else forwarded_messages[0]
         )

@@ -42,9 +42,7 @@ class RPCError(Exception):
             self.value = value
 
         if is_unknown:
-            with Path("unknown_errors.txt").open(
-                "a", encoding="utf-8"
-            ) as f:
+            with Path("unknown_errors.txt").open("a", encoding="utf-8") as f:
                 f.write(f"{datetime.now()}\t{value}\t{rpc_name}\n")
 
     @staticmethod

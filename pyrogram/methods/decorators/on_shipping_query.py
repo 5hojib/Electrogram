@@ -33,9 +33,7 @@ class OnShippingQuery:
         def decorator(func: Callable) -> Callable:
             if isinstance(self, pyrogram.Client):
                 self.add_handler(
-                    pyrogram.handlers.ShippingQueryHandler(
-                        func, filters
-                    ),
+                    pyrogram.handlers.ShippingQueryHandler(func, filters),
                     group,
                 )
             elif isinstance(self, Filter) or self is None:
@@ -44,9 +42,7 @@ class OnShippingQuery:
 
                 func.handlers.append(
                     (
-                        pyrogram.handlers.ShippingQueryHandler(
-                            func, self
-                        ),
+                        pyrogram.handlers.ShippingQueryHandler(func, self),
                         group if filters is None else filters,
                     )
                 )

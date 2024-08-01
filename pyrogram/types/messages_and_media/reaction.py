@@ -40,16 +40,12 @@ class Reaction(Object):
         self.chosen_order = chosen_order
 
     @staticmethod
-    def _parse(
-        client: pyrogram.Client, reaction: raw.base.Reaction
-    ) -> Reaction:
+    def _parse(client: pyrogram.Client, reaction: raw.base.Reaction) -> Reaction:
         if isinstance(reaction, raw.types.ReactionEmoji):
             return Reaction(client=client, emoji=reaction.emoticon)
 
         if isinstance(reaction, raw.types.ReactionCustomEmoji):
-            return Reaction(
-                client=client, custom_emoji_id=reaction.document_id
-            )
+            return Reaction(client=client, custom_emoji_id=reaction.document_id)
         return None
 
     @staticmethod

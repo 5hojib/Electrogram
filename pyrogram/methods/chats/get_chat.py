@@ -39,9 +39,7 @@ class GetChat:
 
         if match:
             r = await self.invoke(
-                raw.functions.messages.CheckChatInvite(
-                    hash=match.group(1)
-                )
+                raw.functions.messages.CheckChatInvite(hash=match.group(1))
             )
 
             if isinstance(r, raw.types.ChatInvite):
@@ -61,17 +59,11 @@ class GetChat:
             r = await self.invoke(
                 raw.functions.channels.GetFullChannel(channel=peer)
             )
-        elif isinstance(
-            peer, raw.types.InputPeerUser | raw.types.InputPeerSelf
-        ):
-            r = await self.invoke(
-                raw.functions.users.GetFullUser(id=peer)
-            )
+        elif isinstance(peer, raw.types.InputPeerUser | raw.types.InputPeerSelf):
+            r = await self.invoke(raw.functions.users.GetFullUser(id=peer))
         else:
             r = await self.invoke(
-                raw.functions.messages.GetFullChat(
-                    chat_id=peer.chat_id
-                )
+                raw.functions.messages.GetFullChat(chat_id=peer.chat_id)
             )
 
         return await types.Chat._parse_full(self, r)

@@ -63,10 +63,7 @@ class AddChatMembers:
             await self.invoke(
                 raw.functions.channels.InviteToChannel(
                     channel=peer,
-                    users=[
-                        await self.resolve_peer(user_id)
-                        for user_id in user_ids
-                    ],
+                    users=[await self.resolve_peer(user_id) for user_id in user_ids],
                 )
             )
 

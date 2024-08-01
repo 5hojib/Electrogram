@@ -53,9 +53,7 @@ class DeleteStories:
             peer = await self.resolve_peer("me")
 
         try:
-            await self.invoke(
-                raw.functions.stories.DeleteStories(peer=peer, id=ids)
-            )
+            await self.invoke(raw.functions.stories.DeleteStories(peer=peer, id=ids))
         except Exception as e:
             print(e)
             return False

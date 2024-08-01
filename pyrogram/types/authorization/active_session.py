@@ -122,27 +122,17 @@ class ActiveSession(Object):
             api_id=session.api_id,
             application_name=session.app_name,
             application_version=session.app_version,
-            log_in_date=utils.timestamp_to_datetime(
-                session.date_created
-            ),
-            last_active_date=utils.timestamp_to_datetime(
-                session.date_active
-            ),
+            log_in_date=utils.timestamp_to_datetime(session.date_created),
+            last_active_date=utils.timestamp_to_datetime(session.date_active),
             ip_address=session.ip,
             location=session.region,
             country=session.country,
             is_current=getattr(session, "current", None),
-            is_password_pending=getattr(
-                session, "password_pending", None
-            ),
+            is_password_pending=getattr(session, "password_pending", None),
             is_unconfirmed=getattr(session, "unconfirmed", None),
             can_accept_secret_chats=not getattr(
                 session, "encrypted_requests_disabled", False
             ),
-            can_accept_calls=not getattr(
-                session, "call_requests_disabled", False
-            ),
-            is_official_application=getattr(
-                session, "official_app", None
-            ),
+            can_accept_calls=not getattr(session, "call_requests_disabled", False),
+            is_official_application=getattr(session, "official_app", None),
         )

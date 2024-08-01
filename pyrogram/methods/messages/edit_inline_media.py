@@ -101,9 +101,7 @@ class EditInlineMedia:
             if is_uploaded_file:
                 media = raw.types.InputMediaUploadedDocument(
                     mime_type=(
-                        None
-                        if is_bytes_io
-                        else self.guess_mime_type(media.media)
+                        None if is_bytes_io else self.guess_mime_type(media.media)
                     )
                     or "video/mp4",
                     thumb=await self.save_file(media.thumb),
@@ -111,8 +109,7 @@ class EditInlineMedia:
                     spoiler=media.has_spoiler,
                     attributes=[
                         raw.types.DocumentAttributeVideo(
-                            supports_streaming=media.supports_streaming
-                            or None,
+                            supports_streaming=media.supports_streaming or None,
                             duration=media.duration,
                             w=media.width,
                             h=media.height,
@@ -132,9 +129,7 @@ class EditInlineMedia:
             if is_uploaded_file:
                 media = raw.types.InputMediaUploadedDocument(
                     mime_type=(
-                        None
-                        if is_bytes_io
-                        else self.guess_mime_type(media.media)
+                        None if is_bytes_io else self.guess_mime_type(media.media)
                     )
                     or "audio/mpeg",
                     thumb=await self.save_file(media.thumb),
@@ -149,9 +144,7 @@ class EditInlineMedia:
                     ],
                 )
             elif is_external_url:
-                media = raw.types.InputMediaDocumentExternal(
-                    url=media.media
-                )
+                media = raw.types.InputMediaDocumentExternal(url=media.media)
             else:
                 media = utils.get_input_media_from_file_id(
                     media.media, FileType.AUDIO
@@ -160,9 +153,7 @@ class EditInlineMedia:
             if is_uploaded_file:
                 media = raw.types.InputMediaUploadedDocument(
                     mime_type=(
-                        None
-                        if is_bytes_io
-                        else self.guess_mime_type(media.media)
+                        None if is_bytes_io else self.guess_mime_type(media.media)
                     )
                     or "video/mp4",
                     thumb=await self.save_file(media.thumb),
@@ -192,9 +183,7 @@ class EditInlineMedia:
             if is_uploaded_file:
                 media = raw.types.InputMediaUploadedDocument(
                     mime_type=(
-                        None
-                        if is_bytes_io
-                        else self.guess_mime_type(media.media)
+                        None if is_bytes_io else self.guess_mime_type(media.media)
                     )
                     or "application/zip",
                     thumb=await self.save_file(media.thumb),
@@ -203,9 +192,7 @@ class EditInlineMedia:
                     force_file=True,
                 )
             elif is_external_url:
-                media = raw.types.InputMediaDocumentExternal(
-                    url=media.media
-                )
+                media = raw.types.InputMediaDocumentExternal(url=media.media)
             else:
                 media = utils.get_input_media_from_file_id(
                     media.media, FileType.DOCUMENT
@@ -254,9 +241,7 @@ class EditInlineMedia:
                         reply_markup=await reply_markup.write(self)
                         if reply_markup
                         else None,
-                        **await self.parser.parse(
-                            caption, parse_mode
-                        ),
+                        **await self.parser.parse(caption, parse_mode),
                     ),
                     sleep_threshold=self.sleep_threshold,
                 )

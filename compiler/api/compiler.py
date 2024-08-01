@@ -165,17 +165,13 @@ def start() -> None:
             qualname, id, qualtype = combinator_match.groups()
 
             namespace, name = (
-                qualname.split(".")
-                if "." in qualname
-                else ("", qualname)
+                qualname.split(".") if "." in qualname else ("", qualname)
             )
             name = camel(name)
             qualname = ".".join([namespace, name]).lstrip(".")
 
             typespace, type = (
-                qualtype.split(".")
-                if "." in qualtype
-                else ("", qualtype)
+                qualtype.split(".") if "." in qualtype else ("", qualtype)
             )
             type = camel(type)
             qualtype = ".".join([typespace, type]).lstrip(".")
@@ -211,11 +207,7 @@ def start() -> None:
         if qualtype.startswith("Vector"):
             qualtype = qualtype.split("<")[1][:-1]
 
-        d = (
-            types_to_constructors
-            if c.section == "types"
-            else types_to_functions
-        )
+        d = types_to_constructors if c.section == "types" else types_to_functions
 
         if qualtype not in d:
             d[qualtype] = []
@@ -237,9 +229,7 @@ def start() -> None:
                 constructors_to_functions[i] = types_to_functions[k]
 
     for qualtype, qualval in types_to_constructors.items():
-        typespace, type = (
-            qualtype.split(".") if "." in qualtype else ("", qualtype)
-        )
+        typespace, type = qualtype.split(".") if "." in qualtype else ("", qualtype)
         dir_path = DESTINATION_PATH / "base" / typespace
 
         module = type
@@ -258,9 +248,7 @@ def start() -> None:
                 type_tmpl.format(
                     name=type,
                     qualname=qualtype,
-                    types=", ".join(
-                        [f'"raw.types.{c}"' for c in constructors]
-                    ),
+                    types=", ".join([f'"raw.types.{c}"' for c in constructors]),
                     doc_name=snake(type).replace("_", "-"),
                 )
             )
@@ -269,22 +257,14 @@ def start() -> None:
         sorted_args = sort_args(c.args)
 
         arguments = (", *, " if c.args else "") + (
-            ", ".join(
-                [
-                    f"{i[0]}: {get_type_hint(i[1])}"
-                    for i in sorted_args
-                ]
-            )
+            ", ".join([f"{i[0]}: {get_type_hint(i[1])}" for i in sorted_args])
             if sorted_args
             else ""
         )
 
         fields = (
             "\n        ".join(
-                [
-                    f"self.{i[0]} = {i[0]}  # {i[1]}"
-                    for i in sorted_args
-                ]
+                [f"self.{i[0]} = {i[0]}  # {i[1]}" for i in sorted_args]
             )
             if sorted_args
             else "pass"
@@ -295,9 +275,7 @@ def start() -> None:
             FLAGS_RE.match(arg_type)
             arg_type = arg_type.split("?")[-1]
 
-        write_types = read_types = (
-            "" if c.has_flags else "# No flags\n        "
-        )
+        write_types = read_types = "" if c.has_flags else "# No flags\n        "
 
         for arg_name, arg_type in c.args:
             flag = FLAGS_RE_2.match(arg_type)
@@ -312,9 +290,9 @@ def start() -> None:
                         if arg_name != f"flags{flag.group(1)}":
                             continue
 
-                        if flag.group(3) == "true" or flag.group(
-                            3
-                        ).startswith("Vector"):
+                        if flag.group(3) == "true" or flag.group(3).startswith(
+                            "Vector"
+                        ):
                             write_flags.append(
                                 f"{arg_name} |= (1 << {flag.group(2)}) if self.{i[0]} else 0"
                             )
@@ -332,9 +310,7 @@ def start() -> None:
                 )
 
                 write_types += write_flags
-                read_types += (
-                    f"\n        {arg_name} = Int.read(b)\n        "
-                )
+                read_types += f"\n        {arg_name} = Int.read(b)\n        "
 
                 continue
 
@@ -347,7 +323,9 @@ def start() -> None:
                 elif flag_type in CORE_TYPES:
                     write_types += "\n        "
                     write_types += f"if self.{arg_name} is not None:\n            "
-                    write_types += f"b.write({flag_type.title()}(self.{arg_name}))\n        "
+                    write_types += (
+                        f"b.write({flag_type.title()}(self.{arg_name}))\n        "
+                    )
 
                     read_types += "\n        "
                     read_types += f"{arg_name} = {flag_type.title()}.read(b) if flags{number} & (1 << {index}) else None"
@@ -363,19 +341,21 @@ def start() -> None:
                 else:
                     write_types += "\n        "
                     write_types += f"if self.{arg_name} is not None:\n            "
-                    write_types += (
-                        f"b.write(self.{arg_name}.write())\n        "
-                    )
+                    write_types += f"b.write(self.{arg_name}.write())\n        "
 
                     read_types += "\n        "
                     read_types += f"{arg_name} = TLObject.read(b) if flags{number} & (1 << {index}) else None\n        "
             else:
                 write_types += "\n        "
                 if arg_type in CORE_TYPES:
-                    write_types += f"b.write({arg_type.title()}(self.{arg_name}))\n        "
+                    write_types += (
+                        f"b.write({arg_type.title()}(self.{arg_name}))\n        "
+                    )
 
                     read_types += "\n        "
-                    read_types += f"{arg_name} = {arg_type.title()}.read(b)\n        "
+                    read_types += (
+                        f"{arg_name} = {arg_type.title()}.read(b)\n        "
+                    )
                 elif "vector" in arg_type.lower():
                     sub_type = arg_type.split("<")[1][:-1]
 
@@ -384,19 +364,13 @@ def start() -> None:
                     read_types += "\n        "
                     read_types += f'{arg_name} = TLObject.read(b{f", {sub_type.title()}" if sub_type in CORE_TYPES else ""})\n        '
                 else:
-                    write_types += (
-                        f"b.write(self.{arg_name}.write())\n        "
-                    )
+                    write_types += f"b.write(self.{arg_name}.write())\n        "
 
                     read_types += "\n        "
-                    read_types += (
-                        f"{arg_name} = TLObject.read(b)\n        "
-                    )
+                    read_types += f"{arg_name} = TLObject.read(b)\n        "
 
         slots = ", ".join([f'"{i[0]}"' for i in sorted_args])
-        return_arguments = ", ".join(
-            [f"{i[0]}={i[0]}" for i in sorted_args]
-        )
+        return_arguments = ", ".join([f"{i[0]}={i[0]}" for i in sorted_args])
 
         compiled_combinator = combinator_tmpl.format(
             name=c.name,
@@ -436,9 +410,7 @@ def start() -> None:
         d[c.namespace].append(c.name)
 
     for namespace, types in namespaces_to_types.items():
-        with open(
-            DESTINATION_PATH / "base" / namespace / "__init__.py", "w"
-        ) as f:
+        with open(DESTINATION_PATH / "base" / namespace / "__init__.py", "w") as f:
             all = []
 
             for t in types:
@@ -494,10 +466,7 @@ def start() -> None:
 
     for namespace, types in namespaces_to_functions.items():
         with open(
-            DESTINATION_PATH
-            / "functions"
-            / namespace
-            / "__init__.py",
+            DESTINATION_PATH / "functions" / namespace / "__init__.py",
             "w",
         ) as f:
             all = []
@@ -524,16 +493,12 @@ def start() -> None:
                 f.write(f'    "{it}",\n')
             f.write("]\n")
 
-    with open(
-        DESTINATION_PATH / "all.py", "w", encoding="utf-8"
-    ) as f:
+    with open(DESTINATION_PATH / "all.py", "w", encoding="utf-8") as f:
         f.write(f"layer = {layer}\n\n")
         f.write("objects = {")
 
         for c in combinators:
-            f.write(
-                f'\n    {c.id}: "pyrogram.raw.{c.section}.{c.qualname}",'
-            )
+            f.write(f'\n    {c.id}: "pyrogram.raw.{c.section}.{c.qualname}",')
 
         f.write('\n    0xbc799737: "pyrogram.raw.core.BoolFalse",')
         f.write('\n    0x997275b5: "pyrogram.raw.core.BoolTrue",')

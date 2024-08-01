@@ -24,9 +24,7 @@ class Terminate:
             raise ConnectionError("Client is already terminated")
 
         if self.takeout_id:
-            await self.invoke(
-                raw.functions.account.FinishTakeoutSession()
-            )
+            await self.invoke(raw.functions.account.FinishTakeoutSession())
             log.info("Takeout session %s finished", self.takeout_id)
 
         await self.storage.save()

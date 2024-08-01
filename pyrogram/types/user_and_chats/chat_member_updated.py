@@ -69,9 +69,7 @@ class ChatMemberUpdated(Object, Update):
         chats: dict[int, raw.types.Chat],
     ) -> ChatMemberUpdated:
         if isinstance(update, raw.types.UpdateBotStopped):
-            from_user = types.User._parse(
-                client, users[update.user_id]
-            )
+            from_user = types.User._parse(client, users[update.user_id])
             _chat_member_one = types.ChatMember(
                 user=from_user,
                 status=enums.ChatMemberStatus.BANNED,
@@ -84,9 +82,7 @@ class ChatMemberUpdated(Object, Update):
             )
             if update.stopped:
                 return ChatMemberUpdated(
-                    chat=types.Chat._parse_chat(
-                        client, users[update.user_id]
-                    ),
+                    chat=types.Chat._parse_chat(client, users[update.user_id]),
                     from_user=from_user,
                     date=utils.timestamp_to_datetime(update.date),
                     old_chat_member=_chat_member_two,
@@ -94,9 +90,7 @@ class ChatMemberUpdated(Object, Update):
                     client=client,
                 )
             return ChatMemberUpdated(
-                chat=types.Chat._parse_chat(
-                    client, users[update.user_id]
-                ),
+                chat=types.Chat._parse_chat(client, users[update.user_id]),
                 from_user=from_user,
                 date=utils.timestamp_to_datetime(update.date),
                 old_chat_member=_chat_member_one,
@@ -104,9 +98,7 @@ class ChatMemberUpdated(Object, Update):
                 client=client,
             )
 
-        chat_id = getattr(update, "chat_id", None) or getattr(
-            update, "channel_id"
-        )
+        chat_id = getattr(update, "chat_id", None) or getattr(update, "channel_id")
 
         old_chat_member = None
         new_chat_member = None
@@ -124,19 +116,13 @@ class ChatMemberUpdated(Object, Update):
             )
 
         if update.invite:
-            invite_link = types.ChatInviteLink._parse(
-                client, update.invite, users
-            )
-            if isinstance(
-                update.invite, raw.types.ChatInvitePublicJoinRequests
-            ):
+            invite_link = types.ChatInviteLink._parse(client, update.invite, users)
+            if isinstance(update.invite, raw.types.ChatInvitePublicJoinRequests):
                 via_join_request = True
 
         return ChatMemberUpdated(
             chat=types.Chat._parse_chat(client, chats[chat_id]),
-            from_user=types.User._parse(
-                client, users[update.actor_id]
-            ),
+            from_user=types.User._parse(client, users[update.actor_id]),
             date=utils.timestamp_to_datetime(update.date),
             old_chat_member=old_chat_member,
             new_chat_member=new_chat_member,

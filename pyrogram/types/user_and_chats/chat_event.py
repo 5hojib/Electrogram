@@ -210,12 +210,8 @@ class ChatEvent(Object):
 
         self.invited_member = invited_member
 
-        self.old_administrator_privileges = (
-            old_administrator_privileges
-        )
-        self.new_administrator_privileges = (
-            new_administrator_privileges
-        )
+        self.old_administrator_privileges = old_administrator_privileges
+        self.new_administrator_privileges = new_administrator_privileges
 
         self.old_member_permissions = old_member_permissions
         self.new_member_permissions = new_member_permissions
@@ -315,9 +311,7 @@ class ChatEvent(Object):
         new_forum_topic: types.ForumTopic | None = None
         deleted_forum_topic: types.ForumTopic | None = None
 
-        if isinstance(
-            action, raw.types.ChannelAdminLogEventActionChangeAbout
-        ):
+        if isinstance(action, raw.types.ChannelAdminLogEventActionChangeAbout):
             old_description = action.prev_value
             new_description = action.new_value
             action = enums.ChatEventAction.DESCRIPTION_CHANGED
@@ -337,28 +331,20 @@ class ChatEvent(Object):
             old_linked_chat = types.Chat._parse_chat(
                 client, chats[action.prev_value]
             )
-            new_linked_chat = types.Chat._parse_chat(
-                client, chats[action.new_value]
-            )
+            new_linked_chat = types.Chat._parse_chat(client, chats[action.new_value])
             action = enums.ChatEventAction.LINKED_CHAT_CHANGED
 
-        elif isinstance(
-            action, raw.types.ChannelAdminLogEventActionChangePhoto
-        ):
+        elif isinstance(action, raw.types.ChannelAdminLogEventActionChangePhoto):
             old_photo = types.Photo._parse(client, action.prev_photo)
             new_photo = types.Photo._parse(client, action.new_photo)
             action = enums.ChatEventAction.PHOTO_CHANGED
 
-        elif isinstance(
-            action, raw.types.ChannelAdminLogEventActionChangeTitle
-        ):
+        elif isinstance(action, raw.types.ChannelAdminLogEventActionChangeTitle):
             old_title = action.prev_value
             new_title = action.new_value
             action = enums.ChatEventAction.TITLE_CHANGED
 
-        elif isinstance(
-            action, raw.types.ChannelAdminLogEventActionChangeUsername
-        ):
+        elif isinstance(action, raw.types.ChannelAdminLogEventActionChangeUsername):
             old_username = action.prev_value
             new_username = action.new_value
             action = enums.ChatEventAction.USERNAME_CHANGED
@@ -375,17 +361,13 @@ class ChatEvent(Object):
             )
             action = enums.ChatEventAction.CHAT_PERMISSIONS_CHANGED
 
-        elif isinstance(
-            action, raw.types.ChannelAdminLogEventActionDeleteMessage
-        ):
+        elif isinstance(action, raw.types.ChannelAdminLogEventActionDeleteMessage):
             deleted_message = await types.Message._parse(
                 client, action.message, users, chats
             )
             action = enums.ChatEventAction.MESSAGE_DELETED
 
-        elif isinstance(
-            action, raw.types.ChannelAdminLogEventActionEditMessage
-        ):
+        elif isinstance(action, raw.types.ChannelAdminLogEventActionEditMessage):
             old_message = await types.Message._parse(
                 client, action.prev_message, users, chats
             )
@@ -413,9 +395,7 @@ class ChatEvent(Object):
             new_administrator_privileges = types.ChatMember._parse(
                 client, action.new_participant, users, chats
             )
-            action = (
-                enums.ChatEventAction.ADMINISTRATOR_PRIVILEGES_CHANGED
-            )
+            action = enums.ChatEventAction.ADMINISTRATOR_PRIVILEGES_CHANGED
 
         elif isinstance(
             action,
@@ -429,9 +409,7 @@ class ChatEvent(Object):
             )
             action = enums.ChatEventAction.MEMBER_PERMISSIONS_CHANGED
 
-        elif isinstance(
-            action, raw.types.ChannelAdminLogEventActionStopPoll
-        ):
+        elif isinstance(action, raw.types.ChannelAdminLogEventActionStopPoll):
             stopped_poll = await types.Message._parse(
                 client, action.message, users, chats
             )
@@ -449,9 +427,7 @@ class ChatEvent(Object):
         ):
             action = enums.ChatEventAction.MEMBER_LEFT
 
-        elif isinstance(
-            action, raw.types.ChannelAdminLogEventActionToggleInvites
-        ):
+        elif isinstance(action, raw.types.ChannelAdminLogEventActionToggleInvites):
             invites_enabled = action.new_value
             action = enums.ChatEventAction.INVITES_ENABLED
 
@@ -469,16 +445,12 @@ class ChatEvent(Object):
             signatures_enabled = action.new_value
             action = enums.ChatEventAction.SIGNATURES_ENABLED
 
-        elif isinstance(
-            action, raw.types.ChannelAdminLogEventActionToggleSlowMode
-        ):
+        elif isinstance(action, raw.types.ChannelAdminLogEventActionToggleSlowMode):
             old_slow_mode = action.prev_value
             new_slow_mode = action.new_value
             action = enums.ChatEventAction.SLOW_MODE_CHANGED
 
-        elif isinstance(
-            action, raw.types.ChannelAdminLogEventActionUpdatePinned
-        ):
+        elif isinstance(action, raw.types.ChannelAdminLogEventActionUpdatePinned):
             message = action.message
 
             if message.pinned:
@@ -522,37 +494,21 @@ class ChatEvent(Object):
             )
             action = enums.ChatEventAction.INVITE_LINK_DELETED
 
-        elif isinstance(
-            action, raw.types.ChannelAdminLogEventActionCreateTopic
-        ):
-            created_forum_topic = types.ForumTopic._parse(
-                action.topic
-            )
+        elif isinstance(action, raw.types.ChannelAdminLogEventActionCreateTopic):
+            created_forum_topic = types.ForumTopic._parse(action.topic)
             action = enums.ChatEventAction.CREATED_FORUM_TOPIC
 
-        elif isinstance(
-            action, raw.types.ChannelAdminLogEventActionEditTopic
-        ):
-            old_forum_topic = types.ForumTopic._parse(
-                action.prev_topic
-            )
-            new_forum_topic = types.ForumTopic._parse(
-                action.new_topic
-            )
+        elif isinstance(action, raw.types.ChannelAdminLogEventActionEditTopic):
+            old_forum_topic = types.ForumTopic._parse(action.prev_topic)
+            new_forum_topic = types.ForumTopic._parse(action.new_topic)
             action = enums.ChatEventAction.EDITED_FORUM_TOPIC
 
-        elif isinstance(
-            action, raw.types.ChannelAdminLogEventActionDeleteTopic
-        ):
-            created_forum_topic = types.ForumTopic._parse(
-                action.topic
-            )
+        elif isinstance(action, raw.types.ChannelAdminLogEventActionDeleteTopic):
+            created_forum_topic = types.ForumTopic._parse(action.topic)
             action = enums.ChatEventAction.DELETED_FORUM_TOPIC
 
         else:
-            action = (
-                f"{enums.ChatEventAction.UNKNOWN}-{action.QUALNAME}"
-            )
+            action = f"{enums.ChatEventAction.UNKNOWN}-{action.QUALNAME}"
 
         return ChatEvent(
             id=event.id,

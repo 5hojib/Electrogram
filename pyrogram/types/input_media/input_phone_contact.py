@@ -21,17 +21,13 @@ class InputPhoneContact(Object):
             Contact's last name
     """
 
-    def __init__(
-        self, phone: str, first_name: str, last_name: str = ""
-    ) -> None:
+    def __init__(self, phone: str, first_name: str, last_name: str = "") -> None:
         super().__init__()
         self.phone = phone
         self.first_name = first_name
         self.last_name = last_name
 
-    def __new__(
-        cls, phone: str, first_name: str, last_name: str = ""
-    ):
+    def __new__(cls, phone: str, first_name: str, last_name: str = ""):
         return raw.types.InputPhoneContact(
             client_id=MsgId(),
             phone="+" + phone.strip("+"),

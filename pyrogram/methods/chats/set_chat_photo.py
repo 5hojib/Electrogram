@@ -76,9 +76,7 @@ class SetChatPhoto:
                     video_start_ts=video_start_ts,
                 )
             else:
-                photo = utils.get_input_media_from_file_id(
-                    photo, FileType.PHOTO
-                )
+                photo = utils.get_input_media_from_file_id(photo, FileType.PHOTO)
                 photo = raw.types.InputChatPhoto(id=photo.id)
         else:
             photo = raw.types.InputChatUploadedPhoto(
@@ -96,13 +94,9 @@ class SetChatPhoto:
             )
         elif isinstance(peer, raw.types.InputPeerChannel):
             await self.invoke(
-                raw.functions.channels.EditPhoto(
-                    channel=peer, photo=photo
-                )
+                raw.functions.channels.EditPhoto(channel=peer, photo=photo)
             )
         else:
-            raise ValueError(
-                f'The chat_id "{chat_id}" belongs to a user'
-            )
+            raise ValueError(f'The chat_id "{chat_id}" belongs to a user')
 
         return True

@@ -78,23 +78,17 @@ class Giveaway(Object):
             except Exception:
                 private_ids.append(chat_id)
             else:
-                chats.append(
-                    types.Chat._parse_chat(client, chat.chats[0])
-                )
+                chats.append(types.Chat._parse_chat(client, chat.chats[0]))
 
         return Giveaway(
             chats=chats,
             quantity=giveaway.quantity,
             months=giveaway.months,
-            expire_date=utils.timestamp_to_datetime(
-                giveaway.until_date
-            ),
+            expire_date=utils.timestamp_to_datetime(giveaway.until_date),
             new_subscribers=giveaway.only_new_subscribers,
             allowed_countries=giveaway.countries_iso2
             if len(giveaway.countries_iso2) > 0
             else None,
-            private_channel_ids=private_ids
-            if len(private_ids) > 0
-            else None,
+            private_channel_ids=private_ids if len(private_ids) > 0 else None,
             client=client,
         )

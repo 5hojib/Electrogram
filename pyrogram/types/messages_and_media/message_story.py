@@ -42,24 +42,18 @@ class MessageStory(Object):
         user_id = None
         chat_id = None
         if isinstance(message_story.peer, raw.types.PeerChannel):
-            chat_id = utils.get_channel_id(
-                message_story.peer.channel_id
-            )
+            chat_id = utils.get_channel_id(message_story.peer.channel_id)
             chat = await client.invoke(
                 raw.functions.channels.GetChannels(
                     id=[await client.resolve_peer(chat_id)]
                 )
             )
-            sender_chat = types.Chat._parse_chat(
-                client, chat.chats[0]
-            )
+            sender_chat = types.Chat._parse_chat(client, chat.chats[0])
         else:
             user_id = message_story.peer.user_id
             from_user = await client.get_users(user_id)
         if not client.me.is_bot:
-            return await client.get_stories(
-                user_id or chat_id, message_story.id
-            )
+            return await client.get_stories(user_id or chat_id, message_story.id)
         return MessageStory(
             from_user=from_user,
             sender_chat=sender_chat,

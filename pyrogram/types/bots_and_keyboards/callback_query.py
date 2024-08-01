@@ -79,27 +79,17 @@ class CallbackQuery(Object, Update):
         message = None
         inline_message_id = None
 
-        if isinstance(
-            callback_query, raw.types.UpdateBotCallbackQuery
-        ):
+        if isinstance(callback_query, raw.types.UpdateBotCallbackQuery):
             chat_id = utils.get_peer_id(callback_query.peer)
             message_id = callback_query.msg_id
 
             message = client.message_cache[(chat_id, message_id)]
 
             if not message:
-                message = await client.get_messages(
-                    chat_id, message_id
-                )
-        elif isinstance(
-            callback_query, raw.types.UpdateInlineBotCallbackQuery
-        ):
-            inline_message_id = utils.pack_inline_message_id(
-                callback_query.msg_id
-            )
-        elif isinstance(
-            callback_query, raw.types.UpdateBusinessBotCallbackQuery
-        ):
+                message = await client.get_messages(chat_id, message_id)
+        elif isinstance(callback_query, raw.types.UpdateInlineBotCallbackQuery):
+            inline_message_id = utils.pack_inline_message_id(callback_query.msg_id)
+        elif isinstance(callback_query, raw.types.UpdateBusinessBotCallbackQuery):
             message = await types.Message._parse(
                 client,
                 callback_query.message,
@@ -118,16 +108,12 @@ class CallbackQuery(Object, Update):
 
         return CallbackQuery(
             id=str(callback_query.query_id),
-            from_user=types.User._parse(
-                client, users[callback_query.user_id]
-            ),
+            from_user=types.User._parse(client, users[callback_query.user_id]),
             message=message,
             inline_message_id=inline_message_id,
             chat_instance=str(callback_query.chat_instance),
             data=data,
-            game_short_name=getattr(
-                callback_query, "game_short_name", None
-            ),
+            game_short_name=getattr(callback_query, "game_short_name", None),
             client=client,
         )
 

@@ -19,8 +19,7 @@ class SendStory:
     ):
         file = await self.save_file(video)
         return raw.types.InputMediaUploadedDocument(
-            mime_type=self.guess_mime_type(file_name or video.name)
-            or "video/mp4",
+            mime_type=self.guess_mime_type(file_name or video.name) or "video/mp4",
             file=file,
             attributes=[
                 raw.types.DocumentAttributeVideo(
@@ -145,26 +144,18 @@ class SendStory:
             privacy_rules = [types.StoriesPrivacyRules(type=privacy)]
         else:
             privacy_rules = [
-                types.StoriesPrivacyRules(
-                    type=enums.StoriesPrivacyRules.PUBLIC
-                )
+                types.StoriesPrivacyRules(type=enums.StoriesPrivacyRules.PUBLIC)
             ]
 
         if photo:
             if isinstance(photo, str):
                 if Path(photo).is_file():
                     file = await self.save_file(photo)
-                    media = raw.types.InputMediaUploadedPhoto(
-                        file=file
-                    )
+                    media = raw.types.InputMediaUploadedPhoto(file=file)
                 elif re.match("^https?://", photo):
-                    media = raw.types.InputMediaPhotoExternal(
-                        url=photo
-                    )
+                    media = raw.types.InputMediaPhotoExternal(url=photo)
                 else:
-                    media = utils.get_input_media_from_file_id(
-                        photo, FileType.PHOTO
-                    )
+                    media = utils.get_input_media_from_file_id(photo, FileType.PHOTO)
             else:
                 file = await self.save_file(photo)
                 media = raw.types.InputMediaUploadedPhoto(file=file)
@@ -173,8 +164,7 @@ class SendStory:
                 if Path(video).is_file():
                     file = await self.save_file(video)
                     media = raw.types.InputMediaUploadedDocument(
-                        mime_type=self.guess_mime_type(video)
-                        or "video/mp4",
+                        mime_type=self.guess_mime_type(video) or "video/mp4",
                         file=file,
                         attributes=[
                             raw.types.DocumentAttributeVideo(
@@ -186,13 +176,9 @@ class SendStory:
                         ],
                     )
                 elif re.match("^https?://", video):
-                    media = raw.types.InputMediaDocumentExternal(
-                        url=video
-                    )
+                    media = raw.types.InputMediaDocumentExternal(url=video)
                 else:
-                    video = await self.download_media(
-                        video, in_memory=True
-                    )
+                    video = await self.download_media(video, in_memory=True)
                     media = await self._upload_video(file_name, video)
             else:
                 media = await self._upload_video(file_name, video)
@@ -216,27 +202,17 @@ class SendStory:
             privacy_rules.append(raw.types.InputPrivacyValueDisallowChatParticipants(chats=chats))
         """
         if allowed_users and len(allowed_users) > 0:
-            users = [
-                await self.resolve_peer(user_id)
-                for user_id in allowed_users
-            ]
-            privacy_rules.append(
-                raw.types.InputPrivacyValueAllowUsers(users=users)
-            )
+            users = [await self.resolve_peer(user_id) for user_id in allowed_users]
+            privacy_rules.append(raw.types.InputPrivacyValueAllowUsers(users=users))
         if denied_users and len(denied_users) > 0:
-            users = [
-                await self.resolve_peer(user_id)
-                for user_id in denied_users
-            ]
+            users = [await self.resolve_peer(user_id) for user_id in denied_users]
             privacy_rules.append(
                 raw.types.InputPrivacyValueDisallowUsers(users=users)
             )
 
         forward_from_chat = None
         if forward_from_chat_id is not None:
-            forward_from_chat = await self.resolve_peer(
-                forward_from_chat_id
-            )
+            forward_from_chat = await self.resolve_peer(forward_from_chat_id)
             media = raw.types.InputMediaEmpty()
             if forward_from_story_id is None:
                 raise ValueError(
@@ -259,17 +235,13 @@ class SendStory:
                 if forward_from_chat_id is not None
                 else None,
                 fwd_modified=bool(
-                    forward_from_chat_id is not None
-                    and caption is not None
+                    forward_from_chat_id is not None and caption is not None
                 ),
                 media_areas=[
-                    await media_area.write(self)
-                    for media_area in media_areas
+                    await media_area.write(self) for media_area in media_areas
                 ]
                 if media_areas is not None
                 else None,
             )
         )
-        return await types.Story._parse(
-            self, r.updates[0].story, r.updates[0].peer
-        )
+        return await types.Story._parse(self, r.updates[0].story, r.updates[0].peer)

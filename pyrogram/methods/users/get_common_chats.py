@@ -43,10 +43,6 @@ class GetCommonChats:
                 )
             )
 
-            return types.List(
-                [types.Chat._parse_chat(self, x) for x in r.chats]
-            )
+            return types.List([types.Chat._parse_chat(self, x) for x in r.chats])
 
-        raise ValueError(
-            f'The user_id "{user_id}" doesn\'t belong to a user'
-        )
+        raise ValueError(f'The user_id "{user_id}" doesn\'t belong to a user')

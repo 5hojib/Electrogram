@@ -13,7 +13,5 @@ class GetActiveSessions:
         Returns:
             :obj:`~pyrogram.types.ActiveSessions`: On success, all the active sessions of the current user is returned.
         """
-        r = await self.invoke(
-            raw.functions.account.GetAuthorizations()
-        )
+        r = await self.invoke(raw.functions.account.GetAuthorizations())
         return types.ActiveSessions._parse(r)

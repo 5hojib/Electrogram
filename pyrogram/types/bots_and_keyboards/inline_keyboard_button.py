@@ -77,9 +77,7 @@ class InlineKeyboardButton(Object):
         self.login_url = login_url
         self.user_id = user_id
         self.switch_inline_query = switch_inline_query
-        self.switch_inline_query_current_chat = (
-            switch_inline_query_current_chat
-        )
+        self.switch_inline_query_current_chat = switch_inline_query_current_chat
         self.callback_game = callback_game
         self.requires_password = requires_password
         # self.pay = pay
@@ -97,9 +95,7 @@ class InlineKeyboardButton(Object):
             return InlineKeyboardButton(
                 text=b.text,
                 callback_data=data,
-                requires_password=getattr(
-                    b, "requires_password", None
-                ),
+                requires_password=getattr(b, "requires_password", None),
             )
 
         if isinstance(b, raw.types.KeyboardButtonUrl):
@@ -111,9 +107,7 @@ class InlineKeyboardButton(Object):
             )
 
         if isinstance(b, raw.types.KeyboardButtonUserProfile):
-            return InlineKeyboardButton(
-                text=b.text, user_id=b.user_id
-            )
+            return InlineKeyboardButton(text=b.text, user_id=b.user_id)
 
         if isinstance(b, raw.types.KeyboardButtonSwitchInline):
             if b.same_peer:
@@ -121,9 +115,7 @@ class InlineKeyboardButton(Object):
                     text=b.text,
                     switch_inline_query_current_chat=b.query,
                 )
-            return InlineKeyboardButton(
-                text=b.text, switch_inline_query=b.query
-            )
+            return InlineKeyboardButton(text=b.text, switch_inline_query=b.query)
 
         if isinstance(b, raw.types.KeyboardButtonGame):
             return InlineKeyboardButton(
@@ -155,16 +147,12 @@ class InlineKeyboardButton(Object):
             )
 
         if self.url is not None:
-            return raw.types.KeyboardButtonUrl(
-                text=self.text, url=self.url
-            )
+            return raw.types.KeyboardButtonUrl(text=self.text, url=self.url)
 
         if self.login_url is not None:
             return self.login_url.write(
                 text=self.text,
-                bot=await client.resolve_peer(
-                    self.login_url.bot_username or "self"
-                ),
+                bot=await client.resolve_peer(self.login_url.bot_username or "self"),
             )
 
         if self.user_id is not None:

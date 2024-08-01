@@ -39,13 +39,9 @@ class ReadChatHistory:
         peer = await self.resolve_peer(chat_id)
 
         if isinstance(peer, raw.types.InputPeerChannel):
-            q = raw.functions.channels.ReadHistory(
-                channel=peer, max_id=max_id
-            )
+            q = raw.functions.channels.ReadHistory(channel=peer, max_id=max_id)
         else:
-            q = raw.functions.messages.ReadHistory(
-                peer=peer, max_id=max_id
-            )
+            q = raw.functions.messages.ReadHistory(peer=peer, max_id=max_id)
 
         await self.invoke(q)
 

@@ -34,8 +34,7 @@ class InputReplyToMessage(Object):
         *,
         reply_to_message_id: int | None = None,
         message_thread_id: int | None = None,
-        reply_to_chat: raw.types.InputPeerChannel
-        | raw.types.InputPeerUser = None,
+        reply_to_chat: raw.types.InputPeerChannel | raw.types.InputPeerUser = None,
         quote_text: str | None = None,
         quote_entities: list[raw.base.MessageEntity] | None = None,
     ) -> None:

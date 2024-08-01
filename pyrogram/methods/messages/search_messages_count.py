@@ -52,11 +52,7 @@ class SearchMessagesCount:
                 limit=1,
                 min_id=0,
                 max_id=0,
-                from_id=(
-                    await self.resolve_peer(from_user)
-                    if from_user
-                    else None
-                ),
+                from_id=(await self.resolve_peer(from_user) if from_user else None),
                 hash=0,
             )
         )

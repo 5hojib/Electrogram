@@ -51,9 +51,7 @@ class InlineQueryResultArticle(InlineQueryResult):
         thumb_width: int = 0,
         thumb_height: int = 0,
     ) -> None:
-        super().__init__(
-            "article", id, input_message_content, reply_markup
-        )
+        super().__init__("article", id, input_message_content, reply_markup)
 
         self.title = title
         self.url = url

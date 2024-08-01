@@ -186,8 +186,7 @@ class SendInvoice:
         for i in r.updates:
             if isinstance(
                 i,
-                raw.types.UpdateNewMessage
-                | raw.types.UpdateNewChannelMessage,
+                raw.types.UpdateNewMessage | raw.types.UpdateNewChannelMessage,
             ):
                 return await types.Message._parse(
                     self,

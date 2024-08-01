@@ -47,15 +47,9 @@ class RequestedChats(Object):
                 | raw.types.PeerChat
                 | raw.types.PeerChannel,
             ):
-                chats.append(
-                    await types.RequestedChat._parse(client, chat)
-                )
-            elif isinstance(
-                chat, raw.types.RequestedPeerUser | raw.types.PeerUser
-            ):
-                users.append(
-                    await types.RequestedUser._parse(client, chat)
-                )
+                chats.append(await types.RequestedChat._parse(client, chat))
+            elif isinstance(chat, raw.types.RequestedPeerUser | raw.types.PeerUser):
+                users.append(await types.RequestedUser._parse(client, chat))
 
         return RequestedChats(
             button_id,

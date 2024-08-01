@@ -74,9 +74,7 @@ class TCPAbridgedO(TCP):
 
             length = aes.ctr256_decrypt(length, *self.decrypt)
 
-        data = await super().recv(
-            int.from_bytes(length, "little") * 4
-        )
+        data = await super().recv(int.from_bytes(length, "little") * 4)
 
         if data is None:
             return None

@@ -24,11 +24,7 @@ if TYPE_CHECKING:
 
 
 ReadPreferences = (
-    Primary
-    | PrimaryPreferred
-    | Secondary
-    | SecondaryPreferred
-    | Nearest
+    Primary | PrimaryPreferred | Secondary | SecondaryPreferred | Nearest
 )
 
 

@@ -29,9 +29,7 @@ class GetChatMenuButton:
         else:
             r = (
                 await self.invoke(
-                    raw.functions.users.GetFullUser(
-                        id=raw.types.InputUserSelf()
-                    )
+                    raw.functions.users.GetFullUser(id=raw.types.InputUserSelf())
                 )
             ).full_user.bot_info.menu_button
 

@@ -132,10 +132,7 @@ class DownloadMedia:
         else:
             media = message
 
-        if isinstance(media, str):
-            file_id_str = media
-        else:
-            file_id_str = media.file_id
+        file_id_str = media if isinstance(media, str) else media.file_id
 
         file_id_obj = FileId.decode(file_id_str)
 
@@ -149,9 +146,7 @@ class DownloadMedia:
         file_name = file_name or media_file_name or ""
 
         if not Path(file_name).is_absolute():
-            directory = self.PARENT_DIR / (
-                directory or DEFAULT_DOWNLOAD_DIR
-            )
+            directory = self.PARENT_DIR / (directory or DEFAULT_DOWNLOAD_DIR)
 
         if not file_name:
             guessed_extension = self.guess_extension(mime_type)
@@ -177,9 +172,7 @@ class DownloadMedia:
 
             file_name = "{}_{}_{}{}".format(
                 FileType(file_id_obj.file_type).name.lower(),
-                (date or datetime.now()).strftime(
-                    "%Y-%m-%d_%H-%M-%S"
-                ),
+                (date or datetime.now()).strftime("%Y-%m-%d_%H-%M-%S"),
                 self.rnd_id(),
                 extension,
             )

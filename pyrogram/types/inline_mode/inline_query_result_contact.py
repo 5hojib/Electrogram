@@ -59,9 +59,7 @@ class InlineQueryResultContact(InlineQueryResult):
         thumb_width: int = 0,
         thumb_height: int = 0,
     ) -> None:
-        super().__init__(
-            "contact", id, input_message_content, reply_markup
-        )
+        super().__init__("contact", id, input_message_content, reply_markup)
 
         self.phone_number = phone_number
         self.first_name = first_name
@@ -77,9 +75,7 @@ class InlineQueryResultContact(InlineQueryResult):
             type=self.type,
             title=self.first_name,
             send_message=(
-                await self.input_message_content.write(
-                    client, self.reply_markup
-                )
+                await self.input_message_content.write(client, self.reply_markup)
                 if self.input_message_content
                 else raw.types.InputBotInlineMessageMediaContact(
                     phone_number=self.phone_number,

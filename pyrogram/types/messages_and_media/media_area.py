@@ -13,9 +13,7 @@ class MediaArea(Object):
     - :obj:`~pyrogram.types.MediaAreaChannelPost`
     """
 
-    def __init__(
-        self, coordinates: types.MediaAreaCoordinates
-    ) -> None:
+    def __init__(self, coordinates: types.MediaAreaCoordinates) -> None:
         super().__init__()
 
         self.coordinates = coordinates
@@ -24,7 +22,5 @@ class MediaArea(Object):
         self: pyrogram.Client, media_area: raw.base.MediaArea
     ) -> MediaArea:
         if isinstance(media_area, raw.types.MediaAreaChannelPost):
-            return await types.MediaAreaChannelPost._parse(
-                self, media_area
-            )
+            return await types.MediaAreaChannelPost._parse(self, media_area)
         return None

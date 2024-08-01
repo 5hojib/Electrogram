@@ -65,12 +65,8 @@ class Markdown:
         for line in lines:
             if line.startswith(BLOCKQUOTE_DELIM):
                 if not in_blockquote:
-                    line = re.sub(
-                        r"^> ", OPENING_TAG.format("blockquote"), line
-                    )
-                    line = re.sub(
-                        r"^>", OPENING_TAG.format("blockquote"), line
-                    )
+                    line = re.sub(r"^> ", OPENING_TAG.format("blockquote"), line)
+                    line = re.sub(r"^>", OPENING_TAG.format("blockquote"), line)
                     in_blockquote = True
                     result.append(line.strip())
                 else:
@@ -98,9 +94,7 @@ class Markdown:
                 result.append(line)
 
         if in_blockquote:
-            line = result[len(result) - 1] + CLOSING_TAG.format(
-                "blockquote"
-            )
+            line = result[len(result) - 1] + CLOSING_TAG.format("blockquote")
             result.pop(len(result) - 1)
             result.append(line)
 
@@ -165,9 +159,7 @@ class Markdown:
                 tag = CLOSING_TAG.format(tag)
 
             if delim == PRE_DELIM and delim in delims:
-                delim_and_language = text[
-                    text.find(PRE_DELIM) :
-                ].split("\n")[0]
+                delim_and_language = text[text.find(PRE_DELIM) :].split("\n")[0]
                 language = delim_and_language[len(PRE_DELIM) :]
                 text = utils.replace_once(
                     text,

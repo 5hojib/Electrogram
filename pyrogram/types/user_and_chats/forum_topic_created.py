@@ -47,7 +47,5 @@ class ForumTopicCreated(Object):
             id=getattr(message, "id", None),
             title=getattr(message.action, "title", None),
             icon_color=getattr(message.action, "icon_color", None),
-            icon_emoji_id=getattr(
-                message.action, "icon_emoji_id", None
-            ),
+            icon_emoji_id=getattr(message.action, "icon_emoji_id", None),
         )

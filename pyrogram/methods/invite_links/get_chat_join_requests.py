@@ -64,9 +64,7 @@ class GetChatJoinRequests:
             users = {i.id: i for i in r.users}
 
             offset_date = r.importers[-1].date
-            offset_user = await self.resolve_peer(
-                r.importers[-1].user_id
-            )
+            offset_user = await self.resolve_peer(r.importers[-1].user_id)
 
             for i in r.importers:
                 yield types.ChatJoiner._parse(self, i, users)

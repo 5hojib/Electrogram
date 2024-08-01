@@ -226,7 +226,9 @@ def test_html_unparse_escaped() -> None:
 
 
 def test_html_unparse_escaped_nested() -> None:
-    expected = "<b>&lt;b&gt;bold <u>&lt;u&gt;underline&lt;/u&gt;</u> bold&lt;/b&gt;</b>"
+    expected = (
+        "<b>&lt;b&gt;bold <u>&lt;u&gt;underline&lt;/u&gt;</u> bold&lt;/b&gt;</b>"
+    )
     text = "<b>bold <u>underline</u> bold</b>"
     entities = pyrogram.types.List(
         [

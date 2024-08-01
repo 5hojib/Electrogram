@@ -72,9 +72,7 @@ class InlineQueryResultDocument(InlineQueryResult):
         thumb_width: int = 0,
         thumb_height: int = 0,
     ) -> None:
-        super().__init__(
-            "file", id, input_message_content, reply_markup
-        )
+        super().__init__("file", id, input_message_content, reply_markup)
 
         self.document_url = document_url
         self.title = title
@@ -127,9 +125,7 @@ class InlineQueryResultDocument(InlineQueryResult):
             thumb=thumb,
             content=document,
             send_message=(
-                await self.input_message_content.write(
-                    client, self.reply_markup
-                )
+                await self.input_message_content.write(client, self.reply_markup)
                 if self.input_message_content
                 else raw.types.InputBotInlineMessageMediaAuto(
                     reply_markup=await self.reply_markup.write(client)

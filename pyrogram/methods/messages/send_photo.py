@@ -196,26 +196,20 @@ class SendPhoto:
                     )
                     media = raw.types.InputMediaUploadedPhoto(
                         file=file,
-                        ttl_seconds=(1 << 31) - 1
-                        if view_once
-                        else ttl_seconds,
+                        ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds,
                         spoiler=has_spoiler,
                     )
                 elif re.match("^https?://", photo):
                     media = raw.types.InputMediaPhotoExternal(
                         url=photo,
-                        ttl_seconds=(1 << 31) - 1
-                        if view_once
-                        else ttl_seconds,
+                        ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds,
                         spoiler=has_spoiler,
                     )
                 else:
                     media = utils.get_input_media_from_file_id(
                         photo,
                         FileType.PHOTO,
-                        ttl_seconds=(1 << 31) - 1
-                        if view_once
-                        else ttl_seconds,
+                        ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds,
                     )
                     media.spoiler = has_spoiler
             else:
@@ -226,9 +220,7 @@ class SendPhoto:
                 )
                 media = raw.types.InputMediaUploadedPhoto(
                     file=file,
-                    ttl_seconds=(1 << 31) - 1
-                    if view_once
-                    else ttl_seconds,
+                    ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds,
                     spoiler=has_spoiler,
                 )
 
@@ -240,9 +232,7 @@ class SendPhoto:
                         silent=disable_notification or None,
                         reply_to=reply_to,
                         random_id=self.rnd_id(),
-                        schedule_date=utils.datetime_to_timestamp(
-                            schedule_date
-                        ),
+                        schedule_date=utils.datetime_to_timestamp(schedule_date),
                         noforwards=protect_content,
                         effect=message_effect_id,
                         invert_media=invert_media,
@@ -266,9 +256,7 @@ class SendPhoto:
                     else:
                         r = await self.invoke(rpc)
                 except FilePartMissing as e:
-                    await self.save_file(
-                        photo, file_id=file.id, file_part=e.value
-                    )
+                    await self.save_file(photo, file_id=file.id, file_part=e.value)
                 else:
                     for i in r.updates:
                         if isinstance(

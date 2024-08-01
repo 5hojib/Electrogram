@@ -30,9 +30,7 @@ class OnEditedBotBusinessMessage:
         def decorator(func: Callable) -> Callable:
             if isinstance(self, pyrogram.Client):
                 self.add_handler(
-                    pyrogram.handlers.EditedBotBusinessMessageHandler(
-                        func, filters
-                    ),
+                    pyrogram.handlers.EditedBotBusinessMessageHandler(func, filters),
                     group,
                 )
             elif isinstance(self, Filter) or self is None:

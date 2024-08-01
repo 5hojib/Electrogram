@@ -132,13 +132,9 @@ class MongoStorage(Storage):
             return
         await self._peer.bulk_write(bulk)
 
-    async def update_usernames(
-        self, usernames: list[tuple[int, str]]
-    ) -> None:
+    async def update_usernames(self, usernames: list[tuple[int, str]]) -> None:
         s = int(time.time())
-        bulk_delete = [
-            DeleteMany({"peer_id": i[0]}) for i in usernames
-        ]
+        bulk_delete = [DeleteMany({"peer_id": i[0]}) for i in usernames]
         bulk = [
             UpdateOne(
                 {"_id": i[1]},
@@ -152,9 +148,7 @@ class MongoStorage(Storage):
         await self._usernames.bulk_write(bulk_delete)
         await self._usernames.bulk_write(bulk)
 
-    async def update_state(
-        self, value: tuple[int, int, int, int, int] = object
-    ):
+    async def update_state(self, value: tuple[int, int, int, int, int] = object):
         if value is object:
             states = [
                 [
@@ -214,10 +208,7 @@ class MongoStorage(Storage):
             )
             if r2 is None:
                 raise KeyError(f"Username not found: {username}")
-            if (
-                abs(time.time() - r2["last_update_on"])
-                > self.USERNAME_TTL
-            ):
+            if abs(time.time() - r2["last_update_on"]) > self.USERNAME_TTL:
                 raise KeyError(f"Username expired: {username}")
             r = await self._peer.find_one(
                 {"_id": r2["peer_id"]},
@@ -262,11 +253,7 @@ class MongoStorage(Storage):
         )
 
     async def _accessor(self, value: Any = object):
-        return (
-            await self._get()
-            if value is object
-            else await self._set(value)
-        )
+        return await self._get() if value is object else await self._set(value)
 
     async def dc_id(self, value: int = object):
         return await self._accessor(value)

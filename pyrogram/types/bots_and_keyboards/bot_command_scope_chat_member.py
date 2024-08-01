@@ -18,17 +18,13 @@ class BotCommandScopeChatMember(BotCommandScope):
             Unique identifier of the target user.
     """
 
-    def __init__(
-        self, chat_id: int | str, user_id: int | str
-    ) -> None:
+    def __init__(self, chat_id: int | str, user_id: int | str) -> None:
         super().__init__("chat_member")
 
         self.chat_id = chat_id
         self.user_id = user_id
 
-    async def write(
-        self, client: pyrogram.Client
-    ) -> raw.base.BotCommandScope:
+    async def write(self, client: pyrogram.Client) -> raw.base.BotCommandScope:
         return raw.types.BotCommandScopePeerUser(
             peer=await client.resolve_peer(self.chat_id),
             user_id=await client.resolve_peer(self.user_id),

@@ -12,9 +12,7 @@ class User:
 
 
 class Message:
-    def __init__(
-        self, text: str | None = None, caption: str | None = None
-    ) -> None:
+    def __init__(self, text: str | None = None, caption: str | None = None) -> None:
         self.text = text
         self.caption = caption
         self.command = None

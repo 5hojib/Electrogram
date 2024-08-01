@@ -171,20 +171,14 @@ class Story(Object, Update):
         | raw.types.InputPeerUser,
     ) -> Story:
         if isinstance(stories, raw.types.StoryItemSkipped):
-            return await types.StorySkipped._parse(
-                client, stories, peer
-            )
+            return await types.StorySkipped._parse(client, stories, peer)
         if isinstance(stories, raw.types.StoryItemDeleted):
-            return await types.StoryDeleted._parse(
-                client, stories, peer
-            )
+            return await types.StoryDeleted._parse(client, stories, peer)
         entities = [
             types.MessageEntity._parse(client, entity, {})
             for entity in stories.entities
         ]
-        entities = types.List(
-            filter(lambda x: x is not None, entities)
-        )
+        entities = types.List(filter(lambda x: x is not None, entities))
         animation = None
         photo = None
         video = None
@@ -205,18 +199,13 @@ class Story(Object, Update):
                     stories.media.ttl_seconds,
                 )
                 media_type = enums.MessageMediaType.PHOTO
-            elif isinstance(
-                stories.media, raw.types.MessageMediaDocument
-            ):
+            elif isinstance(stories.media, raw.types.MessageMediaDocument):
                 doc = stories.media.document
 
                 if isinstance(doc, raw.types.Document):
                     attributes = {type(i): i for i in doc.attributes}
 
-                    if (
-                        raw.types.DocumentAttributeAnimated
-                        in attributes
-                    ):
+                    if raw.types.DocumentAttributeAnimated in attributes:
                         video_attributes = attributes.get(
                             raw.types.DocumentAttributeVideo, None
                         )
@@ -224,9 +213,7 @@ class Story(Object, Update):
                             client, doc, video_attributes, None
                         )
                         media_type = enums.MessageMediaType.ANIMATION
-                    elif (
-                        raw.types.DocumentAttributeVideo in attributes
-                    ):
+                    elif raw.types.DocumentAttributeVideo in attributes:
                         video_attributes = attributes.get(
                             raw.types.DocumentAttributeVideo, None
                         )
@@ -242,18 +229,14 @@ class Story(Object, Update):
                         media_type = None
             else:
                 media_type = None
-        if isinstance(
-            peer, raw.types.PeerChannel | raw.types.InputPeerChannel
-        ):
+        if isinstance(peer, raw.types.PeerChannel | raw.types.InputPeerChannel):
             chat_id = utils.get_channel_id(peer.channel_id)
             chat = await client.invoke(
                 raw.functions.channels.GetChannels(
                     id=[await client.resolve_peer(chat_id)]
                 )
             )
-            sender_chat = types.Chat._parse_chat(
-                client, chat.chats[0]
-            )
+            sender_chat = types.Chat._parse_chat(client, chat.chats[0])
         elif isinstance(peer, raw.types.InputPeerSelf):
             from_user = client.me
         else:
@@ -262,56 +245,40 @@ class Story(Object, Update):
         from_id = getattr(stories, "from_id", None)
         if from_id is not None:
             if getattr(from_id, "user_id", None) is not None:
-                from_user = await client.get_users(
-                    getattr(from_id, "user_id")
-                )
+                from_user = await client.get_users(getattr(from_id, "user_id"))
             elif getattr(from_id, "channel_id", None) is not None:
                 chat = await client.invoke(
                     raw.functions.channels.GetChannels(
                         id=[
                             await client.resolve_peer(
-                                utils.get_channel_id(
-                                    getattr(from_id, "channel_id")
-                                )
+                                utils.get_channel_id(getattr(from_id, "channel_id"))
                             )
                         ]
                     )
                 )
-                sender_chat = types.Chat._parse_chat(
-                    client, chat.chats[0]
-                )
+                sender_chat = types.Chat._parse_chat(client, chat.chats[0])
             elif getattr(from_id, "chat_id", None) is not None:
                 chat = await client.invoke(
                     raw.functions.channels.GetChannels(
                         id=[
                             await client.resolve_peer(
-                                utils.get_channel_id(
-                                    getattr(from_id, "chat_id")
-                                )
+                                utils.get_channel_id(getattr(from_id, "chat_id"))
                             )
                         ]
                     )
                 )
-                sender_chat = types.Chat._parse_chat(
-                    client, chat.chats[0]
-                )
+                sender_chat = types.Chat._parse_chat(client, chat.chats[0])
 
         for priv in stories.privacy:
             if isinstance(priv, raw.types.PrivacyValueAllowAll):
                 privacy = enums.StoryPrivacy.PUBLIC
-            elif isinstance(
-                priv, raw.types.PrivacyValueAllowCloseFriends
-            ):
+            elif isinstance(priv, raw.types.PrivacyValueAllowCloseFriends):
                 privacy = enums.StoryPrivacy.CLOSE_FRIENDS
-            elif isinstance(
-                priv, raw.types.PrivacyValueAllowContacts
-            ):
+            elif isinstance(priv, raw.types.PrivacyValueAllowContacts):
                 privacy = enums.StoryPrivacy.CONTACTS
             elif isinstance(priv, raw.types.PrivacyValueDisallowAll):
                 privacy = enums.StoryPrivacy.PRIVATE
-            elif isinstance(
-                priv, raw.types.PrivacyValueDisallowContacts
-            ):
+            elif isinstance(priv, raw.types.PrivacyValueDisallowContacts):
                 privacy = enums.StoryPrivacy.NO_CONTACTS
 
             """
@@ -333,10 +300,7 @@ class Story(Object, Update):
             )
 
         media_areas = None
-        if (
-            stories.media_areas is not None
-            and len(stories.media_areas) > 0
-        ):
+        if stories.media_areas is not None and len(stories.media_areas) > 0:
             media_areas = [
                 await types.MediaArea._parse(client, media_area)
                 for media_area in stories.media_areas
@@ -347,9 +311,7 @@ class Story(Object, Update):
             from_user=from_user,
             sender_chat=sender_chat,
             date=utils.timestamp_to_datetime(stories.date),
-            expire_date=utils.timestamp_to_datetime(
-                stories.expire_date
-            ),
+            expire_date=utils.timestamp_to_datetime(stories.expire_date),
             media=media_type,
             has_protected_content=stories.noforwards,
             animation=animation,
@@ -448,9 +410,7 @@ class Story(Object, Update):
             reply_to_story_id = self.id
 
         return await self._client.send_message(
-            chat_id=self.from_user.id
-            if self.from_user
-            else self.sender_chat.id,
+            chat_id=self.from_user.id if self.from_user else self.sender_chat.id,
             text=text,
             parse_mode=parse_mode,
             entities=entities,
@@ -587,9 +547,7 @@ class Story(Object, Update):
             reply_to_story_id = self.id
 
         return await self._client.send_animation(
-            chat_id=self.from_user.id
-            if self.from_user
-            else self.sender_chat.id,
+            chat_id=self.from_user.id if self.from_user else self.sender_chat.id,
             animation=animation,
             caption=caption,
             parse_mode=parse_mode,
@@ -726,9 +684,7 @@ class Story(Object, Update):
             reply_to_story_id = self.id
 
         return await self._client.send_audio(
-            chat_id=self.from_user.id
-            if self.from_user
-            else self.sender_chat.id,
+            chat_id=self.from_user.id if self.from_user else self.sender_chat.id,
             audio=audio,
             caption=caption,
             parse_mode=parse_mode,
@@ -811,9 +767,7 @@ class Story(Object, Update):
             reply_to_story_id = self.id
 
         return await self._client.send_cached_media(
-            chat_id=self.from_user.id
-            if self.from_user
-            else self.sender_chat.id,
+            chat_id=self.from_user.id if self.from_user else self.sender_chat.id,
             file_id=file_id,
             caption=caption,
             parse_mode=parse_mode,
@@ -875,9 +829,7 @@ class Story(Object, Update):
             reply_to_story_id = self.id
 
         return await self._client.send_media_group(
-            chat_id=self.from_user.id
-            if self.from_user
-            else self.sender_chat.id,
+            chat_id=self.from_user.id if self.from_user else self.sender_chat.id,
             media=media,
             disable_notification=disable_notification,
             reply_to_story_id=reply_to_story_id,
@@ -992,9 +944,7 @@ class Story(Object, Update):
             reply_to_story_id = self.id
 
         return await self._client.send_photo(
-            chat_id=self.from_user.id
-            if self.from_user
-            else self.sender_chat.id,
+            chat_id=self.from_user.id if self.from_user else self.sender_chat.id,
             photo=photo,
             caption=caption,
             parse_mode=parse_mode,
@@ -1091,9 +1041,7 @@ class Story(Object, Update):
             reply_to_story_id = self.id
 
         return await self._client.send_sticker(
-            chat_id=self.from_user.id
-            if self.from_user
-            else self.sender_chat.id,
+            chat_id=self.from_user.id if self.from_user else self.sender_chat.id,
             sticker=sticker,
             disable_notification=disable_notification,
             reply_to_story_id=reply_to_story_id,
@@ -1234,9 +1182,7 @@ class Story(Object, Update):
             reply_to_story_id = self.id
 
         return await self._client.send_video(
-            chat_id=self.from_user.id
-            if self.from_user
-            else self.sender_chat.id,
+            chat_id=self.from_user.id if self.from_user else self.sender_chat.id,
             video=video,
             caption=caption,
             parse_mode=parse_mode,
@@ -1352,9 +1298,7 @@ class Story(Object, Update):
             reply_to_story_id = self.id
 
         return await self._client.send_video_note(
-            chat_id=self.from_user.id
-            if self.from_user
-            else self.sender_chat.id,
+            chat_id=self.from_user.id if self.from_user else self.sender_chat.id,
             video_note=video_note,
             duration=duration,
             length=length,
@@ -1464,9 +1408,7 @@ class Story(Object, Update):
             reply_to_story_id = self.id
 
         return await self._client.send_voice(
-            chat_id=self.from_user.id
-            if self.from_user
-            else self.sender_chat.id,
+            chat_id=self.from_user.id if self.from_user else self.sender_chat.id,
             voice=voice,
             caption=caption,
             parse_mode=parse_mode,
@@ -1506,9 +1448,7 @@ class Story(Object, Update):
             story_ids=self.id,
         )
 
-    async def edit_animation(
-        self, animation: str | BinaryIO
-    ) -> types.Story:
+    async def edit_animation(self, animation: str | BinaryIO) -> types.Story:
         """Bound method *edit_animation* of :obj:`~pyrogram.types.Story`.
 
         Use as a shortcut for:
@@ -1829,9 +1769,7 @@ class Story(Object, Update):
             RPCError: In case of a Telegram RPC error.
         """
         return await self._client.export_story_link(
-            chat_id=self.from_user.id
-            if self.from_user
-            else self.sender_chat.id,
+            chat_id=self.from_user.id if self.from_user else self.sender_chat.id,
             story_id=self.id,
         )
 

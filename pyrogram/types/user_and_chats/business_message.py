@@ -95,28 +95,18 @@ class BusinessMessage(Object):
 
         return BusinessMessage(
             shortcut_id=message.shortcut_id,
-            is_greeting=isinstance(
-                message, raw.types.BusinessGreetingMessage
-            ),
-            is_away=isinstance(
-                message, raw.types.BusinessAwayMessage
-            ),
-            no_activity_days=getattr(
-                message, "no_activity_days", None
-            ),
+            is_greeting=isinstance(message, raw.types.BusinessGreetingMessage),
+            is_away=isinstance(message, raw.types.BusinessAwayMessage),
+            no_activity_days=getattr(message, "no_activity_days", None),
             offline_only=getattr(message, "offline_only", None),
             recipients=types.BusinessRecipients._parse(
                 client, message.recipients, users
             ),
             schedule=schedule,
-            start_date=utils.timestamp_to_datetime(
-                message.schedule.start_date
-            )
+            start_date=utils.timestamp_to_datetime(message.schedule.start_date)
             if schedule == enums.BusinessSchedule.CUSTOM
             else None,
-            end_date=utils.timestamp_to_datetime(
-                message.schedule.end_date
-            )
+            end_date=utils.timestamp_to_datetime(message.schedule.end_date)
             if schedule == enums.BusinessSchedule.CUSTOM
             else None,
         )

@@ -14,9 +14,7 @@ class Int(bytes, TLObject):
         signed: bool = True,
         *args: Any,  # noqa: ARG003
     ) -> int:
-        return int.from_bytes(
-            data.read(cls.SIZE), "little", signed=signed
-        )
+        return int.from_bytes(data.read(cls.SIZE), "little", signed=signed)
 
     def __new__(cls, value: int, signed: bool = True) -> bytes:  # type: ignore
         return value.to_bytes(cls.SIZE, "little", signed=signed)

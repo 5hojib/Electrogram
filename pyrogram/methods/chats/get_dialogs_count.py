@@ -31,9 +31,7 @@ class GetDialogsCount:
             return len(
                 (
                     await self.invoke(
-                        raw.functions.messages.GetPinnedDialogs(
-                            folder_id=0
-                        )
+                        raw.functions.messages.GetPinnedDialogs(folder_id=0)
                     )
                 ).dialogs
             )

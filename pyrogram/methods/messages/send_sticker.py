@@ -164,8 +164,7 @@ class SendSticker:
                         progress_args=progress_args,
                     )
                     media = raw.types.InputMediaUploadedDocument(
-                        mime_type=self.guess_mime_type(sticker)
-                        or "image/webp",
+                        mime_type=self.guess_mime_type(sticker) or "image/webp",
                         file=file,
                         attributes=[
                             raw.types.DocumentAttributeFilename(
@@ -174,9 +173,7 @@ class SendSticker:
                         ],
                     )
                 elif re.match("^https?://", sticker):
-                    media = raw.types.InputMediaDocumentExternal(
-                        url=sticker
-                    )
+                    media = raw.types.InputMediaDocumentExternal(url=sticker)
                 else:
                     media = utils.get_input_media_from_file_id(
                         sticker, FileType.STICKER
@@ -188,13 +185,10 @@ class SendSticker:
                     progress_args=progress_args,
                 )
                 media = raw.types.InputMediaUploadedDocument(
-                    mime_type=self.guess_mime_type(sticker.name)
-                    or "image/webp",
+                    mime_type=self.guess_mime_type(sticker.name) or "image/webp",
                     file=file,
                     attributes=[
-                        raw.types.DocumentAttributeFilename(
-                            file_name=sticker.name
-                        )
+                        raw.types.DocumentAttributeFilename(file_name=sticker.name)
                     ],
                 )
 
@@ -206,9 +200,7 @@ class SendSticker:
                         silent=disable_notification or None,
                         reply_to=reply_to,
                         random_id=self.rnd_id(),
-                        schedule_date=utils.datetime_to_timestamp(
-                            schedule_date
-                        ),
+                        schedule_date=utils.datetime_to_timestamp(schedule_date),
                         noforwards=protect_content,
                         effect=message_effect_id,
                         reply_markup=await reply_markup.write(self)
@@ -226,9 +218,7 @@ class SendSticker:
                     else:
                         r = await self.invoke(rpc)
                 except FilePartMissing as e:
-                    await self.save_file(
-                        sticker, file_id=file.id, file_part=e.value
-                    )
+                    await self.save_file(sticker, file_id=file.id, file_part=e.value)
                 else:
                     for i in r.updates:
                         if isinstance(

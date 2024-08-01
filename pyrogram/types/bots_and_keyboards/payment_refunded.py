@@ -60,9 +60,7 @@ class PaymentRefunded(Object):
             payload = payment_refunded.payload
 
         return PaymentRefunded(
-            user=await client.get_users(
-                payment_refunded.peer.user_id
-            ),
+            user=await client.get_users(payment_refunded.peer.user_id),
             currency=payment_refunded.currency,
             total_amount=payment_refunded.total_amount,
             telegram_payment_charge_id=payment_refunded.charge.id

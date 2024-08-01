@@ -12,9 +12,9 @@ class TLObject:
 
     @classmethod
     def read(cls, b: BytesIO, *args: Any) -> Any:
-        return cast(
-            TLObject, objects[int.from_bytes(b.read(4), "little")]
-        ).read(b, *args)
+        return cast(TLObject, objects[int.from_bytes(b.read(4), "little")]).read(
+            b, *args
+        )
 
     def write(self, *args: Any) -> bytes:
         pass

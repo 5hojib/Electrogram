@@ -95,9 +95,7 @@ class RestrictChatMember:
                 manage_topics = True
                 send_inline = True
         else:
-            old_permissions = (
-                await self.get_chat(chat_id)
-            ).permissions
+            old_permissions = (await self.get_chat(chat_id)).permissions
             send_messages = None
             send_media = None
             embed_links = (
@@ -186,10 +184,7 @@ class RestrictChatMember:
                 else not old_permissions.can_send_voices
             )
             if permissions.can_send_messages is not None:
-                if permissions.can_send_messages:
-                    send_plain = False
-                else:
-                    send_plain = True
+                send_plain = not permissions.can_send_messages
                 if permissions.can_send_media_messages is None:
                     permissions.can_send_media_messages = (
                         old_permissions.can_send_media_messages
@@ -226,9 +221,7 @@ class RestrictChatMember:
                 channel=await self.resolve_peer(chat_id),
                 participant=await self.resolve_peer(user_id),
                 banned_rights=raw.types.ChatBannedRights(
-                    until_date=utils.datetime_to_timestamp(
-                        until_date
-                    ),
+                    until_date=utils.datetime_to_timestamp(until_date),
                     send_messages=send_messages,
                     send_media=send_media,
                     embed_links=embed_links,

@@ -61,9 +61,7 @@ class SearchGlobalHashtagMessages:
                 await self.invoke(
                     raw.functions.channels.SearchPosts(
                         hashtag=hashtag,
-                        offset_rate=utils.datetime_to_timestamp(
-                            offset_date
-                        ),
+                        offset_rate=utils.datetime_to_timestamp(offset_date),
                         offset_peer=offset_peer,
                         offset_id=offset_id,
                         limit=limit,

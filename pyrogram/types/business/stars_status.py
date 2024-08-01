@@ -20,9 +20,7 @@ class StarsStatus(Object):
         self.history = history
 
     @staticmethod
-    def _parse(
-        client, stars_status: raw.types.StarsStatus
-    ) -> StarsStatus:
+    def _parse(client, stars_status: raw.types.StarsStatus) -> StarsStatus:
         users = {user.id: user for user in stars_status.users}
         return StarsStatus(
             balance=stars_status.balance,

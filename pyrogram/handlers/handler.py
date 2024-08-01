@@ -10,9 +10,7 @@ if TYPE_CHECKING:
 
 
 class Handler:
-    def __init__(
-        self, callback: Callable, filters: Filter = None
-    ) -> None:
+    def __init__(self, callback: Callable, filters: Filter = None) -> None:
         self.callback = callback
         self.filters = filters
 

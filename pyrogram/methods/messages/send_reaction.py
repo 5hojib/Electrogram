@@ -76,15 +76,9 @@ class SendReaction:
                 else None
             )
         elif isinstance(emoji, int):
-            reaction = [
-                raw.types.ReactionCustomEmoji(document_id=emoji)
-            ]
+            reaction = [raw.types.ReactionCustomEmoji(document_id=emoji)]
         else:
-            reaction = (
-                [raw.types.ReactionEmoji(emoticon=emoji)]
-                if emoji
-                else None
-            )
+            reaction = [raw.types.ReactionEmoji(emoticon=emoji)] if emoji else None
         if message_id is not None:
             r = await self.invoke(
                 raw.functions.messages.SendReaction(
@@ -97,9 +91,7 @@ class SendReaction:
             )
             for i in r.updates:
                 if isinstance(i, raw.types.UpdateMessageReactions):
-                    return types.MessageReactions._parse(
-                        self, i.reactions
-                    )
+                    return types.MessageReactions._parse(self, i.reactions)
             return None
         if story_id is not None:
             await self.invoke(

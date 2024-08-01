@@ -72,9 +72,7 @@ class BanChatMember:
                     channel=chat_peer,
                     participant=user_peer,
                     banned_rights=raw.types.ChatBannedRights(
-                        until_date=utils.datetime_to_timestamp(
-                            until_date
-                        ),
+                        until_date=utils.datetime_to_timestamp(until_date),
                         view_messages=True,
                         send_messages=True,
                         send_media=True,
@@ -99,8 +97,7 @@ class BanChatMember:
         for i in r.updates:
             if isinstance(
                 i,
-                raw.types.UpdateNewMessage
-                | raw.types.UpdateNewChannelMessage,
+                raw.types.UpdateNewMessage | raw.types.UpdateNewChannelMessage,
             ):
                 return await types.Message._parse(
                     self,

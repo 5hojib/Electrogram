@@ -37,9 +37,7 @@ class GetChatMembersCount:
         peer = await self.resolve_peer(chat_id)
 
         if isinstance(peer, raw.types.InputPeerChat):
-            r = await self.invoke(
-                raw.functions.messages.GetChats(id=[peer.chat_id])
-            )
+            r = await self.invoke(raw.functions.messages.GetChats(id=[peer.chat_id]))
 
             if not join_request:
                 return r.chats[0].participants_count

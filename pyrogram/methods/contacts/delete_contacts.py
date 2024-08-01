@@ -43,8 +43,6 @@ class DeleteContacts:
         if not r.updates:
             return None
 
-        users = types.List(
-            [types.User._parse(self, i) for i in r.users]
-        )
+        users = types.List([types.User._parse(self, i) for i in r.users])
 
         return users if is_list else users[0]

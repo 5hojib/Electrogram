@@ -134,9 +134,7 @@ class CreateInvoiceLink:
                     phone_to_provider=send_phone_number_to_provider,
                     email_to_provider=send_email_to_provider,
                 ),
-                payload=payload.encode()
-                if isinstance(payload, str)
-                else payload,
+                payload=payload.encode() if isinstance(payload, str) else payload,
                 provider=provider_token,
                 provider_data=raw.types.DataJSON(
                     data=provider_data if provider_data else "{}"

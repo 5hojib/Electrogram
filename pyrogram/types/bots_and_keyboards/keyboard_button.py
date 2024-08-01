@@ -68,14 +68,10 @@ class KeyboardButton(Object):
             return KeyboardButton(text=b.text, request_location=True)
 
         if isinstance(b, raw.types.KeyboardButtonSimpleWebView):
-            return KeyboardButton(
-                text=b.text, web_app=types.WebAppInfo(url=b.url)
-            )
+            return KeyboardButton(text=b.text, web_app=types.WebAppInfo(url=b.url))
 
         if isinstance(b, raw.types.KeyboardButtonRequestPeer):
-            if isinstance(
-                b.peer_type, raw.types.RequestPeerTypeBroadcast
-            ):
+            if isinstance(b.peer_type, raw.types.RequestPeerTypeBroadcast):
                 return KeyboardButton(
                     text=b.text,
                     request_chat=types.RequestPeerTypeChannel(
@@ -119,17 +115,11 @@ class KeyboardButton(Object):
 
     def write(self):
         if self.request_contact:
-            return raw.types.KeyboardButtonRequestPhone(
-                text=self.text
-            )
+            return raw.types.KeyboardButtonRequestPhone(text=self.text)
         if self.request_location:
-            return raw.types.KeyboardButtonRequestGeoLocation(
-                text=self.text
-            )
+            return raw.types.KeyboardButtonRequestGeoLocation(text=self.text)
         if self.request_chat:
-            if isinstance(
-                self.request_chat, types.RequestPeerTypeChannel
-            ):
+            if isinstance(self.request_chat, types.RequestPeerTypeChannel):
                 return raw.types.InputKeyboardButtonRequestPeer(
                     text=self.text,
                     button_id=self.request_chat.button_id,

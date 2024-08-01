@@ -34,9 +34,7 @@ class DeletedMessagesHandler(Handler):
             The deleted messages, as list.
     """
 
-    def __init__(
-        self, callback: Callable, filters: Filter = None
-    ) -> None:
+    def __init__(self, callback: Callable, filters: Filter = None) -> None:
         super().__init__(callback, filters)
 
     async def check(

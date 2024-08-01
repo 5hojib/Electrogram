@@ -44,8 +44,7 @@ async def get_chunk(
     chats = {c.id: c for c in r.chats}
 
     return [
-        types.ChatMember._parse(client, member, users, chats)
-        for member in members
+        types.ChatMember._parse(client, member, users, chats) for member in members
     ]
 
 
@@ -109,14 +108,10 @@ class GetChatMembers:
 
         if isinstance(peer, raw.types.InputPeerChat):
             r = await self.invoke(
-                raw.functions.messages.GetFullChat(
-                    chat_id=peer.chat_id
-                )
+                raw.functions.messages.GetFullChat(chat_id=peer.chat_id)
             )
 
-            members = getattr(
-                r.full_chat.participants, "participants", []
-            )
+            members = getattr(r.full_chat.participants, "participants", [])
             users = {i.id: i for i in r.users}
 
             for member in members:

@@ -38,18 +38,11 @@ class Auth:
 
     @staticmethod
     def pack(data: TLObject) -> bytes:
-        return (
-            bytes(8)
-            + Long(MsgId())
-            + Int(len(data.write()))
-            + data.write()
-        )
+        return bytes(8) + Long(MsgId()) + Int(len(data.write())) + data.write()
 
     @staticmethod
     def unpack(b: BytesIO):
-        b.seek(
-            20
-        )  # Skip auth_key_id (8), message_id (8) and message_length (4)
+        b.seek(20)  # Skip auth_key_id (8), message_id (8) and message_length (4)
         return TLObject.read(b)
 
     async def invoke(self, data: TLObject):
@@ -88,13 +81,9 @@ class Auth:
                 await self.connection.connect()
 
                 # Step 1; Step 2
-                nonce = int.from_bytes(
-                    urandom(16), "little", signed=True
-                )
+                nonce = int.from_bytes(urandom(16), "little", signed=True)
                 log.debug("Send req_pq: %s", nonce)
-                res_pq = await self.invoke(
-                    raw.functions.ReqPqMulti(nonce=nonce)
-                )
+                res_pq = await self.invoke(raw.functions.ReqPqMulti(nonce=nonce))
                 log.debug("Got ResPq: %s", res_pq.server_nonce)
                 log.debug(
                     "Server public key fingerprints: %s",
@@ -125,9 +114,7 @@ class Auth:
 
                 # Step 4
                 server_nonce = res_pq.server_nonce
-                new_nonce = int.from_bytes(
-                    urandom(32), "little", signed=True
-                )
+                new_nonce = int.from_bytes(urandom(32), "little", signed=True)
 
                 data = raw.types.PQInnerData(
                     pq=res_pq.pq,
@@ -141,9 +128,7 @@ class Auth:
                 sha = sha1(data).digest()
                 padding = urandom(-(len(data) + len(sha)) % 255)
                 data_with_hash = sha + data + padding
-                encrypted_data = rsa.encrypt(
-                    data_with_hash, public_key_fingerprint
-                )
+                encrypted_data = rsa.encrypt(data_with_hash, public_key_fingerprint)
 
                 log.debug("Done encrypt data with RSA")
 
@@ -162,12 +147,8 @@ class Auth:
 
                 encrypted_answer = server_dh_params.encrypted_answer
 
-                server_nonce = server_nonce.to_bytes(
-                    16, "little", signed=True
-                )
-                new_nonce = new_nonce.to_bytes(
-                    32, "little", signed=True
-                )
+                server_nonce = server_nonce.to_bytes(16, "little", signed=True)
+                new_nonce = new_nonce.to_bytes(32, "little", signed=True)
 
                 tmp_aes_key = (
                     sha1(new_nonce + server_nonce).digest()
@@ -180,9 +161,7 @@ class Auth:
                     + new_nonce[:4]
                 )
 
-                server_nonce = int.from_bytes(
-                    server_nonce, "little", signed=True
-                )
+                server_nonce = int.from_bytes(server_nonce, "little", signed=True)
 
                 answer_with_hash = aes.ige256_decrypt(
                     encrypted_answer, tmp_aes_key, tmp_aes_iv
@@ -193,12 +172,8 @@ class Auth:
 
                 log.debug("Done decrypting answer")
 
-                dh_prime = int.from_bytes(
-                    server_dh_inner_data.dh_prime, "big"
-                )
-                delta_time = (
-                    server_dh_inner_data.server_time - time.time()
-                )
+                dh_prime = int.from_bytes(server_dh_inner_data.dh_prime, "big")
+                delta_time = server_dh_inner_data.server_time - time.time()
 
                 log.debug("Delta time: %s", round(delta_time, 3))
 
@@ -234,9 +209,7 @@ class Auth:
 
                 g_a = int.from_bytes(server_dh_inner_data.g_a, "big")
                 auth_key = pow(g_a, b, dh_prime).to_bytes(256, "big")
-                server_nonce = server_nonce.to_bytes(
-                    16, "little", signed=True
-                )
+                server_nonce = server_nonce.to_bytes(16, "little", signed=True)
 
                 SecurityCheckMismatch.check(
                     dh_prime == prime.CURRENT_DH_PRIME,
@@ -255,15 +228,11 @@ class Auth:
                     1 < g_b < dh_prime - 1, "1 < g_b < dh_prime - 1"
                 )
                 SecurityCheckMismatch.check(
-                    2 ** (2048 - 64)
-                    < g_a
-                    < dh_prime - 2 ** (2048 - 64),
+                    2 ** (2048 - 64) < g_a < dh_prime - 2 ** (2048 - 64),
                     "2 ** (2048 - 64) < g_a < dh_prime - 2 ** (2048 - 64)",
                 )
                 SecurityCheckMismatch.check(
-                    2 ** (2048 - 64)
-                    < g_b
-                    < dh_prime - 2 ** (2048 - 64),
+                    2 ** (2048 - 64) < g_b < dh_prime - 2 ** (2048 - 64),
                     "2 ** (2048 - 64) < g_b < dh_prime - 2 ** (2048 - 64)",
                 )
                 log.debug("g_a and g_b validation: OK")
@@ -281,9 +250,7 @@ class Auth:
                     nonce == res_pq.nonce, "nonce == res_pq.nonce"
                 )
                 # 2nd message
-                server_nonce = int.from_bytes(
-                    server_nonce, "little", signed=True
-                )
+                server_nonce = int.from_bytes(server_nonce, "little", signed=True)
                 SecurityCheckMismatch.check(
                     nonce == server_dh_params.nonce,
                     "nonce == server_dh_params.nonce",
@@ -298,13 +265,10 @@ class Auth:
                     "nonce == set_client_dh_params_answer.nonce",
                 )
                 SecurityCheckMismatch.check(
-                    server_nonce
-                    == set_client_dh_params_answer.server_nonce,
+                    server_nonce == set_client_dh_params_answer.server_nonce,
                     "server_nonce == set_client_dh_params_answer.server_nonce",
                 )
-                server_nonce = server_nonce.to_bytes(
-                    16, "little", signed=True
-                )
+                server_nonce = server_nonce.to_bytes(16, "little", signed=True)
                 log.debug("Nonce fields check: OK")
 
                 # Step 9
@@ -320,9 +284,7 @@ class Auth:
                     set_client_dh_params_answer.__class__.__name__,
                 )
             except Exception as e:
-                log.info(
-                    "Retrying due to %s: %s", type(e).__name__, e
-                )
+                log.info("Retrying due to %s: %s", type(e).__name__, e)
 
                 if retries_left:
                     retries_left -= 1

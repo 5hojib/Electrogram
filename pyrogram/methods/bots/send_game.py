@@ -88,9 +88,7 @@ class SendGame:
             random_id=self.rnd_id(),
             noforwards=protect_content,
             effect=message_effect_id,
-            reply_markup=await reply_markup.write(self)
-            if reply_markup
-            else None,
+            reply_markup=await reply_markup.write(self) if reply_markup else None,
         )
         if business_connection_id is not None:
             r = await self.invoke(

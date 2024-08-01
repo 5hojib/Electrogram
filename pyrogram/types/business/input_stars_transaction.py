@@ -20,6 +20,4 @@ class InputStarsTransaction(Object):
         self.is_refund = is_refund
 
     async def write(self):
-        return raw.types.InputStarsTransaction(
-            id=self.id, refund=self.is_refund
-        )
+        return raw.types.InputStarsTransaction(id=self.id, refund=self.is_refund)

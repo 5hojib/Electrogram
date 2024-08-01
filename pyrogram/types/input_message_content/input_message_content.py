@@ -24,7 +24,5 @@ class InputMessageContent(Object):
     def __init__(self) -> None:
         super().__init__()
 
-    async def write(
-        self, client: pyrogram.Client, reply_markup
-    ) -> NoReturn:
+    async def write(self, client: pyrogram.Client, reply_markup) -> NoReturn:
         raise NotImplementedError

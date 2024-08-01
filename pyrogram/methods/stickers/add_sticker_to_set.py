@@ -41,9 +41,7 @@ class AddStickerToSet:
         """
 
         if isinstance(sticker, str):
-            if Path(sticker).is_file() or re.match(
-                "^https?://", sticker
-            ):
+            if Path(sticker).is_file() or re.match("^https?://", sticker):
                 raise ValueError("file_id is invalid!")
             decoded = FileId.decode(sticker)
             media = raw.types.InputDocument(
@@ -59,9 +57,7 @@ class AddStickerToSet:
                 stickerset=raw.types.InputStickerSetShortName(
                     short_name=set_short_name
                 ),
-                sticker=raw.types.InputStickerSetItem(
-                    document=media, emoji=emoji
-                ),
+                sticker=raw.types.InputStickerSetItem(document=media, emoji=emoji),
             )
         )
 

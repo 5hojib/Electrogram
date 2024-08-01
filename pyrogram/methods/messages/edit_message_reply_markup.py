@@ -50,9 +50,7 @@ class EditMessageReplyMarkup:
         rpc = raw.functions.messages.EditMessage(
             peer=await self.resolve_peer(chat_id),
             id=message_id,
-            reply_markup=await reply_markup.write(self)
-            if reply_markup
-            else None,
+            reply_markup=await reply_markup.write(self) if reply_markup else None,
         )
         if business_connection_id is not None:
             r = await self.invoke(
@@ -66,8 +64,7 @@ class EditMessageReplyMarkup:
         for i in r.updates:
             if isinstance(
                 i,
-                raw.types.UpdateEditMessage
-                | raw.types.UpdateEditChannelMessage,
+                raw.types.UpdateEditMessage | raw.types.UpdateEditChannelMessage,
             ):
                 return await types.Message._parse(
                     self,

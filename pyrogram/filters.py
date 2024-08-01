@@ -18,9 +18,7 @@ from pyrogram.types import (
 
 
 class Filter:
-    async def __call__(
-        self, client: "pyrogram.Client", update: Update
-    ):
+    async def __call__(self, client: "pyrogram.Client", update: Update):
         raise NotImplementedError
 
     def __invert__(self):
@@ -37,9 +35,7 @@ class InvertFilter(Filter):
     def __init__(self, base) -> None:
         self.base = base
 
-    async def __call__(
-        self, client: "pyrogram.Client", update: Update
-    ):
+    async def __call__(self, client: "pyrogram.Client", update: Update):
         if inspect.iscoroutinefunction(self.base.__call__):
             x = await self.base(client, update)
         else:
@@ -55,9 +51,7 @@ class AndFilter(Filter):
         self.base = base
         self.other = other
 
-    async def __call__(
-        self, client: "pyrogram.Client", update: Update
-    ):
+    async def __call__(self, client: "pyrogram.Client", update: Update):
         if inspect.iscoroutinefunction(self.base.__call__):
             x = await self.base(client, update)
         else:
@@ -84,9 +78,7 @@ class OrFilter(Filter):
         self.base = base
         self.other = other
 
-    async def __call__(
-        self, client: "pyrogram.Client", update: Update
-    ):
+    async def __call__(self, client: "pyrogram.Client", update: Update):
         if inspect.iscoroutinefunction(self.base.__call__):
             x = await self.base(client, update)
         else:
@@ -111,9 +103,7 @@ class OrFilter(Filter):
 CUSTOM_FILTER_NAME = "CustomFilter"
 
 
-def create(
-    func: Callable, name: str | None = None, **kwargs
-) -> Filter:
+def create(func: Callable, name: str | None = None, **kwargs) -> Filter:
     """Easily create a custom filter.
 
     Custom filters give you extra control over which updates are allowed or not to be processed by your handlers.
@@ -157,11 +147,7 @@ all = create(all_filter)
 
 # region me_filter
 async def me_filter(_, __, m: Message):
-    return bool(
-        m.from_user
-        and m.from_user.is_self
-        or getattr(m, "outgoing", False)
-    )
+    return bool(m.from_user and m.from_user.is_self or getattr(m, "outgoing", False))
 
 
 me = create(me_filter)
@@ -473,9 +459,7 @@ media_spoiler = create(media_spoiler_filter)
 # region private_filter
 async def private_filter(_, __, m: Message):
     return bool(
-        m.chat
-        and m.chat.type
-        in {enums.ChatType.PRIVATE, enums.ChatType.BOT}
+        m.chat and m.chat.type in {enums.ChatType.PRIVATE, enums.ChatType.BOT}
     )
 
 
@@ -489,9 +473,7 @@ private = create(private_filter)
 # region group_filter
 async def group_filter(_, __, m: Message):
     return bool(
-        m.chat
-        and m.chat.type
-        in {enums.ChatType.GROUP, enums.ChatType.SUPERGROUP}
+        m.chat and m.chat.type in {enums.ChatType.GROUP, enums.ChatType.SUPERGROUP}
     )
 
 
@@ -923,9 +905,7 @@ def command(
     """
     command_re = re.compile(r"([\"'])(.*?)(?<!\\)\1|(\S+)")
 
-    async def func(
-        flt, client: pyrogram.Client, message: Message
-    ) -> bool:
+    async def func(flt, client: pyrogram.Client, message: Message) -> bool:
         username = client.me.username or ""
         text = message.text or message.caption
         message.command = None
@@ -943,9 +923,7 @@ def command(
                 if not re.match(
                     rf"^(?:{cmd}(?:@?{username})?)(?:\s|$)",
                     without_prefix,
-                    flags=re.IGNORECASE
-                    if not flt.case_sensitive
-                    else 0,
+                    flags=re.IGNORECASE if not flt.case_sensitive else 0,
                 ):
                     continue
 
@@ -954,9 +932,7 @@ def command(
                     "",
                     without_prefix,
                     count=1,
-                    flags=re.IGNORECASE
-                    if not flt.case_sensitive
-                    else 0,
+                    flags=re.IGNORECASE if not flt.case_sensitive else 0,
                 )
 
                 # match.groups are 1-indexed, group(1) is the quote, group(2) is the text
@@ -1026,9 +1002,7 @@ def regex(pattern: str | Pattern, flags: int = 0):
         elif isinstance(update, PreCheckoutQuery):
             value = update.payload
         else:
-            raise ValueError(
-                f"Regex filter doesn't work with {type(update)}"
-            )
+            raise ValueError(f"Regex filter doesn't work with {type(update)}")
 
         if value:
             update.matches = list(flt.p.finditer(value)) or None
@@ -1038,9 +1012,7 @@ def regex(pattern: str | Pattern, flags: int = 0):
     return create(
         func,
         "RegexFilter",
-        p=pattern
-        if isinstance(pattern, Pattern)
-        else re.compile(pattern, flags),
+        p=pattern if isinstance(pattern, Pattern) else re.compile(pattern, flags),
     )
 
 
@@ -1058,15 +1030,9 @@ class user(Filter, set):
             Defaults to None (no users).
     """
 
-    def __init__(
-        self, users: int | str | list[int | str] | None = None
-    ) -> None:
+    def __init__(self, users: int | str | list[int | str] | None = None) -> None:
         users = (
-            []
-            if users is None
-            else users
-            if isinstance(users, list)
-            else [users]
+            [] if users is None else users if isinstance(users, list) else [users]
         )
 
         super().__init__(
@@ -1103,15 +1069,9 @@ class chat(Filter, set):
             Defaults to None (no chats).
     """
 
-    def __init__(
-        self, chats: int | str | list[int | str] | None = None
-    ) -> None:
+    def __init__(self, chats: int | str | list[int | str] | None = None) -> None:
         chats = (
-            []
-            if chats is None
-            else chats
-            if isinstance(chats, list)
-            else [chats]
+            [] if chats is None else chats if isinstance(chats, list) else [chats]
         )
 
         super().__init__(
@@ -1131,8 +1091,7 @@ class chat(Filter, set):
                     message.sender_chat.id in self
                     or (
                         message.sender_chat.username
-                        and message.sender_chat.username.lower()
-                        in self
+                        and message.sender_chat.username.lower() in self
                     )
                 )
             ) or (
@@ -1147,10 +1106,7 @@ class chat(Filter, set):
             )
         return message.chat and (
             message.chat.id in self
-            or (
-                message.chat.username
-                and message.chat.username.lower() in self
-            )
+            or (message.chat.username and message.chat.username.lower() in self)
             or (
                 "me" in self
                 and message.from_user

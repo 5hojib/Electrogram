@@ -57,14 +57,10 @@ class RequestedChat(Object):
             type = enums.ChatType.GROUP
         photo = None
         if getattr(request, "photo", None):
-            photo = types.Photo._parse(
-                client, getattr(request, "photo", None), 0
-            )
+            photo = types.Photo._parse(client, getattr(request, "photo", None), 0)
 
         return RequestedChat(
-            chat_id=utils.get_channel_id(
-                utils.get_raw_peer_id(request)
-            ),
+            chat_id=utils.get_channel_id(utils.get_raw_peer_id(request)),
             chat_type=type,
             name=getattr(request, "title", None),
             username=getattr(request, "username", None),

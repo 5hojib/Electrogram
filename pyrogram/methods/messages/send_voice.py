@@ -180,8 +180,7 @@ class SendVoice:
                         progress_args=progress_args,
                     )
                     media = raw.types.InputMediaUploadedDocument(
-                        mime_type=self.guess_mime_type(voice)
-                        or "audio/mpeg",
+                        mime_type=self.guess_mime_type(voice) or "audio/mpeg",
                         file=file,
                         attributes=[
                             raw.types.DocumentAttributeAudio(
@@ -190,13 +189,9 @@ class SendVoice:
                         ],
                     )
                 elif re.match("^https?://", voice):
-                    media = raw.types.InputMediaDocumentExternal(
-                        url=voice
-                    )
+                    media = raw.types.InputMediaDocumentExternal(url=voice)
                 else:
-                    media = utils.get_input_media_from_file_id(
-                        voice, FileType.VOICE
-                    )
+                    media = utils.get_input_media_from_file_id(voice, FileType.VOICE)
             else:
                 file = await self.save_file(
                     voice,
@@ -204,8 +199,7 @@ class SendVoice:
                     progress_args=progress_args,
                 )
                 media = raw.types.InputMediaUploadedDocument(
-                    mime_type=self.guess_mime_type(voice.name)
-                    or "audio/mpeg",
+                    mime_type=self.guess_mime_type(voice.name) or "audio/mpeg",
                     file=file,
                     attributes=[
                         raw.types.DocumentAttributeAudio(
@@ -222,9 +216,7 @@ class SendVoice:
                         silent=disable_notification or None,
                         reply_to=reply_to,
                         random_id=self.rnd_id(),
-                        schedule_date=utils.datetime_to_timestamp(
-                            schedule_date
-                        ),
+                        schedule_date=utils.datetime_to_timestamp(schedule_date),
                         noforwards=protect_content,
                         effect=message_effect_id,
                         reply_markup=await reply_markup.write(self)
@@ -247,9 +239,7 @@ class SendVoice:
                     else:
                         r = await self.invoke(rpc)
                 except FilePartMissing as e:
-                    await self.save_file(
-                        voice, file_id=file.id, file_part=e.value
-                    )
+                    await self.save_file(voice, file_id=file.id, file_part=e.value)
                 else:
                     for i in r.updates:
                         if isinstance(

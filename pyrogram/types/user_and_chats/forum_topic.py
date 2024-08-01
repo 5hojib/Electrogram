@@ -119,12 +119,8 @@ class ForumTopic(Object):
             title=getattr(forum_topic, "title", None),
             icon_color=getattr(forum_topic, "icon_color", None),
             top_message=getattr(forum_topic, "top_message", None),
-            read_inbox_max_id=getattr(
-                forum_topic, "read_inbox_max_id", None
-            ),
-            read_outbox_max_id=getattr(
-                forum_topic, "read_outbox_max_id", None
-            ),
+            read_inbox_max_id=getattr(forum_topic, "read_inbox_max_id", None),
+            read_outbox_max_id=getattr(forum_topic, "read_outbox_max_id", None),
             unread_count=getattr(forum_topic, "unread_count", None),
             unread_mentions_count=getattr(
                 forum_topic, "unread_mentions_count", None

@@ -27,9 +27,7 @@ class RecoverPassword:
         Raises:
             BadRequest: In case the recovery code is invalid.
         """
-        r = await self.invoke(
-            raw.functions.auth.RecoverPassword(code=recovery_code)
-        )
+        r = await self.invoke(raw.functions.auth.RecoverPassword(code=recovery_code))
 
         await self.storage.user_id(r.user.id)
         await self.storage.is_bot(False)

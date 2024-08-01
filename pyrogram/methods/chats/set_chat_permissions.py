@@ -78,9 +78,7 @@ class SetChatPermissions:
                 manage_topics = True
                 send_inline = True
         else:
-            old_permissions = (
-                await self.get_chat(chat_id)
-            ).permissions
+            old_permissions = (await self.get_chat(chat_id)).permissions
             send_messages = None
             send_media = None
             embed_links = (
@@ -169,10 +167,7 @@ class SetChatPermissions:
                 else not old_permissions.can_send_voices
             )
             if permissions.can_send_messages is not None:
-                if permissions.can_send_messages:
-                    send_plain = False
-                else:
-                    send_plain = True
+                send_plain = not permissions.can_send_messages
                 if permissions.can_send_media_messages is None:
                     permissions.can_send_media_messages = (
                         old_permissions.can_send_media_messages

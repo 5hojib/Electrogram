@@ -120,9 +120,7 @@ class SendWebPage:
         """
 
         message, entities = (
-            await utils.parse_text_entities(
-                self, text, parse_mode, entities
-            )
+            await utils.parse_text_entities(self, text, parse_mode, entities)
         ).values()
 
         reply_to = await utils.get_reply_to(
@@ -148,9 +146,7 @@ class SendWebPage:
             reply_to=reply_to,
             random_id=self.rnd_id(),
             schedule_date=utils.datetime_to_timestamp(schedule_date),
-            reply_markup=await reply_markup.write(self)
-            if reply_markup
-            else None,
+            reply_markup=await reply_markup.write(self) if reply_markup else None,
             message=message,
             media=media,
             invert_media=invert_media,
@@ -208,9 +204,7 @@ class SendWebPage:
                     i.message,
                     {i.id: i for i in r.users},
                     {i.id: i for i in r.chats},
-                    is_scheduled=isinstance(
-                        i, raw.types.UpdateNewScheduledMessage
-                    ),
+                    is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
                     business_connection_id=business_connection_id,
                 )
         return None

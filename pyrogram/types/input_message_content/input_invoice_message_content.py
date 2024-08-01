@@ -118,9 +118,7 @@ class InputInvoiceMessageContent(InputMessageContent):
         self.need_phone_number = need_phone_number
         self.need_email = need_email
         self.need_shipping_address = need_shipping_address
-        self.send_phone_number_to_provider = (
-            send_phone_number_to_provider
-        )
+        self.send_phone_number_to_provider = send_phone_number_to_provider
         self.send_email_to_provider = send_email_to_provider
         self.is_flexible = is_flexible
 
@@ -157,11 +155,7 @@ class InputInvoiceMessageContent(InputMessageContent):
             else self.payload,
             provider=self.provider_token,
             provider_data=raw.types.DataJSON(
-                data=self.provider_data
-                if self.provider_data
-                else "{}"
+                data=self.provider_data if self.provider_data else "{}"
             ),
-            reply_markup=await reply_markup.write(client)
-            if reply_markup
-            else None,
+            reply_markup=await reply_markup.write(client) if reply_markup else None,
         )
