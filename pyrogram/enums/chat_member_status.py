@@ -6,7 +6,7 @@ from .auto_name import AutoName
 class ChatMemberStatus(AutoName):
     """Chat member status enumeration used in :obj:`~pyrogram.types.ChatMember`."""
 
-    OWNER = auto()  # TODO: rename to 'creator'
+    OWNER = auto()
     "Chat owner"
 
     ADMINISTRATOR = auto()
@@ -21,5 +21,5 @@ class ChatMemberStatus(AutoName):
     LEFT = auto()
     "Left chat member"
 
-    BANNED = auto()  # TODO: rename to 'kicked'
+    BANNED = auto()
     "Banned chat member"

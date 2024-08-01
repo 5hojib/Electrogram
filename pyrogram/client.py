@@ -213,10 +213,9 @@ class Client(Methods):
     INVITE_LINK_RE = re.compile(
         r"^(?:https?://)?(?:www\.)?(?:t(?:elegram)?\.(?:org|me|dog)/(?:joinchat/|\+))([\w-]+)$"
     )
-    WORKERS = min(32, (os.cpu_count() or 0) + 4)  # os.cpu_count() can be None
+    WORKERS = min(32, (os.cpu_count() or 0) + 4)
     WORKDIR = PARENT_DIR
 
-    # Interval of seconds in which the updates watchdog will kick in
     UPDATES_WATCHDOG_INTERVAL = 15 * 60
 
     MAX_CONCURRENT_TRANSMISSIONS = 100
@@ -323,42 +322,27 @@ class Client(Methods):
 
         self.connection_factory = Connection
         self.protocol_factory = TCPAbridged
-
         self.dispatcher = Dispatcher(self)
-
         self.rnd_id = MsgId
-
         self.parser = Parser(self)
-
         self.session = None
-
         self.media_sessions = {}
         self.media_sessions_lock = asyncio.Lock()
-
         self.save_file_semaphore = asyncio.Semaphore(
             self.max_concurrent_transmissions
         )
         self.get_file_semaphore = asyncio.Semaphore(
             self.max_concurrent_transmissions
         )
-
         self.is_connected = None
         self.is_initialized = None
-
         self.takeout_id = None
-
         self.disconnect_handler = None
-
         self.me: User | None = None
-
         self.message_cache = Cache(self.max_message_cache_size)
         self.business_user_connection_cache = Cache(
             self.max_business_user_connection_cache_size
         )
-
-        # Sometimes, for some reason, the server will stop sending updates and will only respond to pings.
-        # This watchdog will invoke updates.GetState in order to wake up the server and enable it sending updates again
-        # after some idle time has been detected.
         self.updates_watchdog_task = None
         self.updates_watchdog_event = asyncio.Event()
         self.last_update_time = datetime.now()
@@ -750,7 +734,7 @@ class Client(Methods):
                         {c.id: c for c in diff.chats},
                     )
                 )
-            elif diff.other_updates:  # The other_updates list can be empty
+            elif diff.other_updates:
                 self.dispatcher.updates_queue.put_nowait(
                     (diff.other_updates[0], {}, {})
                 )
@@ -842,7 +826,6 @@ class Client(Methods):
                     module = import_module(module_path)
 
                     for name in vars(module):
-                        # noinspection PyBroadException
                         try:
                             for handler, group in getattr(module, name).handlers:
                                 if isinstance(handler, Handler) and isinstance(
@@ -890,7 +873,6 @@ class Client(Methods):
                         warn_non_existent_functions = False
 
                     for name in handlers:
-                        # noinspection PyBroadException
                         try:
                             for handler, group in getattr(module, name).handlers:
                                 if isinstance(handler, Handler) and isinstance(
@@ -945,7 +927,6 @@ class Client(Methods):
                         warn_non_existent_functions = False
 
                     for name in handlers:
-                        # noinspection PyBroadException
                         try:
                             for handler, group in getattr(module, name).handlers:
                                 if isinstance(handler, Handler) and isinstance(
@@ -1006,7 +987,7 @@ class Client(Methods):
 
         file = (
             BytesIO() if in_memory else Path(temp_file_path).open("wb")
-        )  # file is closed manually
+        )
 
         try:
             async for chunk in self.get_file(
@@ -1212,7 +1193,6 @@ class Client(Methods):
 
                             chunk = r2.bytes
 
-                            # https://core.telegram.org/cdn#decrypting-files
                             decrypted_chunk = aes.ctr256_decrypt(
                                 chunk,
                                 r.encryption_key,
@@ -1229,7 +1209,6 @@ class Client(Methods):
                                 )
                             )
 
-                            # https://core.telegram.org/cdn#verifying-files
                             for i, h in enumerate(hashes):
                                 cdn_chunk = decrypted_chunk[
                                     h.limit * i : h.limit * (i + 1)

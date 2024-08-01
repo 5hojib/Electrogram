@@ -99,7 +99,6 @@ class ChatMember(Object):
         users: dict[int, raw.base.User],
         chats: dict[int, raw.base.Chat],
     ) -> ChatMember:
-        # Chat participants
         if isinstance(member, raw.types.ChatParticipant):
             return ChatMember(
                 status=enums.ChatMemberStatus.MEMBER,
@@ -123,7 +122,6 @@ class ChatMember(Object):
                 client=client,
             )
 
-        # Channel participants
         if isinstance(member, raw.types.ChannelParticipant):
             return ChatMember(
                 status=enums.ChatMemberStatus.MEMBER,

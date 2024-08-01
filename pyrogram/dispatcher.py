@@ -139,13 +139,11 @@ class Dispatcher:
             )
 
         async def edited_message_parser(update, users, chats):
-            # Edited messages are parsed the same way as new messages, but the handler is different
             parsed, _ = await message_parser(update, users, chats)
 
             return (parsed, EditedMessageHandler)
 
         async def edited_bot_business_message_parser(update, users, chats):
-            # Edited messages are parsed the same way as new messages, but the handler is different
             parsed, _ = await bot_business_message_parser(update, users, chats)
 
             return (parsed, EditedBotBusinessMessageHandler)

@@ -95,7 +95,7 @@ class TCP:
             await asyncio.wait_for(self._connect(address), TCP.TIMEOUT)
         except (
             asyncio.TimeoutError
-        ):  # Re-raise as TimeoutError. asyncio.TimeoutError is deprecated in 3.11
+        ):
             raise TimeoutError("Connection timed out")
 
     async def close(self) -> None:

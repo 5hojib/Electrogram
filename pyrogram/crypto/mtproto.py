@@ -9,7 +9,6 @@ from . import aes
 
 
 def kdf(auth_key: bytes, msg_key: bytes, outgoing: bool) -> tuple:
-    # https://core.telegram.org/mtproto/description#defining-aes-key-and-initialization-vector
     x = 0 if outgoing else 8
 
     sha256_a = sha256(msg_key + auth_key[x : x + 36]).digest()
@@ -31,7 +30,6 @@ def pack(
     data = Long(salt) + session_id + message.write()
     padding = urandom(-(len(data) + 12) % 16 + 12)
 
-    # 88 = 88 + 0 (outgoing message)
     msg_key_large = sha256(auth_key[88 : 88 + 32] + data + padding).digest()
     msg_key = msg_key_large[8:24]
     aes_key, aes_iv = kdf(auth_key, msg_key, True)
@@ -51,7 +49,6 @@ def unpack(
     data = BytesIO(aes.ige256_decrypt(b.read(), aes_key, aes_iv))
     data.read(8)  # Salt
 
-    # https://core.telegram.org/mtproto/security_guidelines#checking-session-id
     SecurityCheckMismatch.check(
         data.read(8) == session_id, "data.read(8) == session_id"
     )
@@ -74,17 +71,14 @@ def unpack(
             f"The server sent an unknown constructor: {hex(e.args[0])}\n{left}"
         )
 
-    # https://core.telegram.org/mtproto/security_guidelines#checking-sha256-hash-value-of-msg-key
-    # 96 = 88 + 8 (incoming message)
     SecurityCheckMismatch.check(
         msg_key == sha256(auth_key[96 : 96 + 32] + data.getvalue()).digest()[8:24],
         "msg_key == sha256(auth_key[96:96 + 32] + data.getvalue()).digest()[8:24]",
     )
 
-    # https://core.telegram.org/mtproto/security_guidelines#checking-message-length
     data.seek(
         32
-    )  # Get to the payload, skip salt (8) + session_id (8) + msg_id (8) + seq_no (4) + length (4)
+    )
     payload = data.read()
     padding = payload[message.length :]
     SecurityCheckMismatch.check(
@@ -92,7 +86,6 @@ def unpack(
     )
     SecurityCheckMismatch.check(len(payload) % 4 == 0, "len(payload) % 4 == 0")
 
-    # https://core.telegram.org/mtproto/security_guidelines#checking-msg-id
     SecurityCheckMismatch.check(message.msg_id % 2 != 0, "message.msg_id % 2 != 0")
 
     return message

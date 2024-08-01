@@ -11,7 +11,6 @@ ERRORS_DEST_PATH = REPO_HOME_PATH / "pyrogram" / "errors" / "exceptions"
 
 
 def snake(s):
-    # https://stackoverflow.com/questions/1175208/elegant-python-function-to-convert-camelcase-to-snake-case
     s = re.sub(r"(.)([A-Z][a-z]+)", r"\1_\2", s)
     return re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", s).lower()
 

@@ -124,6 +124,10 @@ class Chat(Object):
         slow_mode_delay (``int``, *optional*):
             For supergroups, the minimum allowed delay between consecutive messages sent by each unpriviledged user in seconds.
             Returned only in :meth:`~pyrogram.Client.get_chat`.
+            
+        join_requests_count (``int``, *optional*):
+            Number of users who requested to join the chat.
+            Returned only in :meth:`~pyrogram.Client.get
 
         restrictions (List of :obj:`~pyrogram.types.Restriction`, *optional*):
             The list of reasons why this chat might be unavailable to some users.
@@ -216,6 +220,7 @@ class Chat(Object):
         can_set_sticker_set: bool | None = None,
         members_count: int | None = None,
         slow_mode_delay: int | None = None,
+        join_requests_count: int | None = None,
         restrictions: list[types.Restriction] | None = None,
         permissions: types.ChatPermissions = None,
         distance: int | None = None,
@@ -263,6 +268,7 @@ class Chat(Object):
         self.sticker_set_name = sticker_set_name
         self.can_set_sticker_set = can_set_sticker_set
         self.members_count = members_count
+        self.join_requests_count = join_requests_count
         self.slow_mode_delay = slow_mode_delay
         self.restrictions = restrictions
         self.permissions = permissions
@@ -338,6 +344,7 @@ class Chat(Object):
                 getattr(chat, "default_banned_rights", None)
             ),
             members_count=getattr(chat, "participants_count", None),
+            join_requests_count=getattr(chat, "requests_pending", None),
             dc_id=getattr(getattr(chat, "photo", None), "dc_id", None),
             has_protected_content=getattr(chat, "noforwards", None),
             usernames=usernames,
@@ -510,7 +517,6 @@ class Chat(Object):
                     full_chat, "slowmode_seconds", None
                 )
                 parsed_chat.description = full_chat.about or None
-                # TODO: Add StickerSet type
                 parsed_chat.can_set_sticker_set = full_chat.can_set_stickers
                 parsed_chat.sticker_set_name = getattr(
                     full_chat.stickerset, "short_name", None
@@ -574,6 +580,7 @@ class Chat(Object):
             parsed_chat.available_reactions = types.ChatReactions._parse(
                 client, full_chat.available_reactions
             )
+            parsed_chat.join_requests_count = getattr(full_chat, "requests_pending", None)
             parsed_chat.max_reaction_count = getattr(
                 full_chat, "reactions_limit", 11
             )
@@ -724,7 +731,6 @@ class Chat(Object):
 
         return await self._client.unarchive_chats(self.id)
 
-    # TODO: Remove notes about "All Members Are Admins" for basic groups, the attribute doesn't exist anymore
     async def set_title(self, title: str) -> bool:
         """Bound method *set_title* of :obj:`~pyrogram.types.Chat`.
 
@@ -996,8 +1002,6 @@ class Chat(Object):
             until_date=until_date,
         )
 
-    # Set None as privileges default due to issues with partially initialized module, because at the time Chat
-    # is being initialized, ChatPrivileges would be required here, but was not initialized yet.
     async def promote_member(
         self,
         user_id: int | str,

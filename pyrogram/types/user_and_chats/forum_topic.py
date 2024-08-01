@@ -5,9 +5,6 @@ from pyrogram.types.object import Object
 
 
 class ForumTopic(Object):
-    # todo
-    # notify_settings: `~pyrogram.types.PeerNotifySettings`
-    # draft: `~pyrogram.types.DraftMessage`
     """A forum topic.
 
 
@@ -76,13 +73,11 @@ class ForumTopic(Object):
         unread_mentions_count: int,
         unread_reactions_count: int,
         from_id: types.PeerChannel | types.PeerUser,
-        # notify_settings: "types.PeerNotifySettings", //todo
         my: bool | None = None,
         closed: bool | None = None,
         pinned: bool | None = None,
         short: bool | None = None,
         icon_emoji_id: int | None = None,
-        # draft: "types.DraftMessage" = None //todo
     ) -> None:
         super().__init__()
 
@@ -97,13 +92,11 @@ class ForumTopic(Object):
         self.unread_mentions_count = unread_mentions_count
         self.unread_reactions_count = unread_reactions_count
         self.from_id = from_id
-        # self.notify_settings = notify_settings //todo
         self.my = my
         self.closed = closed
         self.pinned = pinned
         self.short = short
         self.icon_emoji_id = icon_emoji_id
-        # self.draft = draft //todo
 
     @staticmethod
     def _parse(forum_topic: raw.types.forum_topic) -> ForumTopic:
@@ -129,11 +122,9 @@ class ForumTopic(Object):
                 forum_topic, "unread_reactions_count", None
             ),
             from_id=peer,
-            # notify_settings=None, //todo
             my=getattr(forum_topic, "my", None),
             closed=getattr(forum_topic, "closed", None),
             pinned=getattr(forum_topic, "pinned", None),
             short=getattr(forum_topic, "short", None),
             icon_emoji_id=getattr(forum_topic, "icon_emoji_id", None),
-            # draft=None //todo
         )

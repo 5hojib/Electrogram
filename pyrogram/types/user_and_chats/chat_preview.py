@@ -62,6 +62,3 @@ class ChatPreview(Object):
             or None,
             client=client,
         )
-
-    # TODO: Maybe just merge this object into Chat itself by adding the "members" field.
-    #  get_chat can be used as well instead of get_chat_preview

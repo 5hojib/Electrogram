@@ -126,8 +126,6 @@ async def parse_messages(
         }
 
         if messages_with_replies:
-            # We need a chat id, but some messages might be empty (no chat attribute available)
-            # Scan until we find a message with a chat available (there must be one, because we are fetching replies)
             for m in parsed_messages:
                 if not isinstance(m, types.Message):
                     continue
@@ -150,7 +148,6 @@ async def parse_messages(
                     replies=replies - 1,
                 )
             else:
-                # slow path: fetch all messages individually
                 for target_reply_to in messages_with_replies.values():
                     to_be_added_msg = None
                     the_chat_id = chat_id
@@ -351,7 +348,6 @@ def compute_password_hash(
     return sha256(algo.salt2 + hash3 + algo.salt2)
 
 
-# noinspection PyPep8Naming
 def compute_password_check(
     r: raw.types.account.Password, password: str
 ) -> raw.types.InputCheckPasswordSRP:
@@ -418,7 +414,6 @@ async def parse_text_entities(
     entities: list[types.MessageEntity],
 ) -> dict[str, str | list[raw.base.MessageEntity]]:
     if entities:
-        # Inject the client instance because parsing user mentions requires it
         for entity in entities:
             entity._client = client
 
