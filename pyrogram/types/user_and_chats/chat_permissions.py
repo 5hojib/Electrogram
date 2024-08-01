@@ -79,10 +79,8 @@ class ChatPermissions(Object):
         self,
         *,
         all_perms: bool | None = None,
-        can_send_messages: bool
-        | None = None,
-        can_send_media_messages: bool
-        | None = None,
+        can_send_messages: bool | None = None,
+        can_send_media_messages: bool | None = None,
         can_send_polls: bool | None = None,
         can_add_web_page_previews: bool | None = None,
         can_change_info: bool | None = None,

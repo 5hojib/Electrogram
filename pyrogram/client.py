@@ -985,9 +985,7 @@ class Client(Methods):
             file_path.stem + "_" + random_suffix + ".temp"
         )
 
-        file = (
-            BytesIO() if in_memory else Path(temp_file_path).open("wb")
-        )
+        file = BytesIO() if in_memory else Path(temp_file_path).open("wb")
 
         try:
             async for chunk in self.get_file(

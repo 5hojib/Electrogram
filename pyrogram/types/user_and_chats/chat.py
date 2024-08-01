@@ -124,7 +124,7 @@ class Chat(Object):
         slow_mode_delay (``int``, *optional*):
             For supergroups, the minimum allowed delay between consecutive messages sent by each unpriviledged user in seconds.
             Returned only in :meth:`~pyrogram.Client.get_chat`.
-            
+
         join_requests_count (``int``, *optional*):
             Number of users who requested to join the chat.
             Returned only in :meth:`~pyrogram.Client.get
@@ -580,7 +580,9 @@ class Chat(Object):
             parsed_chat.available_reactions = types.ChatReactions._parse(
                 client, full_chat.available_reactions
             )
-            parsed_chat.join_requests_count = getattr(full_chat, "requests_pending", None)
+            parsed_chat.join_requests_count = getattr(
+                full_chat, "requests_pending", None
+            )
             parsed_chat.max_reaction_count = getattr(
                 full_chat, "reactions_limit", 11
             )

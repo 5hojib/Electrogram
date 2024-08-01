@@ -93,9 +93,7 @@ class TCP:
     async def connect(self, address: tuple[str, int]) -> None:
         try:
             await asyncio.wait_for(self._connect(address), TCP.TIMEOUT)
-        except (
-            asyncio.TimeoutError
-        ):
+        except asyncio.TimeoutError:
             raise TimeoutError("Connection timed out")
 
     async def close(self) -> None:

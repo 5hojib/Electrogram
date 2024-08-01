@@ -194,6 +194,7 @@ async def reaction_filter(_, __, m: Message):
 react = create(reaction_filter)
 """Filter reactions."""
 
+
 async def forwarded_filter(_, __, m: Message):
     return bool(m.forward_date)
 
