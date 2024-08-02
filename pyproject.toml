@@ -77,12 +77,14 @@ api = { chain = ["api:raw", "api:errors"] }
 "api:raw" = { call = "compiler.api.compiler:start" }
 "api:errors" = { call = "compiler.errors.compiler:start" }
 
-towncrier = { cmd = "towncrier build --yes" }
-towncrier-draft = { cmd = "towncrier build --draft" }
-
 [tool.ruff]
+fix = true
+unsafe-fixes = true
 line-length = 85
 target-version = "py310"
+
+[tool.ruff.lint.isort]
+required-imports = ["from __future__ import annotations"]
 
 [tool.ruff.lint]
 select = [
