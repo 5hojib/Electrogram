@@ -28,6 +28,7 @@ class InviteLinkImporter(Object):
 
     @staticmethod
     def _parse(
+        client,
         invite_importers: raw.types.messages.ChatInviteImporters,
     ):
         importers = types.List()
