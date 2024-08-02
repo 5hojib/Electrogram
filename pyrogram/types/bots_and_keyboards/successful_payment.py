@@ -53,9 +53,7 @@ class SuccessfulPayment(Object):
         self.payment_info = payment_info
 
     @staticmethod
-    def _parse(
-            client: pyrogram.Client, successful_payment
-        ) -> SuccessfulPayment:
+    def _parse(client: pyrogram.Client, successful_payment) -> SuccessfulPayment:
         payload = None
         telegram_payment_charge_id = None
         provider_payment_charge_id = None
