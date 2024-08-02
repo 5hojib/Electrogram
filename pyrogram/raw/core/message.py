@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from io import BytesIO
 from typing import Any
 
@@ -21,7 +23,7 @@ class Message(TLObject):
         self.body = body
 
     @staticmethod
-    def read(data: BytesIO, *args: Any) -> "Message":  # noqa: ARG004
+    def read(data: BytesIO, *args: Any) -> Message:  # noqa: ARG004
         msg_id = Long.read(data)
         seq_no = Int.read(data)
         length = Int.read(data)

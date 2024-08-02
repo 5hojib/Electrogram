@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .input_media import InputMedia
 from .input_media_animation import InputMediaAnimation
 from .input_media_area import InputMediaArea

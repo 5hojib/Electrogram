@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 mime_types = """
 application/andrew-inset			ez
 application/applixware				aw

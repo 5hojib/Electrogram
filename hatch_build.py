@@ -1,4 +1,6 @@
 # ruff: noqa: ARG002
+from __future__ import annotations
+
 import sys
 
 from hatchling.builders.hooks.plugin.interface import (

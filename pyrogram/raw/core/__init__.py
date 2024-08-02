@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .future_salt import FutureSalt
 from .future_salts import FutureSalts
 from .gzip_packed import GzipPacked

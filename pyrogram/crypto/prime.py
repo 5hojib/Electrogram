@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from random import randint
 
 CURRENT_DH_PRIME = int(

@@ -1,8 +1,12 @@
-from io import BytesIO
+from __future__ import annotations
+
 from json import dumps
-from typing import Any, cast
+from typing import TYPE_CHECKING, Any, cast
 
 from pyrogram.raw.all import objects
+
+if TYPE_CHECKING:
+    from io import BytesIO
 
 
 class TLObject:
@@ -20,7 +24,7 @@ class TLObject:
         pass
 
     @staticmethod
-    def default(obj: "TLObject") -> str | dict[str, str]:
+    def default(obj: TLObject) -> str | dict[str, str]:
         if isinstance(obj, bytes):
             return repr(obj)
 

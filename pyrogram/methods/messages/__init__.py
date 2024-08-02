@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .copy_media_group import CopyMediaGroup
 from .copy_message import CopyMessage
 from .delete_messages import DeleteMessages

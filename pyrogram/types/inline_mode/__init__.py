@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .chosen_inline_result import ChosenInlineResult
 from .inline_query import InlineQuery
 from .inline_query_result import InlineQueryResult

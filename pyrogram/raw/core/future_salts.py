@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from io import BytesIO
 from typing import Any
 
@@ -19,7 +21,7 @@ class FutureSalts(TLObject):
         self.salts = salts
 
     @staticmethod
-    def read(data: BytesIO, *args: Any) -> "FutureSalts":  # noqa: ARG004
+    def read(data: BytesIO, *args: Any) -> FutureSalts:  # noqa: ARG004
         req_msg_id = Long.read(data)
         now = Int.read(data)
 

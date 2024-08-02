@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .add_chat_members import AddChatMembers
 from .archive_chats import ArchiveChats
 from .ban_chat_member import BanChatMember

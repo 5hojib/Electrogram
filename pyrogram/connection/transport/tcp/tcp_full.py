@@ -1,4 +1,6 @@
 # ruff: noqa: ARG002
+from __future__ import annotations
+
 import logging
 from binascii import crc32
 from struct import pack, unpack

@@ -1,13 +1,15 @@
-from collections.abc import Callable
-from typing import TYPE_CHECKING
+from __future__ import annotations
 
-from pyrogram.filters import Filter
-from pyrogram.types import Message
+from typing import TYPE_CHECKING
 
 from .handler import Handler
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     import pyrogram
+    from pyrogram.filters import Filter
+    from pyrogram.types import Message
 
 
 class DeletedMessagesHandler(Handler):
@@ -37,9 +39,7 @@ class DeletedMessagesHandler(Handler):
     def __init__(self, callback: Callable, filters: Filter = None) -> None:
         super().__init__(callback, filters)
 
-    async def check(
-        self, client: "pyrogram.Client", messages: list[Message]
-    ) -> bool:
+    async def check(self, client: pyrogram.Client, messages: list[Message]) -> bool:
         # Every message should be checked, if at least one matches the filter True is returned
         # otherwise, or if the list is empty, False is returned
         for message in messages:

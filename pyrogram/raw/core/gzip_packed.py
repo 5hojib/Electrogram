@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from gzip import compress, decompress
 from io import BytesIO
 from typing import Any, cast
@@ -18,7 +20,7 @@ class GzipPacked(TLObject):
         self.packed_data = packed_data
 
     @staticmethod
-    def read(data: BytesIO, *args: Any) -> "GzipPacked":  # noqa: ARG004
+    def read(data: BytesIO, *args: Any) -> GzipPacked:  # noqa: ARG004
         # Return the Object itself instead of a GzipPacked wrapping it
         return cast(
             GzipPacked,

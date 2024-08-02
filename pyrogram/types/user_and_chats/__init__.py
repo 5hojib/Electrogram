@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .birthday import Birthday
 from .business_info import BusinessInfo
 from .business_message import BusinessMessage

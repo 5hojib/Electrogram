@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import asyncio
 import logging
 import time
@@ -23,9 +25,7 @@ log = logging.getLogger(__name__)
 class Auth:
     MAX_RETRIES = 5
 
-    def __init__(
-        self, client: "pyrogram.Client", dc_id: int, test_mode: bool
-    ) -> None:
+    def __init__(self, client: pyrogram.Client, dc_id: int, test_mode: bool) -> None:
         self.dc_id = dc_id
         self.test_mode = test_mode
         self.ipv6 = client.ipv6

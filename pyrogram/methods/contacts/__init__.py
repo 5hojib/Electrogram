@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .add_contact import AddContact
 from .delete_contacts import DeleteContacts
 from .get_contacts import GetContacts

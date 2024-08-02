@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .bot_business_connect_handler import BotBusinessConnectHandler
 from .bot_business_message_handler import BotBusinessMessageHandler
 from .callback_query_handler import CallbackQueryHandler

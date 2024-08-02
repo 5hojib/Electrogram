@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 __version__ = "v2.185.0"
 __license__ = "MIT License"
 

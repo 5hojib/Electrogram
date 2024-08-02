@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .create_invoice_link import CreateInvoiceLink
 from .get_business_connection import GetBusinessConnection
 from .get_stars_transactions import GetStarsTransactions

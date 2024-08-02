@@ -1,4 +1,6 @@
 # ruff: noqa: ARG001
+from __future__ import annotations
+
 import asyncio
 import inspect
 import logging
@@ -101,7 +103,7 @@ class Dispatcher:
     PRE_CHECKOUT_QUERY_UPDATES = (UpdateBotPrecheckoutQuery,)
     SHIPPING_QUERY_UPDATES = (UpdateBotShippingQuery,)
 
-    def __init__(self, client: "pyrogram.Client") -> None:
+    def __init__(self, client: pyrogram.Client) -> None:
         self.client = client
         self.loop = asyncio.get_event_loop()
 

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .accept_terms_of_service import AcceptTermsOfService
 from .check_password import CheckPassword
 from .connect import Connect

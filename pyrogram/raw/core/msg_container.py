@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from io import BytesIO
 from typing import Any
 
@@ -17,7 +19,7 @@ class MsgContainer(TLObject):
         self.messages = messages
 
     @staticmethod
-    def read(data: BytesIO, *args: Any) -> "MsgContainer":  # noqa: ARG004
+    def read(data: BytesIO, *args: Any) -> MsgContainer:  # noqa: ARG004
         count = Int.read(data)
         return MsgContainer([Message.read(data) for _ in range(count)])
 

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import asyncio
 import bisect
 import contextlib
@@ -55,7 +57,7 @@ class Session:
 
     def __init__(
         self,
-        client: "pyrogram.Client",
+        client: pyrogram.Client,
         dc_id: int,
         auth_key: bytes,
         test_mode: bool,

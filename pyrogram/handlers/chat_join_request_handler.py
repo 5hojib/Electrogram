@@ -1,6 +1,11 @@
-from collections.abc import Callable
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from .handler import Handler
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 class ChatJoinRequestHandler(Handler):

@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+
 class Client:
     def __init__(self) -> None:
         self.me = User("username")
