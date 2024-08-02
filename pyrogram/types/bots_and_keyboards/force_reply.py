@@ -36,9 +36,7 @@ class ForceReply(Object):
 
     @staticmethod
     def read(b):
-        return ForceReply(
-            selective=b.selective, placeholder=b.placeholder
-        )
+        return ForceReply(selective=b.selective, placeholder=b.placeholder)
 
     async def write(self, _: pyrogram.Client):
         return raw.types.ReplyKeyboardForceReply(

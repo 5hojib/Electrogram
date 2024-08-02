@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .input_contact_message_content import InputContactMessageContent
 from .input_invoice_message_content import InputInvoiceMessageContent
 from .input_location_message_content import (

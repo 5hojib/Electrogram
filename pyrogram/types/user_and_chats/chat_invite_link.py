@@ -108,9 +108,7 @@ class ChatInviteLink(Object):
             name=invite.title,
             creates_join_request=invite.request_needed,
             start_date=utils.timestamp_to_datetime(invite.start_date),
-            expire_date=utils.timestamp_to_datetime(
-                invite.expire_date
-            ),
+            expire_date=utils.timestamp_to_datetime(invite.expire_date),
             member_limit=invite.usage_limit,
             member_count=invite.usage,
             pending_join_request_count=invite.requested,

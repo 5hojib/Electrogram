@@ -5,9 +5,7 @@ from pyrogram import raw
 
 
 class DeleteChatPhoto:
-    async def delete_chat_photo(
-        self: pyrogram.Client, chat_id: int | str
-    ) -> bool:
+    async def delete_chat_photo(self: pyrogram.Client, chat_id: int | str) -> bool:
         """Delete a chat photo.
 
         You must be an administrator in the chat for this to work and must have the appropriate admin rights.
@@ -47,8 +45,6 @@ class DeleteChatPhoto:
                 )
             )
         else:
-            raise ValueError(
-                f'The chat_id "{chat_id}" belongs to a user'
-            )
+            raise ValueError(f'The chat_id "{chat_id}" belongs to a user')
 
         return True

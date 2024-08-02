@@ -1,3 +1,6 @@
+# ruff: noqa: ARG002
+from __future__ import annotations
+
 import logging
 
 from .tcp import TCP, Proxy
@@ -37,6 +40,4 @@ class TCPAbridged(TCP):
             if length is None:
                 return None
 
-        return await super().recv(
-            int.from_bytes(length, "little") * 4
-        )
+        return await super().recv(int.from_bytes(length, "little") * 4)

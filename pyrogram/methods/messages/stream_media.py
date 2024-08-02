@@ -82,10 +82,7 @@ class StreamMedia:
         else:
             media = message
 
-        if isinstance(media, str):
-            file_id_str = media
-        else:
-            file_id_str = media.file_id
+        file_id_str = media if isinstance(media, str) else media.file_id
 
         file_id_obj = FileId.decode(file_id_str)
         file_size = getattr(media, "file_size", 0)
@@ -99,7 +96,5 @@ class StreamMedia:
             chunks = math.ceil(file_size / 1024 / 1024)
             offset += chunks
 
-        async for chunk in self.get_file(
-            file_id_obj, file_size, limit, offset
-        ):
+        async for chunk in self.get_file(file_id_obj, file_size, limit, offset):
             yield chunk

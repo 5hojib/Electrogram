@@ -6,8 +6,9 @@ from pyrogram.types.object import Object
 
 
 class InputPhoneContact(Object):
-    """A Phone Contact to be added in your Telegram address book.
-    It is intended to be used with :meth:`~pyrogram.Client.add_contacts()`
+    """A Phone Contact to be added to your Telegram address book.
+
+    Intended to be used with :meth:`~pyrogram.Client.add_contacts()`.
 
     Parameters:
         phone (``str``):
@@ -20,14 +21,13 @@ class InputPhoneContact(Object):
             Contact's last name
     """
 
-    def __init__(
-        self, phone: str, first_name: str, last_name: str = ""
-    ) -> None:
-        super().__init__(None)
+    def __init__(self, phone: str, first_name: str, last_name: str = "") -> None:
+        super().__init__()
+        self.phone = phone
+        self.first_name = first_name
+        self.last_name = last_name
 
-    def __new__(
-        cls, phone: str, first_name: str, last_name: str = ""
-    ):
+    def __new__(cls, phone: str, first_name: str, last_name: str = ""):
         return raw.types.InputPhoneContact(
             client_id=MsgId(),
             phone="+" + phone.strip("+"),

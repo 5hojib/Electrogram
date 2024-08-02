@@ -67,9 +67,7 @@ class MessageEntity(Object):
     ) -> MessageEntity | None:
         # Special case for InputMessageEntityMentionName -> MessageEntityType.TEXT_MENTION
         # This happens in case of UpdateShortSentMessage inside send_message() where entities are parsed from the input
-        if isinstance(
-            entity, raw.types.InputMessageEntityMentionName
-        ):
+        if isinstance(entity, raw.types.InputMessageEntityMentionName):
             entity_type = enums.MessageEntityType.TEXT_MENTION
             user_id = entity.user_id.user_id
         else:
@@ -95,9 +93,7 @@ class MessageEntity(Object):
             args.pop(arg)
 
         if self.user:
-            args["user_id"] = await self._client.resolve_peer(
-                self.user.id
-            )
+            args["user_id"] = await self._client.resolve_peer(self.user.id)
 
         if not self.url:
             args.pop("url")

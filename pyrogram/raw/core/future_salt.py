@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from io import BytesIO
 from typing import Any
 
@@ -12,22 +14,20 @@ class FutureSalt(TLObject):
 
     QUALNAME = "FutureSalt"
 
-    def __init__(
-        self, valid_since: int, valid_until: int, salt: int
-    ) -> None:
+    def __init__(self, valid_since: int, valid_until: int, salt: int) -> None:
         self.valid_since = valid_since
         self.valid_until = valid_until
         self.salt = salt
 
     @staticmethod
-    def read(data: BytesIO, *args: Any) -> "FutureSalt":
+    def read(data: BytesIO, *args: Any) -> FutureSalt:  # noqa: ARG004
         valid_since = Int.read(data)
         valid_until = Int.read(data)
         salt = Long.read(data)
 
         return FutureSalt(valid_since, valid_until, salt)
 
-    def write(self, *args: Any) -> bytes:
+    def write(self, *args: Any) -> bytes:  # noqa: ARG002
         b = BytesIO()
 
         b.write(Int(self.valid_since))

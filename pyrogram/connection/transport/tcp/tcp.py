@@ -38,9 +38,7 @@ class TCP:
         self.lock = asyncio.Lock()
         self.loop = asyncio.get_event_loop()
 
-    async def _connect_via_proxy(
-        self, destination: tuple[str, int]
-    ) -> None:
+    async def _connect_via_proxy(self, destination: tuple[str, int]) -> None:
         scheme = self.proxy.get("scheme")
         if scheme is None:
             raise ValueError("No scheme specified")
@@ -59,13 +57,9 @@ class TCP:
         except ValueError:
             is_proxy_ipv6 = False
         else:
-            is_proxy_ipv6 = isinstance(
-                ip_address, ipaddress.IPv6Address
-            )
+            is_proxy_ipv6 = isinstance(ip_address, ipaddress.IPv6Address)
 
-        proxy_family = (
-            socket.AF_INET6 if is_proxy_ipv6 else socket.AF_INET
-        )
+        proxy_family = socket.AF_INET6 if is_proxy_ipv6 else socket.AF_INET
         sock = socks.socksocket(proxy_family)
 
         sock.set_proxy(
@@ -81,13 +75,9 @@ class TCP:
 
         sock.setblocking(False)
 
-        self.reader, self.writer = await asyncio.open_connection(
-            sock=sock
-        )
+        self.reader, self.writer = await asyncio.open_connection(sock=sock)
 
-    async def _connect_via_direct(
-        self, destination: tuple[str, int]
-    ) -> None:
+    async def _connect_via_direct(self, destination: tuple[str, int]) -> None:
         host, port = destination
         family = socket.AF_INET6 if self.ipv6 else socket.AF_INET
         self.reader, self.writer = await asyncio.open_connection(
@@ -102,10 +92,8 @@ class TCP:
 
     async def connect(self, address: tuple[str, int]) -> None:
         try:
-            await asyncio.wait_for(
-                self._connect(address), TCP.TIMEOUT
-            )
-        except asyncio.TimeoutError:  # Re-raise as TimeoutError. asyncio.TimeoutError is deprecated in 3.11
+            await asyncio.wait_for(self._connect(address), TCP.TIMEOUT)
+        except asyncio.TimeoutError:
             raise TimeoutError("Connection timed out")
 
     async def close(self) -> None:
@@ -114,9 +102,7 @@ class TCP:
 
         try:
             self.writer.close()
-            await asyncio.wait_for(
-                self.writer.wait_closed(), TCP.TIMEOUT
-            )
+            await asyncio.wait_for(self.writer.wait_closed(), TCP.TIMEOUT)
         except Exception as e:
             log.info("Close exception: %s %s", type(e).__name__, e)
 

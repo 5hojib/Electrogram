@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import asyncio
 import logging
 
@@ -29,24 +31,18 @@ class Connection:
         self.media = media
         self.protocol_factory = protocol_factory
 
-        self.address = DataCenter(
-            dc_id, test_mode, ipv6, alt_port, media
-        )
+        self.address = DataCenter(dc_id, test_mode, ipv6, alt_port, media)
         self.protocol: TCP | None = None
 
     async def connect(self) -> None:
         for i in range(Connection.MAX_CONNECTION_ATTEMPTS):
-            self.protocol = self.protocol_factory(
-                ipv6=self.ipv6, proxy=self.proxy
-            )
+            self.protocol = self.protocol_factory(ipv6=self.ipv6, proxy=self.proxy)
 
             try:
                 log.info("Connecting...")
                 await self.protocol.connect(self.address)
             except OSError as e:
-                log.warning(
-                    "Unable to connect due to network issues: %s", e
-                )
+                log.warning("Unable to connect due to network issues: %s", e)
                 await self.protocol.close()
                 await asyncio.sleep(1)
             else:

@@ -25,9 +25,5 @@ class GetContacts:
                 contacts = await app.get_contacts()
                 print(contacts)
         """
-        contacts = await self.invoke(
-            raw.functions.contacts.GetContacts(hash=0)
-        )
-        return types.List(
-            types.User._parse(self, user) for user in contacts.users
-        )
+        contacts = await self.invoke(raw.functions.contacts.GetContacts(hash=0))
+        return types.List(types.User._parse(self, user) for user in contacts.users)

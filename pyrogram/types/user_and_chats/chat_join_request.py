@@ -60,14 +60,10 @@ class ChatJoinRequest(Object, Update):
 
         return ChatJoinRequest(
             chat=types.Chat._parse_chat(client, chats[chat_id]),
-            from_user=types.User._parse(
-                client, users[update.user_id]
-            ),
+            from_user=types.User._parse(client, users[update.user_id]),
             date=utils.timestamp_to_datetime(update.date),
             bio=update.about,
-            invite_link=types.ChatInviteLink._parse(
-                client, update.invite, users
-            ),
+            invite_link=types.ChatInviteLink._parse(client, update.invite, users),
             client=client,
         )
 

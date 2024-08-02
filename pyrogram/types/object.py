@@ -48,14 +48,9 @@ class Object:
         attributes_to_hide = ["raw"]
 
         filtered_attributes = {
-            attr: (
-                "*" * 9
-                if attr == "phone_number"
-                else getattr(obj, attr)
-            )
+            attr: ("*" * 9 if attr == "phone_number" else getattr(obj, attr))
             for attr in filter(
-                lambda x: not x.startswith("_")
-                and x not in attributes_to_hide,
+                lambda x: not x.startswith("_") and x not in attributes_to_hide,
                 obj.__dict__,
             )
             if getattr(obj, attr) is not None
@@ -64,18 +59,14 @@ class Object:
         return {"_": obj.__class__.__name__, **filtered_attributes}
 
     def __str__(self) -> str:
-        return dumps(
-            self, indent=4, default=Object.default, ensure_ascii=False
-        )
+        return dumps(self, indent=4, default=Object.default, ensure_ascii=False)
 
     def __repr__(self) -> str:
         return "pyrogram.types.{}({})".format(
             self.__class__.__name__,
             ", ".join(
                 f"{attr}={getattr(self, attr)!r}"
-                for attr in filter(
-                    lambda x: not x.startswith("_"), self.__dict__
-                )
+                for attr in filter(lambda x: not x.startswith("_"), self.__dict__)
                 if getattr(self, attr) is not None
             ),
         )
@@ -98,11 +89,7 @@ class Object:
             obj = state[attr]
 
             # Maybe a better alternative would be https://docs.python.org/3/library/inspect.html#inspect.signature
-            if (
-                isinstance(obj, tuple)
-                and len(obj) == 2
-                and obj[0] == "dt"
-            ):
+            if isinstance(obj, tuple) and len(obj) == 2 and obj[0] == "dt":
                 state[attr] = datetime.fromtimestamp(obj[1])
 
         self.__dict__ = state

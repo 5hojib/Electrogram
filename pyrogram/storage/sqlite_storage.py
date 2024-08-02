@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import inspect
 import time
 from typing import Any, NoReturn
@@ -79,9 +81,7 @@ END;
 
 def get_input_peer(peer_id: int, access_hash: int, peer_type: str):
     if peer_type in ["user", "bot"]:
-        return raw.types.InputPeerUser(
-            user_id=peer_id, access_hash=access_hash
-        )
+        return raw.types.InputPeerUser(user_id=peer_id, access_hash=access_hash)
 
     if peer_type == "group":
         return raw.types.InputPeerChat(chat_id=-peer_id)
@@ -109,9 +109,7 @@ class SQLiteStorage(Storage):
             self.conn.executescript(SCHEMA)
             self.conn.executescript(UNAME_SCHEMA)
 
-            self.conn.execute(
-                "INSERT INTO version VALUES (?)", (self.VERSION,)
-            )
+            self.conn.execute("INSERT INTO version VALUES (?)", (self.VERSION,))
 
             self.conn.execute(
                 "INSERT INTO sessions VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -140,22 +138,16 @@ class SQLiteStorage(Storage):
             peers,
         )
 
-    async def update_usernames(
-        self, usernames: list[tuple[int, str]]
-    ) -> None:
+    async def update_usernames(self, usernames: list[tuple[int, str]]) -> None:
         self.conn.executescript(UNAME_SCHEMA)
         for user in usernames:
-            self.conn.execute(
-                "DELETE FROM usernames WHERE peer_id=?", (user[0],)
-            )
+            self.conn.execute("DELETE FROM usernames WHERE peer_id=?", (user[0],))
         self.conn.executemany(
             "REPLACE INTO usernames (peer_id, id)" "VALUES (?, ?)",
             usernames,
         )
 
-    async def update_state(
-        self, value: tuple[int, int, int, int, int] = object
-    ):
+    async def update_state(self, value: tuple[int, int, int, int, int] = object):
         if value is object:
             return self.conn.execute(
                 "SELECT id, pts, qts, date, seq FROM update_state"
@@ -175,9 +167,7 @@ class SQLiteStorage(Storage):
             return None
 
     async def remove_state(self, chat_id) -> None:
-        self.conn.execute(
-            "DELETE FROM update_state WHERE id = ?", (chat_id,)
-        )
+        self.conn.execute("DELETE FROM update_state WHERE id = ?", (chat_id,))
 
     async def get_peer_by_id(self, peer_id: int):
         r = self.conn.execute(
@@ -234,17 +224,13 @@ class SQLiteStorage(Storage):
     def _get(self):
         attr = inspect.stack()[2].function
 
-        return self.conn.execute(
-            f"SELECT {attr} FROM sessions"
-        ).fetchone()[0]
+        return self.conn.execute(f"SELECT {attr} FROM sessions").fetchone()[0]
 
     def _set(self, value: Any) -> None:
         attr = inspect.stack()[2].function
 
         with self.conn:
-            self.conn.execute(
-                f"UPDATE sessions SET {attr} = ?", (value,)
-            )
+            self.conn.execute(f"UPDATE sessions SET {attr} = ?", (value,))
 
     def _accessor(self, value: Any = object):
         return self._get() if value is object else self._set(value)
@@ -272,11 +258,7 @@ class SQLiteStorage(Storage):
 
     def version(self, value: int = object):
         if value is object:
-            return self.conn.execute(
-                "SELECT number FROM version"
-            ).fetchone()[0]
+            return self.conn.execute("SELECT number FROM version").fetchone()[0]
         with self.conn:
-            self.conn.execute(
-                "UPDATE version SET number = ?", (value,)
-            )
+            self.conn.execute("UPDATE version SET number = ?", (value,))
             return None

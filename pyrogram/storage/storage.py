@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import base64
 import struct
 from abc import abstractmethod
@@ -32,9 +34,7 @@ class Storage:
     ) -> NoReturn:
         raise NotImplementedError
 
-    async def update_usernames(
-        self, usernames: list[tuple[int, str]]
-    ) -> NoReturn:
+    async def update_usernames(self, usernames: list[tuple[int, str]]) -> NoReturn:
         raise NotImplementedError
 
     @abstractmethod
@@ -60,9 +60,7 @@ class Storage:
     async def get_peer_by_username(self, username: str) -> NoReturn:
         raise NotImplementedError
 
-    async def get_peer_by_phone_number(
-        self, phone_number: str
-    ) -> NoReturn:
+    async def get_peer_by_phone_number(self, phone_number: str) -> NoReturn:
         raise NotImplementedError
 
     async def dc_id(self, value: int = object) -> NoReturn:

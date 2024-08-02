@@ -48,9 +48,7 @@ class MediaAreaChannelPost(MediaArea):
             ).chats[0],
         )
         return MediaAreaChannelPost(
-            coordinates=types.MediaAreaCoordinates._parse(
-                media_area.coordinates
-            ),
+            coordinates=types.MediaAreaCoordinates._parse(media_area.coordinates),
             chat=chat,
             message_id=media_area.msg_id,
         )

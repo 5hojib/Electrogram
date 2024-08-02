@@ -208,8 +208,7 @@ class SendAudio:
                         progress_args=progress_args,
                     )
                     media = raw.types.InputMediaUploadedDocument(
-                        mime_type=self.guess_mime_type(audio)
-                        or "audio/mpeg",
+                        mime_type=self.guess_mime_type(audio) or "audio/mpeg",
                         file=file,
                         thumb=thumb,
                         attributes=[
@@ -219,19 +218,14 @@ class SendAudio:
                                 title=title,
                             ),
                             raw.types.DocumentAttributeFilename(
-                                file_name=file_name
-                                or Path(audio).name
+                                file_name=file_name or Path(audio).name
                             ),
                         ],
                     )
                 elif re.match("^https?://", audio):
-                    media = raw.types.InputMediaDocumentExternal(
-                        url=audio
-                    )
+                    media = raw.types.InputMediaDocumentExternal(url=audio)
                 else:
-                    media = utils.get_input_media_from_file_id(
-                        audio, FileType.AUDIO
-                    )
+                    media = utils.get_input_media_from_file_id(audio, FileType.AUDIO)
             else:
                 thumb = await self.save_file(thumb)
                 file = await self.save_file(
@@ -240,9 +234,7 @@ class SendAudio:
                     progress_args=progress_args,
                 )
                 media = raw.types.InputMediaUploadedDocument(
-                    mime_type=self.guess_mime_type(
-                        file_name or audio.name
-                    )
+                    mime_type=self.guess_mime_type(file_name or audio.name)
                     or "audio/mpeg",
                     file=file,
                     thumb=thumb,
@@ -266,9 +258,7 @@ class SendAudio:
                         silent=disable_notification or None,
                         reply_to=reply_to,
                         random_id=self.rnd_id(),
-                        schedule_date=utils.datetime_to_timestamp(
-                            schedule_date
-                        ),
+                        schedule_date=utils.datetime_to_timestamp(schedule_date),
                         noforwards=protect_content,
                         effect=message_effect_id,
                         reply_markup=await reply_markup.write(self)
@@ -291,9 +281,7 @@ class SendAudio:
                     else:
                         r = await self.invoke(rpc)
                 except FilePartMissing as e:
-                    await self.save_file(
-                        audio, file_id=file.id, file_part=e.value
-                    )
+                    await self.save_file(audio, file_id=file.id, file_part=e.value)
                 else:
                     for i in r.updates:
                         if isinstance(

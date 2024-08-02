@@ -36,9 +36,7 @@ class GetMediaGroup:
         """
 
         if message_id <= 0:
-            raise ValueError(
-                "Passed message_id is negative or equal to zero."
-            )
+            raise ValueError("Passed message_id is negative or equal to zero.")
 
         # Get messages with id from `id - 9` to `id + 10` to get all possible media group messages.
         messages = await self.get_messages(
@@ -56,12 +54,8 @@ class GetMediaGroup:
         )
 
         if media_group_id is None:
-            raise ValueError(
-                "The message doesn't belong to a media group"
-            )
+            raise ValueError("The message doesn't belong to a media group")
 
         return types.List(
-            msg
-            for msg in messages
-            if msg.media_group_id == media_group_id
+            msg for msg in messages if msg.media_group_id == media_group_id
         )

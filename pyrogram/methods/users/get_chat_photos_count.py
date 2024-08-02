@@ -35,9 +35,7 @@ class GetChatPhotosCount:
             r = await self.invoke(
                 raw.functions.messages.GetSearchCounters(
                     peer=peer_id,
-                    filters=[
-                        raw.types.InputMessagesFilterChatPhotos()
-                    ],
+                    filters=[raw.types.InputMessagesFilterChatPhotos()],
                 )
             )
 

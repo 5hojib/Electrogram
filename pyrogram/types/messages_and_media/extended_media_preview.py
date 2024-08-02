@@ -42,9 +42,7 @@ class ExtendedMediaPreview(Object):
     ) -> ExtendedMediaPreview:
         thumb = None
         if media.thumb:
-            thumb = types.StrippedThumbnail._parse(
-                client, media.thumb
-            )
+            thumb = types.StrippedThumbnail._parse(client, media.thumb)
 
         return ExtendedMediaPreview(
             width=media.w,

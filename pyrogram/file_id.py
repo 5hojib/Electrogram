@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import base64
 import logging
 import struct
@@ -95,9 +97,9 @@ class FileType(IntEnum):
     """Known file types"""
 
     THUMBNAIL = 0
-    CHAT_PHOTO = 1  # ProfilePhoto
+    CHAT_PHOTO = 1
     PHOTO = 2
-    VOICE = 3  # VoiceNote
+    VOICE = 3
     VIDEO = 4
     DOCUMENT = 5
     ENCRYPTED = 6
@@ -119,12 +121,11 @@ class ThumbnailSource(IntEnum):
 
     LEGACY = 0
     THUMBNAIL = 1
-    CHAT_PHOTO_SMALL = 2  # DialogPhotoSmall
-    CHAT_PHOTO_BIG = 3  # DialogPhotoBig
+    CHAT_PHOTO_SMALL = 2
+    CHAT_PHOTO_BIG = 3
     STICKER_SET_THUMBNAIL = 4
 
 
-# Photo-like file ids are longer and contain extra info, the rest are all documents
 PHOTO_TYPES = {
     FileType.THUMBNAIL,
     FileType.CHAT_PHOTO,
@@ -133,9 +134,6 @@ PHOTO_TYPES = {
     FileType.ENCRYPTED_THUMBNAIL,
 }
 DOCUMENT_TYPES = set(FileType) - PHOTO_TYPES
-
-# Since the file type values are small enough to fit them in few bits, Telegram thought it would be a good idea to
-# encode extra information about web url and file reference existence as flag inside the 4 bytes allocated for the field
 WEB_LOCATION_FLAG = 1 << 24
 FILE_REFERENCE_FLAG = 1 << 25
 
@@ -189,8 +187,6 @@ class FileId:
     def decode(file_id: str):
         decoded = rle_decode(b64_decode(file_id))
 
-        # region read version
-        # File id versioning. Major versions lower than 4 don't have a minor version
         major = decoded[-1]
 
         if major < 4:
@@ -199,26 +195,19 @@ class FileId:
         else:
             minor = decoded[-2]
             buffer = BytesIO(decoded[:-2])
-        # endregion
 
         file_type, dc_id = struct.unpack("<ii", buffer.read(8))
 
-        # region media type flags
-        # Check for flags existence
         has_web_location = bool(file_type & WEB_LOCATION_FLAG)
         has_file_reference = bool(file_type & FILE_REFERENCE_FLAG)
 
-        # Remove flags to restore the actual type id value
         file_type &= ~WEB_LOCATION_FLAG
         file_type &= ~FILE_REFERENCE_FLAG
-        # endregion
 
         try:
             file_type = FileType(file_type)
         except ValueError:
-            raise ValueError(
-                f"Unknown file_type {file_type} of file_id {file_id}"
-            )
+            raise ValueError(f"Unknown file_type {file_type} of file_id {file_id}")
 
         if has_web_location:
             url = String.read(buffer)
@@ -233,17 +222,13 @@ class FileId:
                 access_hash=access_hash,
             )
 
-        file_reference = (
-            Bytes.read(buffer) if has_file_reference else b""
-        )
+        file_reference = Bytes.read(buffer) if has_file_reference else b""
         media_id, access_hash = struct.unpack("<qq", buffer.read(16))
 
         if file_type in PHOTO_TYPES:
             (volume_id,) = struct.unpack("<q", buffer.read(8))
             (thumbnail_source,) = (
-                (0,)
-                if major < 4
-                else struct.unpack("<i", buffer.read(4))
+                (0,) if major < 4 else struct.unpack("<i", buffer.read(4))
             )
 
             try:
@@ -254,9 +239,7 @@ class FileId:
                 )
 
             if thumbnail_source == ThumbnailSource.LEGACY:
-                secret, local_id = struct.unpack(
-                    "<qi", buffer.read(12)
-                )
+                secret, local_id = struct.unpack("<qi", buffer.read(12))
 
                 return FileId(
                     major=major,
@@ -273,8 +256,8 @@ class FileId:
                 )
 
             if thumbnail_source == ThumbnailSource.THUMBNAIL:
-                thumbnail_file_type, thumbnail_size, local_id = (
-                    struct.unpack("<iii", buffer.read(12))
+                thumbnail_file_type, thumbnail_size, local_id = struct.unpack(
+                    "<iii", buffer.read(12)
                 )
                 thumbnail_size = chr(thumbnail_size)
 
@@ -316,12 +299,9 @@ class FileId:
                     local_id=local_id,
                 )
 
-            if (
-                thumbnail_source
-                == ThumbnailSource.STICKER_SET_THUMBNAIL
-            ):
-                sticker_set_id, sticker_set_access_hash, local_id = (
-                    struct.unpack("<qqi", buffer.read(20))
+            if thumbnail_source == ThumbnailSource.STICKER_SET_THUMBNAIL:
+                sticker_set_id, sticker_set_access_hash, local_id = struct.unpack(
+                    "<qqi", buffer.read(20)
                 )
 
                 return FileId(
@@ -351,9 +331,7 @@ class FileId:
             )
         return None
 
-    def encode(
-        self, *, major: int | None = None, minor: int | None = None
-    ):
+    def encode(self, *, major: int | None = None, minor: int | None = None):
         major = major if major is not None else self.major
         minor = minor if minor is not None else self.minor
 
@@ -375,9 +353,7 @@ class FileId:
         if self.file_reference:
             buffer.write(Bytes(self.file_reference))
 
-        buffer.write(
-            struct.pack("<qq", self.media_id, self.access_hash)
-        )
+        buffer.write(struct.pack("<qq", self.media_id, self.access_hash))
 
         if self.file_type in PHOTO_TYPES:
             buffer.write(struct.pack("<q", self.volume_id))
@@ -386,9 +362,7 @@ class FileId:
                 buffer.write(struct.pack("<i", self.thumbnail_source))
 
             if self.thumbnail_source == ThumbnailSource.LEGACY:
-                buffer.write(
-                    struct.pack("<qi", self.secret, self.local_id)
-                )
+                buffer.write(struct.pack("<qi", self.secret, self.local_id))
             elif self.thumbnail_source == ThumbnailSource.THUMBNAIL:
                 buffer.write(
                     struct.pack(
@@ -410,10 +384,7 @@ class FileId:
                         self.local_id,
                     )
                 )
-            elif (
-                self.thumbnail_source
-                == ThumbnailSource.STICKER_SET_THUMBNAIL
-            ):
+            elif self.thumbnail_source == ThumbnailSource.STICKER_SET_THUMBNAIL:
                 buffer.write(
                     struct.pack(
                         "<qqi",
@@ -430,9 +401,7 @@ class FileId:
         return b64_encode(rle_encode(buffer.getvalue()))
 
     def __str__(self) -> str:
-        return str(
-            {k: v for k, v in self.__dict__.items() if v is not None}
-        )
+        return str({k: v for k, v in self.__dict__.items() if v is not None})
 
 
 class FileUniqueType(IntEnum):
@@ -477,9 +446,7 @@ class FileUniqueId:
         if file_unique_type == FileUniqueType.WEB:
             url = String.read(buffer)
 
-            return FileUniqueId(
-                file_unique_type=file_unique_type, url=url
-            )
+            return FileUniqueId(file_unique_type=file_unique_type, url=url)
 
         if file_unique_type == FileUniqueType.PHOTO:
             volume_id, local_id = struct.unpack("<qi", buffer.read())
@@ -493,20 +460,15 @@ class FileUniqueId:
         if file_unique_type == FileUniqueType.DOCUMENT:
             (media_id,) = struct.unpack("<q", buffer.read())
 
-            return FileUniqueId(
-                file_unique_type=file_unique_type, media_id=media_id
-            )
+            return FileUniqueId(file_unique_type=file_unique_type, media_id=media_id)
 
-        # TODO: Missing decoder for SECURE, ENCRYPTED and TEMP
         raise ValueError(
             f"Unknown decoder for file_unique_type {file_unique_type} of file_unique_id {file_unique_id}"
         )
 
     def encode(self):
         if self.file_unique_type == FileUniqueType.WEB:
-            string = struct.pack(
-                "<is", self.file_unique_type, String(self.url)
-            )
+            string = struct.pack("<is", self.file_unique_type, String(self.url))
         elif self.file_unique_type == FileUniqueType.PHOTO:
             string = struct.pack(
                 "<iqi",
@@ -515,11 +477,8 @@ class FileUniqueId:
                 self.local_id,
             )
         elif self.file_unique_type == FileUniqueType.DOCUMENT:
-            string = struct.pack(
-                "<iq", self.file_unique_type, self.media_id
-            )
+            string = struct.pack("<iq", self.file_unique_type, self.media_id)
         else:
-            # TODO: Missing encoder for SECURE, ENCRYPTED and TEMP
             raise ValueError(
                 f"Unknown encoder for file_unique_type {self.file_unique_type}"
             )
@@ -527,6 +486,4 @@ class FileUniqueId:
         return b64_encode(rle_encode(string))
 
     def __str__(self) -> str:
-        return str(
-            {k: v for k, v in self.__dict__.items() if v is not None}
-        )
+        return str({k: v for k, v in self.__dict__.items() if v is not None})

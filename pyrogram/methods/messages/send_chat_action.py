@@ -95,9 +95,7 @@ class SendChatAction:
                             "a": [
                                 {
                                     "t": 0,
-                                    "i": randint(
-                                        1, sticker_set.count
-                                    ),
+                                    "i": randint(1, sticker_set.count),
                                 }
                             ],
                         }

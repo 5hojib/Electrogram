@@ -110,15 +110,11 @@ class Poll(Object, Update):
     @staticmethod
     async def _parse(
         client,
-        media_poll: raw.types.MessageMediaPoll
-        | raw.types.UpdateMessagePoll,
-        users: list[raw.base.User],
+        media_poll: raw.types.MessageMediaPoll | raw.types.UpdateMessagePoll,
     ) -> Poll:
         poll: raw.types.Poll = media_poll.poll
         poll_results: raw.types.PollResults = media_poll.results
-        results: list[raw.types.PollAnswerVoters] = (
-            poll_results.results
-        )
+        results: list[raw.types.PollAnswerVoters] = poll_results.results
 
         chosen_option_id = None
         correct_option_id = None
@@ -145,9 +141,7 @@ class Poll(Object, Update):
                 if answer.text.entities
                 else []
             )
-            option_entities = types.List(
-                filter(lambda x: x is not None, o_entities)
-            )
+            option_entities = types.List(filter(lambda x: x is not None, o_entities))
 
             options.append(
                 types.PollOption(
@@ -167,9 +161,7 @@ class Poll(Object, Update):
             if poll.question.entities
             else []
         )
-        question_entities = types.List(
-            filter(lambda x: x is not None, q_entities)
-        )
+        question_entities = types.List(filter(lambda x: x is not None, q_entities))
 
         return Poll(
             id=str(poll.id),
@@ -179,9 +171,7 @@ class Poll(Object, Update):
             total_voter_count=media_poll.results.total_voters,
             is_closed=poll.closed,
             is_anonymous=not poll.public_voters,
-            type=enums.PollType.QUIZ
-            if poll.quiz
-            else enums.PollType.REGULAR,
+            type=enums.PollType.QUIZ if poll.quiz else enums.PollType.REGULAR,
             allows_multiple_answers=poll.multiple_choice,
             chosen_option_id=chosen_option_id,
             correct_option_id=correct_option_id,
@@ -242,9 +232,7 @@ class Poll(Object, Update):
             chosen_option_id=chosen_option_id,
             correct_option_id=correct_option_id,
             recent_voters=[
-                types.User._parse(
-                    client, users.get(user.user_id, None)
-                )
+                types.User._parse(client, users.get(user.user_id, None))
                 for user in update.results.recent_voters
             ]
             if update.results.recent_voters

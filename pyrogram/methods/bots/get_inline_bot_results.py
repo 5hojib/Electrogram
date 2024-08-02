@@ -52,7 +52,6 @@ class GetInlineBotResults:
                 results = await app.get_inline_bot_results("pyrogrambot")
                 print(results)
         """
-        # TODO: Don't return the raw type
 
         try:
             return await self.invoke(
@@ -61,22 +60,12 @@ class GetInlineBotResults:
                     peer=raw.types.InputPeerSelf(),
                     query=query,
                     offset=offset,
-                    geo_point=raw.types.InputGeoPoint(
-                        lat=latitude, long=longitude
-                    )
-                    if (
-                        latitude is not None and longitude is not None
-                    )
+                    geo_point=raw.types.InputGeoPoint(lat=latitude, long=longitude)
+                    if (latitude is not None and longitude is not None)
                     else None,
                 )
             )
         except UnknownError as e:
-            # TODO: Add this -503 Timeout error into the Error DB
-            if (
-                e.value.error_code == -503
-                and e.value.error_message == "Timeout"
-            ):
-                raise TimeoutError(
-                    "The inline bot didn't answer in time"
-                ) from None
+            if e.value.error_code == -503 and e.value.error_message == "Timeout":
+                raise TimeoutError("The inline bot didn't answer in time") from None
             raise e

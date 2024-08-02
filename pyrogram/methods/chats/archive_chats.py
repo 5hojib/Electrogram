@@ -43,9 +43,7 @@ class ArchiveChats:
         ]
 
         await self.invoke(
-            raw.functions.folders.EditPeerFolders(
-                folder_peers=folder_peers
-            )
+            raw.functions.folders.EditPeerFolders(folder_peers=folder_peers)
         )
 
         return True

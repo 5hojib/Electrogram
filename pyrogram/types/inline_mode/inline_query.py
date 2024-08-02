@@ -71,28 +71,20 @@ class InlineQuery(Object, Update):
         peer_type = inline_query.peer_type
         chat_type = None
 
-        if isinstance(
-            peer_type, raw.types.InlineQueryPeerTypeSameBotPM
-        ):
+        if isinstance(peer_type, raw.types.InlineQueryPeerTypeSameBotPM):
             chat_type = enums.ChatType.BOT
         elif isinstance(peer_type, raw.types.InlineQueryPeerTypePM):
             chat_type = enums.ChatType.PRIVATE
         elif isinstance(peer_type, raw.types.InlineQueryPeerTypeChat):
             chat_type = enums.ChatType.GROUP
-        elif isinstance(
-            peer_type, raw.types.InlineQueryPeerTypeMegagroup
-        ):
+        elif isinstance(peer_type, raw.types.InlineQueryPeerTypeMegagroup):
             chat_type = enums.ChatType.SUPERGROUP
-        elif isinstance(
-            peer_type, raw.types.InlineQueryPeerTypeBroadcast
-        ):
+        elif isinstance(peer_type, raw.types.InlineQueryPeerTypeBroadcast):
             chat_type = enums.ChatType.CHANNEL
 
         return InlineQuery(
             id=str(inline_query.query_id),
-            from_user=types.User._parse(
-                client, users[inline_query.user_id]
-            ),
+            from_user=types.User._parse(client, users[inline_query.user_id]),
             query=inline_query.query,
             offset=inline_query.offset,
             chat_type=chat_type,

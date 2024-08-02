@@ -45,13 +45,9 @@ class Start:
 
             if not await self.storage.is_bot() and self.takeout:
                 self.takeout_id = (
-                    await self.invoke(
-                        raw.functions.account.InitTakeoutSession()
-                    )
+                    await self.invoke(raw.functions.account.InitTakeoutSession())
                 ).id
-                log.info(
-                    "Takeout session %s initiated", self.takeout_id
-                )
+                log.info("Takeout session %s initiated", self.takeout_id)
 
             await self.invoke(raw.functions.updates.GetState())
         except (Exception, KeyboardInterrupt):

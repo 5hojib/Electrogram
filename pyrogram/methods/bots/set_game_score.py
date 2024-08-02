@@ -14,7 +14,6 @@ class SetGameScore:
         chat_id: int | str | None = None,
         message_id: int | None = None,
     ) -> types.Message | bool:
-        # inline_message_id: str = None):  TODO Add inline_message_id
         """Set the score of the specified user in a game.
 
         .. include:: /_includes/usable-by/bots.rst
@@ -73,8 +72,7 @@ class SetGameScore:
         for i in r.updates:
             if isinstance(
                 i,
-                raw.types.UpdateEditMessage
-                | raw.types.UpdateEditChannelMessage,
+                raw.types.UpdateEditMessage | raw.types.UpdateEditChannelMessage,
             ):
                 return await types.Message._parse(
                     self,

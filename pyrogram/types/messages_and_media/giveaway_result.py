@@ -95,9 +95,7 @@ class GiveawayResult(Object):
             giveaway_message = await client.get_messages(
                 chat_id, giveaway_result.launch_msg_id
             )
-            expired_date = utils.timestamp_to_datetime(
-                giveaway_result.until_date
-            )
+            expired_date = utils.timestamp_to_datetime(giveaway_result.until_date)
             winners = []
             for winner in giveaway_result.winners:
                 winners.append(await client.get_users(winner))
@@ -106,15 +104,11 @@ class GiveawayResult(Object):
             chat=chat,
             giveaway_message=giveaway_message,
             quantity=getattr(giveaway_result, "winners_count", None),
-            unclaimed_quantity=getattr(
-                giveaway_result, "unclaimed_count", None
-            ),
+            unclaimed_quantity=getattr(giveaway_result, "unclaimed_count", None),
             winners=winners,
             months=getattr(giveaway_result, "months", None),
             expire_date=expired_date,
-            new_subscribers=getattr(
-                giveaway_result, "only_new_subscribers", None
-            ),
+            new_subscribers=getattr(giveaway_result, "only_new_subscribers", None),
             is_refunded=getattr(giveaway_result, "refunded", None),
             is_winners_hidden=hide_winners,
             client=client,

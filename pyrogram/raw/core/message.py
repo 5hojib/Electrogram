@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from io import BytesIO
 from typing import Any
 
@@ -21,17 +23,15 @@ class Message(TLObject):
         self.body = body
 
     @staticmethod
-    def read(data: BytesIO, *args: Any) -> "Message":
+    def read(data: BytesIO, *args: Any) -> Message:  # noqa: ARG004
         msg_id = Long.read(data)
         seq_no = Int.read(data)
         length = Int.read(data)
         body = data.read(length)
 
-        return Message(
-            TLObject.read(BytesIO(body)), msg_id, seq_no, length
-        )
+        return Message(TLObject.read(BytesIO(body)), msg_id, seq_no, length)
 
-    def write(self, *args: Any) -> bytes:
+    def write(self, *args: Any) -> bytes:  # noqa: ARG002
         b = BytesIO()
 
         b.write(Long(self.msg_id))

@@ -50,9 +50,7 @@ class GetChatPhotos:
                 raw.functions.channels.GetFullChannel(channel=peer_id)
             )
 
-            current = (
-                types.Photo._parse(self, r.full_chat.chat_photo) or []
-            )
+            current = types.Photo._parse(self, r.full_chat.chat_photo) or []
             current = [current]
             current_animation = types.Animation._parse_chat_animation(
                 self, r.full_chat.chat_photo
@@ -124,10 +122,8 @@ class GetChatPhotos:
                 photos = []
                 for photo in r.photos:
                     photos.append(types.Photo._parse(self, photo))
-                    current_animation = (
-                        types.Animation._parse_chat_animation(
-                            self, photo
-                        )
+                    current_animation = types.Animation._parse_chat_animation(
+                        self, photo
                     )
                     if current_animation:
                         photos.append(current_animation)

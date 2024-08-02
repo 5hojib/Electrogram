@@ -188,8 +188,7 @@ class SendVideoNote:
                         progress_args=progress_args,
                     )
                     media = raw.types.InputMediaUploadedDocument(
-                        mime_type=self.guess_mime_type(video_note)
-                        or "video/mp4",
+                        mime_type=self.guess_mime_type(video_note) or "video/mp4",
                         file=file,
                         thumb=thumb,
                         attributes=[
@@ -214,8 +213,7 @@ class SendVideoNote:
                     progress_args=progress_args,
                 )
                 media = raw.types.InputMediaUploadedDocument(
-                    mime_type=self.guess_mime_type(video_note.name)
-                    or "video/mp4",
+                    mime_type=self.guess_mime_type(video_note.name) or "video/mp4",
                     file=file,
                     thumb=thumb,
                     attributes=[
@@ -236,9 +234,7 @@ class SendVideoNote:
                         silent=disable_notification or None,
                         reply_to=reply_to,
                         random_id=self.rnd_id(),
-                        schedule_date=utils.datetime_to_timestamp(
-                            schedule_date
-                        ),
+                        schedule_date=utils.datetime_to_timestamp(schedule_date),
                         noforwards=protect_content,
                         effect=message_effect_id,
                         reply_markup=await reply_markup.write(self)

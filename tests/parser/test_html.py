@@ -1,9 +1,7 @@
+from __future__ import annotations
+
 import pyrogram
 from pyrogram.parser.html import HTML
-
-# expected: the expected unparsed HTML
-# text: original text without entities
-# entities: message entities coming from the server
 
 
 def test_html_unparse_bold() -> None:
@@ -226,7 +224,9 @@ def test_html_unparse_escaped() -> None:
 
 
 def test_html_unparse_escaped_nested() -> None:
-    expected = "<b>&lt;b&gt;bold <u>&lt;u&gt;underline&lt;/u&gt;</u> bold&lt;/b&gt;</b>"
+    expected = (
+        "<b>&lt;b&gt;bold <u>&lt;u&gt;underline&lt;/u&gt;</u> bold&lt;/b&gt;</b>"
+    )
     text = "<b>bold <u>underline</u> bold</b>"
     entities = pyrogram.types.List(
         [

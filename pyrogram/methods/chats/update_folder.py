@@ -88,13 +88,9 @@ class UpdateFolder:
                 app.update_folder(folder_id, title="New folder", included_chats="me")
         """
         if not isinstance(included_chats, list):
-            included_chats = (
-                [included_chats] if included_chats else []
-            )
+            included_chats = [included_chats] if included_chats else []
         if not isinstance(excluded_chats, list):
-            excluded_chats = (
-                [excluded_chats] if excluded_chats else []
-            )
+            excluded_chats = [excluded_chats] if excluded_chats else []
         if not isinstance(pinned_chats, list):
             pinned_chats = [pinned_chats] if pinned_chats else []
 
@@ -105,8 +101,7 @@ class UpdateFolder:
                     id=folder_id,
                     title=title,
                     pinned_peers=[
-                        await self.resolve_peer(user_id)
-                        for user_id in pinned_chats
+                        await self.resolve_peer(user_id) for user_id in pinned_chats
                     ],
                     include_peers=[
                         await self.resolve_peer(user_id)

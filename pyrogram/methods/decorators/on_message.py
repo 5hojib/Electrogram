@@ -10,9 +10,7 @@ if TYPE_CHECKING:
 
 
 class OnMessage:
-    def on_message(
-        self=None, filters=None, group: int = 0
-    ) -> Callable:
+    def on_message(self=None, filters=None, group: int = 0) -> Callable:
         """Decorator for handling new messages.
 
         This does the same thing as :meth:`~pyrogram.Client.add_handler` using the

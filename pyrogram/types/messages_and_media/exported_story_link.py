@@ -26,6 +26,4 @@ class ExportedStoryLink(Object):
     def _parse(
         exportedstorylink: raw.types.ExportedStoryLink,
     ) -> ExportedStoryLink:
-        return ExportedStoryLink(
-            link=getattr(exportedstorylink, "link", None)
-        )
+        return ExportedStoryLink(link=getattr(exportedstorylink, "link", None))

@@ -83,9 +83,7 @@ class CopyMediaGroup:
                     captions=["caption 1", None, ""])
         """
 
-        media_group = await self.get_media_group(
-            from_chat_id, message_id
-        )
+        media_group = await self.get_media_group(from_chat_id, message_id)
         multi_media = []
 
         reply_to = None
@@ -105,13 +103,9 @@ class CopyMediaGroup:
             elif message.video:
                 file_id = message.video.file_id
             else:
-                raise ValueError(
-                    "Message with this type can't be copied."
-                )
+                raise ValueError("Message with this type can't be copied.")
 
-            media = utils.get_input_media_from_file_id(
-                file_id=file_id
-            )
+            media = utils.get_input_media_from_file_id(file_id=file_id)
             multi_media.append(
                 raw.types.InputSingleMedia(
                     media=media,
@@ -139,9 +133,7 @@ class CopyMediaGroup:
                 silent=disable_notification or None,
                 reply_to=reply_to,
                 noforwards=protect_content,
-                schedule_date=utils.datetime_to_timestamp(
-                    schedule_date
-                ),
+                schedule_date=utils.datetime_to_timestamp(schedule_date),
             ),
             sleep_threshold=60,
         )

@@ -32,9 +32,7 @@ class OnPreCheckoutQuery:
         def decorator(func: Callable) -> Callable:
             if isinstance(self, pyrogram.Client):
                 self.add_handler(
-                    pyrogram.handlers.PreCheckoutQueryHandler(
-                        func, filters
-                    ),
+                    pyrogram.handlers.PreCheckoutQueryHandler(func, filters),
                     group,
                 )
             elif isinstance(self, Filter) or self is None:
@@ -43,9 +41,7 @@ class OnPreCheckoutQuery:
 
                 func.handlers.append(
                     (
-                        pyrogram.handlers.PreCheckoutQueryHandler(
-                            func, self
-                        ),
+                        pyrogram.handlers.PreCheckoutQueryHandler(func, self),
                         group if filters is None else filters,
                     )
                 )

@@ -44,9 +44,7 @@ class ChatPreview(Object):
         self.members = members
 
     @staticmethod
-    def _parse(
-        client, chat_invite: raw.types.ChatInvite
-    ) -> ChatPreview:
+    def _parse(client, chat_invite: raw.types.ChatInvite) -> ChatPreview:
         return ChatPreview(
             title=chat_invite.title,
             type=(
@@ -59,12 +57,8 @@ class ChatPreview(Object):
             members_count=chat_invite.participants_count,
             photo=types.Photo._parse(client, chat_invite.photo),
             members=[
-                types.User._parse(client, user)
-                for user in chat_invite.participants
+                types.User._parse(client, user) for user in chat_invite.participants
             ]
             or None,
             client=client,
         )
-
-    # TODO: Maybe just merge this object into Chat itself by adding the "members" field.
-    #  get_chat can be used as well instead of get_chat_preview

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .bool import Bool, BoolFalse, BoolTrue
 from .bytes import Bytes
 from .double import Double

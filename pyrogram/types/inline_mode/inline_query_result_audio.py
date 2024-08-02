@@ -68,9 +68,7 @@ class InlineQueryResultAudio(InlineQueryResult):
         input_message_content: types.InputMessageContent = None,
         thumb_url: str | None = None,
     ) -> None:
-        super().__init__(
-            "audio", id, input_message_content, reply_markup
-        )
+        super().__init__("audio", id, input_message_content, reply_markup)
 
         self.audio_url = audio_url
         self.title = title
@@ -120,9 +118,7 @@ class InlineQueryResultAudio(InlineQueryResult):
             if self.thumb_url
             else None,
             send_message=(
-                await self.input_message_content.write(
-                    client, self.reply_markup
-                )
+                await self.input_message_content.write(client, self.reply_markup)
                 if self.input_message_content
                 else raw.types.InputBotInlineMessageMediaAuto(
                     reply_markup=await self.reply_markup.write(client)

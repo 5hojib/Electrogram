@@ -1,7 +1,11 @@
-from io import BytesIO
-from typing import Any
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
 
 from pyrogram.raw.core.tl_object import TLObject
+
+if TYPE_CHECKING:
+    from io import BytesIO
 
 
 class Int(bytes, TLObject):
@@ -9,11 +13,12 @@ class Int(bytes, TLObject):
 
     @classmethod
     def read(
-        cls, data: BytesIO, signed: bool = True, *args: Any
+        cls,
+        data: BytesIO,
+        signed: bool = True,
+        *args: Any,  # noqa: ARG003
     ) -> int:
-        return int.from_bytes(
-            data.read(cls.SIZE), "little", signed=signed
-        )
+        return int.from_bytes(data.read(cls.SIZE), "little", signed=signed)
 
     def __new__(cls, value: int, signed: bool = True) -> bytes:  # type: ignore
         return value.to_bytes(cls.SIZE, "little", signed=signed)

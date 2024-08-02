@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .answer_callback_query import AnswerCallbackQuery
 from .answer_inline_query import AnswerInlineQuery
 from .answer_pre_checkout_query import AnswerPreCheckoutQuery

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .on_bot_business_connect import OnBotBusinessConnect
 from .on_bot_business_message import OnBotBusinessMessage
 from .on_callback_query import OnCallbackQuery

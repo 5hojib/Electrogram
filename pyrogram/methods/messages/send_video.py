@@ -223,23 +223,20 @@ class SendVideo:
                         progress_args=progress_args,
                     )
                     media = raw.types.InputMediaUploadedDocument(
-                        mime_type=self.guess_mime_type(video)
-                        or "video/mp4",
+                        mime_type=self.guess_mime_type(video) or "video/mp4",
                         file=file,
                         ttl_seconds=ttl_seconds,
                         spoiler=has_spoiler,
                         thumb=thumb,
                         attributes=[
                             raw.types.DocumentAttributeVideo(
-                                supports_streaming=supports_streaming
-                                or None,
+                                supports_streaming=supports_streaming or None,
                                 duration=duration,
                                 w=width,
                                 h=height,
                             ),
                             raw.types.DocumentAttributeFilename(
-                                file_name=file_name
-                                or Path(video).name
+                                file_name=file_name or Path(video).name
                             ),
                         ],
                     )
@@ -262,9 +259,7 @@ class SendVideo:
                     progress_args=progress_args,
                 )
                 media = raw.types.InputMediaUploadedDocument(
-                    mime_type=self.guess_mime_type(
-                        file_name or video.name
-                    )
+                    mime_type=self.guess_mime_type(file_name or video.name)
                     or "video/mp4",
                     file=file,
                     ttl_seconds=ttl_seconds,
@@ -272,8 +267,7 @@ class SendVideo:
                     thumb=thumb,
                     attributes=[
                         raw.types.DocumentAttributeVideo(
-                            supports_streaming=supports_streaming
-                            or None,
+                            supports_streaming=supports_streaming or None,
                             duration=duration,
                             w=width,
                             h=height,
@@ -292,9 +286,7 @@ class SendVideo:
                         silent=disable_notification or None,
                         reply_to=reply_to,
                         random_id=self.rnd_id(),
-                        schedule_date=utils.datetime_to_timestamp(
-                            schedule_date
-                        ),
+                        schedule_date=utils.datetime_to_timestamp(schedule_date),
                         noforwards=protect_content,
                         effect=message_effect_id,
                         invert_media=invert_media,
@@ -318,9 +310,7 @@ class SendVideo:
                     else:
                         r = await self.invoke(rpc)
                 except FilePartMissing as e:
-                    await self.save_file(
-                        video, file_id=file.id, file_part=e.value
-                    )
+                    await self.save_file(video, file_id=file.id, file_part=e.value)
                 else:
                     for i in r.updates:
                         if isinstance(

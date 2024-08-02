@@ -10,9 +10,7 @@ if TYPE_CHECKING:
 
 
 class OnInlineQuery:
-    def on_inline_query(
-        self=None, filters=None, group: int = 0
-    ) -> Callable:
+    def on_inline_query(self=None, filters=None, group: int = 0) -> Callable:
         """Decorator for handling inline queries.
 
         This does the same thing as :meth:`~pyrogram.Client.add_handler` using the
@@ -30,9 +28,7 @@ class OnInlineQuery:
         def decorator(func: Callable) -> Callable:
             if isinstance(self, pyrogram.Client):
                 self.add_handler(
-                    pyrogram.handlers.InlineQueryHandler(
-                        func, filters
-                    ),
+                    pyrogram.handlers.InlineQueryHandler(func, filters),
                     group,
                 )
             elif isinstance(self, Filter) or self is None:
@@ -41,9 +37,7 @@ class OnInlineQuery:
 
                 func.handlers.append(
                     (
-                        pyrogram.handlers.InlineQueryHandler(
-                            func, self
-                        ),
+                        pyrogram.handlers.InlineQueryHandler(func, self),
                         group if filters is None else filters,
                     )
                 )

@@ -127,9 +127,7 @@ class SaveFile:
             workers_count = 4 if is_big else 1
             is_missing_part = file_id is not None
             file_id = file_id or self.rnd_id()
-            md5_sum = (
-                md5() if not is_big and not is_missing_part else None
-            )
+            md5_sum = md5() if not is_big and not is_missing_part else None
             session = Session(
                 self,
                 await self.storage.dc_id(),
@@ -138,8 +136,7 @@ class SaveFile:
                 is_media=True,
             )
             workers = [
-                self.loop.create_task(worker(session))
-                for _ in range(workers_count)
+                self.loop.create_task(worker(session)) for _ in range(workers_count)
             ]
             queue = asyncio.Queue(1)
 
@@ -154,10 +151,7 @@ class SaveFile:
                     if not chunk:
                         if not is_big and not is_missing_part:
                             md5_sum = "".join(
-                                [
-                                    hex(i)[2:].zfill(2)
-                                    for i in md5_sum.digest()
-                                ]
+                                [hex(i)[2:].zfill(2) for i in md5_sum.digest()]
                             )
                         break
 
@@ -196,9 +190,7 @@ class SaveFile:
                         if inspect.iscoroutinefunction(progress):
                             await func()
                         else:
-                            await self.loop.run_in_executor(
-                                self.executor, func
-                            )
+                            await self.loop.run_in_executor(self.executor, func)
             except StopTransmissionError:
                 raise
             except Exception as e:

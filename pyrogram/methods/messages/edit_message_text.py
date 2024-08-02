@@ -74,12 +74,8 @@ class EditMessageText:
             id=message_id,
             no_webpage=disable_web_page_preview or None,
             invert_media=invert_media,
-            reply_markup=await reply_markup.write(self)
-            if reply_markup
-            else None,
-            **await utils.parse_text_entities(
-                self, text, parse_mode, entities
-            ),
+            reply_markup=await reply_markup.write(self) if reply_markup else None,
+            **await utils.parse_text_entities(self, text, parse_mode, entities),
         )
         if business_connection_id is not None:
             r = await self.invoke(
@@ -93,8 +89,7 @@ class EditMessageText:
         for i in r.updates:
             if isinstance(
                 i,
-                raw.types.UpdateEditMessage
-                | raw.types.UpdateEditChannelMessage,
+                raw.types.UpdateEditMessage | raw.types.UpdateEditChannelMessage,
             ):
                 return await types.Message._parse(
                     self,

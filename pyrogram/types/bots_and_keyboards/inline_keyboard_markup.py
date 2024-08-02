@@ -18,10 +18,7 @@ class InlineKeyboardMarkup(Object):
     def __init__(
         self,
         inline_keyboard: list[
-            list[
-                types.InlineKeyboardButton
-                | types.InlineKeyboardButtonBuy
-            ]
+            list[types.InlineKeyboardButton | types.InlineKeyboardButtonBuy]
         ],
     ) -> None:
         super().__init__()
@@ -33,9 +30,7 @@ class InlineKeyboardMarkup(Object):
         inline_keyboard = []
 
         for i in o.rows:
-            row = [
-                types.InlineKeyboardButton.read(j) for j in i.buttons
-            ]
+            row = [types.InlineKeyboardButton.read(j) for j in i.buttons]
 
             inline_keyboard.append(row)
 

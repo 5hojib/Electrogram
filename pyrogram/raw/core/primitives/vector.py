@@ -29,15 +29,14 @@ class Vector(bytes, TLObject):
         return Long.read(b) if size == 8 else TLObject.read(b)
 
     @classmethod
-    def read(cls, data: BytesIO, t: Any = None, *args: Any) -> List:
+    def read(cls, data: BytesIO, t: Any = None, *args: Any) -> List:  # noqa: ARG003
         count = Int.read(data)
         left = len(data.read())
         size = (left / count) if count else 0
         data.seek(-left, 1)
 
         return List(
-            t.read(data) if t else Vector.read_bare(data, size)
-            for _ in range(count)
+            t.read(data) if t else Vector.read_bare(data, size) for _ in range(count)
         )
 
     def __new__(cls, value: list, t: Any = None) -> bytes:  # type: ignore

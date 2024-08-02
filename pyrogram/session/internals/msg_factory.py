@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pyrogram.raw.core import Message, MsgContainer, TLObject
 from pyrogram.raw.functions import Ping
 from pyrogram.raw.types import HttpWait, MsgsAck

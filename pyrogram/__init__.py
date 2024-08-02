@@ -1,4 +1,6 @@
-__version__ = "v2.184.3"
+from __future__ import annotations
+
+__version__ = "v2.185.0"
 __license__ = "MIT License"
 
 from concurrent.futures.thread import ThreadPoolExecutor
@@ -16,9 +18,7 @@ class ContinuePropagationError(StopAsyncIteration):
     pass
 
 
-crypto_executor = ThreadPoolExecutor(
-    1, thread_name_prefix="CryptoWorker"
-)
+crypto_executor = ThreadPoolExecutor(1, thread_name_prefix="CryptoWorker")
 
 # ruff: noqa: E402
 import asyncio

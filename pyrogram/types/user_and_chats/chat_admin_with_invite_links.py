@@ -30,9 +30,7 @@ class ChatAdminWithInviteLinks(Object):
 
         self.admin = admin
         self.chat_invite_links_count = chat_invite_links_count
-        self.revoked_chat_invite_links_count = (
-            revoked_chat_invite_links_count
-        )
+        self.revoked_chat_invite_links_count = revoked_chat_invite_links_count
 
     @staticmethod
     def _parse(

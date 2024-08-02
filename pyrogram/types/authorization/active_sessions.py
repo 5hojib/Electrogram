@@ -21,7 +21,7 @@ class ActiveSessions(Object):
         *,
         inactive_session_ttl_days: int | None = None,
         active_sessions: list[types.ActiveSession] | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.inactive_session_ttl_days = inactive_session_ttl_days

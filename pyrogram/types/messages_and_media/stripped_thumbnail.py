@@ -17,9 +17,7 @@ class StrippedThumbnail(Object):
             Thumbnail data
     """
 
-    def __init__(
-        self, *, client: pyrogram.Client = None, data: bytes
-    ) -> None:
+    def __init__(self, *, client: pyrogram.Client = None, data: bytes) -> None:
         super().__init__(client)
 
         self.data = data
@@ -28,6 +26,4 @@ class StrippedThumbnail(Object):
     def _parse(
         client, stripped_thumbnail: raw.types.PhotoStrippedSize
     ) -> StrippedThumbnail:
-        return StrippedThumbnail(
-            data=stripped_thumbnail.bytes, client=client
-        )
+        return StrippedThumbnail(data=stripped_thumbnail.bytes, client=client)

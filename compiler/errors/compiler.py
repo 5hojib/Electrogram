@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import csv
 import os
 import re
@@ -7,13 +9,10 @@ from pathlib import Path
 ERRORS_HOME_PATH = Path(__file__).parent.resolve()
 REPO_HOME_PATH = ERRORS_HOME_PATH.parent.parent
 
-ERRORS_DEST_PATH = (
-    REPO_HOME_PATH / "pyrogram" / "errors" / "exceptions"
-)
+ERRORS_DEST_PATH = REPO_HOME_PATH / "pyrogram" / "errors" / "exceptions"
 
 
 def snake(s):
-    # https://stackoverflow.com/questions/1175208/elegant-python-function-to-convert-camelcase-to-snake-case
     s = re.sub(r"(.)([A-Z][a-z]+)", r"\1_\2", s)
     return re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", s).lower()
 
@@ -29,9 +28,7 @@ def start() -> None:
 
     files = os.listdir(f"{ERRORS_HOME_PATH}/source")
 
-    with (ERRORS_DEST_PATH / "all.py").open(
-        "w", encoding="utf-8"
-    ) as f_all:
+    with (ERRORS_DEST_PATH / "all.py").open("w", encoding="utf-8") as f_all:
         f_all.write("count = {count}\n\n")
         f_all.write("exceptions = {\n")
 
@@ -45,14 +42,10 @@ def start() -> None:
             init = ERRORS_DEST_PATH / "__init__.py"
 
             with init.open("a", encoding="utf-8") as f_init:
-                f_init.write(
-                    f"from .{name.lower()}_{code} import *\n"
-                )
+                f_init.write(f"from .{name.lower()}_{code} import *\n")
 
             with (
-                (ERRORS_HOME_PATH / "source" / i).open(
-                    encoding="utf-8"
-                ) as f_csv,
+                (ERRORS_HOME_PATH / "source" / i).open(encoding="utf-8") as f_csv,
                 (ERRORS_DEST_PATH / f"{name.lower()}_{code}.py").open(
                     "w", encoding="utf-8"
                 ) as f_class,
@@ -63,9 +56,7 @@ def start() -> None:
                 name = " ".join(
                     [
                         i.capitalize()
-                        for i in re.sub(r"_", " ", name)
-                        .lower()
-                        .split(" ")
+                        for i in re.sub(r"_", " ", name).lower().split(" ")
                     ]
                 )
 
@@ -88,27 +79,19 @@ def start() -> None:
                     sub_class = re.sub(r"^2", "Two", sub_class)
                     sub_class = re.sub(r" ", "", sub_class)
 
-                    f_all.write(
-                        f'        "{error_id}": "{sub_class}",\n'
-                    )
+                    f_all.write(f'        "{error_id}": "{sub_class}",\n')
 
-                    sub_classes.append(
-                        (sub_class, error_id, error_message)
-                    )
+                    sub_classes.append((sub_class, error_id, error_message))
 
-                with (
-                    ERRORS_HOME_PATH / "template" / "class.txt"
-                ).open(encoding="utf-8") as f_class_template:
+                with (ERRORS_HOME_PATH / "template" / "class.txt").open(
+                    encoding="utf-8"
+                ) as f_class_template:
                     class_template = f_class_template.read()
 
-                    with (
-                        ERRORS_HOME_PATH
-                        / "template"
-                        / "sub_class.txt"
-                    ).open(encoding="utf-8") as f_sub_class_template:
-                        sub_class_template = (
-                            f_sub_class_template.read()
-                        )
+                    with (ERRORS_HOME_PATH / "template" / "sub_class.txt").open(
+                        encoding="utf-8"
+                    ) as f_sub_class_template:
+                        sub_class_template = f_sub_class_template.read()
 
                     class_template = class_template.format(
                         super_class=super_class,
@@ -134,9 +117,7 @@ def start() -> None:
     with (ERRORS_DEST_PATH / "all.py").open(encoding="utf-8") as f:
         content = f.read()
 
-    with (ERRORS_DEST_PATH / "all.py").open(
-        "w", encoding="utf-8"
-    ) as f:
+    with (ERRORS_DEST_PATH / "all.py").open("w", encoding="utf-8") as f:
         f.write(re.sub("{count}", str(count), content))
 
 

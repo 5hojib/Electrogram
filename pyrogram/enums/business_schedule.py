@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pyrogram import raw
 
 from .auto_name import AutoName
@@ -9,9 +11,7 @@ class BusinessSchedule(AutoName):
     ALWAYS = raw.types.BusinessAwayMessageScheduleAlways
     "Send always"
 
-    OUTSIDE_WORK_HOURS = (
-        raw.types.BusinessAwayMessageScheduleOutsideWorkHours
-    )
+    OUTSIDE_WORK_HOURS = raw.types.BusinessAwayMessageScheduleOutsideWorkHours
     "Outside of Business Hours"
 
     CUSTOM = raw.types.BusinessAwayMessageScheduleCustom

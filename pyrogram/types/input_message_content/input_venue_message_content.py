@@ -66,7 +66,5 @@ class InputVenueMessageContent(InputMessageContent):
             provider="",  # TODO
             venue_id=self.foursquare_id,
             venue_type=self.foursquare_type,
-            reply_markup=await reply_markup.write(client)
-            if reply_markup
-            else None,
+            reply_markup=await reply_markup.write(client) if reply_markup else None,
         )

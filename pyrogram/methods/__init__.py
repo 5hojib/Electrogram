@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .advanced import Advanced
 from .auth import Auth
 from .bots import Bots

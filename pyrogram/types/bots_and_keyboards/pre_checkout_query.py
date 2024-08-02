@@ -67,9 +67,7 @@ class PreCheckoutQuery(Object, Update):
 
         return PreCheckoutQuery(
             id=str(pre_checkout_query.query_id),
-            from_user=types.User._parse(
-                client, users[pre_checkout_query.user_id]
-            ),
+            from_user=types.User._parse(client, users[pre_checkout_query.user_id]),
             currency=pre_checkout_query.currency,
             total_amount=pre_checkout_query.total_amount,
             payload=payload,
@@ -92,9 +90,7 @@ class PreCheckoutQuery(Object, Update):
             client=client,
         )
 
-    async def answer(
-        self, success: bool | None = None, error: str | None = None
-    ):
+    async def answer(self, success: bool | None = None, error: str | None = None):
         """Bound method *answer* of :obj:`~pyrogram.types.PreCheckoutQuery`.
 
         Use this method as a shortcut for:

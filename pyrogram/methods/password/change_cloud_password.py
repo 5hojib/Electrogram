@@ -54,12 +54,8 @@ class ChangeCloudPassword:
             raise ValueError("There is no cloud password to change")
 
         r.new_algo.salt1 += os.urandom(32)
-        new_hash = btoi(
-            compute_password_hash(r.new_algo, new_password)
-        )
-        new_hash = itob(
-            pow(r.new_algo.g, new_hash, btoi(r.new_algo.p))
-        )
+        new_hash = btoi(compute_password_hash(r.new_algo, new_password))
+        new_hash = itob(pow(r.new_algo.g, new_hash, btoi(r.new_algo.p)))
 
         await self.invoke(
             raw.functions.account.UpdatePasswordSettings(

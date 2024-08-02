@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+
 class SeqNo:
     def __init__(self) -> None:
         self.content_related_messages_sent = 0

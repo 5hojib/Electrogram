@@ -57,9 +57,7 @@ class Thumbnail(Object):
     ) -> list[Thumbnail] | None:
         if isinstance(media, raw.types.Photo):
             raw_thumbs = [
-                i
-                for i in media.sizes
-                if isinstance(i, raw.types.PhotoSize)
+                i for i in media.sizes if isinstance(i, raw.types.PhotoSize)
             ]
             raw_thumbs.sort(key=lambda p: p.size)
             raw_thumbs = raw_thumbs[:-1]

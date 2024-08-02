@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pyrogram import raw
 
 from .auto_name import AutoName

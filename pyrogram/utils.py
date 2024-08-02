@@ -28,9 +28,7 @@ async def ainput(prompt: str = "", *, hide: bool = False):
     """Just like the built-in input, but async"""
     with ThreadPoolExecutor(1) as executor:
         func = functools.partial(getpass if hide else input, prompt)
-        return await asyncio.get_event_loop().run_in_executor(
-            executor, func
-        )
+        return await asyncio.get_event_loop().run_in_executor(executor, func)
 
 
 def get_input_media_from_file_id(
@@ -48,18 +46,13 @@ def get_input_media_from_file_id(
 
     file_type = decoded.file_type
 
-    if (
-        expected_file_type is not None
-        and file_type != expected_file_type
-    ):
+    if expected_file_type is not None and file_type != expected_file_type:
         raise ValueError(
             f"Expected {expected_file_type.name}, got {file_type.name} file id instead"
         )
 
     if file_type in (FileType.THUMBNAIL, FileType.CHAT_PHOTO):
-        raise ValueError(
-            f"This file id can only be used for download: {file_id}"
-        )
+        raise ValueError(f"This file id can only be used for download: {file_id}")
 
     if file_type in PHOTO_TYPES:
         return raw.types.InputMediaPhoto(
@@ -129,14 +122,10 @@ async def parse_messages(
             for i in messages.messages
             if not isinstance(i, raw.types.MessageEmpty)
             and i.reply_to
-            and isinstance(
-                i.reply_to, raw.types.MessageReplyStoryHeader
-            )
+            and isinstance(i.reply_to, raw.types.MessageReplyStoryHeader)
         }
 
         if messages_with_replies:
-            # We need a chat id, but some messages might be empty (no chat attribute available)
-            # Scan until we find a message with a chat available (there must be one, because we are fetching replies)
             for m in parsed_messages:
                 if not isinstance(m, types.Message):
                     continue
@@ -148,8 +137,7 @@ async def parse_messages(
                 chat_id = 0
 
             is_all_within_chat = not any(
-                value.reply_to_peer_id
-                for value in messages_with_replies.values()
+                value.reply_to_peer_id for value in messages_with_replies.values()
             )
             reply_messages: list[pyrogram.types.Message] = []
             if is_all_within_chat:
@@ -160,7 +148,6 @@ async def parse_messages(
                     replies=replies - 1,
                 )
             else:
-                # slow path: fetch all messages individually
                 for target_reply_to in messages_with_replies.values():
                     to_be_added_msg = None
                     the_chat_id = chat_id
@@ -187,10 +174,7 @@ async def parse_messages(
                 reply_id = reply_to.reply_to_msg_id
 
                 for reply in reply_messages:
-                    if (
-                        reply.id == reply_id
-                        and not reply.forum_topic_created
-                    ):
+                    if reply.id == reply_id and not reply.forum_topic_created:
                         message.reply_to_message = reply
 
         if message_reply_to_story:
@@ -213,9 +197,7 @@ async def parse_messages(
 
             for message in parsed_messages:
                 if message.id in reply_messages:
-                    message.reply_to_story = reply_messages[
-                        message.id
-                    ]
+                    message.reply_to_story = reply_messages[message.id]
 
     return types.List(parsed_messages)
 
@@ -261,11 +243,7 @@ def pack_inline_message_id(
             msg_id.access_hash,
         )
 
-    return (
-        base64.urlsafe_b64encode(inline_message_id_packed)
-        .decode()
-        .rstrip("=")
-    )
+    return base64.urlsafe_b64encode(inline_message_id_packed).decode().rstrip("=")
 
 
 def unpack_inline_message_id(
@@ -300,19 +278,13 @@ def get_raw_peer_id(
     peer: raw.base.Peer | raw.base.RequestedPeer,
 ) -> int | None:
     """Get the raw peer id from a Peer object"""
-    if isinstance(
-        peer, raw.types.PeerUser | raw.types.RequestedPeerUser
-    ):
+    if isinstance(peer, raw.types.PeerUser | raw.types.RequestedPeerUser):
         return peer.user_id
 
-    if isinstance(
-        peer, raw.types.PeerChat | raw.types.RequestedPeerChat
-    ):
+    if isinstance(peer, raw.types.PeerChat | raw.types.RequestedPeerChat):
         return peer.chat_id
 
-    if isinstance(
-        peer, raw.types.PeerChannel | raw.types.RequestedPeerChannel
-    ):
+    if isinstance(peer, raw.types.PeerChannel | raw.types.RequestedPeerChannel):
         return peer.channel_id
 
     return None
@@ -376,7 +348,6 @@ def compute_password_hash(
     return sha256(algo.salt2 + hash3 + algo.salt2)
 
 
-# noinspection PyPep8Naming
 def compute_password_check(
     r: raw.types.account.Password, password: str
 ) -> raw.types.InputCheckPasswordSRP:
@@ -433,9 +404,7 @@ def compute_password_check(
         + K_bytes
     )
 
-    return raw.types.InputCheckPasswordSRP(
-        srp_id=srp_id, A=A_bytes, M1=M1_bytes
-    )
+    return raw.types.InputCheckPasswordSRP(srp_id=srp_id, A=A_bytes, M1=M1_bytes)
 
 
 async def parse_text_entities(
@@ -445,17 +414,12 @@ async def parse_text_entities(
     entities: list[types.MessageEntity],
 ) -> dict[str, str | list[raw.base.MessageEntity]]:
     if entities:
-        # Inject the client instance because parsing user mentions requires it
         for entity in entities:
             entity._client = client
 
-        entities = [
-            await entity.write() for entity in entities
-        ] or None
+        entities = [await entity.write() for entity in entities] or None
     else:
-        text, entities = (
-            await client.parser.parse(text, parse_mode)
-        ).values()
+        text, entities = (await client.parser.parse(text, parse_mode)).values()
 
     return {"message": text, "entities": entities}
 
@@ -476,9 +440,7 @@ async def run_sync(
     func: Callable[..., TypeVar("Result")], *args: Any, **kwargs: Any
 ) -> TypeVar("Result"):
     loop = asyncio.get_event_loop()
-    return await loop.run_in_executor(
-        None, functools.partial(func, *args, **kwargs)
-    )
+    return await loop.run_in_executor(None, functools.partial(func, *args, **kwargs))
 
 
 async def get_reply_to(
@@ -496,14 +458,10 @@ async def get_reply_to(
     reply_to_chat = None
     if reply_to_message_id or message_thread_id:
         text, entities = (
-            await parse_text_entities(
-                client, quote_text, parse_mode, quote_entities
-            )
+            await parse_text_entities(client, quote_text, parse_mode, quote_entities)
         ).values()
         if reply_to_chat_id is not None:
-            reply_to_chat = await client.resolve_peer(
-                reply_to_chat_id
-            )
+            reply_to_chat = await client.resolve_peer(reply_to_chat_id)
         reply_to = types.InputReplyToMessage(
             reply_to_message_id=reply_to_message_id,
             message_thread_id=message_thread_id,
@@ -513,7 +471,5 @@ async def get_reply_to(
         )
     if reply_to_story_id:
         peer = await client.resolve_peer(chat_id)
-        reply_to = types.InputReplyToStory(
-            peer=peer, story_id=reply_to_story_id
-        )
+        reply_to = types.InputReplyToStory(peer=peer, story_id=reply_to_story_id)
     return reply_to

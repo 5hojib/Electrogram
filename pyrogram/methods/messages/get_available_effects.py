@@ -25,9 +25,7 @@ class GetAvailableEffects:
                 # Get all available effects
                 await app.get_available_effects()
         """
-        r = await self.invoke(
-            raw.functions.messages.GetAvailableEffects(hash=0)
-        )
+        r = await self.invoke(raw.functions.messages.GetAvailableEffects(hash=0))
 
         documents = {d.id: d for d in r.documents}
 

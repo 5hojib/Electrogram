@@ -128,20 +128,14 @@ class WebPage(Object):
             attributes = {type(i): i for i in doc.attributes}
 
             file_name = getattr(
-                attributes.get(
-                    raw.types.DocumentAttributeFilename, None
-                ),
+                attributes.get(raw.types.DocumentAttributeFilename, None),
                 "file_name",
                 None,
             )
 
             if raw.types.DocumentAttributeAudio in attributes:
-                audio_attributes = attributes[
-                    raw.types.DocumentAttributeAudio
-                ]
-                audio = types.Audio._parse(
-                    client, doc, audio_attributes, file_name
-                )
+                audio_attributes = attributes[raw.types.DocumentAttributeAudio]
+                audio = types.Audio._parse(client, doc, audio_attributes, file_name)
 
             elif raw.types.DocumentAttributeAnimated in attributes:
                 video_attributes = attributes.get(
@@ -152,17 +146,11 @@ class WebPage(Object):
                 )
 
             elif raw.types.DocumentAttributeVideo in attributes:
-                video_attributes = attributes[
-                    raw.types.DocumentAttributeVideo
-                ]
-                video = types.Video._parse(
-                    client, doc, video_attributes, file_name
-                )
+                video_attributes = attributes[raw.types.DocumentAttributeVideo]
+                video = types.Video._parse(client, doc, video_attributes, file_name)
 
             else:
-                document = types.Document._parse(
-                    client, doc, file_name
-                )
+                document = types.Document._parse(client, doc, file_name)
 
         return WebPage(
             id=str(webpage.id),

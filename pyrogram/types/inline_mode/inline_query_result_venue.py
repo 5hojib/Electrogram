@@ -74,9 +74,7 @@ class InlineQueryResultVenue(InlineQueryResult):
         thumb_width: int = 0,
         thumb_height: int = 0,
     ) -> None:
-        super().__init__(
-            "venue", id, input_message_content, reply_markup
-        )
+        super().__init__("venue", id, input_message_content, reply_markup)
 
         self.title = title
         self.address = address
@@ -96,9 +94,7 @@ class InlineQueryResultVenue(InlineQueryResult):
             type=self.type,
             title=self.title,
             send_message=(
-                await self.input_message_content.write(
-                    client, self.reply_markup
-                )
+                await self.input_message_content.write(client, self.reply_markup)
                 if self.input_message_content
                 else raw.types.InputBotInlineMessageMediaVenue(
                     geo_point=raw.types.InputGeoPoint(
@@ -110,16 +106,11 @@ class InlineQueryResultVenue(InlineQueryResult):
                         "foursquare"
                         if self.foursquare_id or self.foursquare_type
                         else "google"
-                        if self.google_place_id
-                        or self.google_place_type
+                        if self.google_place_id or self.google_place_type
                         else ""
                     ),
-                    venue_id=self.foursquare_id
-                    or self.google_place_id
-                    or "",
-                    venue_type=self.foursquare_type
-                    or self.google_place_type
-                    or "",
+                    venue_id=self.foursquare_id or self.google_place_id or "",
+                    venue_type=self.foursquare_type or self.google_place_type or "",
                     reply_markup=await self.reply_markup.write(client)
                     if self.reply_markup
                     else None,

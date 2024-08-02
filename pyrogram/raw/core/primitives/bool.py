@@ -1,7 +1,11 @@
-from io import BytesIO
-from typing import Any
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
 
 from pyrogram.raw.core.tl_object import TLObject
+
+if TYPE_CHECKING:
+    from io import BytesIO
 
 
 class BoolFalse(bytes, TLObject):
@@ -9,7 +13,7 @@ class BoolFalse(bytes, TLObject):
     value = False
 
     @classmethod
-    def read(cls, *args: Any) -> bool:
+    def read(cls, *args: Any) -> bool:  # noqa: ARG003
         return cls.value
 
     def __new__(cls) -> bytes:  # type: ignore
@@ -23,7 +27,7 @@ class BoolTrue(BoolFalse):
 
 class Bool(bytes, TLObject):
     @classmethod
-    def read(cls, data: BytesIO, *args: Any) -> bool:
+    def read(cls, data: BytesIO, *args: Any) -> bool:  # noqa: ARG003
         return int.from_bytes(data.read(4), "little") == BoolTrue.ID
 
     def __new__(cls, value: bool) -> bytes:  # type: ignore

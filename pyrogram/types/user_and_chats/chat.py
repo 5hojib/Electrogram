@@ -125,6 +125,10 @@ class Chat(Object):
             For supergroups, the minimum allowed delay between consecutive messages sent by each unpriviledged user in seconds.
             Returned only in :meth:`~pyrogram.Client.get_chat`.
 
+        join_requests_count (``int``, *optional*):
+            Number of users who requested to join the chat.
+            Returned only in :meth:`~pyrogram.Client.get
+
         restrictions (List of :obj:`~pyrogram.types.Restriction`, *optional*):
             The list of reasons why this chat might be unavailable to some users.
             This field is available only in case *is_restricted* is True.
@@ -216,6 +220,7 @@ class Chat(Object):
         can_set_sticker_set: bool | None = None,
         members_count: int | None = None,
         slow_mode_delay: int | None = None,
+        join_requests_count: int | None = None,
         restrictions: list[types.Restriction] | None = None,
         permissions: types.ChatPermissions = None,
         distance: int | None = None,
@@ -263,6 +268,7 @@ class Chat(Object):
         self.sticker_set_name = sticker_set_name
         self.can_set_sticker_set = can_set_sticker_set
         self.members_count = members_count
+        self.join_requests_count = join_requests_count
         self.slow_mode_delay = slow_mode_delay
         self.restrictions = restrictions
         self.permissions = permissions
@@ -276,6 +282,7 @@ class Chat(Object):
         self.business_info = business_info
         self.birthday = birthday
         self.personal_chat = personal_chat
+        self.max_reaction_count = max_reaction_count
 
     @property
     def full_name(self) -> str:
@@ -291,9 +298,7 @@ class Chat(Object):
 
         return Chat(
             id=peer_id,
-            type=enums.ChatType.BOT
-            if user.bot
-            else enums.ChatType.PRIVATE,
+            type=enums.ChatType.BOT if user.bot else enums.ChatType.PRIVATE,
             is_verified=getattr(user, "verified", None),
             is_restricted=getattr(user, "restricted", None),
             is_scam=getattr(user, "scam", None),
@@ -306,18 +311,11 @@ class Chat(Object):
                 client, user.photo, peer_id, user.access_hash
             ),
             restrictions=types.List(
-                [
-                    types.Restriction._parse(r)
-                    for r in user.restriction_reason
-                ]
+                [types.Restriction._parse(r) for r in user.restriction_reason]
             )
             or None,
-            dc_id=getattr(
-                getattr(user, "photo", None), "dc_id", None
-            ),
-            reply_color=types.ChatColor._parse(
-                getattr(user, "color", None)
-            ),
+            dc_id=getattr(getattr(user, "photo", None), "dc_id", None),
+            reply_color=types.ChatColor._parse(getattr(user, "color", None)),
             profile_color=types.ChatColor._parse_profile_color(
                 getattr(user, "profile_color", None)
             ),
@@ -346,22 +344,17 @@ class Chat(Object):
                 getattr(chat, "default_banned_rights", None)
             ),
             members_count=getattr(chat, "participants_count", None),
-            dc_id=getattr(
-                getattr(chat, "photo", None), "dc_id", None
-            ),
+            join_requests_count=getattr(chat, "requests_pending", None),
+            dc_id=getattr(getattr(chat, "photo", None), "dc_id", None),
             has_protected_content=getattr(chat, "noforwards", None),
             usernames=usernames,
             client=client,
         )
 
     @staticmethod
-    def _parse_channel_chat(
-        client, channel: raw.types.Channel
-    ) -> Chat:
+    def _parse_channel_chat(client, channel: raw.types.Channel) -> Chat:
         peer_id = utils.get_channel_id(channel.id)
-        restriction_reason = getattr(
-            channel, "restriction_reason", []
-        )
+        restriction_reason = getattr(channel, "restriction_reason", [])
         user_name = getattr(channel, "username", None)
         active_usernames = getattr(channel, "usernames", [])
         usernames = None
@@ -372,11 +365,7 @@ class Chat(Object):
                     user_name = username.username
                 else:
                     usernames.append(types.Username._parse(username))
-        if (
-            user_name is None
-            and usernames is not None
-            and len(usernames) > 0
-        ):
+        if user_name is None and usernames is not None and len(usernames) > 0:
             user_name = usernames[0].username
             usernames.pop(0)
 
@@ -393,9 +382,7 @@ class Chat(Object):
             is_forum=getattr(channel, "forum", None),
             is_join_request=getattr(channel, "join_request", None),
             is_join_to_send=getattr(channel, "join_to_send", None),
-            is_slowmode_enabled=getattr(
-                channel, "slowmode_enabled", None
-            ),
+            is_slowmode_enabled=getattr(channel, "slowmode_enabled", None),
             title=channel.title,
             username=user_name,
             usernames=usernames,
@@ -406,27 +393,16 @@ class Chat(Object):
                 getattr(channel, "access_hash", 0),
             ),
             restrictions=types.List(
-                [
-                    types.Restriction._parse(r)
-                    for r in restriction_reason
-                ]
+                [types.Restriction._parse(r) for r in restriction_reason]
             )
             or None,
             permissions=types.ChatPermissions._parse(
                 getattr(channel, "default_banned_rights", None)
             ),
-            members_count=getattr(
-                channel, "participants_count", None
-            ),
-            dc_id=getattr(
-                getattr(channel, "photo", None), "dc_id", None
-            ),
-            has_protected_content=getattr(
-                channel, "noforwards", None
-            ),
-            reply_color=types.ChatColor._parse(
-                getattr(channel, "color", None)
-            ),
+            members_count=getattr(channel, "participants_count", None),
+            dc_id=getattr(getattr(channel, "photo", None), "dc_id", None),
+            has_protected_content=getattr(channel, "noforwards", None),
+            reply_color=types.ChatColor._parse(getattr(channel, "color", None)),
             client=client,
         )
 
@@ -440,9 +416,7 @@ class Chat(Object):
     ) -> Chat:
         from_id = utils.get_raw_peer_id(message.from_id)
         peer_id = utils.get_raw_peer_id(message.peer_id)
-        chat_id = (
-            (peer_id or from_id) if is_chat else (from_id or peer_id)
-        )
+        chat_id = (peer_id or from_id) if is_chat else (from_id or peer_id)
 
         if isinstance(message.peer_id, raw.types.PeerUser):
             return Chat._parse_user_chat(client, users[chat_id])
@@ -458,15 +432,12 @@ class Chat(Object):
             return Chat._parse_user_chat(client, users[peer.user_id])
         if isinstance(peer, raw.types.PeerChat):
             return Chat._parse_chat_chat(client, chats[peer.chat_id])
-        return Chat._parse_channel_chat(
-            client, chats[peer.channel_id]
-        )
+        return Chat._parse_channel_chat(client, chats[peer.channel_id])
 
     @staticmethod
     async def _parse_full(
         client,
-        chat_full: raw.types.messages.ChatFull
-        | raw.types.users.UserFull,
+        chat_full: raw.types.messages.ChatFull | raw.types.users.UserFull,
     ) -> Chat:
         users = {u.id: u for u in chat_full.users}
         chats = {c.id: c for c in chat_full.chats}
@@ -474,25 +445,17 @@ class Chat(Object):
         if isinstance(chat_full, raw.types.users.UserFull):
             full_user = chat_full.full_user
 
-            parsed_chat = Chat._parse_user_chat(
-                client, users[full_user.id]
-            )
+            parsed_chat = Chat._parse_user_chat(client, users[full_user.id])
             parsed_chat.bio = full_user.about
-            parsed_chat.folder_id = getattr(
-                full_user, "folder_id", None
-            )
+            parsed_chat.folder_id = getattr(full_user, "folder_id", None)
             parsed_chat.business_info = types.BusinessInfo._parse(
                 client, full_user, users
             )
             birthday = getattr(full_user, "birthday", None)
             parsed_chat.birthday = (
-                types.Birthday._parse(birthday)
-                if birthday is not None
-                else None
+                types.Birthday._parse(birthday) if birthday is not None else None
             )
-            personal_chat_id = getattr(
-                full_user, "personal_channel_id", None
-            )
+            personal_chat_id = getattr(full_user, "personal_channel_id", None)
             if personal_chat_id is not None:
                 personal_chat = await client.invoke(
                     raw.functions.channels.GetChannels(
@@ -508,17 +471,13 @@ class Chat(Object):
                 )
 
             if full_user.pinned_msg_id:
-                parsed_chat.pinned_message = (
-                    await client.get_messages(
-                        parsed_chat.id,
-                        message_ids=full_user.pinned_msg_id,
-                    )
+                parsed_chat.pinned_message = await client.get_messages(
+                    parsed_chat.id,
+                    message_ids=full_user.pinned_msg_id,
                 )
 
             if getattr(full_user, "stories"):
-                peer_stories: raw.types.PeerStories = (
-                    full_user.stories
-                )
+                peer_stories: raw.types.PeerStories = full_user.stories
                 parsed_chat.stories = (
                     types.List(
                         [
@@ -547,69 +506,44 @@ class Chat(Object):
                 parsed_chat = Chat._parse_chat_chat(client, chat_raw)
                 parsed_chat.description = full_chat.about or None
 
-                if isinstance(
-                    full_chat.participants, raw.types.ChatParticipants
-                ):
+                if isinstance(full_chat.participants, raw.types.ChatParticipants):
                     parsed_chat.members_count = len(
                         full_chat.participants.participants
                     )
             else:
-                parsed_chat = Chat._parse_channel_chat(
-                    client, chat_raw
-                )
-                parsed_chat.members_count = (
-                    full_chat.participants_count
-                )
+                parsed_chat = Chat._parse_channel_chat(client, chat_raw)
+                parsed_chat.members_count = full_chat.participants_count
                 parsed_chat.slow_mode_delay = getattr(
                     full_chat, "slowmode_seconds", None
                 )
                 parsed_chat.description = full_chat.about or None
-                # TODO: Add StickerSet type
-                parsed_chat.can_set_sticker_set = (
-                    full_chat.can_set_stickers
-                )
+                parsed_chat.can_set_sticker_set = full_chat.can_set_stickers
                 parsed_chat.sticker_set_name = getattr(
                     full_chat.stickerset, "short_name", None
                 )
-                parsed_chat.is_participants_hidden = (
-                    full_chat.participants_hidden
-                )
+                parsed_chat.is_participants_hidden = full_chat.participants_hidden
                 parsed_chat.is_antispam = full_chat.antispam
-                parsed_chat.folder_id = getattr(
-                    full_chat, "folder_id", None
-                )
+                parsed_chat.folder_id = getattr(full_chat, "folder_id", None)
 
-                linked_chat_raw = chats.get(
-                    full_chat.linked_chat_id, None
-                )
+                linked_chat_raw = chats.get(full_chat.linked_chat_id, None)
 
                 if linked_chat_raw:
-                    parsed_chat.linked_chat = (
-                        Chat._parse_channel_chat(
-                            client, linked_chat_raw
-                        )
+                    parsed_chat.linked_chat = Chat._parse_channel_chat(
+                        client, linked_chat_raw
                     )
 
                 default_send_as = full_chat.default_send_as
 
                 if default_send_as:
-                    if isinstance(
-                        default_send_as, raw.types.PeerUser
-                    ):
+                    if isinstance(default_send_as, raw.types.PeerUser):
                         send_as_raw = users[default_send_as.user_id]
                     else:
-                        send_as_raw = chats[
-                            default_send_as.channel_id
-                        ]
+                        send_as_raw = chats[default_send_as.channel_id]
 
-                    parsed_chat.send_as_chat = Chat._parse_chat(
-                        client, send_as_raw
-                    )
+                    parsed_chat.send_as_chat = Chat._parse_chat(client, send_as_raw)
 
                 if getattr(full_chat, "stories"):
-                    peer_stories: raw.types.PeerStories = (
-                        full_chat.stories
-                    )
+                    peer_stories: raw.types.PeerStories = full_chat.stories
                     parsed_chat.stories = (
                         types.List(
                             [
@@ -632,25 +566,22 @@ class Chat(Object):
                     )
 
             if full_chat.pinned_msg_id:
-                parsed_chat.pinned_message = (
-                    await client.get_messages(
-                        parsed_chat.id,
-                        message_ids=full_chat.pinned_msg_id,
-                    )
+                parsed_chat.pinned_message = await client.get_messages(
+                    parsed_chat.id,
+                    message_ids=full_chat.pinned_msg_id,
                 )
 
             if isinstance(
                 full_chat.exported_invite,
                 raw.types.ChatInviteExported,
             ):
-                parsed_chat.invite_link = (
-                    full_chat.exported_invite.link
-                )
+                parsed_chat.invite_link = full_chat.exported_invite.link
 
-            parsed_chat.available_reactions = (
-                types.ChatReactions._parse(
-                    client, full_chat.available_reactions
-                )
+            parsed_chat.available_reactions = types.ChatReactions._parse(
+                client, full_chat.available_reactions
+            )
+            parsed_chat.join_requests_count = getattr(
+                full_chat, "requests_pending", None
             )
             parsed_chat.max_reaction_count = getattr(
                 full_chat, "reactions_limit", 11
@@ -754,9 +685,7 @@ class Chat(Object):
                 chat.stop_listen()
 
         """
-        return self._client.stop_listening(
-            *args, chat_id=self.id, **kwargs
-        )
+        return self._client.stop_listening(*args, chat_id=self.id, **kwargs)
 
     async def archive(self):
         """Bound method *archive* of :obj:`~pyrogram.types.Chat`.
@@ -804,7 +733,6 @@ class Chat(Object):
 
         return await self._client.unarchive_chats(self.id)
 
-    # TODO: Remove notes about "All Members Are Admins" for basic groups, the attribute doesn't exist anymore
     async def set_title(self, title: str) -> bool:
         """Bound method *set_title* of :obj:`~pyrogram.types.Chat`.
 
@@ -838,9 +766,7 @@ class Chat(Object):
             ValueError: In case a chat_id belongs to user.
         """
 
-        return await self._client.set_chat_title(
-            chat_id=self.id, title=title
-        )
+        return await self._client.set_chat_title(chat_id=self.id, title=title)
 
     async def set_description(self, description: str) -> bool:
         """Bound method *set_description* of :obj:`~pyrogram.types.Chat`.
@@ -1078,8 +1004,6 @@ class Chat(Object):
             until_date=until_date,
         )
 
-    # Set None as privileges default due to issues with partially initialized module, because at the time Chat
-    # is being initialized, ChatPrivileges would be required here, but was not initialized yet.
     async def promote_member(
         self,
         user_id: int | str,
@@ -1224,9 +1148,7 @@ class Chat(Object):
             :obj:`~pyrogram.types.ChatMember`: On success, a chat member is returned.
         """
 
-        return await self._client.get_chat_member(
-            self.id, user_id=user_id
-        )
+        return await self._client.get_chat_member(self.id, user_id=user_id)
 
     def get_members(
         self,

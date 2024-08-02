@@ -16,9 +16,7 @@ class Link(str):
     HTML = "<a href={url}>{text}</a>"
     MARKDOWN = "[{text}]({url})"
 
-    def __init__(
-        self, url: str, text: str, style: enums.ParseMode
-    ) -> None:
+    def __init__(self, url: str, text: str, style: enums.ParseMode) -> None:
         super().__init__()
 
         self.url = url
@@ -27,23 +25,15 @@ class Link(str):
 
     @staticmethod
     def format(url: str, text: str, style: enums.ParseMode):
-        if style == enums.ParseMode.MARKDOWN:
-            fmt = Link.MARKDOWN
-        else:
-            fmt = Link.HTML
+        fmt = Link.MARKDOWN if style == enums.ParseMode.MARKDOWN else Link.HTML
 
         return fmt.format(url=url, text=html.escape(text))
 
-    # noinspection PyArgumentList
     def __new__(cls, url, text, style):
         return str.__new__(cls, Link.format(url, text, style))
 
-    def __call__(
-        self, other: str | None = None, *, style: str | None = None
-    ):
-        return Link.format(
-            self.url, other or self.text, style or self.style
-        )
+    def __call__(self, other: str | None = None, *, style: str | None = None):
+        return Link.format(self.url, other or self.text, style or self.style)
 
     def __str__(self) -> str:
         return Link.format(self.url, self.text, self.style)
@@ -154,6 +144,9 @@ class User(Object, Update):
 
         profile_color (:obj:`~pyrogram.types.ChatColor`, *optional*)
             Chat profile color.
+
+        active_users (``int``, *optional*):
+            Bot's active users count.
     """
 
     def __init__(
@@ -189,6 +182,7 @@ class User(Object, Update):
         restrictions: list[types.Restriction] | None = None,
         reply_color: types.ChatColor = None,
         profile_color: types.ChatColor = None,
+        active_users: int | None = None,
     ) -> None:
         super().__init__(client)
 
@@ -221,13 +215,11 @@ class User(Object, Update):
         self.restrictions = restrictions
         self.reply_color = reply_color
         self.profile_color = profile_color
+        self.active_users = active_users
 
     @property
     def full_name(self) -> str:
-        return (
-            " ".join(filter(None, [self.first_name, self.last_name]))
-            or None
-        )
+        return " ".join(filter(None, [self.first_name, self.last_name])) or None
 
     @property
     def mention(self):
@@ -243,6 +235,7 @@ class User(Object, Update):
             return None
         user_name = user.username
         active_usernames = getattr(user, "usernames", [])
+        active_users = getattr(user, "bot_active_users", None)
         usernames = None
         if len(active_usernames) >= 1:
             usernames = []
@@ -251,11 +244,7 @@ class User(Object, Update):
                     user_name = username.username
                 else:
                     usernames.append(types.Username._parse(username))
-        if (
-            user_name is None
-            and usernames is not None
-            and len(usernames) > 0
-        ):
+        if user_name is None and usernames is not None and len(usernames) > 0:
             user_name = usernames[0].username
             usernames.pop(0)
 
@@ -280,34 +269,26 @@ class User(Object, Update):
             username=user_name,
             usernames=usernames,
             language_code=user.lang_code,
-            emoji_status=types.EmojiStatus._parse(
-                client, user.emoji_status
-            ),
+            emoji_status=types.EmojiStatus._parse(client, user.emoji_status),
             dc_id=getattr(user.photo, "dc_id", None),
             phone_number=user.phone,
             photo=types.ChatPhoto._parse(
                 client, user.photo, user.id, user.access_hash
             ),
             restrictions=types.List(
-                [
-                    types.Restriction._parse(r)
-                    for r in user.restriction_reason
-                ]
+                [types.Restriction._parse(r) for r in user.restriction_reason]
             )
             or None,
-            reply_color=types.ChatColor._parse(
-                getattr(user, "color", None)
-            ),
+            reply_color=types.ChatColor._parse(getattr(user, "color", None)),
             profile_color=types.ChatColor._parse_profile_color(
                 getattr(user, "profile_color", None)
             ),
+            active_users=active_users,
             client=client,
         )
 
     @staticmethod
-    def _parse_status(
-        user_status: raw.base.UserStatus, is_bot: bool = False
-    ):
+    def _parse_status(user_status: raw.base.UserStatus, is_bot: bool = False):
         if isinstance(user_status, raw.types.UserStatusOnline):
             status, date = (
                 enums.UserStatus.ONLINE,
@@ -346,9 +327,7 @@ class User(Object, Update):
         }
 
     @staticmethod
-    def _parse_user_status(
-        client, user_status: raw.types.UpdateUserStatus
-    ):
+    def _parse_user_status(client, user_status: raw.types.UpdateUserStatus):
         return User(
             id=user_status.user_id,
             **User._parse_status(user_status.status),
@@ -416,9 +395,7 @@ class User(Object, Update):
             RPCError: In case of a Telegram RPC error.
             asyncio.TimeoutError: In case reply not received within the timeout.
         """
-        return self._client.ask(
-            self.id, text, *args, user_id=self.id, **kwargs
-        )
+        return self._client.ask(self.id, text, *args, user_id=self.id, **kwargs)
 
     def stop_listening(self, *args, **kwargs):
         """Bound method *stop_listening* of :obj:`~pyrogram.types.User`.
@@ -441,9 +418,7 @@ class User(Object, Update):
 
                 user.stop_listen()
         """
-        return self._client.stop_listening(
-            *args, user_id=self.id, **kwargs
-        )
+        return self._client.stop_listening(*args, user_id=self.id, **kwargs)
 
     async def archive(self):
         """Bound method *archive* of :obj:`~pyrogram.types.User`.

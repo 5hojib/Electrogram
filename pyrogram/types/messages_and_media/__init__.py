@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .animation import Animation
 from .audio import Audio
 from .available_effect import AvailableEffect

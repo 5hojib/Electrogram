@@ -72,9 +72,7 @@ class GetChatEventLog:
                     min_id=0,
                     max_id=offset_id,
                     limit=limit,
-                    events_filter=filters.write()
-                    if filters
-                    else None,
+                    events_filter=filters.write() if filters else None,
                     admins=(
                         [await self.resolve_peer(i) for i in user_ids]
                         if user_ids is not None
@@ -90,9 +88,7 @@ class GetChatEventLog:
             offset_id = last.id
 
             for event in r.events:
-                yield await types.ChatEvent._parse(
-                    self, event, r.users, r.chats
-                )
+                yield await types.ChatEvent._parse(self, event, r.users, r.chats)
 
                 current += 1
 

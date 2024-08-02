@@ -218,8 +218,7 @@ class SendAnimation:
                         progress_args=progress_args,
                     )
                     media = raw.types.InputMediaUploadedDocument(
-                        mime_type=self.guess_mime_type(animation)
-                        or "video/mp4",
+                        mime_type=self.guess_mime_type(animation) or "video/mp4",
                         file=file,
                         thumb=thumb,
                         spoiler=has_spoiler,
@@ -231,8 +230,7 @@ class SendAnimation:
                                 h=height,
                             ),
                             raw.types.DocumentAttributeFilename(
-                                file_name=file_name
-                                or Path(animation).name
+                                file_name=file_name or Path(animation).name
                             ),
                             raw.types.DocumentAttributeAnimated(),
                         ],
@@ -254,9 +252,7 @@ class SendAnimation:
                     progress_args=progress_args,
                 )
                 media = raw.types.InputMediaUploadedDocument(
-                    mime_type=self.guess_mime_type(
-                        file_name or animation.name
-                    )
+                    mime_type=self.guess_mime_type(file_name or animation.name)
                     or "video/mp4",
                     file=file,
                     thumb=thumb,
@@ -283,9 +279,7 @@ class SendAnimation:
                         silent=disable_notification or None,
                         reply_to=reply_to,
                         random_id=self.rnd_id(),
-                        schedule_date=utils.datetime_to_timestamp(
-                            schedule_date
-                        ),
+                        schedule_date=utils.datetime_to_timestamp(schedule_date),
                         noforwards=protect_content,
                         effect=message_effect_id,
                         invert_media=invert_media,
@@ -334,10 +328,7 @@ class SendAnimation:
                             )
 
                             if unsave:
-                                document = (
-                                    message.animation
-                                    or message.document
-                                )
+                                document = message.animation or message.document
                                 document_id = utils.get_input_media_from_file_id(
                                     document.file_id,
                                     FileType.ANIMATION,

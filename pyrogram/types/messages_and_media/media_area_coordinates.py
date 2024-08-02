@@ -53,14 +53,9 @@ class MediaAreaCoordinates(Object):
 
     def write(self):
         return raw.types.MediaAreaCoordinates(
-            x=self.x
-            or 51.596797943115,  # value from official android apps
-            y=self.y
-            or 51.580257415771,  # value from official android apps
-            w=self.width
-            or 69.867012023926,  # value from official android apps
-            h=self.height
-            or 75.783416748047,  # value from official android apps
-            rotation=self.rotation
-            or 0.0,  # value from official android apps
+            x=self.x or 51.596797943115,  # value from official android apps
+            y=self.y or 51.580257415771,  # value from official android apps
+            w=self.width or 69.867012023926,  # value from official android apps
+            h=self.height or 75.783416748047,  # value from official android apps
+            rotation=self.rotation or 0.0,  # value from official android apps
         ).write()

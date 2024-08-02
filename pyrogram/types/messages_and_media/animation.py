@@ -112,16 +112,12 @@ class Animation(Object):
         )
 
     @staticmethod
-    def _parse_chat_animation(
-        client, video: raw.types.Photo
-    ) -> Animation:
+    def _parse_chat_animation(client, video: raw.types.Photo) -> Animation:
         if isinstance(video, raw.types.Photo):
             if not video.video_sizes:
                 return None
             video_sizes: list[raw.types.VideoSize] = [
-                p
-                for p in video.video_sizes
-                if isinstance(p, raw.types.VideoSize)
+                p for p in video.video_sizes if isinstance(p, raw.types.VideoSize)
             ]
             video_sizes.sort(key=lambda p: p.size)
             video_size = video_sizes[-1]
@@ -149,9 +145,7 @@ class Animation(Object):
                 width=video_size.w,
                 height=video_size.h,
                 file_size=video_size.size,
-                date=utils.timestamp_to_datetime(video.date)
-                if video
-                else None,
+                date=utils.timestamp_to_datetime(video.date) if video else None,
                 file_name=f"chat_video_{video.date}_{client.rnd_id()}.mp4",
                 mime_type="video/mp4",
                 client=client,

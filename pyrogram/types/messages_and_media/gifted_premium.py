@@ -52,7 +52,6 @@ class GiftedPremium(Object):
 
     @staticmethod
     async def _parse(
-        client,
         gifted_premium: raw.types.MessageActionGiftPremium,
         gifter_user_id: int,
     ) -> GiftedPremium:
@@ -60,11 +59,7 @@ class GiftedPremium(Object):
             gifter_user_id=gifter_user_id,
             currency=gifted_premium.currency,
             amount=gifted_premium.amount,
-            cryptocurrency=getattr(
-                gifted_premium, "crypto_currency", None
-            ),
-            cryptocurrency_amount=getattr(
-                gifted_premium, "crypto_amount", None
-            ),
+            cryptocurrency=getattr(gifted_premium, "crypto_currency", None),
+            cryptocurrency_amount=getattr(gifted_premium, "crypto_amount", None),
             month_count=gifted_premium.months,
         )

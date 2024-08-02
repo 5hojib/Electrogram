@@ -5,9 +5,7 @@ from pyrogram import raw
 
 
 class DeleteFolder:
-    async def delete_folder(
-        self: pyrogram.Client, folder_id: int
-    ) -> bool:
+    async def delete_folder(self: pyrogram.Client, folder_id: int) -> bool:
         """Delete a user's folder.
 
         .. include:: /_includes/usable-by/users.rst

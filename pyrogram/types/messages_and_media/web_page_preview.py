@@ -45,13 +45,9 @@ class WebPagePreview(Object):
         invert_media: bool | None = None,
     ):
         if isinstance(web_page_preview.webpage, raw.types.WebPage):
-            webpage = types.WebPage._parse(
-                client, web_page_preview.webpage
-            )
+            webpage = types.WebPage._parse(client, web_page_preview.webpage)
         else:
-            webpage = types.WebPageEmpty._parse(
-                web_page_preview.webpage
-            )
+            webpage = types.WebPageEmpty._parse(web_page_preview.webpage)
         return WebPagePreview(
             webpage=webpage,
             force_large_media=web_page_preview.force_large_media,

@@ -25,13 +25,13 @@ class RPCError(Exception):
         rpc_name: str | None = None,
         is_unknown: bool = False,
         is_signed: bool = False,
-    ):
+    ) -> None:
         super().__init__(
             "Telegram says: [{}{} {}] - {}".format(
                 "-" if is_signed else "",
                 self.CODE,
                 self.ID or self.NAME,
-                #  self.MESSAGE.format(value=value),
+                # NextTime self.MESSAGE.format(value=value),
                 f'(caused by "{rpc_name}")' if rpc_name else "",
             )
         )
@@ -42,9 +42,7 @@ class RPCError(Exception):
             self.value = value
 
         if is_unknown:
-            with Path("unknown_errors.txt").open(
-                "a", encoding="utf-8"
-            ) as f:
+            with Path("unknown_errors.txt").open("a", encoding="utf-8") as f:
                 f.write(f"{datetime.now()}\t{value}\t{rpc_name}\n")
 
     @staticmethod

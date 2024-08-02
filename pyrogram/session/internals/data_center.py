@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import ClassVar
 
 
@@ -56,9 +58,7 @@ class DataCenter:
             return ip, 80
         if ipv6:
             if media:
-                ip = cls.PROD_IPV6_MEDIA.get(
-                    dc_id, cls.PROD_IPV6[dc_id]
-                )
+                ip = cls.PROD_IPV6_MEDIA.get(dc_id, cls.PROD_IPV6[dc_id])
             else:
                 ip = cls.PROD_IPV6[dc_id]
         elif media:

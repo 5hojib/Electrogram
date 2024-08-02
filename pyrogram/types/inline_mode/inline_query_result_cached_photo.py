@@ -56,9 +56,7 @@ class InlineQueryResultCachedPhoto(InlineQueryResult):
         reply_markup: types.InlineKeyboardMarkup = None,
         input_message_content: types.InputMessageContent = None,
     ) -> None:
-        super().__init__(
-            "photo", id, input_message_content, reply_markup
-        )
+        super().__init__("photo", id, input_message_content, reply_markup)
 
         self.photo_file_id = photo_file_id
         self.title = title
@@ -90,9 +88,7 @@ class InlineQueryResultCachedPhoto(InlineQueryResult):
                 file_reference=file_id.file_reference,
             ),
             send_message=(
-                await self.input_message_content.write(
-                    client, self.reply_markup
-                )
+                await self.input_message_content.write(client, self.reply_markup)
                 if self.input_message_content
                 else raw.types.InputBotInlineMessageMediaAuto(
                     reply_markup=await self.reply_markup.write(client)

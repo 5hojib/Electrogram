@@ -139,9 +139,7 @@ class SendCachedMedia:
                 silent=disable_notification or None,
                 reply_to=reply_to,
                 random_id=self.rnd_id(),
-                schedule_date=utils.datetime_to_timestamp(
-                    schedule_date
-                ),
+                schedule_date=utils.datetime_to_timestamp(schedule_date),
                 noforwards=protect_content,
                 invert_media=invert_media,
                 reply_markup=await reply_markup.write(self)
@@ -165,8 +163,6 @@ class SendCachedMedia:
                     i.message,
                     {i.id: i for i in r.users},
                     {i.id: i for i in r.chats},
-                    is_scheduled=isinstance(
-                        i, raw.types.UpdateNewScheduledMessage
-                    ),
+                    is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
                 )
         return None

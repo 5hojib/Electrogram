@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import ClassVar
 
 from .exceptions import *
@@ -21,9 +23,7 @@ class BadMsgNotification(Exception):
     }
 
     def __init__(self, code) -> None:
-        description = self.descriptions.get(
-            code, "Unknown error code"
-        )
+        description = self.descriptions.get(code, "Unknown error code")
         super().__init__(f"[{code}] {description}")
 
 
@@ -42,9 +42,7 @@ class SecurityCheckMismatch(SecurityError):
 
     def __init__(self, msg: str | None = None) -> None:
         super().__init__(
-            "A security check mismatch has occurred."
-            if msg is None
-            else msg
+            "A security check mismatch has occurred." if msg is None else msg
         )
 
 
@@ -53,9 +51,7 @@ class CDNFileHashMismatch(SecurityError):
 
     def __init__(self, msg: str | None = None) -> None:
         super().__init__(
-            "A CDN file hash mismatch has occurred."
-            if msg is None
-            else msg
+            "A CDN file hash mismatch has occurred." if msg is None else msg
         )
 
 

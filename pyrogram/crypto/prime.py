@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from random import randint
 
 CURRENT_DH_PRIME = int(
@@ -13,11 +15,6 @@ CURRENT_DH_PRIME = int(
 )
 
 
-# Recursive variant
-# def gcd(cls, a: int, b: int) -> int:
-#     return cls.gcd(b, a % b) if b else a
-
-
 def gcd(a: int, b: int) -> int:
     while b:
         a, b = b, a % b
@@ -26,7 +23,6 @@ def gcd(a: int, b: int) -> int:
 
 
 def decompose(pq: int) -> int:
-    # https://comeoncodeon.wordpress.com/2010/09/18/pollard-rho-brent-integer-factorization/
     if pq % 2 == 0:
         return 2
 

@@ -53,7 +53,6 @@ class RequestCallbackAnswer:
                 await app.request_callback_answer(chat_id, message_id, "callback_data")
         """
 
-        # Telegram only wants bytes, but we are allowed to pass strings too.
         data = (
             bytes(callback_data, "utf-8")
             if isinstance(callback_data, str)

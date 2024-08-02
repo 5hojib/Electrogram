@@ -35,7 +35,5 @@ class StoryViews(Object):
     def _parse(storyviews: raw.types.StoryViews) -> StoryViews:
         return StoryViews(
             view_count=getattr(storyviews, "view_count", None),
-            recent_viewers=getattr(
-                storyviews, "recent_viewers", None
-            ),
+            recent_viewers=getattr(storyviews, "recent_viewers", None),
         )

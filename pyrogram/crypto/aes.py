@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 
 import tgcrypto
@@ -19,9 +21,7 @@ def ctr256_encrypt(
     iv: bytearray,
     state: bytearray | None = None,
 ) -> bytes:
-    return tgcrypto.ctr256_encrypt(
-        data, key, iv, state or bytearray(1)
-    )
+    return tgcrypto.ctr256_encrypt(data, key, iv, state or bytearray(1))
 
 
 def ctr256_decrypt(
@@ -30,9 +30,7 @@ def ctr256_decrypt(
     iv: bytearray,
     state: bytearray | None = None,
 ) -> bytes:
-    return tgcrypto.ctr256_decrypt(
-        data, key, iv, state or bytearray(1)
-    )
+    return tgcrypto.ctr256_decrypt(data, key, iv, state or bytearray(1))
 
 
 def xor(a: bytes, b: bytes) -> bytes:

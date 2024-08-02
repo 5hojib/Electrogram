@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import asyncio
 import functools
 import inspect
@@ -9,7 +11,7 @@ from pyrogram.methods.utilities import compose as compose_module
 from pyrogram.methods.utilities import idle as idle_module
 
 
-def async_to_sync(obj, name):
+def async_to_sync(obj, name) -> None:
     function = getattr(obj, name)
     main_loop = asyncio.get_event_loop()
 
@@ -60,15 +62,11 @@ def async_to_sync(obj, name):
 
                 async def coro_wrapper():
                     return await asyncio.wrap_future(
-                        asyncio.run_coroutine_threadsafe(
-                            coroutine, main_loop
-                        )
+                        asyncio.run_coroutine_threadsafe(coroutine, main_loop)
                     )
 
                 return coro_wrapper()
-            return asyncio.run_coroutine_threadsafe(
-                coroutine, main_loop
-            ).result()
+            return asyncio.run_coroutine_threadsafe(coroutine, main_loop).result()
 
         if inspect.isasyncgen(coroutine):
             if loop.is_running():
@@ -84,8 +82,7 @@ def wrap(source) -> None:
         method = getattr(source, name)
 
         if not name.startswith("_") and (
-            inspect.iscoroutinefunction(method)
-            or inspect.isasyncgenfunction(method)
+            inspect.iscoroutinefunction(method) or inspect.isasyncgenfunction(method)
         ):
             async_to_sync(source, name)
 

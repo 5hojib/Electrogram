@@ -47,14 +47,10 @@ class GetForumTopicsByID:
         Raises:
             ValueError: In case of invalid arguments.
         """
-        ids, ids_type = (
-            (topic_ids, int) if topic_ids else (None, None)
-        )
+        ids, ids_type = (topic_ids, int) if topic_ids else (None, None)
 
         if ids is None:
-            raise ValueError(
-                "No argument supplied. Either pass topic_ids"
-            )
+            raise ValueError("No argument supplied. Either pass topic_ids")
 
         peer = await self.resolve_peer(chat_id)
 
@@ -62,16 +58,12 @@ class GetForumTopicsByID:
         ids = list(ids) if is_iterable else [ids]
         ids = list(ids)
 
-        rpc = raw.functions.channels.GetForumTopicsByID(
-            channel=peer, topics=ids
-        )
+        rpc = raw.functions.channels.GetForumTopicsByID(channel=peer, topics=ids)
 
         r = await self.invoke(rpc, sleep_threshold=-1)
 
         if is_iterable:
-            topic_list = [
-                types.ForumTopic._parse(topic) for topic in r.topics
-            ]
+            topic_list = [types.ForumTopic._parse(topic) for topic in r.topics]
             topics = types.List(topic_list)
         else:
             topics = types.ForumTopic._parse(r.topics[0])

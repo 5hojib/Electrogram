@@ -29,6 +29,7 @@ class SendWebPage:
         quote_entities: list[types.MessageEntity] | None = None,
         schedule_date: datetime | None = None,
         protect_content: bool | None = None,
+        message_effect_id: int | None = None,
         reply_markup: types.InlineKeyboardMarkup
         | types.ReplyKeyboardMarkup
         | types.ReplyKeyboardRemove
@@ -101,6 +102,9 @@ class SendWebPage:
             protect_content (``bool``, *optional*):
                 Protects the contents of the sent message from forwarding and saving.
 
+            message_effect_id (``int`` ``64-bit``, *optional*):
+                Unique identifier of the message effect to be added to the message; for private chats only.
+
             reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup` | :obj:`~pyrogram.types.ReplyKeyboardMarkup` | :obj:`~pyrogram.types.ReplyKeyboardRemove` | :obj:`~pyrogram.types.ForceReply`, *optional*):
                 Additional interface options. An object for an inline keyboard, custom reply keyboard,
                 instructions to remove reply keyboard or to force a reply from the user.
@@ -116,9 +120,7 @@ class SendWebPage:
         """
 
         message, entities = (
-            await utils.parse_text_entities(
-                self, text, parse_mode, entities
-            )
+            await utils.parse_text_entities(self, text, parse_mode, entities)
         ).values()
 
         reply_to = await utils.get_reply_to(
@@ -144,14 +146,13 @@ class SendWebPage:
             reply_to=reply_to,
             random_id=self.rnd_id(),
             schedule_date=utils.datetime_to_timestamp(schedule_date),
-            reply_markup=await reply_markup.write(self)
-            if reply_markup
-            else None,
+            reply_markup=await reply_markup.write(self) if reply_markup else None,
             message=message,
             media=media,
             invert_media=invert_media,
             entities=entities,
             noforwards=protect_content,
+            effect=message_effect_id,
         )
         if business_connection_id is not None:
             r = await self.invoke(
@@ -203,9 +204,7 @@ class SendWebPage:
                     i.message,
                     {i.id: i for i in r.users},
                     {i.id: i for i in r.chats},
-                    is_scheduled=isinstance(
-                        i, raw.types.UpdateNewScheduledMessage
-                    ),
+                    is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
                     business_connection_id=business_connection_id,
                 )
         return None

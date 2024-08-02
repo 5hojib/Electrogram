@@ -20,9 +20,7 @@ class BotCommandScopeChatAdministrators(BotCommandScope):
 
         self.chat_id = chat_id
 
-    async def write(
-        self, client: pyrogram.Client
-    ) -> raw.base.BotCommandScope:
+    async def write(self, client: pyrogram.Client) -> raw.base.BotCommandScope:
         return raw.types.BotCommandScopePeerAdmins(
             peer=await client.resolve_peer(self.chat_id)
         )

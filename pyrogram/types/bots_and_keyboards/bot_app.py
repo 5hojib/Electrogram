@@ -47,24 +47,16 @@ class BotApp(Object):
         self.document = document
 
     @staticmethod
-    def _parse(
-        client: pyrogram.Client, bot_app: raw.types.BotApp
-    ) -> BotApp:
+    def _parse(client: pyrogram.Client, bot_app: raw.types.BotApp) -> BotApp:
         document = None
         if isinstance(bot_app.document, raw.types.Document):
-            attributes = {
-                type(i): i for i in bot_app.document.attributes
-            }
+            attributes = {type(i): i for i in bot_app.document.attributes}
             file_name = getattr(
-                attributes.get(
-                    raw.types.DocumentAttributeFilename, None
-                ),
+                attributes.get(raw.types.DocumentAttributeFilename, None),
                 "file_name",
                 None,
             )
-            document = types.Document._parse(
-                client, bot_app.document, file_name
-            )
+            document = types.Document._parse(client, bot_app.document, file_name)
         return BotApp(
             id=bot_app.id,
             short_name=bot_app.short_name,

@@ -128,15 +128,11 @@ class HTML:
         entities = []
 
         for entity in parser.entities:
-            if isinstance(
-                entity, raw.types.InputMessageEntityMentionName
-            ):
+            if isinstance(entity, raw.types.InputMessageEntityMentionName):
                 try:
                     if self.client is not None:
-                        entity.user_id = (
-                            await self.client.resolve_peer(
-                                entity.user_id
-                            )
+                        entity.user_id = await self.client.resolve_peer(
+                            entity.user_id
                         )
                 except PeerIdInvalid:
                     continue
@@ -148,8 +144,7 @@ class HTML:
 
         return {
             "message": utils.remove_surrogates(parser.text),
-            "entities": sorted(entities, key=lambda e: e.offset)
-            or None,
+            "entities": sorted(entities, key=lambda e: e.offset) or None,
         }
 
     @staticmethod
@@ -175,14 +170,10 @@ class HTML:
                 name = entity_type.name.lower()
                 language = getattr(entity, "language", "") or ""
                 start_tag = (
-                    f'<{name} language="{language}">'
-                    if language
-                    else f"<{name}>"
+                    f'<{name} language="{language}">' if language else f"<{name}>"
                 )
                 end_tag = f"</{name}>"
-            elif (
-                entity_type == MessageEntityType.EXPANDABLE_BLOCKQUOTE
-            ):
+            elif entity_type == MessageEntityType.EXPANDABLE_BLOCKQUOTE:
                 name = "blockquote"
                 start_tag = f"<{name} expandable>"
                 end_tag = f"</{name}>"
@@ -225,10 +216,7 @@ class HTML:
             entities_offsets.append((start_tag, start))
             internal_i = entity_i + 1
             # while the next entity is inside the current one, keep parsing
-            while (
-                internal_i < len(entities)
-                and entities[internal_i].offset < end
-            ):
+            while internal_i < len(entities) and entities[internal_i].offset < end:
                 internal_i += recursive(internal_i)
             entities_offsets.append((end_tag, end))
             return internal_i - entity_i

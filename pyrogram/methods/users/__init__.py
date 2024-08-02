@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .block_user import BlockUser
 from .delete_profile_photos import DeleteProfilePhotos
 from .delete_stories import DeleteStories
