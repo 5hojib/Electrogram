@@ -41,7 +41,6 @@ class GetGameHighScores:
                 scores = await app.get_game_high_scores(user_id, chat_id, message_id)
                 print(scores)
         """
-        # TODO: inline_message_id
 
         r = await self.invoke(
             raw.functions.messages.GetGameHighScores(

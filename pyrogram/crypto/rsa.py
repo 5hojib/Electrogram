@@ -4,25 +4,8 @@ from collections import namedtuple
 
 PublicKey = namedtuple("PublicKey", ["m", "e"])
 
-# To get modulus and exponent:
-#
-# [RSA PUBLIC KEY]:
-# grep -v -- - public.key | tr -d \\n | base64 -d | openssl asn1parse -inform DER -i
-#
-# [PUBLIC KEY]:
-# openssl rsa -pubin -in key -text -noout
-
 server_public_keys = {
-    # -4344800451088585951
-    0xC3B42B026CE86B21 - (1 << 64): PublicKey(  # Telegram servers #1
-        # -----BEGIN RSA PUBLIC KEY-----
-        # MIIBCgKCAQEAwVACPi9w23mF3tBkdZz+zwrzKOaaQdr01vAbU4E1pvkfj4sqDsm6
-        # lyDONS789sVoD/xCS9Y0hkkC3gtL1tSfTlgCMOOul9lcixlEKzwKENj1Yz/s7daS
-        # an9tqw3bfUV/nqgbhGX81v/+7RFAEd+RwFnK7a+XYl9sluzHRyVVaTTveB2GazTw
-        # Efzk2DWgkBluml8OREmvfraX3bkHZJTKX4EQSjBbbdJ2ZXIsRrYOXfaA+xayEGB+
-        # 8hdlLmAjbCVfaigxX0CDqWeR1yFL9kwd9P0NsZRPsmoqVwMbMu7mStFai6aIhc3n
-        # Slv8kg9qv1m6XHVQY3PnEw+QQtqSIXklHwIDAQAB
-        # -----END RSA PUBLIC KEY-----
+    0xC3B42B026CE86B21 - (1 << 64): PublicKey(  
         int(
             "C150023E2F70DB7985DED064759CFECF0AF328E69A41DAF4D6F01B538135A6F9"
             "1F8F8B2A0EC9BA9720CE352EFCF6C5680FFC424BD634864902DE0B4BD6D49F4E"
@@ -33,20 +16,10 @@ server_public_keys = {
             "6A28315F4083A96791D7214BF64C1DF4FD0DB1944FB26A2A57031B32EEE64AD1"
             "5A8BA68885CDE74A5BFC920F6ABF59BA5C75506373E7130F9042DA922179251F",
             16,
-        ),  # Modulus
-        int("010001", 16),  # Exponent
+        ),  
+        int("010001", 16), 
     ),
-    # 847625836280919973
-    0x10BC35F3509F7B7A5 - (1 << 64): PublicKey(  # Telegram servers #2
-        # -----BEGIN PUBLIC KEY-----
-        # MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAruw2yP/BCcsJliRoW5eB
-        # VBVle9dtjJw+OYED160Wybum9SXtBBLXriwt4rROd9csv0t0OHCaTmRqBcQ0J8fx
-        # hN6/cpR1GWgOZRUAiQxoMnlt0R93LCX/j1dnVa/gVbCjdSxpbrfY2g2L4frzjJvd
-        # l84Kd9ORYjDEAyFnEA7dD556OptgLQQ2e2iVNq8NZLYTzLp5YpOdO1doK+ttrltg
-        # gTCy5SrKeLoCPPbOgGsdxJxyz5KKcZnSLj16yE5HvJQn0CNpRdENvRUXe6tBP78O
-        # 39oJ8BTHp9oIjd6XWXAsp2CvK45Ol8wFXGF710w9lwCGNbmNxNYhtIkdqfsEcwR5
-        # JwIDAQAB
-        # -----END PUBLIC KEY-----
+    0x10BC35F3509F7B7A5 - (1 << 64): PublicKey(  
         int(
             "AEEC36C8FFC109CB099624685B97815415657BD76D8C9C3E398103D7AD16C9BB"
             "A6F525ED0412D7AE2C2DE2B44E77D72CBF4B7438709A4E646A05C43427C7F184"
@@ -57,20 +30,10 @@ server_public_keys = {
             "D0236945D10DBD15177BAB413FBF0EDFDA09F014C7A7DA088DDE9759702CA760"
             "AF2B8E4E97CC055C617BD74C3D97008635B98DC4D621B4891DA9FB0473047927",
             16,
-        ),  # Modulus
-        int("010001", 16),  # Exponent
+        ), 
+        int("010001", 16), 
     ),
-    # 1562291298945373506
-    0x115AE5FA8B5529542 - (1 << 64): PublicKey(  # Telegram servers #3
-        # -----BEGIN PUBLIC KEY-----
-        # MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvfLHfYH2r9R70w8prHbl
-        # Wt/nDkh+XkgpflqQVcnAfSuTtO05lNPspQmL8Y2XjVT4t8cT6xAkdgfmmvnvRPOO
-        # KPi0OfJXoRVylFzAQG/j83u5K3kRLbae7fLccVhKZhY46lvsueI1hQdLgNV9n1cQ
-        # 3TDS2pQOCtovG4eDl9wacrXOJTG2990VjgnIKNA0UMoP+KF03qzryqIt3oTvZq03
-        # DyWdGK+AZjgBLaDKSnC6qD2cFY81UryRWOab8zKkWAnhw2kFpcqhI0jdV5QaSCEx
-        # vnsjVaX0Y1N0870931/5Jb9ICe4nweZ9kSDF/gip3kWLG0o8XQpChDfyvsqB9OLV
-        # /wIDAQAB
-        # -----END PUBLIC KEY-----
+    0x115AE5FA8B5529542 - (1 << 64): PublicKey( 
         int(
             "BDF2C77D81F6AFD47BD30F29AC76E55ADFE70E487E5E48297E5A9055C9C07D2B"
             "93B4ED3994D3ECA5098BF18D978D54F8B7C713EB10247607E69AF9EF44F38E28"
@@ -81,20 +44,10 @@ server_public_keys = {
             "C36905A5CAA12348DD57941A482131BE7B2355A5F4635374F3BD3DDF5FF925BF"
             "4809EE27C1E67D9120C5FE08A9DE458B1B4A3C5D0A428437F2BECA81F4E2D5FF",
             16,
-        ),  # Modulus
-        int("010001", 16),  # Exponent
+        ), 
+        int("010001", 16),
     ),
-    # -5859577972006586033
-    0xAEAE98E13CD7F94F - (1 << 64): PublicKey(  # Telegram servers #4
-        # -----BEGIN PUBLIC KEY-----
-        # MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAs/ditzm+mPND6xkhzwFI
-        # z6J/968CtkcSE/7Z2qAJiXbmZ3UDJPGrzqTDHkO30R8VeRM/Kz2f4nR05GIFiITl
-        # 4bEjvpy7xqRDspJcCFIOcyXm8abVDhF+th6knSU0yLtNKuQVP6voMrnt9MV1X92L
-        # GZQLgdHZbPQz0Z5qIpaKhdyA8DEvWWvSUwwc+yi1/gGaybwlzZwqXYoPOhwMebzK
-        # Uk0xW14htcJrRrq+PXXQbRzTMynseCoPIoke0dtCodbA3qQxQovE16q9zz4Otv2k
-        # 4j63cz53J+mhkVWAeWxVGI0lltJmWtEYK6er8VqqWot3nqmWMXogrgRLggv/Nbbo
-        # oQIDAQAB
-        # -----END PUBLIC KEY-----
+    0xAEAE98E13CD7F94F - (1 << 64): PublicKey( 
         int(
             "B3F762B739BE98F343EB1921CF0148CFA27FF7AF02B6471213FED9DAA0098976"
             "E667750324F1ABCEA4C31E43B7D11F1579133F2B3D9FE27474E462058884E5E1"
@@ -105,20 +58,10 @@ server_public_keys = {
             "DEA431428BC4D7AABDCF3E0EB6FDA4E23EB7733E7727E9A1915580796C55188D"
             "2596D2665AD1182BA7ABF15AAA5A8B779EA996317A20AE044B820BFF35B6E8A1",
             16,
-        ),  # Modulus
-        int("010001", 16),  # Exponent
+        ), 
+        int("010001", 16),  
     ),
-    # 6491968696586960280
-    0x15A181B2235057D98 - (1 << 64): PublicKey(  # Telegram servers #5
-        # -----BEGIN PUBLIC KEY-----
-        # MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvmpxVY7ld/8DAjz6F6q0
-        # 5shjg8/4p6047bn6/m8yPy1RBsvIyvuDuGnP/RzPEhzXQ9UJ5Ynmh2XJZgHoE9xb
-        # nfxL5BXHplJhMtADXKM9bWB11PU1Eioc3+AXBB8QiNFBn2XI5UkO5hPhbb9mJpjA
-        # 9Uhw8EdfqJP8QetVsI/xrCEbwEXe0xvifRLJbY08/Gp66KpQvy7g8w7VB8wlgePe
-        # xW3pT13Ap6vuC+mQuJPyiHvSxjEKHgqePji9NP3tJUFQjcECqcm0yV7/2d0t/pbC
-        # m+ZH1sadZspQCEPPrtbkQBlvHb4OLiIWPGHKSMeRFvp3IWcmdJqXahxLCUS1Eh6M
-        # AQIDAQAB
-        # -----END PUBLIC KEY-----
+    0x15A181B2235057D98 - (1 << 64): PublicKey(  
         int(
             "BE6A71558EE577FF03023CFA17AAB4E6C86383CFF8A7AD38EDB9FAFE6F323F2D"
             "5106CBC8CAFB83B869CFFD1CCF121CD743D509E589E68765C96601E813DC5B9D"
@@ -129,19 +72,10 @@ server_public_keys = {
             "8DC102A9C9B4C95EFFD9DD2DFE96C29BE647D6C69D66CA500843CFAED6E44019"
             "6F1DBE0E2E22163C61CA48C79116FA77216726749A976A1C4B0944B5121E8C01",
             16,
-        ),  # Modulus
-        int("010001", 16),  # Exponent
+        ),  
+        int("010001", 16),  
     ),
-    # -7395192255793472640
-    0x995EFFD323B5DB80 - (1 << 64): PublicKey(  # CDN DC-121
-        # -----BEGIN RSA PUBLIC KEY-----
-        # MIIBCgKCAQEA4tWHcGJlElkxuxKQJwFjJaulmVHgdxNA3wgI2E8XbNnA88y51Xog
-        # V5m8BEYuTSP4llXZY4ZSJW5VlFXnmsJT/hmjyeFqqTajyAW6nb9vwZX291QvqD/1
-        # ZCFBy7TLvCM0lbNIEhcLMf33ZV8AetLAd+uRLF6QHosys5w0iJ7x+UbGwDxyfeic
-        # 8EJJnsKaXrUOwRycMRN+V/zDySa0EYl1u1EB1MDX1/jIV1IQEbLvdBH4vsVTVEdW
-        # KHlzOcFzT9qX/g8XibCPiHLJvqQb8hVibvs9NaANyClcBEt3mOucG1/46Lilkc/K
-        # d4nlCcohk0jIHNp8symUzNWRPUGmTs3SPwIDAQAB
-        # -----END RSA PUBLIC KEY-----
+    0x995EFFD323B5DB80 - (1 << 64): PublicKey(  
         int(
             "E2D587706265125931BB129027016325ABA59951E0771340DF0808D84F176CD9"
             "C0F3CCB9D57A205799BC04462E4D23F89655D9638652256E559455E79AC253FE"
@@ -152,19 +86,10 @@ server_public_keys = {
             "FE0F1789B08F8872C9BEA41BF215626EFB3D35A00DC8295C044B7798EB9C1B5F"
             "F8E8B8A591CFCA7789E509CA219348C81CDA7CB32994CCD5913D41A64ECDD23F",
             16,
-        ),  # Modulus
-        int("010001", 16),  # Exponent
+        ),  
+        int("010001", 16),  
     ),
-    # 2685959930972952888
-    0x1254672538E935938 - (1 << 64): PublicKey(  # CDN DC-140
-        # -----BEGIN RSA PUBLIC KEY-----
-        # MIIBCgKCAQEAzuHVC7sE50Kho/yDVZtWnlmA5Bf/aM8KZY3WzS16w6w1sBqipj8o
-        # gMGG7ULbGBtYmKEaI7IIJO6WM2m1MaXVnsqS8d7PaGAZiy8rSN3S7S2a8wp4RXZe
-        # hs0JAXvZeIz45iByCMBfycbJKmSweYkesRUI7hUO8eQhmm/UYUEpJY7VOt0Iemiu
-        # URSpqlRQ2FlcyHahYUNcvbICb4+/AP7coKBn6cB5FyzM7MCcKxbEKOx3Y3MUnbZq
-        # q5pN6/eRazkegyrlp4kuJ94KsbRFHFX5Dx8uzjrO9wi8LF7gIgZu5DRMcmjXJKq6
-        # rGZ2Z9cnrD8pVu1L2vcInd4K6ximZS2hbwIDAQAB
-        # -----END RSA PUBLIC KEY-----
+    0x1254672538E935938 - (1 << 64): PublicKey(  
         int(
             "CEE1D50BBB04E742A1A3FC83559B569E5980E417FF68CF0A658DD6CD2D7AC3AC"
             "35B01AA2A63F2880C186ED42DB181B5898A11A23B20824EE963369B531A5D59E"
@@ -175,19 +100,10 @@ server_public_keys = {
             "832AE5A7892E27DE0AB1B4451C55F90F1F2ECE3ACEF708BC2C5EE022066EE434"
             "4C7268D724AABAAC667667D727AC3F2956ED4BDAF7089DDE0AEB18A6652DA16F",
             16,
-        ),  # Modulus
-        int("010001", 16),  # Exponent
+        ),  
+        int("010001", 16), 
     ),
-    # -3997872768018684475
-    0xC884B3E62D09E5C5 - (1 << 64): PublicKey(  # CDN DC-201
-        # -----BEGIN RSA PUBLIC KEY-----
-        # MIIBCgKCAQEAug6fETVb7NkXYYu5ueZuM0pqw1heuqUrZNYomQN0lS0o7i6mAWwb
-        # 1/FiscFK+y4LQSSEx+oUzXAhjmll9fmb4e7PbUiXo8MuXO0Rj3e5416DXfTiOYGW
-        # XlFRV0aQzu8agy1epKwkFDidnmy7g5rJJV0q1+3eR+Jk2OEc/B6lMAOv3fBU6xhE
-        # ZByN9gqc6fvkNo13PQ8JYZUSGttzLlYy76uFmvFBhRsJU+LNQ2+bsTHwafSffVYl
-        # Z2boJOblvqbRWe453CzssaSWywGXOQmWvVbEe7F8q1ki/s7S8BxYWrhSLJ6bsu9V
-        # ZWnIHD9vB34QF8IABPRE93mhCOHBqJxSBQIDAQAB
-        # -----END RSA PUBLIC KEY-----
+    0xC884B3E62D09E5C5 - (1 << 64): PublicKey(  
         int(
             "BA0E9F11355BECD917618BB9B9E66E334A6AC3585EBAA52B64D628990374952D"
             "28EE2EA6016C1BD7F162B1C14AFB2E0B412484C7EA14CD70218E6965F5F99BE1"
@@ -198,19 +114,10 @@ server_public_keys = {
             "59EE39DC2CECB1A496CB0197390996BD56C47BB17CAB5922FECED2F01C585AB8"
             "522C9E9BB2EF556569C81C3F6F077E1017C20004F444F779A108E1C1A89C5205",
             16,
-        ),  # Modulus
-        int("010001", 16),  # Exponent
+        ),  
+        int("010001", 16),  
     ),
-    # -4960899639492471258
-    0xBB27580FD5B01626 - (1 << 64): PublicKey(  # CDN DC-203
-        # -----BEGIN RSA PUBLIC KEY-----
-        # MIIBCgKCAQEAv/L6td+mj7Dl81NHfu+Xf1KNtvZPR1tS5xFqkiUson1u7D2ulK05
-        # jM8HKvpV1o+1HPPqhaXhasvsX90u3TIHRQ0zuJKJxKAiZo3GK7phHozjAJ9VUFbO
-        # 7jKAa5BTE9tXgA5ZwJAiQWb3U6ykwRzk3fFRe5WaW7xfVUiepxyWGdr1eecoWCfB
-        # af1TCXfcS7vcyljNT03pwt2YyS5iXE5IB5wBB5yqSSm4GYtWWR67UjIsXBd77TRp
-        # foLGpfOdUHxBz4ZSj8D76m1zlpID5J2pF6bH4+ZCz0SUpv3j7bE8WFlvgMfwEPhw
-        # xMYidRGayq9YlLlYd4D+Yoq0U6jS3MWTRQIDAQAB
-        # -----END RSA PUBLIC KEY-----
+    0xBB27580FD5B01626 - (1 << 64): PublicKey( 
         int(
             "BFF2FAB5DFA68FB0E5F353477EEF977F528DB6F64F475B52E7116A92252CA27D"
             "6EEC3DAE94AD398CCF072AFA55D68FB51CF3EA85A5E16ACBEC5FDD2EDD320745"
@@ -221,8 +128,8 @@ server_public_keys = {
             "CF86528FC0FBEA6D73969203E49DA917A6C7E3E642CF4494A6FDE3EDB13C5859"
             "6F80C7F010F870C4C62275119ACAAF5894B9587780FE628AB453A8D2DCC59345",
             16,
-        ),  # Modulus
-        int("010001", 16),  # Exponent
+        ),
+        int("010001", 16),
     ),
 }
 

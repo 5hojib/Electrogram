@@ -52,7 +52,6 @@ class GetInlineBotResults:
                 results = await app.get_inline_bot_results("pyrogrambot")
                 print(results)
         """
-        # TODO: Don't return the raw type
 
         try:
             return await self.invoke(
@@ -67,7 +66,6 @@ class GetInlineBotResults:
                 )
             )
         except UnknownError as e:
-            # TODO: Add this -503 Timeout error into the Error DB
             if e.value.error_code == -503 and e.value.error_message == "Timeout":
                 raise TimeoutError("The inline bot didn't answer in time") from None
             raise e

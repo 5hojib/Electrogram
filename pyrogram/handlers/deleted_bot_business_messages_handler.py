@@ -40,8 +40,6 @@ class DeletedBotBusinessMessagesHandler(Handler):
         super().__init__(callback, filters)
 
     async def check(self, client: pyrogram.Client, messages: list[Message]) -> bool:
-        # Every message should be checked, if at least one matches the filter True is returned
-        # otherwise, or if the list is empty, False is returned
         for message in messages:
             if await super().check(client, message):
                 return True

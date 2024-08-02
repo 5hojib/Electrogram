@@ -95,8 +95,6 @@ class Story(Object, Update):
             The raw story object, as received from the Telegram API.
     """
 
-    # TODO: fix Allowed Chats
-
     def __init__(
         self,
         *,
@@ -127,8 +125,6 @@ class Story(Object, Update):
         denied_users: list[int] | None = None,
         media_areas: list[types.MediaArea] | None = None,
         raw: raw.types.StoryItem = None,
-        # allowed_chats: list[int] = None,
-        # denied_chats: list[int] = None
     ) -> None:
         super().__init__(client)
 
@@ -158,8 +154,6 @@ class Story(Object, Update):
         self.denied_users = denied_users
         self.media_areas = media_areas
         self.raw = raw
-        # self.allowed_chats = allowed_chats
-        # self.denied_chats = denied_chats
 
     @staticmethod
     async def _parse(
@@ -187,9 +181,7 @@ class Story(Object, Update):
         sender_chat = None
         privacy = None
         forward_from = None
-        # allowed_chats = None
         allowed_users = None
-        # denied_chats = None
         denied_users = None
         if stories.media:
             if isinstance(stories.media, raw.types.MessageMediaPhoto):
@@ -328,8 +320,6 @@ class Story(Object, Update):
             views=types.StoryViews._parse(stories.views),
             privacy=privacy,
             forward_from=forward_from,
-            # allowed_chats=allowed_chats,
-            # denied_chats=denied_chats,
             allowed_users=allowed_users,
             denied_users=denied_users,
             media_areas=media_areas,
@@ -1486,8 +1476,6 @@ class Story(Object, Update):
         privacy: enums.StoriesPrivacyRules = None,
         allowed_users: list[int] | None = None,
         denied_users: list[int] | None = None,
-        # allowed_chats: list[int] = None,
-        # denied_chats: list[int] = None,
         animation: str | None = None,
         photo: str | None = None,
         video: str | None = None,
@@ -1569,8 +1557,6 @@ class Story(Object, Update):
             chat_id=self.sender_chat.id if self.sender_chat else None,
             story_id=self.id,
             privacy=privacy,
-            # allowed_chats=allowed_chats,
-            # denied_chats=denied_chats,
             allowed_users=allowed_users,
             denied_users=denied_users,
             animation=animation,
@@ -1667,8 +1653,6 @@ class Story(Object, Update):
         privacy: enums.StoriesPrivacyRules = None,
         allowed_users: list[int] | None = None,
         denied_users: list[int] | None = None,
-        # allowed_chats: list[int] = None,
-        # denied_chats: list[int] = None
     ) -> types.Story:
         """Bound method *edit_privacy* of :obj:`~pyrogram.types.Story`.
 
@@ -1706,8 +1690,6 @@ class Story(Object, Update):
             chat_id=self.sender_chat.id if self.sender_chat else None,
             story_id=self.id,
             privacy=privacy,
-            # allowed_chats=allowed_chats,
-            # denied_chats=denied_chats,
             allowed_users=allowed_users,
             denied_users=denied_users,
         )
@@ -1779,8 +1761,6 @@ class Story(Object, Update):
         privacy: enums.StoriesPrivacyRules = None,
         allowed_users: list[int] | None = None,
         denied_users: list[int] | None = None,
-        # allowed_chats: list[int] = None,
-        # denied_chats: list[int] = None,
         pinned: bool | None = None,
         protect_content: bool | None = None,
         caption: str | None = None,

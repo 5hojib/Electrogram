@@ -128,6 +128,8 @@ class CreateInvoiceLink:
                     test=self.test_mode,
                     name_requested=need_name,
                     phone_requested=need_phone_number,
+                    max_tip_amount=max_tip_amount,
+                    suggested_tip_amounts=suggested_tip_amounts,
                     email_requested=need_email,
                     shipping_address_requested=need_shipping_address,
                     flexible=is_flexible,
