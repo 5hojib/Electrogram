@@ -1,14 +1,17 @@
-from typing import Union, Iterable
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw
 
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+
 
 class DeleteScheduledMessages:
     async def delete_scheduled_messages(
-        self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        message_ids: Union[int, Iterable[int]]
+        self: pyrogram.Client, chat_id: int | str, message_ids: int | Iterable[int]
     ) -> int:
         """Delete scheduled messages.
         .. include:: /_includes/usable-by/users-bots.rst
@@ -35,10 +38,7 @@ class DeleteScheduledMessages:
         message_ids = list(message_ids) if is_iterable else [message_ids]
 
         r = await self.invoke(
-            raw.functions.channels.DeleteMessages(
-                peer=peer,
-                id=message_ids
-            )
+            raw.functions.channels.DeleteMessages(peer=peer, id=message_ids)
         )
 
         return r.messages if is_iterable else r.messages[0]

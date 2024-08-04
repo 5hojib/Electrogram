@@ -20,6 +20,6 @@ class TelegramBusiness(
     GetStarsTransactionsById,
     RefundStarPayment,
     SendInvoice,
-    SendPaidMedia
+    SendPaidMedia,
 ):
     pass

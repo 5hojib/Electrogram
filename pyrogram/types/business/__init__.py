@@ -27,5 +27,5 @@ __all__ = [
     "ShippingAddress",
     "ShippingOption",
     "ShippingQuery",
-    "SuccessfulPayment"
+    "SuccessfulPayment",
 ]

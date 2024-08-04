@@ -1,19 +1,21 @@
+from __future__ import annotations
+
 import logging
-from typing import Union, List, Iterable
+from typing import TYPE_CHECKING
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
-from pyrogram import utils
+from pyrogram import raw, types, utils
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 log = logging.getLogger(__name__)
 
+
 class GetScheduledMessages:
     async def get_scheduled_messages(
-        self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        message_ids: Union[int, Iterable[int]]
-    ) -> Union["types.Message", List["types.Message"]]:
+        self: pyrogram.Client, chat_id: int | str, message_ids: int | Iterable[int]
+    ) -> types.Message | list[types.Message]:
         """Get one or more scheduled messages from a chat by using message identifiers.
         You can retrieve up to 200 messages at once.
         .. include:: /_includes/usable-by/users-bots.rst
