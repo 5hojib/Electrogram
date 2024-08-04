@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from pyrogram import raw
 
 
-class MessageInvoice(Object):
+class Invoice(Object):
     """Contains information about an Invoice.
 
     Parameters:
@@ -64,8 +64,8 @@ class MessageInvoice(Object):
     @staticmethod
     def _parse(
         message_invoice: raw.types.MessageMediaInvoice,
-    ) -> MessageInvoice:
-        return MessageInvoice(
+    ) -> Invoice:
+        return Invoice(
             title=message_invoice.title,
             description=message_invoice.description,
             currency=message_invoice.currency,

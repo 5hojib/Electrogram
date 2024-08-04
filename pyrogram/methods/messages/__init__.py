@@ -3,6 +3,7 @@ from __future__ import annotations
 from .copy_media_group import CopyMediaGroup
 from .copy_message import CopyMessage
 from .delete_messages import DeleteMessages
+from .delete_scheduled_messages import DeleteScheduledMessages
 from .download_media import DownloadMedia
 from .edit_inline_caption import EditInlineCaption
 from .edit_inline_media import EditInlineMedia
@@ -22,6 +23,7 @@ from .get_discussion_replies import GetDiscussionReplies
 from .get_discussion_replies_count import GetDiscussionRepliesCount
 from .get_media_group import GetMediaGroup
 from .get_messages import GetMessages
+from .get_scheduled_messages import GetScheduledMessages
 from .read_chat_history import ReadChatHistory
 from .retract_vote import RetractVote
 from .search_global import SearchGlobal
@@ -41,11 +43,9 @@ from .send_chat_action import SendChatAction
 from .send_contact import SendContact
 from .send_dice import SendDice
 from .send_document import SendDocument
-from .send_invoice import SendInvoice
 from .send_location import SendLocation
 from .send_media_group import SendMediaGroup
 from .send_message import SendMessage
-from .send_paid_media import SendPaidMedia
 from .send_photo import SendPhoto
 from .send_poll import SendPoll
 from .send_reaction import SendReaction
@@ -62,6 +62,7 @@ from .vote_poll import VotePoll
 
 class Messages(
     DeleteMessages,
+    DeleteScheduledMessages,
     EditMessageCaption,
     EditMessageReplyMarkup,
     EditMessageMedia,
@@ -70,16 +71,15 @@ class Messages(
     GetAvailableEffects,
     GetMediaGroup,
     GetMessages,
+    GetScheduledMessages,
     SendAudio,
     SendChatAction,
     SendContact,
     SendDocument,
     SendAnimation,
-    SendInvoice,
     SendLocation,
     SendMediaGroup,
     SendMessage,
-    SendPaidMedia,
     SendPhoto,
     SendSticker,
     SendVenue,
