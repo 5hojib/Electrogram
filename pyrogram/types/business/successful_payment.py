@@ -55,7 +55,7 @@ class SuccessfulPayment(Object):
     @staticmethod
     def _parse(
         client: pyrogram.Client,
-        successful_payment,  # noqa: ARG004
+        successful_payment,
     ) -> SuccessfulPayment:
         payload = None
         telegram_payment_charge_id = None
