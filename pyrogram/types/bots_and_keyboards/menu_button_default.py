@@ -13,6 +13,7 @@ class MenuButtonDefault(MenuButton):
         super().__init__("default")
 
     async def write(
-        self, client: pyrogram.Client  # noqa: ARG002
+        self,
+        client: pyrogram.Client,  # noqa: ARG002
     ) -> raw.types.BotMenuButtonDefault:
         return raw.types.BotMenuButtonDefault()
