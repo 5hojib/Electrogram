@@ -111,7 +111,7 @@ class Poll(Object, Update):
     async def _parse(
         client,
         media_poll: raw.types.MessageMediaPoll | raw.types.UpdateMessagePoll,
-        users: list[raw.base.User],
+        users: list[raw.base.User],  # noqa: ARG004
     ) -> Poll:
         poll: raw.types.Poll = media_poll.poll
         poll_results: raw.types.PollResults = media_poll.results

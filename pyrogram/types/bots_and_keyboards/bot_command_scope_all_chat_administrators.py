@@ -12,5 +12,7 @@ class BotCommandScopeAllChatAdministrators(BotCommandScope):
     def __init__(self) -> None:
         super().__init__("all_chat_administrators")
 
-    async def write(self, client: pyrogram.Client) -> raw.base.BotCommandScope:
+    async def write(
+        self, client: pyrogram.Client  # noqa: ARG002
+    ) -> raw.base.BotCommandScope:
         return raw.types.BotCommandScopeChatAdmins()
