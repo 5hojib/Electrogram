@@ -31,7 +31,7 @@ class RequestPeerTypeChannel(Object):
         is_photo_requested (``bool``, *optional*):
             If True, Channel photo is requested.
             default True.
-    """  # TODO user_admin_rights, bot_admin_rights
+    """
 
     def __init__(
         self,

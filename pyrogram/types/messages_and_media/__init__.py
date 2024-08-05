@@ -7,7 +7,6 @@ from .contact import Contact
 from .dice import Dice
 from .document import Document
 from .exported_story_link import ExportedStoryLink
-from .extended_media_preview import ExtendedMediaPreview
 from .game import Game
 from .gifted_premium import GiftedPremium
 from .giveaway import Giveaway
@@ -20,14 +19,12 @@ from .media_area_channel_post import MediaAreaChannelPost
 from .media_area_coordinates import MediaAreaCoordinates
 from .message import Message
 from .message_entity import MessageEntity
-from .message_invoice import MessageInvoice
 from .message_reaction_count_updated import (
     MessageReactionCountUpdated,
 )
 from .message_reaction_updated import MessageReactionUpdated
 from .message_reactions import MessageReactions
 from .message_story import MessageStory
-from .paid_media import PaidMedia
 from .photo import Photo
 from .poll import Poll
 from .poll_option import PollOption
@@ -59,7 +56,6 @@ __all__ = [
     "AvailableEffect",
     "Contact",
     "Document",
-    "ExtendedMediaPreview",
     "Game",
     "GiftedPremium",
     "Giveaway",
@@ -72,7 +68,6 @@ __all__ = [
     "MediaAreaCoordinates",
     "Message",
     "MessageEntity",
-    "PaidMedia",
     "Photo",
     "Thumbnail",
     "StrippedThumbnail",
@@ -90,7 +85,6 @@ __all__ = [
     "Dice",
     "Reaction",
     "WebAppData",
-    "MessageInvoice",
     "MessageReactions",
     "ReactionCount",
     "ReactionType",

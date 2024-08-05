@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import pyrogram
 from pyrogram import raw, types
 from pyrogram.types.object import Object
 
@@ -52,7 +53,10 @@ class SuccessfulPayment(Object):
         self.payment_info = payment_info
 
     @staticmethod
-    def _parse(successful_payment) -> SuccessfulPayment:
+    def _parse(
+        client: pyrogram.Client,  # noqa: ARG004
+        successful_payment,
+    ) -> SuccessfulPayment:
         payload = None
         telegram_payment_charge_id = None
         provider_payment_charge_id = None
@@ -60,8 +64,6 @@ class SuccessfulPayment(Object):
         payment_info = None
 
         if isinstance(successful_payment, raw.types.MessageActionPaymentSentMe):
-            # Try to decode invoice payload into string. If that fails, fallback to bytes instead of decoding by
-            # ignoring/replacing errors, this way, button clicks will still work.
             try:
                 payload = successful_payment.payload.decode()
             except (UnicodeDecodeError, AttributeError):

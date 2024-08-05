@@ -52,6 +52,7 @@ class GiftedPremium(Object):
 
     @staticmethod
     async def _parse(
+        client,  # noqa: ARG004
         gifted_premium: raw.types.MessageActionGiftPremium,
         gifter_user_id: int,
     ) -> GiftedPremium:

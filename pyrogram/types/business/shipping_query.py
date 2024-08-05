@@ -46,8 +46,6 @@ class ShippingQuery(Object, Update):
         shipping_query: raw.types.updateBotShippingQuery,
         users: dict,
     ) -> ShippingQuery:
-        # Try to decode pre-checkout query payload into string. If that fails, fallback to bytes instead of decoding by
-        # ignoring/replacing errors, this way, button clicks will still work.
         try:
             payload = shipping_query.payload.decode()
         except (UnicodeDecodeError, AttributeError):
