@@ -945,9 +945,12 @@ class Client(Methods):
 
         Path(directory).mkdir(parents=True, exist_ok=True) if not in_memory else None
         temp_file_path = (
-                Path(directory).joinpath(re.sub(r"\\", "/", file_name)).resolve().as_posix()
-                + ".temp"
-            )
+            Path(directory)
+            .joinpath(re.sub(r"\\", "/", file_name))
+            .resolve()
+            .as_posix()
+            + ".temp"
+        )
         file = BytesIO() if in_memory else Path(temp_file_path).open("wb")
 
         try:
@@ -972,7 +975,7 @@ class Client(Methods):
                 file.name = file_name
                 return file
             file.close()
-            file_path = Path(temp_file_path).with_suffix('')
+            file_path = Path(temp_file_path).with_suffix("")
             shutil.move(temp_file_path, file_path)
             return file_path
 
