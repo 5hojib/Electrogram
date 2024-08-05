@@ -1,12 +1,15 @@
-name: Auto Tag Workflow
+name: Auto Tag and Upload Python Package
 
 on:
   push:
     branches:
-      - err
+      - dev
+
+permissions:
+  contents: read
 
 jobs:
-  tag:
+  tag_and_publish:
     runs-on: ubuntu-latest
 
     steps:
@@ -35,3 +38,14 @@ jobs:
         run: |
           git tag ${{ env.VERSION }}
           git push origin ${{ env.VERSION }}
+
+      - name: Upload Python Package
+        if: env.TAG_EXISTS != 'true'
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e '.[dev]'
+          hatch build
+          hatch publish
+        env:
+          HATCH_INDEX_USER: __token__
+          HATCH_INDEX_AUTH: ${{ secrets.PYPI_API_TOKEN }}
