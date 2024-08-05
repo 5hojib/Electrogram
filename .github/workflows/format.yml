@@ -23,8 +23,8 @@ jobs:
 
     - name: Run ruff to format code
       run: |
-        rye run ruff check . --exit-zero
-        rye run ruff format .
+        rye lint
+        rye fmt
         git add -u
 
     - name: Commit and push changes

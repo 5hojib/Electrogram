@@ -10,6 +10,7 @@ import platform
 import re
 import shutil
 import sys
+
 from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime, timedelta
 from hashlib import sha256
