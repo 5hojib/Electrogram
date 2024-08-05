@@ -976,8 +976,8 @@ class Client(Methods):
                 return file
             file.close()
             file_path = Path(temp_file_path).with_suffix("")
-            shutil.move(temp_file_path, file_path)
-            return file_path
+            shutil.move(str(temp_file_path), str(file_path))
+            return str(file_path)
 
     async def get_file(
         self,
