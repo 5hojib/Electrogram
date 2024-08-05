@@ -1,4 +1,4 @@
-name: Format and Test Code with Ruff
+name: Format and Test Code with Rye
 
 on: 
   push:
