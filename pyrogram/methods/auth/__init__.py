@@ -8,6 +8,8 @@ from .get_active_sessions import GetActiveSessions
 from .get_password_hint import GetPasswordHint
 from .initialize import Initialize
 from .log_out import LogOut
+from .reset_session import ResetSession
+from .reset_sessions import ResetSessions
 from .recover_password import RecoverPassword
 from .resend_code import ResendCode
 from .send_code import SendCode
@@ -27,6 +29,8 @@ class Auth(
     GetPasswordHint,
     Initialize,
     LogOut,
+    ResetSession,
+    ResetSessions,
     RecoverPassword,
     ResendCode,
     SendCode,
