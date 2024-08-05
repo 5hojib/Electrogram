@@ -19,22 +19,19 @@ jobs:
           VERSION=$(grep -E '__version__ = ".*"' pyrogram/__init__.py | cut -d\" -f2)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Check Existing Release
-        id: check_release
+      - name: Check Existing Tag
+        id: check_tag
         run: |
-          TAG_EXISTS=$(curl -s -o /dev/null -w "%{http_code}" https://api.github.com/repos/$GITHUB_REPOSITORY/releases/tags/${{ env.VERSION }})
-          if [[ "$TAG_EXISTS" -eq 200 ]]; then
-            echo "Release with tag ${{ env.VERSION }} already exists."
-            echo "RELEASE_EXISTS=true" >> $GITHUB_ENV  # Set environment variable
+          TAG_EXISTS=$(git tag -l "${{ env.VERSION }}")
+          if [ -n "$TAG_EXISTS" ]; then
+            echo "Tag ${{ env.VERSION }} already exists."
+            echo "TAG_EXISTS=true" >> $GITHUB_ENV  # Set environment variable
+          else
+            echo "TAG_EXISTS=false" >> $GITHUB_ENV
           fi
 
-      - name: Create Release
-        if: env.RELEASE_EXISTS != 'true'
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GX_TOKEN }}
-        with:
-          tag_name: ${{ env.VERSION }}
-          release_name: Release ${{ env.VERSION }}
-          body: Release ${{ env.VERSION }}
+      - name: Create Tag
+        if: env.TAG_EXISTS != 'true'
+        run: |
+          git tag ${{ env.VERSION }}
+          git push origin ${{ env.VERSION }}
