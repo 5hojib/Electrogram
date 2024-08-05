@@ -10,6 +10,7 @@ import platform
 import re
 import shutil
 import sys
+
 from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime, timedelta
 from hashlib import sha256
@@ -943,12 +944,12 @@ class Client(Methods):
             progress_args,
         ) = packet
 
-        os.makedirs(directory, exist_ok=True) if not in_memory else None
+        Path(directory).mkdir(parents=True, exist_ok=True) if not in_memory else None
         temp_file_path = (
             os.path.abspath(re.sub("\\\\", "/", os.path.join(directory, file_name)))
             + ".temp"
         )
-        file = BytesIO() if in_memory else open(temp_file_path, "wb")
+        file = BytesIO() if in_memory else Path(temp_file_path).open("wb")
 
         try:
             async for chunk in self.get_file(
@@ -958,7 +959,7 @@ class Client(Methods):
         except BaseException as e:
             if not in_memory:
                 file.close()
-                os.remove(temp_file_path)
+                Path(temp_file_path).unlink()
 
             if isinstance(e, asyncio.CancelledError):
                 raise e
