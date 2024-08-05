@@ -1,0 +1,51 @@
+name: Auto Tag and Upload Python Package
+
+on:
+  push:
+    branches:
+      - dev
+
+permissions:
+  contents: read
+
+jobs:
+  tag_and_publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set Version from File
+        id: version
+        run: |
+          VERSION=$(grep -E '__version__ = ".*"' pyrogram/__init__.py | cut -d\" -f2)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Check Existing Tag
+        id: check_tag
+        run: |
+          TAG_EXISTS=$(git tag -l "${{ env.VERSION }}")
+          if [ -n "$TAG_EXISTS" ]; then
+            echo "Tag ${{ env.VERSION }} already exists."
+            echo "TAG_EXISTS=true" >> $GITHUB_ENV  # Set environment variable
+          else
+            echo "TAG_EXISTS=false" >> $GITHUB_ENV
+          fi
+
+      - name: Create Tag
+        if: env.TAG_EXISTS != 'true'
+        run: |
+          git tag ${{ env.VERSION }}
+          git push origin ${{ env.VERSION }}
+
+      - name: Upload Python Package
+        if: env.TAG_EXISTS != 'true'
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e '.[dev]'
+          hatch build
+          hatch publish
+        env:
+          HATCH_INDEX_USER: __token__
+          HATCH_INDEX_AUTH: ${{ secrets.PYPI_API_TOKEN }}
