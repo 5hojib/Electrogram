@@ -10,7 +10,7 @@ class PromoteChatMember:
         chat_id: int | str,
         user_id: int | str,
         privileges: types.ChatPrivileges = None,
-        title: str | None = "",
+        title: str | None = None,
     ) -> bool:
         """Promote or demote a user in a supergroup or a channel.
 
@@ -92,7 +92,7 @@ class PromoteChatMember:
                     delete_stories=privileges.can_delete_stories,
                     other=privileges.can_manage_chat,
                 ),
-                rank=rank,
+                rank=rank or "",
             )
         )
 

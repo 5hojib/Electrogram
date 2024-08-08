@@ -23,7 +23,7 @@ class RequestedChats(Object):
         button_id: int,
         chats: list[types.RequestedChat] | None = None,
         users: list[types.RequestedUser] | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.button_id = button_id

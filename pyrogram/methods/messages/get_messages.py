@@ -12,9 +12,6 @@ if TYPE_CHECKING:
 log = logging.getLogger(__name__)
 
 
-# TODO: Rewrite using a flag for replied messages and have message_ids non-optional
-
-
 class GetMessages:
     async def get_messages(
         self: pyrogram.Client,

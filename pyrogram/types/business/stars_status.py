@@ -13,7 +13,7 @@ class StarsStatus(Object):
             Stars transactions history.
     """
 
-    def __init__(self, *, balance: int, history: list):
+    def __init__(self, *, balance: int, history: list) -> None:
         super().__init__()
 
         self.balance = balance

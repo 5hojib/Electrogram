@@ -30,6 +30,7 @@ from .forum_topic_closed import ForumTopicClosed
 from .forum_topic_created import ForumTopicCreated
 from .forum_topic_edited import ForumTopicEdited
 from .forum_topic_reopened import ForumTopicReopened
+from .found_contacts import FoundContacts
 from .general_forum_topic_hidden import GeneralTopicHidden
 from .general_forum_topic_unhidden import GeneralTopicUnhidden
 from .invite_link_importer import InviteLinkImporter
@@ -57,6 +58,7 @@ __all__ = [
     "ChatPreview",
     "Dialog",
     "Folder",
+    "FoundContacts",
     "User",
     "Username",
     "Restriction",

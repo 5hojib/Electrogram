@@ -106,13 +106,10 @@ class Dispatcher:
     def __init__(self, client: pyrogram.Client) -> None:
         self.client = client
         self.loop = asyncio.get_event_loop()
-
         self.handler_worker_tasks = []
         self.locks_list = []
-
         self.updates_queue = asyncio.Queue()
         self.groups = OrderedDict()
-
         self.conversation_handler = ConversationHandler()
         self.groups[0] = [self.conversation_handler]
 

@@ -11,7 +11,7 @@ class SendInvoice:
         title: str,
         description: str,
         currency: str,
-        prices: list[types.LabeledPrice],
+        prices: types.LabeledPrice | list[types.LabeledPrice],
         provider: str | None = None,
         provider_data: str | None = None,
         payload: str | None = None,
@@ -44,8 +44,10 @@ class SendInvoice:
                 Three-letter ISO 4217 currency code.
                 `XTR` for Telegram Stars.
 
-            prices (List of :obj:`~pyrogram.types.LabeledPrice`):
+            prices (:obj:`~pyrogram.types.LabeledPrice` | List of :obj:`~pyrogram.types.LabeledPrice`):
                 Price with label.
+                If you add multiple prices, the prices will be added up.
+                For stars invoice you can only have one item.
 
             provider (``str``, *optional*):
                 Payment provider.
@@ -97,13 +99,27 @@ class SendInvoice:
         Example:
             .. code-block:: python
 
-                # USD
+                # USD (single prices)
                 app.send_invoice(
                     chat_id,
                     title="Product Name",
                     description="Product Description",
                     currency="USD",
-                    prices=[types.LabeledPrice("Product", 1000)],
+                    prices=types.LabeledPrice("Product", 1000),
+                    provider="Stripe_provider_codes",
+                    provider_data="{}"
+                )
+
+                # USD (multiple prices)
+                app.send_invoice(
+                    chat_id,
+                    title="Product Name",
+                    description="Product Description",
+                    currency="USD",
+                    prices=[
+                        types.LabeledPrice("Product 1", 1000),
+                        types.LabeledPrice("Product 2", 2000)
+                    ],
                     provider="Stripe_provider_codes",
                     provider_data="{}"
                 )
@@ -114,9 +130,11 @@ class SendInvoice:
                     title="Product Name",
                     description="Product Description",
                     currency="XTR",
-                    prices=[types.LabeledPrice("Product", 1000)]
+                    prices=types.LabeledPrice("Product", 1000)
                 )
         """
+
+        is_iterable = not isinstance(prices, types.LabeledPrice)
 
         if reply_markup is not None:
             has_buy_button = False
@@ -156,7 +174,9 @@ class SendInvoice:
                     description=description,
                     invoice=raw.types.Invoice(
                         currency=currency,
-                        prices=[price.write() for price in prices],
+                        prices=[price.write() for price in prices]
+                        if is_iterable
+                        else [prices.write()],
                     ),
                     payload=encoded_payload,
                     provider=provider,
@@ -185,8 +205,7 @@ class SendInvoice:
 
         for i in r.updates:
             if isinstance(
-                i,
-                raw.types.UpdateNewMessage | raw.types.UpdateNewChannelMessage,
+                i, raw.types.UpdateNewMessage | raw.types.UpdateNewChannelMessage
             ):
                 return await types.Message._parse(
                     self,

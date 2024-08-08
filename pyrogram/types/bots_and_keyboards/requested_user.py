@@ -34,7 +34,7 @@ class RequestedUser(Object):
         last_name: str | None = None,
         username: str | None = None,
         photo: types.ChatPhoto = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.user_id = user_id

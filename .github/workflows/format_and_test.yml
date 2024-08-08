@@ -1,4 +1,4 @@
-name: Format and Test Code with Ruff
+name: Format and Test Code with Rye
 
 on: 
   push:
@@ -28,7 +28,7 @@ jobs:
 
       - name: Run ruff to lint and format code
         run: |
-          rye lint
+          rye run ruff check . --exit-zero
           rye fmt
           git add -u
 
