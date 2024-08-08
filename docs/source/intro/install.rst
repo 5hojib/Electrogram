@@ -18,13 +18,7 @@ Install Electrogram
 
     .. code-block:: text
 
-        $ pip3 install -U pyrofork
-
--   or, with :doc:`TgCrypto <../topics/speedups>` as extra requirement (recommended):
-
-    .. code-block:: text
-
-        $ pip3 install -U pyrofork tgcrypto
+        $ pip3 install -U electrogram
 
 Bleeding Edge
 -------------

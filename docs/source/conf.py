@@ -56,7 +56,7 @@ html_theme_options = {
     },
     "site_url": "https://electrogram-docs.vercel.app/",
     "repo_url": "https://github.com/5hojib/Electrogram/",
-    "repo_name": "pyrofork",
+    "repo_name": "Electrogram",
     "globaltoc_collapse": True,
     "features": [
         "navigation.expand",

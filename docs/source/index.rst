@@ -5,7 +5,7 @@ Welcome to Electrogram
 
     <div align="center">
         <a href="/">
-            <h1 class="pyrogram-text pyrogram-text-index">PyroFork</h1>
+            <h1 class="pyrogram-text pyrogram-text-index">Electrogram</h1>
         </a>
     </div>
 
@@ -27,10 +27,6 @@ Welcome to Electrogram
         •
         <a href="https://t.me/AeonDiscussion">
             Support Chat
-        </a>
-        •
-        <a href="https://t.me/Electrogram_CH">
-            News/Releases
         </a>
     </p>
 
@@ -141,7 +137,6 @@ Meta
     topics/create-filters
     topics/more-on-updates
     topics/client-settings
-    topics/speedups
     topics/text-formatting
     topics/synchronous
     topics/smart-plugins
