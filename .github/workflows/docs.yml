@@ -1,0 +1,22 @@
+name: Build-docs
+
+on:
+  push:
+    tags:
+    - "*"
+    branches:
+    - err
+  workflow_dispatch:
+    {}
+
+jobs:
+  build:
+
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build
+        run: bash build-docs.sh
+        env:
+          DOCS_KEY: ${{ secrets.GX_TOKEN }}
