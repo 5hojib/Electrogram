@@ -1,7 +1,7 @@
 Update Handlers
 ===============
 
-Handlers are used to instruct Pyrofork about which kind of updates you'd like to handle with your callback functions.
+Handlers are used to instruct Electrogram about which kind of updates you'd like to handle with your callback functions.
 For a much more convenient way of registering callback functions have a look at :doc:`Decorators <decorators>` instead.
 
 .. code-block:: python

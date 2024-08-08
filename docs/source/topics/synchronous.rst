@@ -1,13 +1,13 @@
 Synchronous Usage
 =================
 
-Pyrofork is an asynchronous framework and as such is subject to the asynchronous rules. It can, however, run in
+Electrogram is an asynchronous framework and as such is subject to the asynchronous rules. It can, however, run in
 synchronous mode (also known as non-asynchronous or sync/non-async for short). This mode exists mainly as a convenience
 way for invoking methods without the need of ``async``/``await`` keywords and the extra boilerplate, but **it's not the
 intended way to use the framework**.
 
-You can use Pyrofork in this synchronous mode when you want to write something short and contained without the
-async boilerplate or in case you want to combine Pyrofork with other libraries that are not async.
+You can use Electrogram in this synchronous mode when you want to write something short and contained without the
+async boilerplate or in case you want to combine Electrogram with other libraries that are not async.
 
 .. warning::
 
@@ -26,7 +26,7 @@ Synchronous Invocations
 -----------------------
 
 The following is a standard example of running asynchronous functions with Python's asyncio.
-Pyrofork is being used inside the main function with its asynchronous interface.
+Electrogram is being used inside the main function with its asynchronous interface.
 
 .. code-block:: python
 
@@ -43,7 +43,7 @@ Pyrofork is being used inside the main function with its asynchronous interface.
 
     asyncio.run(main())
 
-To run Pyrofork synchronously, use the non-async context manager as shown in the following example.
+To run Electrogram synchronously, use the non-async context manager as shown in the following example.
 As you can see, the non-async example becomes less cluttered.
 
 .. code-block:: python
@@ -75,8 +75,8 @@ possible.
 uvloop usage
 ------------
 
-When using Pyrofork in its synchronous mode combined with uvloop, you need to call ``uvloop.install()`` before importing
-Pyrofork.
+When using Electrogram in its synchronous mode combined with uvloop, you need to call ``uvloop.install()`` before importing
+Electrogram.
 
 .. code-block:: python
 

@@ -1,7 +1,7 @@
 Invoking Methods
 ================
 
-At this point, we have successfully :doc:`installed Pyrofork <../intro/install>` and :doc:`authorized <auth>` our
+At this point, we have successfully :doc:`installed Electrogram <../intro/install>` and :doc:`authorized <auth>` our
 account; we are now aiming towards the core of the framework.
 
 .. contents:: Contents
@@ -14,7 +14,7 @@ account; we are now aiming towards the core of the framework.
 Basic Usage
 -----------
 
-Making API calls with Pyrofork is very simple. Here's a basic example we are going to examine step by step:
+Making API calls with Electrogram is very simple. Here's a basic example we are going to examine step by step:
 
 .. code-block:: python
 
@@ -55,7 +55,7 @@ Step-by-step
             async with app:
                 await app.send_message("me", "Hi!")
 
-#.  Finally, we tell Python to schedule our ``main()`` async function by using Pyrofork's :meth:`~pyrogram.Client.run`
+#.  Finally, we tell Python to schedule our ``main()`` async function by using Electrogram's :meth:`~pyrogram.Client.run`
     method.
 
     .. code-block:: python

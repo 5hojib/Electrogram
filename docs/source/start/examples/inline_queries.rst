@@ -22,15 +22,15 @@ It uses the @on_inline_query decorator to register an InlineQueryHandler.
                 InlineQueryResultArticle(
                     title="Installation",
                     input_message_content=InputTextMessageContent(
-                        "Here's how to install **Pyrofork**"
+                        "Here's how to install **Electrogram**"
                     ),
-                    url="https://pyrofork.mayuri.my.id/intro/install",
-                    description="How to install Pyrofork",
+                    url="https://electrogram-docs.vercel.app/intro/install",
+                    description="How to install Electrogram",
                     reply_markup=InlineKeyboardMarkup(
                         [
                             [InlineKeyboardButton(
                                 "Open website",
-                                url="https://pyrofork.mayuri.my.id/intro/install"
+                                url="https://electrogram-docs.vercel.app/intro/install"
                             )]
                         ]
                     )
@@ -38,15 +38,15 @@ It uses the @on_inline_query decorator to register an InlineQueryHandler.
                 InlineQueryResultArticle(
                     title="Usage",
                     input_message_content=InputTextMessageContent(
-                        "Here's how to use **Pyrofork**"
+                        "Here's how to use **Electrogram**"
                     ),
-                    url="https://pyrofork.mayuri.my.id/start/invoking",
-                    description="How to use Pyrofork",
+                    url="https://electrogram-docs.vercel.app/start/invoking",
+                    description="How to use Electrogram",
                     reply_markup=InlineKeyboardMarkup(
                         [
                             [InlineKeyboardButton(
                                 "Open website",
-                                url="https://pyrofork.mayuri.my.id/start/invoking"
+                                url="https://electrogram-docs.vercel.app/start/invoking"
                             )]
                         ]
                     )

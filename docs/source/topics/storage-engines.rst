@@ -1,7 +1,7 @@
 Storage Engines
 ===============
 
-Every time you login to Telegram, some personal piece of data are created and held by both parties (the client, Pyrofork
+Every time you login to Telegram, some personal piece of data are created and held by both parties (the client, Electrogram
 and the server, Telegram). This session data is uniquely bound to your own account, indefinitely (until you logout or
 decide to manually terminate it) and is used to authorize a client to execute API calls on behalf of your identity.
 
@@ -16,12 +16,12 @@ Persisting Sessions
 -------------------
 
 In order to make a client reconnect successfully between restarts, that is, without having to start a new
-authorization process from scratch each time, Pyrofork needs to store the generated session data somewhere.
+authorization process from scratch each time, Electrogram needs to store the generated session data somewhere.
 
 Different Storage Engines
 -------------------------
 
-Pyrofork offers two different types of storage engines: a **File Storage** and a **Memory Storage**.
+Electrogram offers two different types of storage engines: a **File Storage** and a **Memory Storage**.
 These engines are well integrated in the framework and require a minimal effort to set up. Here's how they work:
 
 File Storage
@@ -42,7 +42,7 @@ To use this type of engine, simply pass any name of your choice to the ``name`` 
         print(await app.get_me())
 
 Once you successfully log in (either with a user or a bot identity), a session file will be created and saved to disk as
-``my_account.session``. Any subsequent client restart will make Pyrofork search for a file named that way and the
+``my_account.session``. Any subsequent client restart will make Electrogram search for a file named that way and the
 session database will be automatically loaded.
 
 Memory Storage
@@ -93,7 +93,7 @@ Using motor:
         print(await app.get_me())
 
 This storage engine is backed by MongoDB, a session will be created and saved to mongodb database. Any subsequent client
-restart will make PyroFork search for a database named that way and the session database will be automatically loaded.
+restart will make Electrogram search for a database named that way and the session database will be automatically loaded.
 
 Session Strings
 ---------------
@@ -120,5 +120,5 @@ login using the same session; the storage used will still be in-memory:
     async with Client("my_account", session_string=session_string) as app:
         print(await app.get_me())
 
-Session strings are useful when you want to run authorized Pyrofork clients on platforms where their ephemeral
+Session strings are useful when you want to run authorized Electrogram clients on platforms where their ephemeral
 filesystems makes it harder for a file-based storage engine to properly work as intended.

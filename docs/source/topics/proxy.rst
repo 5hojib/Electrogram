@@ -1,7 +1,7 @@
 Proxy Settings
 ==============
 
-Pyrofork supports proxies with and without authentication. This feature allows Pyrofork to exchange data with Telegram
+Electrogram supports proxies with and without authentication. This feature allows Electrogram to exchange data with Telegram
 through an intermediate SOCKS 4/5 or HTTP (CONNECT) proxy server.
 
 .. contents:: Contents
@@ -14,7 +14,7 @@ through an intermediate SOCKS 4/5 or HTTP (CONNECT) proxy server.
 Usage
 -----
 
-To use Pyrofork with a proxy, use the *proxy* parameter in the Client class. If your proxy doesn't require authorization
+To use Electrogram with a proxy, use the *proxy* parameter in the Client class. If your proxy doesn't require authorization
 you can omit ``username`` and ``password``.
 
 .. code-block:: python

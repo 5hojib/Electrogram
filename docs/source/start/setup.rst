@@ -1,7 +1,7 @@
 Project Setup
 =============
 
-We have just :doc:`installed Pyrofork <../intro/install>`. In this page we'll discuss what you need to do in order to set up a
+We have just :doc:`installed Electrogram <../intro/install>`. In this page we'll discuss what you need to do in order to set up a
 project with the framework.
 
 .. contents:: Contents
@@ -28,7 +28,7 @@ The first step requires you to obtain a valid Telegram API key (api_id and api_h
 Configuration
 -------------
 
-Having the API key from the previous step in handy, we can now begin to configure a Pyrofork project: pass your API key to Pyrofork by using the *api_id* and *api_hash* parameters of the Client class:
+Having the API key from the previous step in handy, we can now begin to configure a Electrogram project: pass your API key to Electrogram by using the *api_id* and *api_hash* parameters of the Client class:
 
 .. code-block:: python
 

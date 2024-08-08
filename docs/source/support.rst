@@ -1,4 +1,4 @@
-Support Pyrofork
+Support Electrogram
 ================
 
 .. raw:: html
@@ -7,37 +7,37 @@ Support Pyrofork
 
     <div style="float: right; margin-bottom: 10px">
         <a class="github-button"
-           href="https://github.com/Mayuri-Chan/pyrofork"
+           href="https://github.com/5hojib/Electrogram"
            data-color-scheme="no-preference: light; light: light; dark: dark;"
            data-icon="octicon-star" data-size="large" data-show-count="true"
-           aria-label="Star Mayuri-Chan/pyrofork on GitHub">Star</a>
+           aria-label="Star 5hojib/Electrogram on GitHub">Star</a>
 
         <a class="github-button"
-           href="https://github.com/Mayuri-Chan/pyrofork/fork"
+           href="https://github.com/5hojib/Electrogram/fork"
            data-color-scheme="no-preference: light; light: light; dark: dark;"
            data-icon="octicon-repo-forked" data-size="large"
-           data-show-count="true" aria-label="Fork Mayuri-Chan/pyrofok on GitHub">Fork</a>
+           data-show-count="true" aria-label="Fork 5hojib/Electrogram on GitHub">Fork</a>
     </div>
 
     <br style="clear: both"/>
 
-Pyrofork is a free and open source project.
-If you enjoy Pyrofork and would like to show your appreciation, consider donating or becoming
-a sponsor of the project. You can support Pyrofork via the ways shown below:
+Electrogram is a free and open source project.
+If you enjoy Electrogram and would like to show your appreciation, consider donating or becoming
+a sponsor of the project. You can support Electrogram via the ways shown below:
 
 -----
 
 GitHub Sponsor
 --------------
 
-`Become a GitHub sponsor <https://github.com/sponsors/Mayuri-Chan>`_.
+`Become a GitHub sponsor <https://github.com/sponsors/5hojib>`_.
 
 .. raw:: html
 
     <a class="github-button"
-       href="https://github.com/sponsors/Mayuri-Chan"
+       href="https://github.com/sponsors/5hojib"
        data-color-scheme="no-preference: light; light: light; dark: dark;"
        data-icon="octicon-heart" data-size="large"
-       aria-label="Sponsor @Mayuri-Chan on GitHub">Sponsor</a>
+       aria-label="Sponsor @5hojib on GitHub">Sponsor</a>
 
 -----

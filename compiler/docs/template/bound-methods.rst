@@ -1,7 +1,7 @@
 Bound Methods
 =============
 
-Some Pyrofork types define what are called bound methods. Bound methods are functions attached to a type which are
+Some Electrogram types define what are called bound methods. Bound methods are functions attached to a type which are
 accessed via an instance of that type. They make it even easier to call specific methods by automatically inferring
 some of the required arguments.
 
