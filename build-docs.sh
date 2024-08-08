@@ -5,7 +5,7 @@ VENV="$(pwd)/venv"
 export VENV
 
 if [[ "$(echo "$GITHUB_REF" | cut -d '/' -f "1 2")" == "refs/tags" ]]; then
-    branch="main"
+    branch="dev"
 elif [[ "$GITHUB_REF" == "refs/heads/err" ]]; then
     branch="err"
 else

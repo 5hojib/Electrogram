@@ -49,6 +49,7 @@ html_theme = "sphinx_immaterial"
 html_static_path = ["../resources/static", "_static"]
 html_show_sourcelink = True
 html_show_copyright = False
+html_show_sphinx = False
 html_theme_options = {
     "icon": {
         "repo": "fontawesome/brands/github",
@@ -73,8 +74,8 @@ html_theme_options = {
     "toc_title_is_page_title": True,
     "version_dropdown": True,
     "version_info": [
-        {"version": "main", "title": "main", "aliases": ["latest"]},
-        {"version": "staging", "title": "staging", "aliases": []},
+        {"version": "dev", "title": "dev", "aliases": ["latest"]},
+        {"version": "err", "title": "err", "aliases": []},
     ],
 }
 
