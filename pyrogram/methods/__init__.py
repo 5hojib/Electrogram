@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from .account import Account
 from .advanced import Advanced
 from .auth import Auth
 from .bots import Bots
@@ -16,6 +17,7 @@ from .utilities import Utilities
 
 
 class Methods(
+    Account,
     Advanced,
     Auth,
     Bots,

@@ -78,9 +78,6 @@ class KeyboardButton(Object):
                         is_creator=b.peer_type.creator,
                         is_username=b.peer_type.has_username,
                         max=b.max_quantity,
-                        is_name_requested=b.name_requested,
-                        is_username_requested=b.username_requested,
-                        is_photo_requested=b.photo_requested,
                     ),
                 )
             if isinstance(b.peer_type, raw.types.RequestPeerTypeChat):
@@ -92,9 +89,6 @@ class KeyboardButton(Object):
                         is_username=b.peer_type.has_username,
                         is_forum=b.peer_type.forum,
                         max=b.max_quantity,
-                        is_name_requested=b.name_requested,
-                        is_username_requested=b.username_requested,
-                        is_photo_requested=b.photo_requested,
                     ),
                 )
 
@@ -105,9 +99,6 @@ class KeyboardButton(Object):
                         is_bot=b.peer_type.bot,
                         is_premium=b.peer_type.premium,
                         max=b.max_quantity,
-                        is_name_requested=b.name_requested,
-                        is_username_requested=b.username_requested,
-                        is_photo_requested=b.photo_requested,
                     ),
                 )
             return None

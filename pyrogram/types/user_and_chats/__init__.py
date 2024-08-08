@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from .found_contacts import FoundContacts
 from .birthday import Birthday
 from .business_info import BusinessInfo
 from .business_message import BusinessMessage
@@ -57,6 +58,7 @@ __all__ = [
     "ChatPreview",
     "Dialog",
     "Folder",
+    "FoundContacts",
     "User",
     "Username",
     "Restriction",

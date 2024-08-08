@@ -931,7 +931,7 @@ class Client(Methods):
             else:
                 log.warning('[%s] No plugin loaded from "%s"', self.name, root)
 
-    async def handle_download(self, packet):
+    async def handle_download(self, packet) -> str:
         (
             file_id,
             directory,
@@ -976,7 +976,7 @@ class Client(Methods):
             file.close()
             file_path = Path(temp_file_path).with_suffix("")
             shutil.move(str(temp_file_path), str(file_path))
-            return str(file_path)
+            return file_path
 
     async def get_file(
         self,
