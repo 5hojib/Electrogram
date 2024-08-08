@@ -107,7 +107,7 @@ select = [
     "FA",       # flake8-future-annotations
     "PL",       # pylint
     "ARG",      # flake8-unused-arguments
-    "ANN",      # flake8-annotations
+    "ANN2",     # flake8-annotations
 ]
 
 ignore = [
