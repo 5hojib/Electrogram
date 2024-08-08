@@ -30,7 +30,7 @@ cd compiler/docs || exit 1 && "$VENV"/bin/python compiler.py
 cd  ../.. || exit 1
 "$VENV"/bin/sphinx-build -b html "docs/source" "docs/build/html" -j auto
 git clone https://5hojib:"$DOCS_KEY"@github.com/5hojib/Electrogram-docs.git
-cd electrogram-docs || exit 1
+cd Electrogram-docs || exit 1
 mkdir -p "$branch"
 cd "$branch" || exit 1
 rm -rf _includes api genindex.html intro py-modindex.html sitemap.xml support.html topics _static faq index.html objects.inv searchindex.js start telegram
