@@ -70,14 +70,17 @@ class Dispatcher:
         UpdateNewChannelMessage,
         UpdateNewScheduledMessage,
     )
+    NEW_BOT_BUSINESS_MESSAGE_UPDATES = (UpdateBotNewBusinessMessage,)
     EDIT_MESSAGE_UPDATES = (
         UpdateEditMessage,
         UpdateEditChannelMessage,
     )
+    EDIT_BOT_BUSINESS_MESSAGE_UPDATES = (UpdateBotEditBusinessMessage,)
     DELETE_MESSAGES_UPDATES = (
         UpdateDeleteMessages,
         UpdateDeleteChannelMessages,
     )
+    DELETE_BOT_BUSINESS_MESSAGES_UPDATES = (UpdateBotDeleteBusinessMessage,)
     CALLBACK_QUERY_UPDATES = (
         UpdateBotCallbackQuery,
         UpdateInlineBotCallbackQuery,
@@ -88,20 +91,17 @@ class Dispatcher:
         UpdateChannelParticipant,
         UpdateBotStopped,
     )
-    NEW_BOT_BUSINESS_MESSAGE_UPDATES = UpdateBotNewBusinessMessage
-    EDIT_BOT_BUSINESS_MESSAGE_UPDATES = UpdateBotEditBusinessMessage
-    DELETE_BOT_BUSINESS_MESSAGES_UPDATES = UpdateBotDeleteBusinessMessage
-    USER_STATUS_UPDATES = UpdateUserStatus
-    BOT_INLINE_QUERY_UPDATES = UpdateBotInlineQuery
-    POLL_UPDATES = UpdateMessagePoll
-    CHOSEN_INLINE_RESULT_UPDATES = UpdateBotInlineSend
-    CHAT_JOIN_REQUEST_UPDATES = UpdateBotChatInviteRequester
-    NEW_STORY_UPDATES = UpdateStory
-    MESSAGE_BOT_NA_REACTION_UPDATES = UpdateBotMessageReaction
-    MESSAGE_BOT_A_REACTION_UPDATES = UpdateBotMessageReactions
-    BOT_BUSSINESS_CONNECT_UPDATES = UpdateBotBusinessConnect
-    PRE_CHECKOUT_QUERY_UPDATES = UpdateBotPrecheckoutQuery
-    SHIPPING_QUERY_UPDATES = UpdateBotShippingQuery
+    USER_STATUS_UPDATES = (UpdateUserStatus,)
+    BOT_INLINE_QUERY_UPDATES = (UpdateBotInlineQuery,)
+    POLL_UPDATES = (UpdateMessagePoll,)
+    CHOSEN_INLINE_RESULT_UPDATES = (UpdateBotInlineSend,)
+    CHAT_JOIN_REQUEST_UPDATES = (UpdateBotChatInviteRequester,)
+    NEW_STORY_UPDATES = (UpdateStory,)
+    MESSAGE_BOT_NA_REACTION_UPDATES = (UpdateBotMessageReaction,)
+    MESSAGE_BOT_A_REACTION_UPDATES = (UpdateBotMessageReactions,)
+    BOT_BUSSINESS_CONNECT_UPDATES = (UpdateBotBusinessConnect,)
+    PRE_CHECKOUT_QUERY_UPDATES = (UpdateBotPrecheckoutQuery,)
+    SHIPPING_QUERY_UPDATES = (UpdateBotShippingQuery,)
 
     def __init__(self, client: pyrogram.Client) -> None:
         self.client = client
