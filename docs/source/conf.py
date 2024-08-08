@@ -16,20 +16,21 @@
 #
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+from __future__ import annotations
 
 import os
 import sys
 
 sys.path.insert(0, os.path.abspath("../.."))
 
-from pyrogram import __version__
-
 from pygments.styles.friendly import FriendlyStyle
+
+from pyrogram import __version__
 
 FriendlyStyle.background_color = "#f3f2f1"
 
 project = "Pyrofork"
-copyright = f"2022-present, Mayuri-Chan"
+copyright = "2022-present, Mayuri-Chan"
 author = "Mayuri-Chan"
 
 version = ".".join(__version__.split(".")[:-1])
@@ -40,12 +41,10 @@ extensions = [
     "sphinx.ext.autosummary",
     "sphinx.ext.intersphinx",
     "sphinx_copybutton",
-    "sphinx_immaterial"
+    "sphinx_immaterial",
 ]
 
-intersphinx_mapping = {
-    "python": ("https://docs.python.org/3", None)
-}
+intersphinx_mapping = {"python": ("https://docs.python.org/3", None)}
 
 master_doc = "index"
 source_suffix = ".rst"
@@ -65,7 +64,7 @@ suppress_warnings = ["image.not_readable"]
 
 html_title = "Pyrofork Documentation"
 html_theme = "sphinx_immaterial"
-html_static_path = ["../resources/static","_static"]
+html_static_path = ["../resources/static", "_static"]
 html_show_sourcelink = True
 html_show_copyright = False
 html_theme_options = {
@@ -88,12 +87,7 @@ html_theme_options = {
         "content.tabs.link",
         "announce.dismiss",
     ],
-    "palette": [
-        {
-            "media": "(prefers-color-scheme: dark)",
-            "scheme": "slate"
-        }
-    ],
+    "palette": [{"media": "(prefers-color-scheme: dark)", "scheme": "slate"}],
     "toc_title_is_page_title": True,
     "version_dropdown": True,
     "version_info": [
@@ -114,7 +108,7 @@ latex_elements = {
         \setmainfont{Open Sans}
         \setsansfont{Bitter}
         \setmonofont{Ubuntu Mono}
-        """
+        """,
 }
 
 html_css_files = [
