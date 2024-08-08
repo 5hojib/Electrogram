@@ -1,12 +1,11 @@
+from __future__ import annotations
+
 import pyrogram
 from pyrogram import raw
 
 
 class SetAccountTTL:
-    async def set_account_ttl(
-        self: "pyrogram.Client",
-        days: int
-    ) -> bool:
+    async def set_account_ttl(self: pyrogram.Client, days: int) -> bool:
         """Set days to live of account.
         .. include:: /_includes/usable-by/users.rst
         Parameters:
@@ -19,10 +18,8 @@ class SetAccountTTL:
                 # Set ttl in days
                 await app.set_account_ttl(365)
         """
-        r = await self.invoke(
+        return await self.invoke(
             raw.functions.account.SetAccountTTL(
                 ttl=raw.types.AccountDaysTTL(days=days)
             )
         )
-
-        return r

@@ -1,23 +1,26 @@
-from datetime import datetime
+from __future__ import annotations
+
 import logging
-from typing import Union
+from typing import TYPE_CHECKING
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import utils
+from pyrogram import raw, utils
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 log = logging.getLogger(__name__)
 
 
 class DeleteChatHistory:
     async def delete_chat_history(
-        self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        self: pyrogram.Client,
+        chat_id: int | str,
         max_id: int = 0,
-        revoke: bool = None,
-        just_clear: bool = None,
-        min_date: datetime = None,
-        max_date: datetime = None,
+        revoke: bool | None = None,
+        just_clear: bool | None = None,
+        min_date: datetime | None = None,
+        max_date: datetime | None = None,
     ) -> int:
         """Delete the history of a chat.
         .. include:: /_includes/usable-by/users.rst
@@ -51,11 +54,10 @@ class DeleteChatHistory:
             r = await self.invoke(
                 raw.functions.channels.DeleteHistory(
                     channel=raw.types.InputChannel(
-                        channel_id=peer.channel_id,
-                        access_hash=peer.access_hash
+                        channel_id=peer.channel_id, access_hash=peer.access_hash
                     ),
                     max_id=max_id,
-                    for_everyone=revoke
+                    for_everyone=revoke,
                 )
             )
         else:
@@ -66,8 +68,12 @@ class DeleteChatHistory:
                     just_clear=just_clear,
                     revoke=revoke,
                     min_date=utils.datetime_to_timestamp(min_date),
-                    max_date=utils.datetime_to_timestamp(max_date)
+                    max_date=utils.datetime_to_timestamp(max_date),
                 )
             )
 
-        return len(r.updates[0].messages) if isinstance(peer, raw.types.InputPeerChannel) else r.pts_count
+        return (
+            len(r.updates[0].messages)
+            if isinstance(peer, raw.types.InputPeerChannel)
+            else r.pts_count
+        )

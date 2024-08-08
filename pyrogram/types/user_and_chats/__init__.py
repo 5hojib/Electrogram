@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from .found_contacts import FoundContacts
 from .birthday import Birthday
 from .business_info import BusinessInfo
 from .business_message import BusinessMessage
@@ -31,6 +30,7 @@ from .forum_topic_closed import ForumTopicClosed
 from .forum_topic_created import ForumTopicCreated
 from .forum_topic_edited import ForumTopicEdited
 from .forum_topic_reopened import ForumTopicReopened
+from .found_contacts import FoundContacts
 from .general_forum_topic_hidden import GeneralTopicHidden
 from .general_forum_topic_unhidden import GeneralTopicUnhidden
 from .invite_link_importer import InviteLinkImporter

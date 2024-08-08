@@ -1,10 +1,8 @@
-from typing import Optional
+from __future__ import annotations
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import utils
-from pyrogram import types
-from ..object import Object
+from pyrogram import raw, types, utils
+from pyrogram.types.object import Object
 
 
 class FoundContacts(Object):
@@ -19,17 +17,17 @@ class FoundContacts(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
-        my_results: Optional["types.Chat"] = None,
-        global_results: Optional["types.Chat"] = None
-    ):
+        client: pyrogram.Client = None,
+        my_results: types.Chat | None = None,
+        global_results: types.Chat | None = None,
+    ) -> None:
         super().__init__(client)
 
         self.my_results = my_results
         self.global_results = global_results
 
     @staticmethod
-    def _parse(client, found: "raw.types.contacts.Found") -> "FoundContacts":
+    def _parse(client, found: raw.types.contacts.Found) -> FoundContacts:
         users = {u.id: u for u in found.users}
         chats = {c.id: c for c in found.chats}
 
@@ -51,5 +49,5 @@ class FoundContacts(Object):
         return FoundContacts(
             my_results=types.List(my_results) or None,
             global_results=types.List(global_results) or None,
-            client=client
+            client=client,
         )

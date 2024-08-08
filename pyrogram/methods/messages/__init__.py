@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from .copy_media_group import CopyMediaGroup
-from .delete_chat_history import DeleteChatHistory
 from .copy_message import CopyMessage
+from .delete_chat_history import DeleteChatHistory
 from .delete_messages import DeleteMessages
 from .delete_scheduled_messages import DeleteScheduledMessages
 from .download_media import DownloadMedia

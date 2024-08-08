@@ -46,7 +46,7 @@ class KeyboardButton(Object):
         | types.RequestPeerTypeChannel = None,
         request_user: types.RequestPeerTypeUser = None,
         web_app: types.WebAppInfo = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.text = str(text)

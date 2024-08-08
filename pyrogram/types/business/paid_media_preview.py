@@ -1,6 +1,11 @@
-from pyrogram import types
+from __future__ import annotations
 
-from ..object import Object
+from typing import TYPE_CHECKING
+
+from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    from pyrogram import types
 
 
 class PaidMediaPreview(Object):
@@ -19,11 +24,11 @@ class PaidMediaPreview(Object):
     def __init__(
         self,
         *,
-        width: int = None,
-        height: int = None,
-        duration: int = None,
-        thumbnail: "types.StrippedThumbnail" = None
-    ):
+        width: int | None = None,
+        height: int | None = None,
+        duration: int | None = None,
+        thumbnail: types.StrippedThumbnail = None,
+    ) -> None:
         super().__init__()
 
         self.width = width

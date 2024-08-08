@@ -7,6 +7,7 @@ from .get_contacts_count import GetContactsCount
 from .import_contacts import ImportContacts
 from .search_contacts import SearchContacts
 
+
 class Contacts(
     GetContacts,
     DeleteContacts,

@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 from .extended_media_preview import ExtendedMediaPreview
-from .paid_media_preview import PaidMediaPreview
 from .input_stars_transaction import InputStarsTransaction
 from .invoice import Invoice
 from .paid_media import PaidMedia
+from .paid_media_preview import PaidMediaPreview
 from .payment_info import PaymentInfo
 from .payment_refunded import PaymentRefunded
 from .pre_checkout_query import PreCheckoutQuery

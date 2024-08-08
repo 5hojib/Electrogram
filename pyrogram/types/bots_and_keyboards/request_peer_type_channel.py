@@ -42,7 +42,7 @@ class RequestPeerTypeChannel(Object):
         is_name_requested: bool = True,
         is_username_requested: bool = True,
         is_photo_requested: bool = True,
-    ):
+    ) -> None:
         super().__init__()
 
         self.button_id = button_id

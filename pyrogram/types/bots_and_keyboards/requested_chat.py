@@ -31,7 +31,7 @@ class RequestedChat(Object):
         name: str | None = None,
         username: str | None = None,
         photo: types.ChatPhoto = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.chat_id = chat_id

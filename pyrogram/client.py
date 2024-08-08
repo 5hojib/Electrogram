@@ -351,7 +351,7 @@ class Client(Methods):
         with contextlib.suppress(ConnectionError):
             await self.stop()
 
-    async def updates_watchdog(self):
+    async def updates_watchdog(self) -> None:
         while True:
             try:
                 await asyncio.wait_for(
@@ -608,7 +608,7 @@ class Client(Methods):
 
         return is_min
 
-    async def handle_updates(self, updates):
+    async def handle_updates(self, updates) -> None:
         self.last_update_time = datetime.now()
 
         if isinstance(updates, raw.types.Updates | raw.types.UpdatesCombined):
@@ -712,7 +712,7 @@ class Client(Methods):
         elif isinstance(updates, raw.types.UpdatesTooLong):
             log.info(updates)
 
-    async def load_session(self):
+    async def load_session(self) -> None:
         await self.storage.open()
 
         session_empty = any(
@@ -767,7 +767,7 @@ class Client(Methods):
                     except Exception as e:
                         print(e)
 
-    def load_plugins(self):
+    def load_plugins(self) -> None:
         if self.plugins:
             plugins = self.plugins.copy()
 

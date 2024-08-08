@@ -69,7 +69,7 @@ class StarsTransaction(Object):
         transaction_url: str | None = None,
         payload: str | None = None,
         message_id: int | None = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.id = id

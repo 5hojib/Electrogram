@@ -13,7 +13,7 @@ class InputStarsTransaction(Object):
             True, If the transaction is a refund.
     """
 
-    def __init__(self, *, id: str, is_refund: bool | None = None):
+    def __init__(self, *, id: str, is_refund: bool | None = None) -> None:
         super().__init__()
 
         self.id = id

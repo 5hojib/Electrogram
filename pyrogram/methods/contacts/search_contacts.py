@@ -1,13 +1,12 @@
+from __future__ import annotations
+
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class SearchContacts:
     async def search_contacts(
-        self: "pyrogram.Client",
-        query: str,
-        limit: int = 0
+        self: pyrogram.Client, query: str, limit: int = 0
     ) -> types.FoundContacts:
         """Returns users or channels found by name substring and auxiliary data.
         .. include:: /_includes/usable-by/users.rst
@@ -25,11 +24,6 @@ class SearchContacts:
         total = limit or (1 << 31) - 1
         limit = min(100, total)
 
-        r = await self.invoke(
-            raw.functions.contacts.Search(
-                q=query,
-                limit=limit
-            )
-        )
+        r = await self.invoke(raw.functions.contacts.Search(q=query, limit=limit))
 
         return types.FoundContacts._parse(self, r)
