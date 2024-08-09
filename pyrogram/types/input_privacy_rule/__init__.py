@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .input_privacy_rule import InputPrivacyRule
 from .input_privacy_rule_allow_all import InputPrivacyRuleAllowAll
 from .input_privacy_rule_allow_chats import InputPrivacyRuleAllowChats
@@ -19,5 +21,5 @@ __all__ = [
     "InputPrivacyRuleDisallowAll",
     "InputPrivacyRuleDisallowChats",
     "InputPrivacyRuleDisallowContacts",
-    "InputPrivacyRuleDisallowUsers"
+    "InputPrivacyRuleDisallowUsers",
 ]

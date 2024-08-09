@@ -1,6 +1,11 @@
-import pyrogram
+from __future__ import annotations
 
-from ..object import Object
+from typing import TYPE_CHECKING
+
+from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    import pyrogram
 
 
 class InputPrivacyRule(Object):
@@ -22,5 +27,5 @@ class InputPrivacyRule(Object):
     def __init__(self):
         super().__init__()
 
-    async def write(self, client: "pyrogram.Client"):
+    async def write(self, client: pyrogram.Client):
         raise NotImplementedError

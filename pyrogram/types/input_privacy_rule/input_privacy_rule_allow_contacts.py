@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 import pyrogram
 from pyrogram import raw
+
 from .input_privacy_rule import InputPrivacyRule
 
 
@@ -11,5 +14,5 @@ class InputPrivacyRuleAllowContacts(InputPrivacyRule):
     ):
         super().__init__()
 
-    async def write(self, client: "pyrogram.Client"):
+    async def write(self, client: pyrogram.Client):
         return raw.types.InputPrivacyValueAllowContacts()

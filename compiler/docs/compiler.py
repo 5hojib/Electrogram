@@ -685,7 +685,7 @@ def pyrogram_api():
             InputPrivacyRuleDisallowContacts
             InputPrivacyRuleDisallowUsers
             InputPrivacyRuleDisallowChats
-        """
+        """,
     }
 
     root = PYROGRAM_API_DEST + "/types"

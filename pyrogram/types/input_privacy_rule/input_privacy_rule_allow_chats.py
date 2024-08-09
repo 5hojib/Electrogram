@@ -1,9 +1,15 @@
+from __future__ import annotations
+
 import asyncio
-from typing import Union, Iterable
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, utils
+
 from .input_privacy_rule import InputPrivacyRule
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 
 class InputPrivacyRuleAllowChats(InputPrivacyRule):
@@ -16,14 +22,18 @@ class InputPrivacyRuleAllowChats(InputPrivacyRule):
 
     def __init__(
         self,
-        chat_ids: Union[int, str, Iterable[Union[int, str]]],
+        chat_ids: int | str | Iterable[int | str],
     ):
         super().__init__()
 
         self.chat_ids = chat_ids
 
-    async def write(self, client: "pyrogram.Client"):
-        chats = list(self.chat_ids) if not isinstance(self.chat_ids, (int, str)) else [self.chat_ids]
+    async def write(self, client: pyrogram.Client):
+        chats = (
+            list(self.chat_ids)
+            if not isinstance(self.chat_ids, int | str)
+            else [self.chat_ids]
+        )
         chats = await asyncio.gather(*[client.resolve_peer(i) for i in chats])
 
         return raw.types.InputPrivacyValueAllowChatParticipants(
