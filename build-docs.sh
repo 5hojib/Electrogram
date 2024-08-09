@@ -32,9 +32,8 @@ git config --local user.name "5hojib"
 git config --local user.email "yesiamshojib@gmail.com"
 git add --all
 git commit -m "Update docs" --signoff
-git push --force origin main
 git checkout --orphan x
-git commit -m "Initial commit"
+git commit -m "Update docs" --signoff
 git branch -D main
 git branch -m main
 git push --force origin main
