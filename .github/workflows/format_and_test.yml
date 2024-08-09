@@ -39,7 +39,7 @@ jobs:
           if git diff-index --quiet HEAD --; then
             echo "No changes to commit."
           else
-            git commit -m "InkyPinkyPonky [no ci]"
+            git commit -m "InkyPinkyPonky [no ci]" --signoff
             git push origin ${{ github.ref }}
           fi
         env:

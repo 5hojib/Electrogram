@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export DOCS_KEY
+export GITHUB_TOKEN
 VENV="$(pwd)/venv"
 export VENV
 
@@ -16,11 +16,8 @@ cd ../..
 
 "$VENV/bin/sphinx-build" -b html "docs/source" "docs/build/html" -j auto
 
-git clone https://5hojib:"$DOCS_KEY"@github.com/5hojib/Electrogram-docs.git
+git clone https://5hojib:"$GITHUB_TOKEN"@github.com/5hojib/Electrogram-docs.git
 cd Electrogram-docs
-
-mkdir -p main
-cd main
 
 rm -rf _includes api genindex.html intro py-modindex.html sitemap.xml \
        support.html topics _static faq index.html objects.inv \
