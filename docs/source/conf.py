@@ -110,7 +110,7 @@ html_theme_options = {
 
 # HTML resources
 html_logo = "https://github.com/5hojib/5hojib/raw/main/images/book.gif"
-html_favicon = "../resources/static/img/favicon.ico"
+html_favicon = "_static/fav.svg"
 
 # LaTeX configuration
 latex_engine = "xelatex"
