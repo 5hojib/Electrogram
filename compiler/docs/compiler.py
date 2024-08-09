@@ -4,7 +4,8 @@ import ast
 import os
 import re
 import shutil
-from .vao import methods_all, types_all, b_all
+
+from .vao import b_all, methods_all, types_all
 
 HOME = "compiler/docs"
 DESTINATION = "docs/source/telegram"
@@ -122,7 +123,6 @@ def pyrogram_api():
     def get_title_list(s: str) -> list:
         return [i.strip() for i in [j.strip() for j in s.split("\n") if j] if i]
 
-
     root = PYROGRAM_API_DEST + "/methods"
 
     shutil.rmtree(root, ignore_errors=True)
@@ -156,7 +156,6 @@ def pyrogram_api():
 
         f.write(template.format(**fmt_keys))
 
-
     root = PYROGRAM_API_DEST + "/types"
 
     shutil.rmtree(root, ignore_errors=True)
@@ -181,7 +180,6 @@ def pyrogram_api():
                     f2.write(f".. autoclass:: pyrogram.types.{type}()\n")
 
         f.write(template.format(**fmt_keys))
-
 
     root = PYROGRAM_API_DEST + "/bound-methods"
 

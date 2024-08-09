@@ -1,5 +1,7 @@
-methods_all  = {
-        "utilities": """
+from __future__ import annotations
+
+methods_all = {
+    "utilities": """
         Utilities
             start
             stop
@@ -12,7 +14,7 @@ methods_all  = {
             export_session_string
             set_parse_mode
         """,
-        "messages": """
+    "messages": """
         Messages
             send_message
             forward_messages
@@ -69,7 +71,7 @@ methods_all  = {
             get_discussion_replies_count
             get_custom_emoji_stickers
         """,
-        "chats": """
+    "chats": """
         Chats
             join_chat
             leave_chat
@@ -130,7 +132,7 @@ methods_all  = {
             delete_chat_history
             update_folder
         """,
-        "users": """
+    "users": """
         Users
             get_me
             get_users
@@ -148,7 +150,7 @@ methods_all  = {
             get_default_emoji_statuses
             set_emoji_status
         """,
-        "stories": """
+    "stories": """
         Stories
             delete_stories
             edit_story
@@ -160,13 +162,13 @@ methods_all  = {
             get_peer_stories
             send_story
         """,
-        "stickers": """
+    "stickers": """
         Stickers
             add_sticker_to_set
             create_sticker_set
             get_sticker_set
         """,
-        "invite_links": """
+    "invite_links": """
         Invite Links
             get_chat_invite_link
             export_chat_invite_link
@@ -186,7 +188,7 @@ methods_all  = {
             decline_chat_join_request
             decline_all_chat_join_requests
         """,
-        "contacts": """
+    "contacts": """
         Contacts
             add_contact
             delete_contacts
@@ -195,13 +197,13 @@ methods_all  = {
             get_contacts_count
             search_contacts
         """,
-        "password": """
+    "password": """
         Password
             enable_cloud_password
             change_cloud_password
             remove_cloud_password
         """,
-        "bots": """
+    "bots": """
         Bots
             get_inline_bot_results
             send_inline_bot_result
@@ -223,7 +225,7 @@ methods_all  = {
             set_bot_info
             get_collectible_item_info
         """,
-        "business": """
+    "business": """
         Telegram Business
             answer_pre_checkout_query
             answer_shipping_query
@@ -235,7 +237,7 @@ methods_all  = {
             send_invoice
             send_paid_media
         """,
-        "authorization": """
+    "authorization": """
         Authorization
             connect
             disconnect
@@ -256,23 +258,23 @@ methods_all  = {
             reset_session
             reset_sessions
         """,
-        "advanced": """
+    "advanced": """
         Advanced
             invoke
             resolve_peer
             save_file
         """,
-        "account": """
+    "account": """
         Account
             get_account_ttl
             set_account_ttl
             set_privacy
             get_privacy
         """,
-    }
+}
 
 types_all = {
-        "users_chats": """
+    "users_chats": """
         Users & Chats
             Birthday
             BusinessInfo
@@ -309,7 +311,7 @@ types_all = {
             PrivacyRule
             CollectibleItemInfo
         """,
-        "messages_media": """
+    "messages_media": """
         Messages & Media
             Message
             MessageEntity
@@ -362,7 +364,7 @@ types_all = {
             MessageReactionUpdated
             MessageReactionCountUpdated
         """,
-        "stories": """
+    "stories": """
         Stories
             Story
             StoryDeleted
@@ -376,13 +378,13 @@ types_all = {
             InputMediaArea
             InputMediaAreaChannelPost
         """,
-        "bot": """
+    "bot": """
         Bot
             BotAllowed
             BotApp
             BotBusinessConnection
         """,
-        "bot_keyboards": """
+    "bot_keyboards": """
         Bot keyboards
             ReplyKeyboardMarkup
             KeyboardButton
@@ -409,7 +411,7 @@ types_all = {
             SentWebAppMessage
             PreCheckoutQuery
         """,
-        "bot_commands": """
+    "bot_commands": """
         Bot commands
             BotCommand
             BotCommandScope
@@ -421,7 +423,7 @@ types_all = {
             BotCommandScopeChatAdministrators
             BotCommandScopeChatMember
         """,
-        "business": """
+    "business": """
         Telegram Business
             ExtendedMediaPreview
             InputStarsTransaction
@@ -437,7 +439,7 @@ types_all = {
             StarsTransaction
             SuccessfulPayment
         """,
-        "input_media": """
+    "input_media": """
         Input Media
             InputMedia
             InputMediaPhoto
@@ -447,7 +449,7 @@ types_all = {
             InputMediaDocument
             InputPhoneContact
         """,
-        "inline_mode": """
+    "inline_mode": """
         Inline Mode
             InlineQuery
             InlineQueryResult
@@ -470,15 +472,15 @@ types_all = {
             InlineQueryResultVoice
             ChosenInlineResult
         """,
-        "pre_checkout_query": """
+    "pre_checkout_query": """
         PreCheckoutQuery
             PreCheckoutQuery.answer
         """,
-        "shipping_query": """
+    "shipping_query": """
         ShippingQuery
             ShippingQuery.answer
         """,
-        "input_message_content": """
+    "input_message_content": """
         InputMessageContent
             InputMessageContent
             InputReplyToMessage
@@ -489,14 +491,14 @@ types_all = {
             InputContactMessageContent
             InputInvoiceMessageContent
         """,
-        "authorization": """
+    "authorization": """
         Authorization
             ActiveSession
             ActiveSessions
             SentCode
             TermsOfService
         """,
-        "input_privacy_rule": """
+    "input_privacy_rule": """
         InputPrivacyRule
             InputPrivacyRuleAllowAll
             InputPrivacyRuleAllowContacts
@@ -508,10 +510,10 @@ types_all = {
             InputPrivacyRuleDisallowUsers
             InputPrivacyRuleDisallowChats
         """,
-    }
+}
 
 b_all = {
-        "message": """
+    "message": """
         Message
             Message.ask
             Message.click
@@ -550,7 +552,7 @@ b_all = {
             Message.react
             Message.wait_for_click
         """,
-        "chat": """
+    "chat": """
         Chat
             Chat.ask
             Chat.listen
@@ -573,7 +575,7 @@ b_all = {
             Chat.set_protected_content
             Chat.unpin_all_messages
         """,
-        "user": """
+    "user": """
         User
             User.ask
             User.listen
@@ -583,7 +585,7 @@ b_all = {
             User.block
             User.unblock
         """,
-        "story": """
+    "story": """
         Story
             Story.delete
             Story.download
@@ -606,7 +608,7 @@ b_all = {
             Story.reply_video_note
             Story.reply_voice
         """,
-        "callback_query": """
+    "callback_query": """
         Callback Query
             CallbackQuery.answer
             CallbackQuery.edit_message_text
@@ -614,21 +616,21 @@ b_all = {
             CallbackQuery.edit_message_media
             CallbackQuery.edit_message_reply_markup
         """,
-        "inline_query": """
+    "inline_query": """
         InlineQuery
             InlineQuery.answer
         """,
-        "pre_checkout_query": """
+    "pre_checkout_query": """
         PreCheckoutQuery
             PreCheckoutQuery.answer
         """,
-        "shipping_query": """
+    "shipping_query": """
         ShippingQuery
             ShippingQuery.answer
         """,
-        "chat_join_request": """
+    "chat_join_request": """
         ChatJoinRequest
             ChatJoinRequest.approve
             ChatJoinRequest.decline
         """,
-    }
+}
