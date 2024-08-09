@@ -33,13 +33,6 @@ Welcome to Electrogram
 It enables you to easily interact with the main Telegram API through a user account (custom client) or a bot identity
 (bot API alternative) using Python.
 
-Support
--------
-
-If you'd like to support Electrogram, you can consider:
-
-- `Become a GitHub sponsor <https://github.com/sponsors/5hojib>`_.
-
 How the Documentation is Organized
 ----------------------------------
 
@@ -141,11 +134,3 @@ Meta
 
     faq/index
     support
-
-.. toctree::
-    :hidden:
-    :caption: Telegram Raw API
-
-    telegram/functions/index
-    telegram/types/index
-    telegram/base/index
