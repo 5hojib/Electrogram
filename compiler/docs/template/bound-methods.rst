@@ -140,3 +140,15 @@ ChatJoinRequest
 
     {chat_join_request_toctree}
 
+ActiveSession
+-------------
+
+.. hlist::
+    :columns: 2
+
+    {active_session_hlist}
+
+.. toctree::
+    :hidden:
+
+    {active_session_toctree}

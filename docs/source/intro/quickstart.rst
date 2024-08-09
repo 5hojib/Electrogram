@@ -6,7 +6,7 @@ The next few steps serve as a quick start to see Electrogram in action as fast a
 Get Electrogram Real Fast
 ----------------------
 
-1. Install Electrogram with ``pip3 install -U electrogram``.
+1. Install Electrogram with ``pip3 install electrogram``.
 
 2. Get your own Telegram API key from https://my.telegram.org/apps.
 

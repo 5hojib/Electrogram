@@ -18,16 +18,7 @@ Install Electrogram
 
     .. code-block:: text
 
-        $ pip3 install -U electrogram
-
-Bleeding Edge
--------------
-
-You can install the development version from the git ``master`` branch using this command:
-
-.. code-block:: text
-
-    $ pip3 install -U https://github.com/5hojib/Electrogram/archive/master.zip
+        $ pip3 install electrogram
 
 Verifying
 ---------

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from .input_privacy_rule import *
 from .authorization import *
 from .bots_and_keyboards import *
 from .business import *

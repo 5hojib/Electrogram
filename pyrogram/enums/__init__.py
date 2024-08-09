@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from .privacy_key import PrivacyKey
 from .business_schedule import BusinessSchedule
 from .chat_action import ChatAction
 from .chat_event_action import ChatEventAction
@@ -42,6 +43,7 @@ __all__ = [
     "ParseMode",
     "PollType",
     "ProfileColor",
+    "PrivacyKey",
     "ReactionType",
     "ReplyColor",
     "SentCodeType",

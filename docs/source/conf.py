@@ -18,9 +18,6 @@ project = "Electrogram"
 copyright = "2023-present, 5hojib"
 author = "5hojib"
 
-# Version information
-version = ".".join(__version__.split(".")[:-1])
-
 # Sphinx extensions
 extensions = [
     "sphinx.ext.autodoc",
@@ -45,7 +42,7 @@ html_static_path = ["../resources/static", "_static"]
 
 # HTML options
 html_copy_source = False
-html_title = "Electrogram"
+html_title = f"Electrogram {__version__}"
 html_theme = "sphinx_immaterial"
 html_show_sourcelink = True
 html_show_copyright = False

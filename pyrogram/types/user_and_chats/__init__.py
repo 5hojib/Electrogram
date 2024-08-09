@@ -38,6 +38,7 @@ from .peer_channel import PeerChannel
 from .peer_user import PeerUser
 from .restriction import Restriction
 from .user import User
+from .privacy_rule import PrivacyRule
 from .username import Username
 from .video_chat_ended import VideoChatEnded
 from .video_chat_members_invited import VideoChatMembersInvited
@@ -77,6 +78,7 @@ __all__ = [
     "GeneralTopicUnhidden",
     "PeerChannel",
     "PeerUser",
+    "PrivacyRule",
     "VideoChatStarted",
     "VideoChatEnded",
     "VideoChatMembersInvited",

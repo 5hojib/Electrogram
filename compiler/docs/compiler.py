@@ -267,6 +267,7 @@ def pyrogram_api():
             reopen_general_topic
             unhide_general_topic
             update_color
+            delete_chat_history
             update_folder
         """,
         "users": """
@@ -332,6 +333,7 @@ def pyrogram_api():
             import_contacts
             get_contacts
             get_contacts_count
+            search_contacts
         """,
         "password": """
         Password
@@ -391,12 +393,21 @@ def pyrogram_api():
             accept_terms_of_service
             log_out
             get_active_sessions
+            reset_session
+            reset_sessions
         """,
         "advanced": """
         Advanced
             invoke
             resolve_peer
             save_file
+        """,
+        "account": """
+        Account
+            get_account_ttl
+            set_account_ttl
+            set_privacy
+            get_privacy
         """,
     }
 
@@ -469,6 +480,8 @@ def pyrogram_api():
             PeerChannel
             BotInfo
             ChatColor
+            FoundContacts
+            PrivacyRule
             CollectibleItemInfo
         """,
         "messages_media": """
@@ -592,6 +605,7 @@ def pyrogram_api():
             InputStarsTransaction
             Invoice
             PaidMedia
+            PaidMediaPreview
             PaymentInfo
             PaymentRefunded
             ShippingAddress
@@ -660,6 +674,18 @@ def pyrogram_api():
             SentCode
             TermsOfService
         """,
+        "input_privacy_rule": """
+        InputPrivacyRule
+            InputPrivacyRuleAllowAll
+            InputPrivacyRuleAllowContacts
+            InputPrivacyRuleAllowPremium
+            InputPrivacyRuleAllowUsers
+            InputPrivacyRuleAllowChats
+            InputPrivacyRuleDisallowAll
+            InputPrivacyRuleDisallowContacts
+            InputPrivacyRuleDisallowUsers
+            InputPrivacyRuleDisallowChats
+        """
     }
 
     root = PYROGRAM_API_DEST + "/types"
@@ -678,7 +704,6 @@ def pyrogram_api():
 
             fmt_keys.update({k: "\n    ".join(types)})
 
-            # noinspection PyShadowingBuiltins
             for type in types:
                 with open(root + f"/{type}.rst", "w") as f2:
                     title = f"{type}"
