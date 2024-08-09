@@ -1,4 +1,6 @@
-from ..object import Object
+from __future__ import annotations
+
+from pyrogram.types.object import Object
 
 
 class ContactRegistered(Object):

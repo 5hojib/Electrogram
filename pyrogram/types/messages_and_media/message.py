@@ -535,9 +535,9 @@ class Message(Object, Update):
         | types.ReplyKeyboardRemove
         | types.ForceReply = None,
         reactions: list[types.Reaction] | None = None,
-        contact_registered: "types.ContactRegistered" = None,
-        chat_join_type: "enums.ChatJoinType" = None,
-        screenshot_taken: "types.ScreenshotTaken" = None,
+        contact_registered: types.ContactRegistered = None,
+        chat_join_type: enums.ChatJoinType = None,
+        screenshot_taken: types.ScreenshotTaken = None,
         raw: raw.types.Message = None,
     ) -> None:
         super().__init__(client)

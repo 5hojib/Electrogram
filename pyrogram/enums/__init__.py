@@ -3,6 +3,7 @@ from __future__ import annotations
 from .business_schedule import BusinessSchedule
 from .chat_action import ChatAction
 from .chat_event_action import ChatEventAction
+from .chat_join_type import ChatJoinType
 from .chat_member_status import ChatMemberStatus
 from .chat_members_filter import ChatMembersFilter
 from .chat_type import ChatType
@@ -24,7 +25,6 @@ from .sent_code_type import SentCodeType
 from .stories_privacy_rules import StoriesPrivacyRules
 from .story_privacy import StoryPrivacy
 from .user_status import UserStatus
-from .chat_join_type import ChatJoinType
 
 __all__ = [
     "BusinessSchedule",

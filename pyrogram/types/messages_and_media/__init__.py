@@ -4,6 +4,7 @@ from .animation import Animation
 from .audio import Audio
 from .available_effect import AvailableEffect
 from .contact import Contact
+from .contact_registered import ContactRegistered
 from .dice import Dice
 from .document import Document
 from .exported_story_link import ExportedStoryLink
@@ -31,6 +32,7 @@ from .poll_option import PollOption
 from .reaction import Reaction
 from .reaction_count import ReactionCount
 from .reaction_type import ReactionType
+from .screenshot_taken import ScreenshotTaken
 from .sticker import Sticker
 from .stickerset import StickerSet
 from .stories_privacy_rules import StoriesPrivacyRules
@@ -49,8 +51,6 @@ from .web_app_data import WebAppData
 from .web_page import WebPage
 from .web_page_empty import WebPageEmpty
 from .web_page_preview import WebPagePreview
-from .contact_registered import ContactRegistered
-from .screenshot_taken import ScreenshotTaken
 
 __all__ = [
     "Animation",
