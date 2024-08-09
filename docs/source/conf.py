@@ -2,21 +2,24 @@ from __future__ import annotations
 
 import os
 import sys
-
-sys.path.insert(0, os.path.abspath("../.."))
-
 from pygments.styles.friendly import FriendlyStyle
-
 from pyrogram import __version__
 
+# Set the system path
+sys.path.insert(0, os.path.abspath("../.."))
+
+# Set the background color for Pygments style
 FriendlyStyle.background_color = "#f3f2f1"
 
+# Project information
 project = "Electrogram"
 copyright = "2023-present, 5hojib"
 author = "5hojib"
 
+# Version information
 version = ".".join(__version__.split(".")[:-1])
 
+# Sphinx extensions
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
@@ -26,30 +29,38 @@ extensions = [
     "sphinx_immaterial",
 ]
 
+# Intersphinx configuration
 intersphinx_mapping = {"python": ("https://docs.python.org/3", None)}
 
+# Document settings
 master_doc = "index"
 source_suffix = ".rst"
 autodoc_member_order = "bysource"
 
+# Paths for templates and static files
 templates_path = ["../resources/templates"]
+html_static_path = ["../resources/static", "_static"]
+
+# HTML options
 html_copy_source = False
-
-napoleon_use_rtype = False
-napoleon_use_param = False
-
-pygments_style = "friendly"
-
-copybutton_prompt_text = "$ "
-
-suppress_warnings = ["image.not_readable"]
-
 html_title = "Electrogram Documentation"
 html_theme = "sphinx_immaterial"
-html_static_path = ["../resources/static", "_static"]
 html_show_sourcelink = True
 html_show_copyright = False
 html_show_sphinx = False
+
+# Napoleon settings
+napoleon_use_rtype = False
+napoleon_use_param = False
+
+# Pygments style settings
+pygments_style = "friendly"
+copybutton_prompt_text = "$ "
+
+# Suppress specific warnings
+suppress_warnings = ["image.not_readable"]
+
+# HTML theme options
 html_theme_options = {
     "icon": {
         "repo": "fontawesome/brands/github",
@@ -70,21 +81,38 @@ html_theme_options = {
         "content.tabs.link",
         "announce.dismiss",
     ],
-    "palette": [{"media": "(prefers-color-scheme: dark)", "scheme": "slate"}],
-    "toc_title_is_page_title": True,
-    "version_dropdown": True,
-    "version_info": [
-        {"version": "dev", "title": "dev", "aliases": ["latest"]},
-        {"version": "err", "title": "err", "aliases": []},
+    "palette": [
+        {
+            "media": "(prefers-color-scheme: light)",
+            "scheme": "default",
+            "primary": "light-green",
+            "accent": "light-blue",
+            "toggle": {
+                "icon": "material/lightbulb-outline",
+                "name": "Switch to dark mode",
+            },
+        },
+        {
+            "media": "(prefers-color-scheme: dark)",
+            "scheme": "slate",
+            "primary": "deep-orange",
+            "accent": "lime",
+            "toggle": {
+                "icon": "material/lightbulb",
+                "name": "Switch to light mode",
+            },
+        },
     ],
+    "toc_title_is_page_title": True,
 }
 
+# HTML resources
 html_logo = "../resources/static/img/pyrogram.png"
 html_favicon = "../resources/static/img/favicon.ico"
 
+# LaTeX configuration
 latex_engine = "xelatex"
 latex_logo = "../resources/static/img/pyrogram.png"
-
 latex_elements = {
     "pointsize": "12pt",
     "fontpkg": r"""
@@ -94,6 +122,7 @@ latex_elements = {
         """,
 }
 
+# Custom CSS files
 html_css_files = [
     "css/custom.css",
     "css/all.min.css",

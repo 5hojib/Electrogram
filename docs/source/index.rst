@@ -13,20 +13,12 @@ Welcome to Electrogram
         <b>Telegram MTProto API Framework for Python</b>
 
         <br>
-        <a href="https://github.com/5hojib">
-            Homepage
-        </a>
-        •
         <a href="https://github.com/5hojib/Electrogram">
             Development
         </a>
         •
         <a href="https://github.com/5hojib/Electrogram/issues">
             Issues
-        </a>
-        •
-        <a href="https://t.me/AeonDiscussion">
-            Support Chat
         </a>
     </p>
 
