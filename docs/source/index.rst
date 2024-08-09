@@ -3,15 +3,8 @@ Welcome to Electrogram
 
 .. raw:: html
 
-    <div align="center">
-        <a href="/">
-            <h1 class="pyrogram-text pyrogram-text-index">Electrogram</h1>
-        </a>
-    </div>
-
-    <p align="center">
+    <p>
         <b>Telegram MTProto API Framework for Python</b>
-
         <br>
         <a href="https://github.com/5hojib/Electrogram">
             Development
