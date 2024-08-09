@@ -180,7 +180,7 @@ class Client(Methods):
         max_concurrent_transmissions (``bool``, *optional*):
             Set the maximum amount of concurrent transmissions (uploads & downloads).
             A value that is too high may result in network related issues.
-            Defaults to 1.
+            Defaults to 100.
 
         max_message_cache_size (``int``, *optional*):
             Set the maximum size of the message cache.
