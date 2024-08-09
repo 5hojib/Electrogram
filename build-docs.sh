@@ -23,8 +23,7 @@ rm -rf _includes api genindex.html intro py-modindex.html sitemap.xml \
        support.html topics _static faq index.html objects.inv \
        searchindex.js start telegram
 
-cp -r ../../docs/build/html/* .
-
+cp -r ../docs/build/html/* .
 git config --local user.name "5hojib"
 git config --local user.email "yesiamshojib@gmail.com"
 git add --all
