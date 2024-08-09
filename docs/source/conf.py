@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import os
 import sys
+
 from pygments.styles.friendly import FriendlyStyle
+
 from pyrogram import __version__
 
 # Set the system path
