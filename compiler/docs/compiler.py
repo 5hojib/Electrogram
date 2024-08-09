@@ -503,6 +503,8 @@ def pyrogram_api():
             Venue
             Sticker
             StickerSet
+            ContactRegistered
+            ScreenshotTaken
             Game
             GiftedPremium
             Giveaway
@@ -869,7 +871,6 @@ def pyrogram_api():
                 }
             )
 
-            # noinspection PyShadowingBuiltins
             for bm in bound_methods:
                 with open(root + f"/{bm}.rst", "w") as f2:
                     title = f"{bm}()"
