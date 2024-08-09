@@ -87,7 +87,7 @@ html_theme_options = {
         {
             "media": "(prefers-color-scheme: light)",
             "scheme": "default",
-            "primary": "light-green",
+            "primary": "blue-grey",
             "accent": "light-blue",
             "toggle": {
                 "icon": "material/lightbulb-outline",
@@ -97,12 +97,23 @@ html_theme_options = {
         {
             "media": "(prefers-color-scheme: dark)",
             "scheme": "slate",
-            "primary": "deep-orange",
+            "primary": "blue-grey",
             "accent": "lime",
             "toggle": {
                 "icon": "material/lightbulb",
                 "name": "Switch to light mode",
             },
+        },
+    ],
+    "social": [
+        {
+            "icon": "fontawesome/brands/github",
+            "link": "https://github.com/5hojib/Electrogram",
+            "name": "Source on github.com",
+        },
+        {
+            "icon": "fontawesome/brands/python",
+            "link": "https://pypi.org/project/electrogram/",
         },
     ],
     "toc_title_is_page_title": True,
