@@ -16,6 +16,7 @@ from .messages_filter import MessagesFilter
 from .next_code_type import NextCodeType
 from .parse_mode import ParseMode
 from .poll_type import PollType
+from .privacy_key import PrivacyKey
 from .profile_color import ProfileColor
 from .reaction_type import ReactionType
 from .reply_color import ReplyColor
@@ -42,6 +43,7 @@ __all__ = [
     "ParseMode",
     "PollType",
     "ProfileColor",
+    "PrivacyKey",
     "ReactionType",
     "ReplyColor",
     "SentCodeType",

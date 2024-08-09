@@ -44,6 +44,14 @@ dev = [
     "twine"
 ]
 
+docs = [
+    "sphinx",
+    "sphinx-immaterial",
+    "sphinx_copybutton",
+    "sphinx-autobuild",
+    "tornado"
+]
+
 [tool.hatch.metadata]
 allow-direct-references = true
 
