@@ -5,7 +5,7 @@ import os
 import re
 import shutil
 
-from .vao import b_all, methods_all, types_all
+from compiler.docs.strings import b_all, methods_all, types_all
 
 HOME = "compiler/docs"
 DESTINATION = "docs/source/telegram"
