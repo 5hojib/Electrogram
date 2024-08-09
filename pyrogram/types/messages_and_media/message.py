@@ -403,6 +403,14 @@ class Message(Object, Update):
         gift_code (:obj:`~pyrogram.types.GiftCode`, *optional*):
             Contains a `Telegram Premium giftcode link <https://core.telegram.org/api/links#premium-giftcode-links>`_.
 
+        contact_registered (:obj:`~pyrogram.types.ContactRegistered`, *optional*):
+            A service message that a contact has registered with Telegram.
+        chat_join_type (:obj:`~pyrogram.enums.ChatJoinType`, *optional*):
+            The message is a service message of the type :obj:`~pyrogram.enums.MessageServiceType.NEW_CHAT_MEMBERS`.
+            This field will contain the enumeration type of how the user had joined the chat.
+        screenshot_taken (:obj:`~pyrogram.types.ScreenshotTaken`, *optional*):
+            A service message that a screenshot of a message in the chat has been taken.
+
         gifted_premium (:obj:`~pyrogram.types.GiftedPremium`, *optional*):
             Info about a gifted Telegram Premium subscription
 
@@ -527,6 +535,9 @@ class Message(Object, Update):
         | types.ReplyKeyboardRemove
         | types.ForceReply = None,
         reactions: list[types.Reaction] | None = None,
+        contact_registered: "types.ContactRegistered" = None,
+        chat_join_type: "enums.ChatJoinType" = None,
+        screenshot_taken: "types.ScreenshotTaken" = None
         raw: raw.types.Message = None,
     ) -> None:
         super().__init__(client)
@@ -633,6 +644,9 @@ class Message(Object, Update):
         self.successful_payment = successful_payment
         self.payment_refunded = payment_refunded
         self.reactions = reactions
+        self.contact_registered = contact_registered
+        self.chat_join_type = chat_join_type
+        self.screenshot_taken = screenshot_taken
         self.raw = raw
 
     async def wait_for_click(
@@ -743,8 +757,11 @@ class Message(Object, Update):
             successful_payment = None
             payment_refunded = None
             boosts_applied = None
+            contact_registered = None
+            chat_join_type = None
+            screenshot_taken = None
 
-            service_type = None
+            service_type = enums.MessageServiceType.UNKNOWN_EMPTY
 
             from_user = types.User._parse(client, users.get(user_id))
             sender_chat = (
@@ -758,6 +775,7 @@ class Message(Object, Update):
                     types.User._parse(client, users[i]) for i in action.users
                 ]
                 service_type = enums.MessageServiceType.NEW_CHAT_MEMBERS
+                chat_join_type = enums.ChatJoinType.BY_ADD
             elif isinstance(action, raw.types.MessageActionChatJoinedByLink):
                 new_chat_members = [
                     types.User._parse(
@@ -766,9 +784,11 @@ class Message(Object, Update):
                     )
                 ]
                 service_type = enums.MessageServiceType.NEW_CHAT_MEMBERS
+                chat_join_type = enums.ChatJoinType.BY_LINK
             elif isinstance(action, raw.types.MessageActionChatJoinedByRequest):
                 chat_joined_by_request = types.ChatJoinedByRequest()
                 service_type = enums.MessageServiceType.CHAT_JOINED_BY_REQUEST
+                chat_join_type = enums.ChatJoinType.BY_REQUEST
             elif isinstance(action, raw.types.MessageActionChatDeleteUser):
                 left_chat_member = types.User._parse(client, users[action.user_id])
                 service_type = enums.MessageServiceType.LEFT_CHAT_MEMBERS
@@ -803,6 +823,12 @@ class Message(Object, Update):
             ):
                 chats_shared = await types.RequestedChats._parse(client, action)
                 service_type = enums.MessageServiceType.ChatShared
+            elif isinstance(action, raw.types.MessageActionContactSignUp):
+                service_type = enums.MessageServiceType.CONTACT_REGISTERED
+                contact_registered = types.ContactRegistered()
+            elif isinstance(action, raw.types.MessageActionScreenshotTaken):
+                service_type = enums.MessageServiceType.SCREENSHOT_TAKEN
+                screenshot_taken = types.ScreenshotTaken()
             elif isinstance(action, raw.types.MessageActionTopicCreate):
                 forum_topic_created = types.ForumTopicCreated._parse(message)
                 service_type = enums.MessageServiceType.FORUM_TOPIC_CREATED
@@ -910,8 +936,10 @@ class Message(Object, Update):
                 payment_refunded=payment_refunded,
                 boosts_applied=boosts_applied,
                 raw=message,
+                contact_registered=contact_registered,
+                chat_join_type=chat_join_type,
+                screenshot_taken=screenshot_taken,
                 client=client,
-                # TODO: supergroup_chat_created
             )
             if parsed_message.chat.type is not enums.ChatType.CHANNEL:
                 parsed_message.sender_chat = sender_chat

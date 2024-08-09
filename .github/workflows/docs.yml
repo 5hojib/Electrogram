@@ -2,12 +2,8 @@ name: Build-docs
 
 on:
   push:
-    tags:
-    - "*"
     branches:
-    - err
-  workflow_dispatch:
-    {}
+    - test
 
 jobs:
   build:

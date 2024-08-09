@@ -3,7 +3,7 @@ name: Format and Test Code with Rye
 on: 
   push:
     branches:
-      - err
+      - test
 
 jobs:
   lint-format-and-test:

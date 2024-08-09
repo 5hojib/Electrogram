@@ -24,6 +24,7 @@ from .sent_code_type import SentCodeType
 from .stories_privacy_rules import StoriesPrivacyRules
 from .story_privacy import StoryPrivacy
 from .user_status import UserStatus
+from .chat_join_type import ChatJoinType
 
 __all__ = [
     "BusinessSchedule",
@@ -32,6 +33,7 @@ __all__ = [
     "ChatMemberStatus",
     "ChatMembersFilter",
     "ChatType",
+    "ChatJoinType",
     "ClientPlatform",
     "FolderColor",
     "ListenerTypes",

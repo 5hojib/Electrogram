@@ -49,12 +49,15 @@ from .web_app_data import WebAppData
 from .web_page import WebPage
 from .web_page_empty import WebPageEmpty
 from .web_page_preview import WebPagePreview
+from .contact_registered import ContactRegistered
+from .screenshot_taken import ScreenshotTaken
 
 __all__ = [
     "Animation",
     "Audio",
     "AvailableEffect",
     "Contact",
+    "ContactRegistered",
     "Document",
     "Game",
     "GiftedPremium",
@@ -98,4 +101,5 @@ __all__ = [
     "StoryForwardHeader",
     "StoriesPrivacyRules",
     "ExportedStoryLink",
+    "ScreenshotTaken",
 ]

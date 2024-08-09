@@ -4,7 +4,6 @@ export DOCS_KEY
 VENV="$(pwd)/venv"
 export VENV
 
-
 make clean
 make clean-docs
 make venv
@@ -31,7 +30,9 @@ cp -r ../../docs/build/html/* .
 
 git config --local user.name "5hojib"
 git config --local user.email "yesiamshojib@gmail.com"
-
+git checkout --orphan x
 git add --all
-git commit -a -m "docs: main: Update docs $(date '+%Y-%m-%d | %H:%m:%S %p %Z')" --signoff
-git push -u origin --all
+git commit -m "Update docs" --signoff
+git branch -D main
+git branch -m main
+git push -f origin main
