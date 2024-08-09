@@ -45,7 +45,7 @@ html_static_path = ["../resources/static", "_static"]
 
 # HTML options
 html_copy_source = False
-html_title = "Electrogram Documentation"
+html_title = "Electrogram"
 html_theme = "sphinx_immaterial"
 html_show_sourcelink = True
 html_show_copyright = False
@@ -105,22 +105,11 @@ html_theme_options = {
             },
         },
     ],
-    "social": [
-        {
-            "icon": "fontawesome/brands/github",
-            "link": "https://github.com/5hojib/Electrogram",
-            "name": "Source on github.com",
-        },
-        {
-            "icon": "fontawesome/brands/python",
-            "link": "https://pypi.org/project/electrogram/",
-        },
-    ],
     "toc_title_is_page_title": True,
 }
 
 # HTML resources
-html_logo = "../resources/static/img/pyrogram.png"
+html_logo = "https://github.com/5hojib/5hojib/raw/main/images/book.gif"
 html_favicon = "../resources/static/img/favicon.ico"
 
 # LaTeX configuration

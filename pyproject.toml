@@ -46,10 +46,10 @@ dev = [
 
 docs = [
     "sphinx",
-    "sphinx-immaterial==0.12.2",
+    "sphinx-immaterial",
     "sphinx_copybutton",
     "sphinx-autobuild",
-    "tornado>=6.3.3"
+    "tornado"
 ]
 
 [tool.hatch.metadata]
