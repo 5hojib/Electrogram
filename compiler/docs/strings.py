@@ -512,7 +512,7 @@ types_all = {
         """,
 }
 
-b_all = {
+bounds_all = {
     "message": """
         Message
             Message.ask

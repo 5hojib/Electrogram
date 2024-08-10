@@ -11,7 +11,7 @@ make api
 "$VENV/bin/pip" install -e '.[docs]'
 
 cd compiler/docs
-"$VENV/bin/python" compiler.py
+PYTHONPATH=$(pwd):$PYTHONPATH "$VENV/bin/python" -m compiler
 cd ../..
 
 "$VENV/bin/sphinx-build" -b html "docs/source" "docs/build/html" -j auto

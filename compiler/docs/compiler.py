@@ -5,7 +5,7 @@ import os
 import re
 import shutil
 
-from .strings import b_all, methods_all, types_all
+from .strings import bounds_all, methods_all, types_all
 
 HOME = "compiler/docs"
 DESTINATION = "docs/source/telegram"
@@ -192,7 +192,7 @@ def pyrogram_api():
     with open(root + "/index.rst", "w") as f:
         fmt_keys = {}
 
-        for k, v in b_all.items():
+        for k, v in bounds_all.items():
             name, *bound_methods = get_title_list(v)
 
             fmt_keys.update(
