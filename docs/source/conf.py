@@ -38,7 +38,6 @@ autodoc_member_order = "bysource"
 
 # Paths for templates and static files
 templates_path = ["../resources/templates"]
-html_static_path = ["../resources/static", "_static"]
 
 # HTML options
 html_copy_source = False

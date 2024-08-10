@@ -838,7 +838,7 @@ def pyrogram_api():
             ChatJoinRequest.approve
             ChatJoinRequest.decline
         """,
-        "active_sessions": """
+        "active_session": """
         ActiveSession
             ActiveSession.reset
         """,
