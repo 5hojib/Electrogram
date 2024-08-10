@@ -1,7 +1,130 @@
 from __future__ import annotations
 
-methods_all = {
-    "utilities": """
+import ast
+import os
+import re
+import shutil
+
+HOME = "compiler/docs"
+DESTINATION = "docs/source/telegram"
+PYROGRAM_API_DEST = "docs/source/api"
+
+FUNCTIONS_PATH = "pyrogram/raw/functions"
+TYPES_PATH = "pyrogram/raw/types"
+BASE_PATH = "pyrogram/raw/base"
+
+FUNCTIONS_BASE = "functions"
+TYPES_BASE = "types"
+BASE_BASE = "base"
+
+
+def snek(s: str):
+    s = re.sub(r"(.)([A-Z][a-z]+)", r"\1_\2", s)
+    return re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", s).lower()
+
+
+def generate(source_path, base):
+    all_entities = {}
+
+    def build(path, level=0):
+        last = path.split("/")[-1]
+
+        for i in os.listdir(path):
+            try:
+                if not i.startswith("__"):
+                    build("/".join([path, i]), level=level + 1)
+            except NotADirectoryError:
+                with open(path + "/" + i, encoding="utf-8") as f:
+                    p = ast.parse(f.read())
+
+                for node in ast.walk(p):
+                    if isinstance(node, ast.ClassDef):
+                        name = node.name
+                        break
+                else:
+                    continue
+
+                full_path = (
+                    os.path.basename(path)
+                    + "/"
+                    + snek(name).replace("_", "-")
+                    + ".rst"
+                )
+
+                if level:
+                    full_path = base + "/" + full_path
+
+                namespace = path.split("/")[-1]
+                if namespace in ["base", "types", "functions"]:
+                    namespace = ""
+
+                full_name = f"{(namespace + '.') if namespace else ''}{name}"
+
+                os.makedirs(
+                    os.path.dirname(DESTINATION + "/" + full_path), exist_ok=True
+                )
+
+                with open(DESTINATION + "/" + full_path, "w", encoding="utf-8") as f:
+                    f.write(
+                        page_template.format(
+                            title=full_name,
+                            title_markup="=" * len(full_name),
+                            full_class_path="pyrogram.raw.{}".format(
+                                ".".join(full_path.split("/")[:-1]) + "." + name
+                            ),
+                        )
+                    )
+
+                if last not in all_entities:
+                    all_entities[last] = []
+
+                all_entities[last].append(name)
+
+    build(source_path)
+
+    for k, v in sorted(all_entities.items()):
+        v = sorted(v)
+        entities = []
+
+        for i in v:
+            entities.append(f'{i} <{snek(i).replace("_", "-")}>')
+
+        if k != base:
+            inner_path = base + "/" + k + "/index" + ".rst"
+            module = f"pyrogram.raw.{base}.{k}"
+        else:
+            for i in sorted(all_entities, reverse=True):
+                if i != base:
+                    entities.insert(0, f"{i}/index")
+
+            inner_path = base + "/index" + ".rst"
+            module = f"pyrogram.raw.{base}"
+
+        with open(DESTINATION + "/" + inner_path, "w", encoding="utf-8") as f:
+            if k == base:
+                f.write(":tocdepth: 1\n\n")
+                k = "Raw " + k
+
+            f.write(
+                toctree.format(
+                    title=k.title(),
+                    title_markup="=" * len(k),
+                    module=module,
+                    entities="\n    ".join(entities),
+                )
+            )
+
+            f.write("\n")
+
+
+def pyrogram_api():
+    def get_title_list(s: str) -> list:
+        return [i.strip() for i in [j.strip() for j in s.split("\n") if j] if i]
+
+    # Methods
+
+    categories = {
+        "utilities": """
         Utilities
             start
             stop
@@ -14,7 +137,22 @@ methods_all = {
             export_session_string
             set_parse_mode
         """,
-    "messages": """
+        "conversation": """
+        Conversation
+            ask
+            listen
+            get_listener_matching_with_data
+            get_listener_matching_with_identifier_pattern
+            get_many_listeners_matching_with_data
+            get_many_listeners_matching_with_identifier_pattern
+            register_next_step_handler
+            remove_listener
+            stop_listener
+            stop_listening
+            wait_for_callback_query
+            wait_for_message
+        """,
+        "messages": """
         Messages
             send_message
             forward_messages
@@ -71,7 +209,7 @@ methods_all = {
             get_discussion_replies_count
             get_custom_emoji_stickers
         """,
-    "chats": """
+        "chats": """
         Chats
             join_chat
             leave_chat
@@ -132,7 +270,7 @@ methods_all = {
             delete_chat_history
             update_folder
         """,
-    "users": """
+        "users": """
         Users
             get_me
             get_users
@@ -150,7 +288,7 @@ methods_all = {
             get_default_emoji_statuses
             set_emoji_status
         """,
-    "stories": """
+        "stories": """
         Stories
             delete_stories
             edit_story
@@ -162,13 +300,13 @@ methods_all = {
             get_peer_stories
             send_story
         """,
-    "stickers": """
+        "stickers": """
         Stickers
             add_sticker_to_set
             create_sticker_set
             get_sticker_set
         """,
-    "invite_links": """
+        "invite_links": """
         Invite Links
             get_chat_invite_link
             export_chat_invite_link
@@ -188,7 +326,7 @@ methods_all = {
             decline_chat_join_request
             decline_all_chat_join_requests
         """,
-    "contacts": """
+        "contacts": """
         Contacts
             add_contact
             delete_contacts
@@ -197,13 +335,13 @@ methods_all = {
             get_contacts_count
             search_contacts
         """,
-    "password": """
+        "password": """
         Password
             enable_cloud_password
             change_cloud_password
             remove_cloud_password
         """,
-    "bots": """
+        "bots": """
         Bots
             get_inline_bot_results
             send_inline_bot_result
@@ -225,7 +363,7 @@ methods_all = {
             set_bot_info
             get_collectible_item_info
         """,
-    "business": """
+        "business": """
         Telegram Business
             answer_pre_checkout_query
             answer_shipping_query
@@ -237,7 +375,7 @@ methods_all = {
             send_invoice
             send_paid_media
         """,
-    "authorization": """
+        "authorization": """
         Authorization
             connect
             disconnect
@@ -258,23 +396,58 @@ methods_all = {
             reset_session
             reset_sessions
         """,
-    "advanced": """
+        "advanced": """
         Advanced
             invoke
             resolve_peer
             save_file
         """,
-    "account": """
+        "account": """
         Account
             get_account_ttl
             set_account_ttl
             set_privacy
             get_privacy
         """,
-}
+    }
 
-types_all = {
-    "users_chats": """
+    root = PYROGRAM_API_DEST + "/methods"
+
+    shutil.rmtree(root, ignore_errors=True)
+    os.mkdir(root)
+
+    with open(HOME + "/template/methods.rst") as f:
+        template = f.read()
+
+    with open(root + "/index.rst", "w") as f:
+        fmt_keys = {}
+
+        for k, v in categories.items():
+            name, *methods = get_title_list(v)
+            fmt_keys.update({k: "\n    ".join(f"{m} <{m}>" for m in methods)})
+
+            for method in methods:
+                with open(root + f"/{method}.rst", "w") as f2:
+                    title = f"{method}()"
+
+                    f2.write(title + "\n" + "=" * len(title) + "\n\n")
+                    f2.write(f".. automethod:: pyrogram.Client.{method}()")
+
+            functions = ["idle", "compose"]
+
+            for func in functions:
+                with open(root + f"/{func}.rst", "w") as f2:
+                    title = f"{func}()"
+
+                    f2.write(title + "\n" + "=" * len(title) + "\n\n")
+                    f2.write(f".. autofunction:: pyrogram.{func}()")
+
+        f.write(template.format(**fmt_keys))
+
+    # Types
+
+    categories = {
+        "users_chats": """
         Users & Chats
             Birthday
             BusinessInfo
@@ -311,7 +484,7 @@ types_all = {
             PrivacyRule
             CollectibleItemInfo
         """,
-    "messages_media": """
+        "messages_media": """
         Messages & Media
             Message
             MessageEntity
@@ -364,7 +537,7 @@ types_all = {
             MessageReactionUpdated
             MessageReactionCountUpdated
         """,
-    "stories": """
+        "stories": """
         Stories
             Story
             StoryDeleted
@@ -378,13 +551,18 @@ types_all = {
             InputMediaArea
             InputMediaAreaChannelPost
         """,
-    "bot": """
+        "pyromod": """
+        Pyromod
+            Identifier
+            Listener
+        """,
+        "bot": """
         Bot
             BotAllowed
             BotApp
             BotBusinessConnection
         """,
-    "bot_keyboards": """
+        "bot_keyboards": """
         Bot keyboards
             ReplyKeyboardMarkup
             KeyboardButton
@@ -411,7 +589,7 @@ types_all = {
             SentWebAppMessage
             PreCheckoutQuery
         """,
-    "bot_commands": """
+        "bot_commands": """
         Bot commands
             BotCommand
             BotCommandScope
@@ -423,7 +601,7 @@ types_all = {
             BotCommandScopeChatAdministrators
             BotCommandScopeChatMember
         """,
-    "business": """
+        "business": """
         Telegram Business
             ExtendedMediaPreview
             InputStarsTransaction
@@ -439,7 +617,7 @@ types_all = {
             StarsTransaction
             SuccessfulPayment
         """,
-    "input_media": """
+        "input_media": """
         Input Media
             InputMedia
             InputMediaPhoto
@@ -449,7 +627,7 @@ types_all = {
             InputMediaDocument
             InputPhoneContact
         """,
-    "inline_mode": """
+        "inline_mode": """
         Inline Mode
             InlineQuery
             InlineQueryResult
@@ -472,15 +650,15 @@ types_all = {
             InlineQueryResultVoice
             ChosenInlineResult
         """,
-    "pre_checkout_query": """
+        "pre_checkout_query": """
         PreCheckoutQuery
             PreCheckoutQuery.answer
         """,
-    "shipping_query": """
+        "shipping_query": """
         ShippingQuery
             ShippingQuery.answer
         """,
-    "input_message_content": """
+        "input_message_content": """
         InputMessageContent
             InputMessageContent
             InputReplyToMessage
@@ -491,14 +669,14 @@ types_all = {
             InputContactMessageContent
             InputInvoiceMessageContent
         """,
-    "authorization": """
+        "authorization": """
         Authorization
             ActiveSession
             ActiveSessions
             SentCode
             TermsOfService
         """,
-    "input_privacy_rule": """
+        "input_privacy_rule": """
         InputPrivacyRule
             InputPrivacyRuleAllowAll
             InputPrivacyRuleAllowContacts
@@ -510,10 +688,37 @@ types_all = {
             InputPrivacyRuleDisallowUsers
             InputPrivacyRuleDisallowChats
         """,
-}
+    }
 
-bounds_all = {
-    "message": """
+    root = PYROGRAM_API_DEST + "/types"
+
+    shutil.rmtree(root, ignore_errors=True)
+    os.mkdir(root)
+
+    with open(HOME + "/template/types.rst") as f:
+        template = f.read()
+
+    with open(root + "/index.rst", "w") as f:
+        fmt_keys = {}
+
+        for k, v in categories.items():
+            name, *types = get_title_list(v)
+
+            fmt_keys.update({k: "\n    ".join(types)})
+
+            for type in types:
+                with open(root + f"/{type}.rst", "w") as f2:
+                    title = f"{type}"
+
+                    f2.write(title + "\n" + "=" * len(title) + "\n\n")
+                    f2.write(f".. autoclass:: pyrogram.types.{type}()\n")
+
+        f.write(template.format(**fmt_keys))
+
+    # Bound Methods
+
+    categories = {
+        "message": """
         Message
             Message.ask
             Message.click
@@ -552,7 +757,7 @@ bounds_all = {
             Message.react
             Message.wait_for_click
         """,
-    "chat": """
+        "chat": """
         Chat
             Chat.ask
             Chat.listen
@@ -575,7 +780,7 @@ bounds_all = {
             Chat.set_protected_content
             Chat.unpin_all_messages
         """,
-    "user": """
+        "user": """
         User
             User.ask
             User.listen
@@ -585,7 +790,7 @@ bounds_all = {
             User.block
             User.unblock
         """,
-    "story": """
+        "story": """
         Story
             Story.delete
             Story.download
@@ -608,7 +813,7 @@ bounds_all = {
             Story.reply_video_note
             Story.reply_voice
         """,
-    "callback_query": """
+        "callback_query": """
         Callback Query
             CallbackQuery.answer
             CallbackQuery.edit_message_text
@@ -616,198 +821,76 @@ bounds_all = {
             CallbackQuery.edit_message_media
             CallbackQuery.edit_message_reply_markup
         """,
-    "inline_query": """
+        "inline_query": """
         InlineQuery
             InlineQuery.answer
         """,
-    "pre_checkout_query": """
+        "pre_checkout_query": """
         PreCheckoutQuery
             PreCheckoutQuery.answer
         """,
-    "shipping_query": """
+        "shipping_query": """
         ShippingQuery
             ShippingQuery.answer
         """,
-    "chat_join_request": """
+        "chat_join_request": """
         ChatJoinRequest
             ChatJoinRequest.approve
             ChatJoinRequest.decline
         """,
-}
+    }
 
+    root = PYROGRAM_API_DEST + "/bound-methods"
 
-from __future__ import annotations
+    shutil.rmtree(root, ignore_errors=True)
+    os.mkdir(root)
 
-import ast
-import os
-import re
-import shutil
+    with open(HOME + "/template/bound-methods.rst") as f:
+        template = f.read()
 
-# Constants
-HOME = "compiler/docs"
-DESTINATION = "docs/source/telegram"
-PYROGRAM_API_DEST = "docs/source/api"
-FUNCTIONS_PATH = "pyrogram/raw/functions"
-TYPES_PATH = "pyrogram/raw/types"
-BASE_PATH = "pyrogram/raw/base"
+    with open(root + "/index.rst", "w") as f:
+        fmt_keys = {}
 
-FUNCTIONS_BASE = "functions"
-TYPES_BASE = "types"
-BASE_BASE = "base"
+        for k, v in categories.items():
+            name, *bound_methods = get_title_list(v)
 
-
-def snek(s: str) -> str:
-    """Convert CamelCase to snake_case."""
-    s = re.sub(r"(.)([A-Z][a-z]+)", r"\1_\2", s)
-    return re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", s).lower()
-
-
-def generate(source_path: str, base: str):
-    """Generate documentation for the given source path."""
-    all_entities = {}
-
-    def build(path: str, level: int = 0):
-        last = os.path.basename(path)
-
-        for item in os.listdir(path):
-            full_item_path = os.path.join(path, item)
-            if os.path.isdir(full_item_path) and not item.startswith("__"):
-                build(full_item_path, level + 1)
-            elif os.path.isfile(full_item_path):
-                with open(full_item_path, encoding="utf-8") as f:
-                    p = ast.parse(f.read())
-                    name = next(
-                        (
-                            node.name
-                            for node in ast.walk(p)
-                            if isinstance(node, ast.ClassDef)
-                        ),
-                        None,
+            fmt_keys.update(
+                {
+                    f"{k}_hlist": "\n    ".join(
+                        f"- :meth:`~{bm}`" for bm in bound_methods
                     )
-
-                if not name:
-                    continue
-
-                full_path = os.path.join(
-                    base if level else "",
-                    last,
-                    snek(name).replace("_", "-") + ".rst",
-                )
-
-                namespace = last if last in ["base", "types", "functions"] else ""
-                full_name = f"{(namespace + '.') if namespace else ''}{name}"
-
-                os.makedirs(
-                    os.path.join(DESTINATION, os.path.dirname(full_path)),
-                    exist_ok=True,
-                )
-
-                with open(
-                    os.path.join(DESTINATION, full_path), "w", encoding="utf-8"
-                ) as f:
-                    f.write(
-                        page_template.format(
-                            title=full_name,
-                            title_markup="=" * len(full_name),
-                            full_class_path=f"pyrogram.raw.{'.'.join(full_path.split('/')[:-1])}.{name}",
-                        )
-                    )
-
-                all_entities.setdefault(last, []).append(name)
-
-    build(source_path)
-
-    for k, v in sorted(all_entities.items()):
-        v = sorted(v)
-        entities = [f'{i} <{snek(i).replace("_", "-")}>' for i in v]
-
-        if k != base:
-            inner_path = os.path.join(base, k, "index.rst")
-            module = f"pyrogram.raw.{base}.{k}"
-        else:
-            for i in sorted(all_entities, reverse=True):
-                if i != base:
-                    entities.insert(0, f"{i}/index")
-
-            inner_path = os.path.join(base, "index.rst")
-            module = f"pyrogram.raw.{base}"
-
-        with open(os.path.join(DESTINATION, inner_path), "w", encoding="utf-8") as f:
-            if k == base:
-                f.write(":tocdepth: 1\n\n")
-                k = "Raw " + k
-
-            f.write(
-                toctree.format(
-                    title=k.title(),
-                    title_markup="=" * len(k),
-                    module=module,
-                    entities="\n    ".join(entities),
-                )
+                }
             )
 
+            fmt_keys.update(
+                {
+                    f"{k}_toctree": "\n    ".join(
+                        "{} <{}>".format(bm.split(".")[1], bm)
+                        for bm in bound_methods
+                    )
+                }
+            )
 
-def pyrogram_api():
-    """Generate Pyrogram API documentation."""
+            for bm in bound_methods:
+                with open(root + f"/{bm}.rst", "w") as f2:
+                    title = f"{bm}()"
 
-    def get_title_list(s: str) -> list:
-        return [line.strip() for line in s.split("\n") if line.strip()]
+                    f2.write(title + "\n" + "=" * len(title) + "\n\n")
+                    f2.write(f".. automethod:: pyrogram.types.{bm}()")
 
-    def create_docs(root: str, template_path: str, items: dict, entity_type: str):
-        """Create documentation for methods, types, or bound methods."""
-        shutil.rmtree(root, ignore_errors=True)
-        os.mkdir(root)
-
-        with open(template_path) as f:
-            template = f.read()
-
-        with open(os.path.join(root, "index.rst"), "w") as f:
-            fmt_keys = {}
-
-            for k, v in items.items():
-                name, *entities = get_title_list(v)
-                fmt_keys[k] = "\n    ".join(f"{m} <{m}>" for m in entities)
-
-                for entity in entities:
-                    with open(os.path.join(root, f"{entity}.rst"), "w") as f2:
-                        title = f"{entity}()"
-                        f2.write(f"{title}\n{'=' * len(title)}\n\n")
-                        f2.write(
-                            f".. automethod:: pyrogram.{entity_type}.{entity}()"
-                        )
-
-            f.write(template.format(**fmt_keys))
-
-    create_docs(
-        os.path.join(PYROGRAM_API_DEST, "methods"),
-        os.path.join(HOME, "template/methods.rst"),
-        methods_all,
-        "Client",
-    )
-    create_docs(
-        os.path.join(PYROGRAM_API_DEST, "types"),
-        os.path.join(HOME, "template/types.rst"),
-        types_all,
-        "types",
-    )
-    create_docs(
-        os.path.join(PYROGRAM_API_DEST, "bound-methods"),
-        os.path.join(HOME, "template/bound-methods.rst"),
-        b_all,
-        "types",
-    )
+        f.write(template.format(**fmt_keys))
 
 
 def start():
-    """Initialize the documentation generation process."""
-    global page_template, toctree
+    global page_template
+    global toctree
 
     shutil.rmtree(DESTINATION, ignore_errors=True)
 
-    with open(os.path.join(HOME, "template/page.txt"), encoding="utf-8") as f:
+    with open(HOME + "/template/page.txt", encoding="utf-8") as f:
         page_template = f.read()
 
-    with open(os.path.join(HOME, "template/toctree.txt"), encoding="utf-8") as f:
+    with open(HOME + "/template/toctree.txt", encoding="utf-8") as f:
         toctree = f.read()
 
     generate(TYPES_PATH, TYPES_BASE)

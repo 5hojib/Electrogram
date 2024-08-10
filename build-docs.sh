@@ -10,8 +10,10 @@ make venv
 make api
 "$VENV/bin/pip" install -e '.[docs]'
 
-export PYTHONPATH="$(pwd):$PYTHONPATH"
-"$VENV/bin/python" compiler/docs/compiler.py
+cd compiler/docs
+"$VENV/bin/python" compiler.py
+cd ../..
+
 "$VENV/bin/sphinx-build" -b html "docs/source" "docs/build/html" -j auto
 
 git clone https://5hojib:"$GITHUB_TOKEN"@github.com/5hojib/Electrogram-docs.git
