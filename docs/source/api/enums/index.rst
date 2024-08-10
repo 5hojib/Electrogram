@@ -16,43 +16,54 @@ to apply only a valid value among the expected ones.
     BusinessSchedule
     ChatAction
     ChatEventAction
+    ChatJoinType
     ChatMemberStatus
     ChatMembersFilter
     ChatType
+    ClientPlatform
     FolderColor
     ListenerTypes
     MessageEntityType
     MessageMediaType
     MessageServiceType
     MessagesFilter
+    NextCodeType
     ParseMode
     PollType
-    SentCodeType
-    NextCodeType
-    UserStatus
+    PrivacyKey
+    ProfileColor
     ReactionType
+    ReplyColor
+    SentCodeType
     StoriesPrivacyRules
     StoryPrivacy
+    UserStatus
 
 .. toctree::
     :hidden:
 
+    BusinessSchedule
     ChatAction
     ChatEventAction
+    ChatJoinType
     ChatMemberStatus
     ChatMembersFilter
     ChatType
+    ClientPlatform
     FolderColor
     ListenerTypes
     MessageEntityType
     MessageMediaType
     MessageServiceType
     MessagesFilter
+    NextCodeType
     ParseMode
     PollType
-    SentCodeType
-    NextCodeType
-    UserStatus
+    PrivacyKey
+    ProfileColor
     ReactionType
+    ReplyColor
+    SentCodeType
     StoriesPrivacyRules
     StoryPrivacy
+    UserStatus
