@@ -1,8 +1,12 @@
-from datetime import datetime
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from pyrogram import raw, utils
+from pyrogram.types.object import Object
 
-from ..object import Object
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class ActiveSession(Object):
@@ -71,25 +75,25 @@ class ActiveSession(Object):
     def __init__(
         self,
         *,
-        id: int = None,
-        device_model: str = None,
-        platform: str = None,
-        system_version: str = None,
-        api_id: int = None,
-        application_name: str = None,
-        application_version: str = None,
-        log_in_date: datetime = None,
-        last_active_date: datetime = None,
-        ip_address: str = None,
-        location: str = None,
-        country: str = None,
-        region: str = None,
-        is_current: bool = None,
-        is_password_pending: bool = None,
-        is_unconfirmed: bool = None,
-        can_accept_secret_chats: bool = None,
-        can_accept_calls: bool = None,
-        is_official_application: bool = None
+        id: int | None = None,
+        device_model: str | None = None,
+        platform: str | None = None,
+        system_version: str | None = None,
+        api_id: int | None = None,
+        application_name: str | None = None,
+        application_version: str | None = None,
+        log_in_date: datetime | None = None,
+        last_active_date: datetime | None = None,
+        ip_address: str | None = None,
+        location: str | None = None,
+        country: str | None = None,
+        region: str | None = None,
+        is_current: bool | None = None,
+        is_password_pending: bool | None = None,
+        is_unconfirmed: bool | None = None,
+        can_accept_secret_chats: bool | None = None,
+        can_accept_calls: bool | None = None,
+        is_official_application: bool | None = None,
     ):
         super().__init__()
 
@@ -114,7 +118,7 @@ class ActiveSession(Object):
         self.is_official_application = is_official_application
 
     @staticmethod
-    def _parse(session: "raw.types.Authorization") -> "ActiveSession":
+    def _parse(session: raw.types.Authorization) -> ActiveSession:
         return ActiveSession(
             id=session.hash,
             device_model=session.device_model,
@@ -132,9 +136,11 @@ class ActiveSession(Object):
             is_current=getattr(session, "current", None),
             is_password_pending=getattr(session, "password_pending", None),
             is_unconfirmed=getattr(session, "unconfirmed", None),
-            can_accept_secret_chats=not getattr(session, "encrypted_requests_disabled", False),
+            can_accept_secret_chats=not getattr(
+                session, "encrypted_requests_disabled", False
+            ),
             can_accept_calls=not getattr(session, "call_requests_disabled", False),
-            is_official_application=getattr(session, "official_app", None)
+            is_official_application=getattr(session, "official_app", None),
         )
 
     async def reset(self):
