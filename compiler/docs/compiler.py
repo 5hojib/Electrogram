@@ -46,10 +46,7 @@ def generate(source_path, base):
                     continue
 
                 full_path = (
-                    Path(path).name
-                    + "/"
-                    + snek(name).replace("_", "-")
-                    + ".rst"
+                    Path(path).name + "/" + snek(name).replace("_", "-") + ".rst"
                 )
 
                 if level:
@@ -61,7 +58,9 @@ def generate(source_path, base):
 
                 full_name = f"{(namespace + '.') if namespace else ''}{name}"
 
-                Path(DESTINATION, full_path).parent.mkdir(parents=True, exist_ok=True)
+                Path(DESTINATION, full_path).parent.mkdir(
+                    parents=True, exist_ok=True
+                )
 
                 with Path(DESTINATION, full_path).open("w", encoding="utf-8") as f:
                     f.write(
@@ -882,7 +881,7 @@ def pyrogram_api():
 
 
 def start():
-    global page_template, toctree # noqa: PLW0603
+    global page_template, toctree  # noqa: PLW0603
 
     shutil.rmtree(DESTINATION, ignore_errors=True)
 
