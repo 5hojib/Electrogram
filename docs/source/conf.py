@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-import os
 import sys
+from pathlib import Path
 
 from pygments.styles.friendly import FriendlyStyle
-from pathlib import Path
+
 from pyrogram import __version__
 
 # Set the system path
