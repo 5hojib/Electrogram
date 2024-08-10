@@ -27,7 +27,7 @@ Message
 -------
 
 .. hlist::
-    :columns: 3
+    :columns: 1
 
     {message_hlist}
 
@@ -40,7 +40,7 @@ Story
 -----
 
 .. hlist::
-    :columns: 3
+    :columns: 1
 
     {story_hlist}
 
@@ -53,7 +53,7 @@ Chat
 ----
 
 .. hlist::
-    :columns: 4
+    :columns: 1
 
     {chat_hlist}
 
@@ -66,7 +66,7 @@ User
 ----
 
 .. hlist::
-    :columns: 2
+    :columns: 1
 
     {user_hlist}
 
@@ -79,7 +79,7 @@ CallbackQuery
 -------------
 
 .. hlist::
-    :columns: 3
+    :columns: 1
 
     {callback_query_hlist}
 
@@ -92,7 +92,7 @@ InlineQuery
 -----------
 
 .. hlist::
-    :columns: 2
+    :columns: 1
 
     {inline_query_hlist}
 
@@ -105,7 +105,7 @@ PreCheckoutQuery
 ----------------
 
 .. hlist::
-    :columns: 2
+    :columns: 1
 
     {pre_checkout_query_hlist}
 
@@ -118,7 +118,7 @@ ShippingQuery
 -------------
 
 .. hlist::
-    :columns: 2
+    :columns: 1
 
     {shipping_query_hlist}
 
@@ -131,7 +131,7 @@ ChatJoinRequest
 ---------------
 
 .. hlist::
-    :columns: 2
+    :columns: 1
 
     {chat_join_request_hlist}
 
@@ -144,7 +144,7 @@ ActiveSession
 -------------
 
 .. hlist::
-    :columns: 2
+    :columns: 1
 
     {active_session_hlist}
 

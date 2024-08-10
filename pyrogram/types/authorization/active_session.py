@@ -1,12 +1,8 @@
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
+from datetime import datetime
 
 from pyrogram import raw, utils
-from pyrogram.types.object import Object
 
-if TYPE_CHECKING:
-    from datetime import datetime
+from ..object import Object
 
 
 class ActiveSession(Object):
@@ -47,7 +43,10 @@ class ActiveSession(Object):
             A human-readable description of the location from which the session was created, based on the IP address.
 
         country (``str``):
-            Country.
+            Country determined from IP.
+
+        region (``str``):
+            Region determined from IP.
 
         is_current (``bool``):
             True, if this session is the current session.
@@ -72,25 +71,26 @@ class ActiveSession(Object):
     def __init__(
         self,
         *,
-        id: int | None = None,
-        device_model: str | None = None,
-        platform: str | None = None,
-        system_version: str | None = None,
-        api_id: int | None = None,
-        application_name: str | None = None,
-        application_version: str | None = None,
-        log_in_date: datetime | None = None,
-        last_active_date: datetime | None = None,
-        ip_address: str | None = None,
-        location: str | None = None,
-        country: str | None = None,
-        is_current: bool | None = None,
-        is_password_pending: bool | None = None,
-        is_unconfirmed: bool | None = None,
-        can_accept_secret_chats: bool | None = None,
-        can_accept_calls: bool | None = None,
-        is_official_application: bool | None = None,
-    ) -> None:
+        id: int = None,
+        device_model: str = None,
+        platform: str = None,
+        system_version: str = None,
+        api_id: int = None,
+        application_name: str = None,
+        application_version: str = None,
+        log_in_date: datetime = None,
+        last_active_date: datetime = None,
+        ip_address: str = None,
+        location: str = None,
+        country: str = None,
+        region: str = None,
+        is_current: bool = None,
+        is_password_pending: bool = None,
+        is_unconfirmed: bool = None,
+        can_accept_secret_chats: bool = None,
+        can_accept_calls: bool = None,
+        is_official_application: bool = None
+    ):
         super().__init__()
 
         self.id = id
@@ -105,6 +105,7 @@ class ActiveSession(Object):
         self.ip_address = ip_address
         self.location = location
         self.country = country
+        self.region = region
         self.is_current = is_current
         self.is_password_pending = is_password_pending
         self.is_unconfirmed = is_unconfirmed
@@ -113,7 +114,7 @@ class ActiveSession(Object):
         self.is_official_application = is_official_application
 
     @staticmethod
-    def _parse(session: raw.types.Authorization) -> ActiveSession:
+    def _parse(session: "raw.types.Authorization") -> "ActiveSession":
         return ActiveSession(
             id=session.hash,
             device_model=session.device_model,
@@ -127,12 +128,34 @@ class ActiveSession(Object):
             ip_address=session.ip,
             location=session.region,
             country=session.country,
+            region=session.region,
             is_current=getattr(session, "current", None),
             is_password_pending=getattr(session, "password_pending", None),
             is_unconfirmed=getattr(session, "unconfirmed", None),
-            can_accept_secret_chats=not getattr(
-                session, "encrypted_requests_disabled", False
-            ),
+            can_accept_secret_chats=not getattr(session, "encrypted_requests_disabled", False),
             can_accept_calls=not getattr(session, "call_requests_disabled", False),
-            is_official_application=getattr(session, "official_app", None),
+            is_official_application=getattr(session, "official_app", None)
         )
+
+    async def reset(self):
+        """Bound method *reset* of :obj:`~pyrogram.types.ActiveSession`.
+
+        Use as a shortcut for:
+
+        .. code-block:: python
+
+            await client.reset_session(123456789)
+
+        Example:
+            .. code-block:: python
+
+                await session.reset()
+
+        Returns:
+            True on success.
+
+        Raises:
+            RPCError: In case of a Telegram RPC error.
+        """
+
+        return await self._client.reset_session(self.id)
