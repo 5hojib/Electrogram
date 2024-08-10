@@ -655,10 +655,12 @@ FUNCTIONS_BASE = "functions"
 TYPES_BASE = "types"
 BASE_BASE = "base"
 
+
 def snek(s: str) -> str:
     """Convert CamelCase to snake_case."""
     s = re.sub(r"(.)([A-Z][a-z]+)", r"\1_\2", s)
     return re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", s).lower()
+
 
 def generate(source_path: str, base: str):
     """Generate documentation for the given source path."""
@@ -674,24 +676,42 @@ def generate(source_path: str, base: str):
             elif os.path.isfile(full_item_path):
                 with open(full_item_path, encoding="utf-8") as f:
                     p = ast.parse(f.read())
-                    name = next((node.name for node in ast.walk(p) if isinstance(node, ast.ClassDef)), None)
+                    name = next(
+                        (
+                            node.name
+                            for node in ast.walk(p)
+                            if isinstance(node, ast.ClassDef)
+                        ),
+                        None,
+                    )
 
                 if not name:
                     continue
 
-                full_path = os.path.join(base if level else "", last, snek(name).replace("_", "-") + ".rst")
+                full_path = os.path.join(
+                    base if level else "",
+                    last,
+                    snek(name).replace("_", "-") + ".rst",
+                )
 
                 namespace = last if last in ["base", "types", "functions"] else ""
                 full_name = f"{(namespace + '.') if namespace else ''}{name}"
 
-                os.makedirs(os.path.join(DESTINATION, os.path.dirname(full_path)), exist_ok=True)
+                os.makedirs(
+                    os.path.join(DESTINATION, os.path.dirname(full_path)),
+                    exist_ok=True,
+                )
 
-                with open(os.path.join(DESTINATION, full_path), "w", encoding="utf-8") as f:
-                    f.write(page_template.format(
-                        title=full_name,
-                        title_markup="=" * len(full_name),
-                        full_class_path=f"pyrogram.raw.{'.'.join(full_path.split('/')[:-1])}.{name}",
-                    ))
+                with open(
+                    os.path.join(DESTINATION, full_path), "w", encoding="utf-8"
+                ) as f:
+                    f.write(
+                        page_template.format(
+                            title=full_name,
+                            title_markup="=" * len(full_name),
+                            full_class_path=f"pyrogram.raw.{'.'.join(full_path.split('/')[:-1])}.{name}",
+                        )
+                    )
 
                 all_entities.setdefault(last, []).append(name)
 
@@ -717,15 +737,19 @@ def generate(source_path: str, base: str):
                 f.write(":tocdepth: 1\n\n")
                 k = "Raw " + k
 
-            f.write(toctree.format(
-                title=k.title(),
-                title_markup="=" * len(k),
-                module=module,
-                entities="\n    ".join(entities),
-            ))
+            f.write(
+                toctree.format(
+                    title=k.title(),
+                    title_markup="=" * len(k),
+                    module=module,
+                    entities="\n    ".join(entities),
+                )
+            )
+
 
 def pyrogram_api():
     """Generate Pyrogram API documentation."""
+
     def get_title_list(s: str) -> list:
         return [line.strip() for line in s.split("\n") if line.strip()]
 
@@ -748,13 +772,31 @@ def pyrogram_api():
                     with open(os.path.join(root, f"{entity}.rst"), "w") as f2:
                         title = f"{entity}()"
                         f2.write(f"{title}\n{'=' * len(title)}\n\n")
-                        f2.write(f".. automethod:: pyrogram.{entity_type}.{entity}()")
+                        f2.write(
+                            f".. automethod:: pyrogram.{entity_type}.{entity}()"
+                        )
 
             f.write(template.format(**fmt_keys))
 
-    create_docs(os.path.join(PYROGRAM_API_DEST, "methods"), os.path.join(HOME, "template/methods.rst"), methods_all, "Client")
-    create_docs(os.path.join(PYROGRAM_API_DEST, "types"), os.path.join(HOME, "template/types.rst"), types_all, "types")
-    create_docs(os.path.join(PYROGRAM_API_DEST, "bound-methods"), os.path.join(HOME, "template/bound-methods.rst"), b_all, "types")
+    create_docs(
+        os.path.join(PYROGRAM_API_DEST, "methods"),
+        os.path.join(HOME, "template/methods.rst"),
+        methods_all,
+        "Client",
+    )
+    create_docs(
+        os.path.join(PYROGRAM_API_DEST, "types"),
+        os.path.join(HOME, "template/types.rst"),
+        types_all,
+        "types",
+    )
+    create_docs(
+        os.path.join(PYROGRAM_API_DEST, "bound-methods"),
+        os.path.join(HOME, "template/bound-methods.rst"),
+        b_all,
+        "types",
+    )
+
 
 def start():
     """Initialize the documentation generation process."""
@@ -772,6 +814,7 @@ def start():
     generate(FUNCTIONS_PATH, FUNCTIONS_BASE)
     generate(BASE_PATH, BASE_BASE)
     pyrogram_api()
+
 
 if __name__ == "__main__":
     FUNCTIONS_PATH = "../../pyrogram/raw/functions"
