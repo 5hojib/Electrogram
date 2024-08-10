@@ -4,6 +4,7 @@ import ast
 import os
 import re
 import shutil
+from pathlib import Path
 
 HOME = "compiler/docs"
 DESTINATION = "docs/source/telegram"
@@ -693,12 +694,12 @@ def pyrogram_api():
     root = PYROGRAM_API_DEST + "/types"
 
     shutil.rmtree(root, ignore_errors=True)
-    os.mkdir(root)
+    Path(root).mkdir()
 
-    with open(HOME + "/template/types.rst") as f:
+    with Path(HOME, "template/types.rst").open() as f:
         template = f.read()
 
-    with open(root + "/index.rst", "w") as f:
+    with Path(root, "index.rst").open("w") as f:
         fmt_keys = {}
 
         for k, v in categories.items():
@@ -707,7 +708,7 @@ def pyrogram_api():
             fmt_keys.update({k: "\n    ".join(types)})
 
             for type in types:
-                with open(root + f"/{type}.rst", "w") as f2:
+                with Path(root, f"{type}.rst").open("w") as f2:
                     title = f"{type}"
 
                     f2.write(title + "\n" + "=" * len(title) + "\n\n")
@@ -847,12 +848,12 @@ def pyrogram_api():
     root = PYROGRAM_API_DEST + "/bound-methods"
 
     shutil.rmtree(root, ignore_errors=True)
-    os.mkdir(root)
+    Path(root).mkdir()
 
-    with open(HOME + "/template/bound-methods.rst") as f:
+    with Path(HOME, "template/bound-methods.rst").open() as f:
         template = f.read()
 
-    with open(root + "/index.rst", "w") as f:
+    with Path(root, "index.rst").open("w") as f:
         fmt_keys = {}
 
         for k, v in categories.items():
@@ -876,7 +877,7 @@ def pyrogram_api():
             )
 
             for bm in bound_methods:
-                with open(root + f"/{bm}.rst", "w") as f2:
+                with Path(root, f"{bm}.rst").open("w") as f2:
                     title = f"{bm}()"
 
                     f2.write(title + "\n" + "=" * len(title) + "\n\n")
@@ -886,15 +887,14 @@ def pyrogram_api():
 
 
 def start():
-    global page_template
-    global toctree
+    global page_template, toctree
 
     shutil.rmtree(DESTINATION, ignore_errors=True)
 
-    with open(HOME + "/template/page.txt", encoding="utf-8") as f:
+    with Path(HOME, "template/page.txt").open(encoding="utf-8") as f:
         page_template = f.read()
 
-    with open(HOME + "/template/toctree.txt", encoding="utf-8") as f:
+    with Path(HOME, "template/toctree.txt").open(encoding="utf-8") as f:
         toctree = f.read()
 
     generate(TYPES_PATH, TYPES_BASE)

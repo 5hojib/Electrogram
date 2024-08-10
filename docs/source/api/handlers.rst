@@ -33,7 +33,7 @@ Index
 -----
 
 .. hlist::
-    :columns: 3
+    :columns: 1
 
     - :class:`BotBusinessConnectHandler`
     - :class:`MessageHandler`

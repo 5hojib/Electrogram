@@ -33,7 +33,7 @@ Index
 -----
 
 .. hlist::
-    :columns: 3
+    :columns: 1
 
     - :meth:`~Client.on_bot_business_connect`
     - :meth:`~Client.on_message`

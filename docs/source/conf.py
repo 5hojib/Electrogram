@@ -4,11 +4,11 @@ import os
 import sys
 
 from pygments.styles.friendly import FriendlyStyle
-
+from pathlib import Path
 from pyrogram import __version__
 
 # Set the system path
-sys.path.insert(0, os.path.abspath("../.."))
+sys.path.insert(0, str(Path("../..").resolve()))
 
 # Set the background color for Pygments style
 FriendlyStyle.background_color = "#f3f2f1"
