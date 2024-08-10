@@ -838,6 +838,10 @@ def pyrogram_api():
             ChatJoinRequest.approve
             ChatJoinRequest.decline
         """,
+        "active_sessions": """
+        ActiveSession
+            ActiveSession.reset
+        """,
     }
 
     root = PYROGRAM_API_DEST + "/bound-methods"
