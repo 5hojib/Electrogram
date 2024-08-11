@@ -2,12 +2,8 @@ name: Build-docs
 
 on:
   push:
-    tags:
-    - "*"
     branches:
-    - err
-  workflow_dispatch:
-    {}
+    - test
 
 jobs:
   build:
@@ -19,4 +15,4 @@ jobs:
       - name: Build
         run: bash build-docs.sh
         env:
-          DOCS_KEY: ${{ secrets.GX_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GX_TOKEN }}

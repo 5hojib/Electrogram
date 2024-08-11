@@ -100,3 +100,12 @@ class MessageServiceType(AutoName):
 
     BOT_ALLOWED = auto()
     "Bot allowed"
+
+    CONTACT_REGISTERED = auto()
+    "A contact has registered with Telegram"
+
+    SCREENSHOT_TAKEN = auto()
+    "A screenshot of a message in the chat has been taken"
+
+    UNKNOWN_EMPTY = auto()
+    "This service message is unsupported by the current version of Electrogram"

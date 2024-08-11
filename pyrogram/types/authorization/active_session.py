@@ -47,7 +47,10 @@ class ActiveSession(Object):
             A human-readable description of the location from which the session was created, based on the IP address.
 
         country (``str``):
-            Country.
+            Country determined from IP.
+
+        region (``str``):
+            Region determined from IP.
 
         is_current (``bool``):
             True, if this session is the current session.
@@ -84,13 +87,14 @@ class ActiveSession(Object):
         ip_address: str | None = None,
         location: str | None = None,
         country: str | None = None,
+        region: str | None = None,
         is_current: bool | None = None,
         is_password_pending: bool | None = None,
         is_unconfirmed: bool | None = None,
         can_accept_secret_chats: bool | None = None,
         can_accept_calls: bool | None = None,
         is_official_application: bool | None = None,
-    ) -> None:
+    ):
         super().__init__()
 
         self.id = id
@@ -105,6 +109,7 @@ class ActiveSession(Object):
         self.ip_address = ip_address
         self.location = location
         self.country = country
+        self.region = region
         self.is_current = is_current
         self.is_password_pending = is_password_pending
         self.is_unconfirmed = is_unconfirmed
@@ -127,6 +132,7 @@ class ActiveSession(Object):
             ip_address=session.ip,
             location=session.region,
             country=session.country,
+            region=session.region,
             is_current=getattr(session, "current", None),
             is_password_pending=getattr(session, "password_pending", None),
             is_unconfirmed=getattr(session, "unconfirmed", None),
@@ -136,3 +142,26 @@ class ActiveSession(Object):
             can_accept_calls=not getattr(session, "call_requests_disabled", False),
             is_official_application=getattr(session, "official_app", None),
         )
+
+    async def reset(self):
+        """Bound method *reset* of :obj:`~pyrogram.types.ActiveSession`.
+
+        Use as a shortcut for:
+
+        .. code-block:: python
+
+            await client.reset_session(123456789)
+
+        Example:
+            .. code-block:: python
+
+                await session.reset()
+
+        Returns:
+            True on success.
+
+        Raises:
+            RPCError: In case of a Telegram RPC error.
+        """
+
+        return await self._client.reset_session(self.id)

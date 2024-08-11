@@ -8,7 +8,6 @@ from pathlib import Path
 
 ERRORS_HOME_PATH = Path(__file__).parent.resolve()
 REPO_HOME_PATH = ERRORS_HOME_PATH.parent.parent
-
 ERRORS_DEST_PATH = REPO_HOME_PATH / "pyrogram" / "errors" / "exceptions"
 
 
