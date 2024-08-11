@@ -13,31 +13,35 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set Version from File
+      - name: Extract Version from File
         id: version
         run: |
           VERSION=$(grep -E '__version__ = ".*"' pyrogram/__init__.py | cut -d\" -f2)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Check Existing Tag
-        id: check_tag
+      - name: Check for Existing Release
+        id: check_release
         run: |
-          TAG_EXISTS=$(git tag -l "${{ env.VERSION }}")
-          if [ -n "$TAG_EXISTS" ]; then
-            echo "Tag ${{ env.VERSION }} already exists."
-            echo "TAG_EXISTS=true" >> $GITHUB_ENV  # Set environment variable
+          TAG_EXISTS=$(curl -s -o /dev/null -w "%{http_code}" https://api.github.com/repos/$GITHUB_REPOSITORY/releases/tags/${{ env.VERSION }})
+          if [ "$TAG_EXISTS" -eq 200 ]; then
+            echo "Release with tag ${{ env.VERSION }} already exists."
+            echo "RELEASE_EXISTS=true" >> $GITHUB_ENV
           else
-            echo "TAG_EXISTS=false" >> $GITHUB_ENV
+            echo "RELEASE_EXISTS=false" >> $GITHUB_ENV
           fi
 
-      - name: Create Tag
-        if: env.TAG_EXISTS != 'true'
-        run: |
-          git tag ${{ env.VERSION }}
-          git push origin ${{ env.VERSION }}
+      - name: Create New Release
+        if: env.RELEASE_EXISTS == 'false'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GX_TOKEN }}
+        with:
+          tag_name: ${{ env.VERSION }}
+          release_name: Release ${{ env.VERSION }}
+          body: Release ${{ env.VERSION }}
 
-      - name: Upload Python Package
-        if: env.TAG_EXISTS != 'true'
+      - name: Build and Publish Python Package
+        if: env.RELEASE_EXISTS == 'false'
         run: |
           python -m pip install --upgrade pip
           pip install -e '.[dev]'

@@ -9,17 +9,15 @@ from pathlib import Path
 HOME = "compiler/docs"
 DESTINATION = "docs/source/telegram"
 PYROGRAM_API_DEST = "docs/source/api"
-
 FUNCTIONS_PATH = "pyrogram/raw/functions"
 TYPES_PATH = "pyrogram/raw/types"
 BASE_PATH = "pyrogram/raw/base"
-
 FUNCTIONS_BASE = "functions"
 TYPES_BASE = "types"
 BASE_BASE = "base"
 
 
-def snek(s: str):
+def snake(s: str):
     s = re.sub(r"(.)([A-Z][a-z]+)", r"\1_\2", s)
     return re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", s).lower()
 
@@ -46,7 +44,7 @@ def generate(source_path, base):
                     continue
 
                 full_path = (
-                    Path(path).name + "/" + snek(name).replace("_", "-") + ".rst"
+                    Path(path).name + "/" + snake(name).replace("_", "-") + ".rst"
                 )
 
                 if level:
@@ -82,7 +80,7 @@ def generate(source_path, base):
 
     for k, v in sorted(all_entities.items()):
         v = sorted(v)
-        entities = [f'{i} <{snek(i).replace("_", "-")}>' for i in v]
+        entities = [f'{i} <{snake(i).replace("_", "-")}>' for i in v]
 
         if k != base:
             inner_path = base + "/" + k + "/index" + ".rst"
