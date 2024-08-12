@@ -13,7 +13,9 @@ class GetPaymentForm:
         message_id: int | str,
     ) -> types.PaymentForm:
         """Get information about a invoice or paid media.
+
         .. include:: /_includes/usable-by/users.rst
+
         Parameters:
             chat_id (``int`` | ``str``):
                 Unique identifier (int) or username (str) of the target chat.
@@ -22,10 +24,13 @@ class GetPaymentForm:
             message_id (``int`` | ``str``):
                 Pass a message identifier or to get the invoice from message.
                 Pass a invoice link in form of a *t.me/$...* link or slug itself to get the payment form from link.
+
         Returns:
             :obj:`~pyrogram.types.PaymentForm`: On success, a payment form is returned.
+
         Example:
             .. code-block:: python
+
                 # get payment form from message
                 app.get_payment_form(chat_id, 123)
                 # get payment form from link

@@ -130,21 +130,6 @@ def pyrogram_api():
             export_session_string
             set_parse_mode
         """,
-        "conversation": """
-        Conversation
-            ask
-            listen
-            get_listener_matching_with_data
-            get_listener_matching_with_identifier_pattern
-            get_many_listeners_matching_with_data
-            get_many_listeners_matching_with_identifier_pattern
-            register_next_step_handler
-            remove_listener
-            stop_listener
-            stop_listening
-            wait_for_callback_query
-            wait_for_message
-        """,
         "messages": """
         Messages
             send_message
