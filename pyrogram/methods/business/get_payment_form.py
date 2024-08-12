@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 import re
-from typing import Union
 
 import pyrogram
 from pyrogram import raw, types
@@ -7,10 +8,10 @@ from pyrogram import raw, types
 
 class GetPaymentForm:
     async def get_payment_form(
-        self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        message_id: Union[int, str],
-    ) -> "types.PaymentForm":
+        self: pyrogram.Client,
+        chat_id: int | str,
+        message_id: int | str,
+    ) -> types.PaymentForm:
         """Get information about a invoice or paid media.
         .. include:: /_includes/usable-by/users.rst
         Parameters:
@@ -34,25 +35,18 @@ class GetPaymentForm:
 
         if isinstance(message_id, int):
             invoice = raw.types.InputInvoiceMessage(
-                peer=await self.resolve_peer(chat_id),
-                msg_id=message_id
+                peer=await self.resolve_peer(chat_id), msg_id=message_id
             )
         elif isinstance(message_id, str):
-            match = re.match(r"^(?:https?://)?(?:www\.)?(?:t(?:elegram)?\.(?:org|me|dog)/\$)([\w-]+)$", message_id)
-
-            if match:
-                slug = match.group(1)
-            else:
-                slug = message_id
-
-            invoice = raw.types.InputInvoiceSlug(
-                slug=slug
+            match = re.match(
+                r"^(?:https?://)?(?:www\.)?(?:t(?:elegram)?\.(?:org|me|dog)/\$)([\w-]+)$",
+                message_id,
             )
 
-        r = await self.invoke(
-            raw.functions.payments.GetPaymentForm(
-                invoice=invoice
-            )
-        )
+            slug = match.group(1) if match else message_id
+
+            invoice = raw.types.InputInvoiceSlug(slug=slug)
+
+        r = await self.invoke(raw.functions.payments.GetPaymentForm(invoice=invoice))
 
         return types.PaymentForm._parse(self, r)

@@ -26,6 +26,7 @@ from .message_reaction_count_updated import (
 from .message_reaction_updated import MessageReactionUpdated
 from .message_reactions import MessageReactions
 from .message_story import MessageStory
+from .payment_form import PaymentForm
 from .photo import Photo
 from .poll import Poll
 from .poll_option import PollOption
@@ -50,7 +51,6 @@ from .voice import Voice
 from .web_app_data import WebAppData
 from .web_page import WebPage
 from .web_page_empty import WebPageEmpty
-from .payment_form import PaymentForm
 from .web_page_preview import WebPagePreview
 
 __all__ = [

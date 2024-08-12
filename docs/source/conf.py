@@ -5,8 +5,6 @@ from pathlib import Path
 
 from pygments.styles.friendly import FriendlyStyle
 
-from pyrogram import __version__
-
 # Set the system path
 sys.path.insert(0, str(Path("../..").resolve()))
 
@@ -41,7 +39,7 @@ templates_path = ["../resources/templates"]
 
 # HTML options
 html_copy_source = False
-html_title = f"Electrogram Docs"
+html_title = "Electrogram Docs"
 html_theme = "sphinx_immaterial"
 html_show_sourcelink = True
 html_show_copyright = False
