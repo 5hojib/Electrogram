@@ -120,6 +120,6 @@ latex_elements = {
 
 # Custom CSS files
 html_css_files = [
-    "css/custom.css",
-    "css/all.min.css",
+    "_static/css/custom.css",
+    "_static/css/all.min.css",
 ]

@@ -47,19 +47,6 @@ Utilities
 
 .. currentmodule:: pyrogram.Client
 
-Conversation
-------------
-
-.. autosummary::
-    :nosignatures:
-
-    {conversation}
-
-.. toctree::
-    :hidden:
-
-    {conversation}
-
 Messages
 --------
 
