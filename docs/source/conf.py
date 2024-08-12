@@ -41,7 +41,7 @@ templates_path = ["../resources/templates"]
 
 # HTML options
 html_copy_source = False
-html_title = f"Electrogram {__version__}"
+html_title = f"Electrogram Docs"
 html_theme = "sphinx_immaterial"
 html_show_sourcelink = True
 html_show_copyright = False

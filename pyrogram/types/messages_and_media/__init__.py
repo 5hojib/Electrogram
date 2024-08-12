@@ -50,6 +50,7 @@ from .voice import Voice
 from .web_app_data import WebAppData
 from .web_page import WebPage
 from .web_page_empty import WebPageEmpty
+from .payment_form import PaymentForm
 from .web_page_preview import WebPagePreview
 
 __all__ = [
@@ -76,6 +77,7 @@ __all__ = [
     "StrippedThumbnail",
     "Poll",
     "PollOption",
+    "PaymentForm",
     "Sticker",
     "StickerSet",
     "Venue",

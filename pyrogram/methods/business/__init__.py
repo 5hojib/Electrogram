@@ -8,6 +8,8 @@ from .get_stars_transactions import GetStarsTransactions
 from .get_stars_transactions_by_id import GetStarsTransactionsById
 from .refund_stars_payment import RefundStarPayment
 from .send_invoice import SendInvoice
+from .get_payment_form import GetPaymentForm
+from .send_payment_form import SendPaymentForm
 from .send_paid_media import SendPaidMedia
 
 
@@ -21,5 +23,7 @@ class TelegramBusiness(
     RefundStarPayment,
     SendInvoice,
     SendPaidMedia,
+    GetPaymentForm,
+    SendPaymentForm,
 ):
     pass

@@ -367,6 +367,8 @@ def pyrogram_api():
             refund_star_payment
             send_invoice
             send_paid_media
+            get_payment_form
+            send_payment_form
         """,
         "authorization": """
         Authorization
@@ -544,11 +546,6 @@ def pyrogram_api():
             InputMediaArea
             InputMediaAreaChannelPost
         """,
-        "pyromod": """
-        Pyromod
-            Identifier
-            Listener
-        """,
         "bot": """
         Bot
             BotAllowed
@@ -601,6 +598,7 @@ def pyrogram_api():
             Invoice
             PaidMedia
             PaidMediaPreview
+            PaymentForm
             PaymentInfo
             PaymentRefunded
             ShippingAddress
@@ -749,6 +747,7 @@ def pyrogram_api():
             Message.get_media_group
             Message.react
             Message.wait_for_click
+            Message.pay
         """,
         "chat": """
         Chat
