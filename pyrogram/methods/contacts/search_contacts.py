@@ -9,16 +9,21 @@ class SearchContacts:
         self: pyrogram.Client, query: str, limit: int = 0
     ) -> types.FoundContacts:
         """Returns users or channels found by name substring and auxiliary data.
+
         .. include:: /_includes/usable-by/users.rst
+
         Parameters:
             query (``str``):
                 Target substring.
             limit (``int``, *optional*):
                 Maximum number of users to be returned.
+
         Returns:
             :obj:`~pyrogram.types.FoundContacts`: On success, a list of chats is returned.
+
         Example:
             .. code-block:: python
+
                 await app.search_contacts("pyrogram")
         """
         total = limit or (1 << 31) - 1

@@ -44,6 +44,7 @@ html_theme = "sphinx_immaterial"
 html_show_sourcelink = True
 html_show_copyright = False
 html_show_sphinx = False
+html_static_path = ["../resources/static","_static"]
 
 # Napoleon settings
 napoleon_use_rtype = False
@@ -120,6 +121,6 @@ latex_elements = {
 
 # Custom CSS files
 html_css_files = [
-    "_static/css/custom.css",
-    "_static/css/all.min.css",
+    "css/custom.css",
+    "css/all.min.css",
 ]

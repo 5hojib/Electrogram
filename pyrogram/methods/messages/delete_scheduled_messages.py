@@ -14,7 +14,9 @@ class DeleteScheduledMessages:
         self: pyrogram.Client, chat_id: int | str, message_ids: int | Iterable[int]
     ) -> int:
         """Delete scheduled messages.
+
         .. include:: /_includes/usable-by/users-bots.rst
+
         Parameters:
             chat_id (``int`` | ``str``):
                 Unique identifier (int) or username (str) of the target chat.
@@ -23,11 +25,14 @@ class DeleteScheduledMessages:
                 You can also use chat public link in form of *t.me/<username>* (str).
             message_ids (``int`` | Iterable of ``int``):
                 An iterable of message identifiers to delete (integers) or a single message id.
+
         Returns:
             ``int`` | List of ``int``: In case *message_ids* was not
             a list, a single message id is returned, otherwise a list of messages ids is returned.
+
         Example:
             .. code-block:: python
+
                 # Delete one message
                 await app.delete_scheduled_messages(chat_id, message_id)
                 # Delete multiple messages at once
