@@ -29,13 +29,15 @@ jobs:
 
       - name: Run Compiler
         run: |
+          source "$VENV/bin/activate"
           cd compiler/docs
-          "$VENV/bin/python" compiler.py
+          python compiler.py
           cd ../..
 
       - name: Build Documentation
         run: |
-          "$VENV/bin/sphinx-build" -b html "docs/source" "docs/build/html" -j auto
+          source "$VENV/bin/activate"
+          sphinx-build -b html "docs/source" "docs/build/html" -j auto
 
       - name: Clone Electrogram-docs Repository
         run: |
