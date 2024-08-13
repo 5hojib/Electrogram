@@ -44,7 +44,7 @@ html_theme = "sphinx_immaterial"
 html_show_sourcelink = True
 html_show_copyright = False
 html_show_sphinx = False
-html_static_path = ["../resources/static","_static"]
+html_static_path = ["../resources/static", "_static"]
 
 # Napoleon settings
 napoleon_use_rtype = False
