@@ -9,9 +9,9 @@ from pathlib import Path
 HOME = "compiler/docs"
 DESTINATION = "docs/source/telegram"
 PYROGRAM_API_DEST = "docs/source/api"
-FUNCTIONS_PATH = "pyrogram/raw/functions"
-TYPES_PATH = "pyrogram/raw/types"
-BASE_PATH = "pyrogram/raw/base"
+#FUNCTIONS_PATH = "pyrogram/raw/functions"
+#TYPES_PATH = "pyrogram/raw/types"
+#BASE_PATH = "pyrogram/raw/base"
 FUNCTIONS_BASE = "functions"
 TYPES_BASE = "types"
 BASE_BASE = "base"
@@ -22,7 +22,7 @@ def snake(s: str):
     return re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", s).lower()
 
 
-def generate(source_path, base):
+"""def generate(source_path, base):
     all_entities = {}
 
     def build(path, level=0):
@@ -108,7 +108,7 @@ def generate(source_path, base):
             )
 
             f.write("\n")
-
+"""
 
 def pyrogram_api():
     def get_title_list(s: str) -> list:
@@ -870,16 +870,16 @@ def start():
     with Path(HOME, "template/toctree.txt").open(encoding="utf-8") as f:
         toctree = f.read()
 
-    generate(TYPES_PATH, TYPES_BASE)
-    generate(FUNCTIONS_PATH, FUNCTIONS_BASE)
-    generate(BASE_PATH, BASE_BASE)
+    #generate(TYPES_PATH, TYPES_BASE)
+    #generate(FUNCTIONS_PATH, FUNCTIONS_BASE)
+    #generate(BASE_PATH, BASE_BASE)
     pyrogram_api()
 
 
 if __name__ == "__main__":
-    FUNCTIONS_PATH = "../../pyrogram/raw/functions"
-    TYPES_PATH = "../../pyrogram/raw/types"
-    BASE_PATH = "../../pyrogram/raw/base"
+    #FUNCTIONS_PATH = "../../pyrogram/raw/functions"
+    #TYPES_PATH = "../../pyrogram/raw/types"
+    #BASE_PATH = "../../pyrogram/raw/base"
     HOME = "."
     DESTINATION = "../../docs/source/telegram"
     PYROGRAM_API_DEST = "../../docs/source/api"
