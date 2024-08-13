@@ -495,7 +495,6 @@ def pyrogram_api():
             Poll
             PollOption
             Dice
-            Reaction
             VideoChatScheduled
             VideoChatStarted
             VideoChatEnded

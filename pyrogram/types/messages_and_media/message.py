@@ -761,7 +761,7 @@ class Message(Object, Update):
             chat_join_type = None
             screenshot_taken = None
 
-            service_type = enums.MessageServiceType.UNKNOWN_EMPTY
+            service_type = enums.MessageServiceType.UNKNOWN
 
             from_user = types.User._parse(client, users.get(user_id))
             sender_chat = (

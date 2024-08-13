@@ -7,12 +7,62 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-22.04
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Build
-        run: bash build-docs.sh
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup environment variables
+        run: |
+          export VENV="$(pwd)/venv"
+          echo "VENV=$VENV" >> $GITHUB_ENV
+
+      - name: Clean and prepare environment
+        run: |
+          make clean
+          make clean-docs
+          make venv
+          make api
+          "$VENV/bin/pip" install -e '.[docs]'
+
+      - name: Generate documentation
+        run: |
+          cd compiler/docs
+          "$VENV/bin/python" compiler.py
+          cd ../..
+          "$VENV/bin/sphinx-build" -b html "docs/source" "docs/build/html" -j auto
+
+      - name: Clone Electrogram-docs repository
+        run: |
+          git clone https://5hojib:"$GITHUB_TOKEN"@github.com/5hojib/Electrogram-docs.git
+        env:
+          GITHUB_TOKEN: ${{ secrets.GX_TOKEN }}
+
+      - name: Clean up old documentation
+        run: |
+          cd Electrogram-docs
+          rm -rf _includes api genindex.html intro py-modindex.html sitemap.xml \
+                 support.html topics _static faq index.html objects.inv \
+                 searchindex.js start telegram
+
+      - name: Copy new documentation
+        run: |
+          cp -r ../docs/build/html/* .
+
+      - name: Configure Git
+        run: |
+          git config --local user.name "5hojib"
+          git config --local user.email "yesiamshojib@gmail.com"
+
+      - name: Commit and push changes
+        run: |
+          git add --all
+          git commit -m "Update docs" --signoff
+          git checkout --orphan x
+          git commit -m "Update docs" --signoff
+          git branch -D main
+          git branch -m main
+          git push --force origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GX_TOKEN }}

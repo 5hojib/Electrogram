@@ -4,7 +4,7 @@ Quick Start
 The next few steps serve as a quick start to see Electrogram in action as fast as possible.
 
 Get Electrogram Real Fast
-----------------------
+-------------------------
 
 1. Install Electrogram with ``pip3 install electrogram``.
 

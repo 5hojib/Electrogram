@@ -12,7 +12,7 @@ We recommend using the latest versions of both Python 3 and pip.
 -----
 
 Install Electrogram
-----------------
+-------------------
 
 -   The easiest way to install and upgrade Electrogram to its latest stable version is by using **pip**:
 
