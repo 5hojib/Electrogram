@@ -642,7 +642,7 @@ general_forum_topic_unhidden = create(general_topic_unhidden_filter)
 def command(
     commands: str | list[str],
     prefixes: str | list[str] = "/",
-    case_sensitive: bool = True,
+    case_sensitive: bool = False,
 ):
     """Filter commands, i.e.: text messages starting with "/" or any other custom prefix.
 
@@ -659,7 +659,7 @@ def command(
             Pass None or "" (empty string) to allow commands with no prefix at all.
 
         case_sensitive (``bool``, *optional*):
-            Pass True if you want your command(s) to be case sensitive. Defaults to True.
+            Pass True if you want your command(s) to be case sensitive. Defaults to False.
             Examples: when True, command="Start" would trigger /Start but not /start.
     """
     command_re = re.compile(r"([\"'])(.*?)(?<!\\)\1|(\S+)")
