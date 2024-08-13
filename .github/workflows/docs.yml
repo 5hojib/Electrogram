@@ -3,22 +3,23 @@ name: Build-docs
 on:
   push:
     branches:
-    - test
+      - test
 
 jobs:
   build:
     runs-on: ubuntu-22.04
 
     steps:
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Setup environment variables
+      - name: Setup Environment
         run: |
-          export VENV="$(pwd)/venv"
-          echo "VENV=$VENV" >> $GITHUB_ENV
+          export GITHUB_TOKEN
+          VENV="$(pwd)/venv"
+          export VENV
 
-      - name: Clean and prepare environment
+      - name: Clean and Setup Virtual Environment
         run: |
           make clean
           make clean-docs
@@ -26,37 +27,35 @@ jobs:
           make api
           "$VENV/bin/pip" install -e '.[docs]'
 
-      - name: Generate documentation
+      - name: Run Compiler
         run: |
           cd compiler/docs
           "$VENV/bin/python" compiler.py
           cd ../..
+
+      - name: Build Documentation
+        run: |
           "$VENV/bin/sphinx-build" -b html "docs/source" "docs/build/html" -j auto
 
-      - name: Clone Electrogram-docs repository
+      - name: Clone Electrogram-docs Repository
         run: |
           git clone https://5hojib:"$GITHUB_TOKEN"@github.com/5hojib/Electrogram-docs.git
-        env:
-          GITHUB_TOKEN: ${{ secrets.GX_TOKEN }}
-
-      - name: Clean up old documentation
-        run: |
           cd Electrogram-docs
+
+      - name: Clean Old Documentation
+        run: |
           rm -rf _includes api genindex.html intro py-modindex.html sitemap.xml \
                  support.html topics _static faq index.html objects.inv \
                  searchindex.js start telegram
 
-      - name: Copy new documentation
+      - name: Copy New Documentation
         run: |
           cp -r ../docs/build/html/* .
 
-      - name: Configure Git
+      - name: Commit and Push Changes
         run: |
           git config --local user.name "5hojib"
           git config --local user.email "yesiamshojib@gmail.com"
-
-      - name: Commit and push changes
-        run: |
           git add --all
           git commit -m "Update docs" --signoff
           git checkout --orphan x
