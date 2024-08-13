@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import ast
-import os
 import re
 import shutil
 from pathlib import Path
@@ -9,9 +7,9 @@ from pathlib import Path
 HOME = "compiler/docs"
 DESTINATION = "docs/source/telegram"
 PYROGRAM_API_DEST = "docs/source/api"
-#FUNCTIONS_PATH = "pyrogram/raw/functions"
-#TYPES_PATH = "pyrogram/raw/types"
-#BASE_PATH = "pyrogram/raw/base"
+# FUNCTIONS_PATH = "pyrogram/raw/functions"
+# TYPES_PATH = "pyrogram/raw/types"
+# BASE_PATH = "pyrogram/raw/base"
 FUNCTIONS_BASE = "functions"
 TYPES_BASE = "types"
 BASE_BASE = "base"
@@ -109,6 +107,7 @@ def snake(s: str):
 
             f.write("\n")
 """
+
 
 def pyrogram_api():
     def get_title_list(s: str) -> list:
@@ -870,16 +869,16 @@ def start():
     with Path(HOME, "template/toctree.txt").open(encoding="utf-8") as f:
         toctree = f.read()
 
-    #generate(TYPES_PATH, TYPES_BASE)
-    #generate(FUNCTIONS_PATH, FUNCTIONS_BASE)
-    #generate(BASE_PATH, BASE_BASE)
+    # generate(TYPES_PATH, TYPES_BASE)
+    # generate(FUNCTIONS_PATH, FUNCTIONS_BASE)
+    # generate(BASE_PATH, BASE_BASE)
     pyrogram_api()
 
 
 if __name__ == "__main__":
-    #FUNCTIONS_PATH = "../../pyrogram/raw/functions"
-    #TYPES_PATH = "../../pyrogram/raw/types"
-    #BASE_PATH = "../../pyrogram/raw/base"
+    # FUNCTIONS_PATH = "../../pyrogram/raw/functions"
+    # TYPES_PATH = "../../pyrogram/raw/types"
+    # BASE_PATH = "../../pyrogram/raw/base"
     HOME = "."
     DESTINATION = "../../docs/source/telegram"
     PYROGRAM_API_DEST = "../../docs/source/api"
