@@ -7,9 +7,6 @@ from pathlib import Path
 HOME = "compiler/docs"
 DESTINATION = "docs/source/telegram"
 PYROGRAM_API_DEST = "docs/source/api"
-# FUNCTIONS_PATH = "pyrogram/raw/functions"
-# TYPES_PATH = "pyrogram/raw/types"
-# BASE_PATH = "pyrogram/raw/base"
 FUNCTIONS_BASE = "functions"
 TYPES_BASE = "types"
 BASE_BASE = "base"
@@ -18,95 +15,6 @@ BASE_BASE = "base"
 def snake(s: str):
     s = re.sub(r"(.)([A-Z][a-z]+)", r"\1_\2", s)
     return re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", s).lower()
-
-
-"""def generate(source_path, base):
-    all_entities = {}
-
-    def build(path, level=0):
-        last = path.split("/")[-1]
-
-        for i in os.listdir(path):
-            try:
-                if not i.startswith("__"):
-                    build("/".join([path, i]), level=level + 1)
-            except NotADirectoryError:
-                with Path(path, i).open(encoding="utf-8") as f:
-                    p = ast.parse(f.read())
-
-                for node in ast.walk(p):
-                    if isinstance(node, ast.ClassDef):
-                        name = node.name
-                        break
-                else:
-                    continue
-
-                full_path = (
-                    Path(path).name + "/" + snake(name).replace("_", "-") + ".rst"
-                )
-
-                if level:
-                    full_path = base + "/" + full_path
-
-                namespace = path.split("/")[-1]
-                if namespace in ["base", "types", "functions"]:
-                    namespace = ""
-
-                full_name = f"{(namespace + '.') if namespace else ''}{name}"
-
-                Path(DESTINATION, full_path).parent.mkdir(
-                    parents=True, exist_ok=True
-                )
-
-                with Path(DESTINATION, full_path).open("w", encoding="utf-8") as f:
-                    f.write(
-                        page_template.format(
-                            title=full_name,
-                            title_markup="=" * len(full_name),
-                            full_class_path="pyrogram.raw.{}".format(
-                                ".".join(full_path.split("/")[:-1]) + "." + name
-                            ),
-                        )
-                    )
-
-                if last not in all_entities:
-                    all_entities[last] = []
-
-                all_entities[last].append(name)
-
-    build(source_path)
-
-    for k, v in sorted(all_entities.items()):
-        v = sorted(v)
-        entities = [f'{i} <{snake(i).replace("_", "-")}>' for i in v]
-
-        if k != base:
-            inner_path = base + "/" + k + "/index" + ".rst"
-            module = f"pyrogram.raw.{base}.{k}"
-        else:
-            for i in sorted(all_entities, reverse=True):
-                if i != base:
-                    entities.insert(0, f"{i}/index")
-
-            inner_path = base + "/index" + ".rst"
-            module = f"pyrogram.raw.{base}"
-
-        with Path(DESTINATION, inner_path).open("w", encoding="utf-8") as f:
-            if k == base:
-                f.write(":tocdepth: 1\n\n")
-                k = "Raw " + k
-
-            f.write(
-                toctree.format(
-                    title=k.title(),
-                    title_markup="=" * len(k),
-                    module=module,
-                    entities="\n    ".join(entities),
-                )
-            )
-
-            f.write("\n")
-"""
 
 
 def pyrogram_api():
@@ -869,16 +777,10 @@ def start():
     with Path(HOME, "template/toctree.txt").open(encoding="utf-8") as f:
         toctree = f.read()
 
-    # generate(TYPES_PATH, TYPES_BASE)
-    # generate(FUNCTIONS_PATH, FUNCTIONS_BASE)
-    # generate(BASE_PATH, BASE_BASE)
     pyrogram_api()
 
 
 if __name__ == "__main__":
-    # FUNCTIONS_PATH = "../../pyrogram/raw/functions"
-    # TYPES_PATH = "../../pyrogram/raw/types"
-    # BASE_PATH = "../../pyrogram/raw/base"
     HOME = "."
     DESTINATION = "../../docs/source/telegram"
     PYROGRAM_API_DEST = "../../docs/source/api"
