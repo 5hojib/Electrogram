@@ -200,7 +200,6 @@ def pyrogram_api():
             delete_chat_photo
             delete_folder
             export_folder_link
-            update_folder
             set_chat_title
             set_chat_description
             set_chat_permissions
@@ -433,7 +432,6 @@ def pyrogram_api():
             BusinessInfo
             BusinessMessage
             BusinessRecipients
-            BusinessSchedule
             BusinessWeeklyOpen
             BusinessWorkingHours
             User

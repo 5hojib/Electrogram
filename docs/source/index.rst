@@ -1,5 +1,5 @@
 Welcome to Electrogram
-===================
+======================
 
 .. raw:: html
 

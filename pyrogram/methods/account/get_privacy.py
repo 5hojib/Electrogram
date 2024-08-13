@@ -9,14 +9,19 @@ class GetPrivacy:
         self: pyrogram.Client, key: enums.PrivacyKey
     ) -> types.PrivacyRule:
         """Get account privacy rules.
+
         .. include:: /_includes/usable-by/users.rst
+
         Parameters:
             key (:obj:`~pyrogram.enums.PrivacyKey`):
                 Privacy key.
+
         Returns:
             List of :obj:`~pyrogram.types.PrivacyRule`: On success, the list of privacy rules is returned.
+
         Example:
             .. code-block:: python
+
                 from pyrogram import enums
                 await app.get_privacy(enums.PrivacyKey.PHONE_NUMBER)
         """

@@ -23,7 +23,9 @@ class DeleteChatHistory:
         max_date: datetime | None = None,
     ) -> int:
         """Delete the history of a chat.
+
         .. include:: /_includes/usable-by/users.rst
+
         Parameters:
             chat_id (``int`` | ``str``):
                 Unique identifier (int) or username (str) of the target chat.
@@ -41,10 +43,13 @@ class DeleteChatHistory:
             max_date (:py:obj:`~datetime.datetime`, *optional*):
                 Delete all messages older than this time.
                 For private and simple group chats only.
+
         Returns:
             ``int``: Amount of affected messages
+
         Example:
             .. code-block:: python
+
                 # Delete all messages in channel
                 await app.delete_chat_history(chat_id, revoke=True)
         """

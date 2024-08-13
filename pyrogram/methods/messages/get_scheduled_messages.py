@@ -18,7 +18,9 @@ class GetScheduledMessages:
     ) -> types.Message | list[types.Message]:
         """Get one or more scheduled messages from a chat by using message identifiers.
         You can retrieve up to 200 messages at once.
+
         .. include:: /_includes/usable-by/users-bots.rst
+
         Parameters:
             chat_id (``int`` | ``str``):
                 Unique identifier (int) or username (str) of the target chat.
@@ -28,15 +30,19 @@ class GetScheduledMessages:
             message_ids (``int`` | Iterable of ``int``):
                 Pass a single message identifier or an iterable of message ids (as integers) to get the content of the
                 message themselves.
+
         Returns:
             :obj:`~pyrogram.types.Message` | List of :obj:`~pyrogram.types.Message`: In case *message_ids* was not
             a list, a single message is returned, otherwise a list of messages is returned.
+
         Example:
             .. code-block:: python
+
                 # Get one scheduled message
                 await app.get_scheduled_message(chat_id, 12345)
                 # Get more than one scheduled message (list of messages)
                 await app.get_scheduled_message(chat_id, [12345, 12346])
+
         Raises:
             ValueError: In case of invalid arguments.
         """

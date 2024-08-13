@@ -87,7 +87,7 @@ Bot keyboards
     {bot_keyboards}
 
 Bot commands
--------------
+------------
 
 .. autosummary::
     :nosignatures:
@@ -100,7 +100,7 @@ Bot commands
     {bot_commands}
 
 Telegram Business
--------------
+-----------------
 
 .. autosummary::
     :nosignatures:

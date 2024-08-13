@@ -100,7 +100,7 @@ Stickers
     {stickers}
 
 Telegram Business
--------------
+-----------------
 
 .. autosummary::
     :nosignatures:
