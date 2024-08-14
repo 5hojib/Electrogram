@@ -58,6 +58,7 @@ def pyrogram_api():
             send_contact
             send_cached_media
             send_reaction
+            send_paid_media
             edit_message_text
             edit_message_caption
             edit_message_media
@@ -259,7 +260,6 @@ def pyrogram_api():
             get_stars_transactions_by_id
             refund_star_payment
             send_invoice
-            send_paid_media
             get_payment_form
             send_payment_form
         """,

@@ -55,6 +55,7 @@ from .send_web_page import SendWebPage
 from .stop_poll import StopPoll
 from .stream_media import StreamMedia
 from .translate_text import TranslateText
+from .send_paid_media import SendPaidMedia
 from .vote_poll import VotePoll
 
 
@@ -86,6 +87,7 @@ class Messages(
     SendVideoNote,
     SendVoice,
     SendWebPage,
+    SendPaidMedia,
     SendPoll,
     TranslateText,
     VotePoll,
