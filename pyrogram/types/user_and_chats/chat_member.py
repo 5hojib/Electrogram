@@ -128,7 +128,9 @@ class ChatMember(Object):
                 status=enums.ChatMemberStatus.MEMBER,
                 user=types.User._parse(client, users[member.user_id]),
                 joined_date=utils.timestamp_to_datetime(member.date),
-                until_date=utils.timestamp_to_datetime(member.subscription_until_date),
+                until_date=utils.timestamp_to_datetime(
+                    member.subscription_until_date
+                ),
                 client=client,
             )
         if isinstance(member, raw.types.ChannelParticipantAdmin):
@@ -216,7 +218,9 @@ class ChatMember(Object):
                 user=types.User._parse(client, users[member.user_id]),
                 joined_date=utils.timestamp_to_datetime(member.date),
                 invited_by=types.User._parse(client, users[member.inviter_id]),
-                until_date=utils.timestamp_to_datetime(member.subscription_until_date),
+                until_date=utils.timestamp_to_datetime(
+                    member.subscription_until_date
+                ),
                 client=client,
             )
         return None

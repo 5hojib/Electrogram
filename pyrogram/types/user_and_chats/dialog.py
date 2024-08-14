@@ -1,8 +1,8 @@
+from __future__ import annotations
+
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
-from ..object import Object
-from ... import utils
+from pyrogram import raw, types, utils
+from pyrogram.types.object import Object
 
 
 class Dialog(Object):
@@ -20,7 +20,7 @@ class Dialog(Object):
 
         unread_mentions_count (``int``):
             Amount of unread messages containing a mention in this dialog.
-        
+
         unread_reactions_count (``int``):
             Amount of unread messages containing a reaction in this dialog.
 
@@ -29,7 +29,7 @@ class Dialog(Object):
 
         is_pinned (``bool``):
             True, if the dialog is pinned.
-        
+
         chat_list (``int``):
             Chat list in which the dialog is present; Only Main (0) and Archive (1) chat lists are supported.
 
@@ -37,7 +37,7 @@ class Dialog(Object):
             Current message auto-delete or self-destruct timer setting for the chat, in seconds; 0 if disabled.
             Self-destruct timer in secret chats starts after the message or its content is viewed.
             Auto-delete timer in other chats starts from the send date.
-        
+
         view_as_topics (``bool``):
             True, if the chat is a forum supergroup that must be shown in the "View as topics" mode, or Saved Messages chat that must be shown in the "View as chats".
 
@@ -46,9 +46,9 @@ class Dialog(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
-        chat: "types.Chat",
-        top_message: "types.Message",
+        client: pyrogram.Client = None,
+        chat: types.Chat,
+        top_message: types.Message,
         unread_messages_count: int,
         unread_mentions_count: int,
         unread_reactions_count: int,
@@ -57,7 +57,7 @@ class Dialog(Object):
         chat_list: int,
         message_auto_delete_time: int,
         view_as_topics: bool,
-        _raw: "raw.types.Dialog" = None
+        _raw: raw.types.Dialog = None,
     ):
         super().__init__(client)
 
@@ -74,7 +74,7 @@ class Dialog(Object):
         self._raw = _raw
 
     @staticmethod
-    def _parse(client, dialog: "raw.types.Dialog", messages, users, chats) -> "Dialog":
+    def _parse(client, dialog: raw.types.Dialog, messages, users, chats) -> Dialog:
         return Dialog(
             chat=types.Chat._parse_dialog(client, dialog.peer, users, chats),
             top_message=messages.get(utils.get_peer_id(dialog.peer)),
@@ -87,5 +87,5 @@ class Dialog(Object):
             message_auto_delete_time=getattr(dialog, "ttl_period", 0),
             view_as_topics=not dialog.view_forum_as_messages,
             client=client,
-            _raw=dialog
+            _raw=dialog,
         )
