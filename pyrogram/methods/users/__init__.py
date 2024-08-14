@@ -30,6 +30,7 @@ from .update_profile import UpdateProfile
 class Users(
     BlockUser,
     DeleteStories,
+    DeleteAccount,
     EditStory,
     ExportStoryLink,
     ForwardStory,

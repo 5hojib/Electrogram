@@ -22,3 +22,7 @@ a .pre{
 .md-sidebar a {
     text-decoration: none;
 }
+
+.headerlink {
+    display: none;
+}
