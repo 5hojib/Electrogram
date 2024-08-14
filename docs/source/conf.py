@@ -42,6 +42,7 @@ html_copy_source = False
 html_title = "Electrogram Docs"
 html_theme = "sphinx_immaterial"
 html_show_sourcelink = True
+html_permalinks = False
 html_show_copyright = False
 html_show_sphinx = False
 html_static_path = ["../resources/static", "_static"]
