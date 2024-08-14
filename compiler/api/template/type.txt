@@ -4,9 +4,7 @@ from pyrogram.raw.core import TLObject
 
 {name} = Union[{types}]
 
-
-# noinspection PyRedeclaration
-class {name}:  # type: ignore
+class {name}:
     QUALNAME = "pyrogram.raw.base.{qualname}"
 
     def __init__(self):

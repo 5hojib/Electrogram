@@ -52,6 +52,7 @@ from .web_app_data import WebAppData
 from .web_page import WebPage
 from .web_page_empty import WebPageEmpty
 from .web_page_preview import WebPagePreview
+from .translated_text import TranslatedText
 
 __all__ = [
     "Animation",
@@ -101,6 +102,7 @@ __all__ = [
     "StorySkipped",
     "StoryViews",
     "StoryForwardHeader",
+    "TranslatedText",
     "StoriesPrivacyRules",
     "ExportedStoryLink",
     "ScreenshotTaken",

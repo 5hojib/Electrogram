@@ -93,6 +93,7 @@ def pyrogram_api():
             get_discussion_replies
             get_discussion_replies_count
             get_custom_emoji_stickers
+            translate_text
         """,
         "chats": """
         Chats
@@ -156,6 +157,7 @@ def pyrogram_api():
         """,
         "users": """
         Users
+            delete_account
             get_me
             get_users
             get_chat_photos
@@ -420,6 +422,7 @@ def pyrogram_api():
             ReactionType
             MessageReactionUpdated
             MessageReactionCountUpdated
+            TranslatedText
         """,
         "stories": """
         Stories

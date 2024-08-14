@@ -6,7 +6,7 @@ from pyrogram import raw
 from typing import List, Optional, Any
 
 
-class {name}(TLObject):  # type: ignore
+class {name}(TLObject):
     __slots__: List[str] = [{slots}]
 
     ID = {id}
