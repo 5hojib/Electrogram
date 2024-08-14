@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import pyrogram
 from pyrogram import raw
 from pyrogram.utils import compute_password_check
@@ -5,7 +7,7 @@ from pyrogram.utils import compute_password_check
 
 class DeleteAccount:
     async def delete_account(
-        self: "pyrogram.Client", reason: str = "", password: str = None
+        self: pyrogram.Client, reason: str = "", password: str | None = None
     ) -> bool:
         """Deletes the account of the current user, deleting all information associated with the user from the server.
 

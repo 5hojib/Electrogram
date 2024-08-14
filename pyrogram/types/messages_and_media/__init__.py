@@ -44,6 +44,7 @@ from .story_skipped import StorySkipped
 from .story_views import StoryViews
 from .stripped_thumbnail import StrippedThumbnail
 from .thumbnail import Thumbnail
+from .translated_text import TranslatedText
 from .venue import Venue
 from .video import Video
 from .video_note import VideoNote
@@ -52,7 +53,6 @@ from .web_app_data import WebAppData
 from .web_page import WebPage
 from .web_page_empty import WebPageEmpty
 from .web_page_preview import WebPagePreview
-from .translated_text import TranslatedText
 
 __all__ = [
     "Animation",
