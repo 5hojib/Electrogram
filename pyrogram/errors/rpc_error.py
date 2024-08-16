@@ -27,11 +27,12 @@ class RPCError(Exception):
         is_signed: bool = False,
     ) -> None:
         super().__init__(
-            "Telegram says: [{}{} {}] - {}".format(
+            "Telegram says: [{}{} {}] - {} {}".format(
                 "-" if is_signed else "",
                 self.CODE,
                 self.ID or self.NAME,
                 self.MESSAGE.format(value=value),
+                f'(caused by "{rpc_name}")' if rpc_name else "",
             )
         )
 
