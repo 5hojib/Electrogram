@@ -57,6 +57,7 @@ from .stop_poll import StopPoll
 from .stream_media import StreamMedia
 from .translate_text import TranslateText
 from .vote_poll import VotePoll
+from .send_paid_reaction import SendPaidReaction
 
 
 class Messages(
@@ -88,6 +89,7 @@ class Messages(
     SendVoice,
     SendWebPage,
     SendPaidMedia,
+    SendPaidReaction,
     SendPoll,
     TranslateText,
     VotePoll,

@@ -58,6 +58,7 @@ def pyrogram_api():
             send_contact
             send_cached_media
             send_reaction
+            send_paid_reaction
             send_paid_media
             edit_message_text
             edit_message_caption
@@ -418,6 +419,7 @@ def pyrogram_api():
             GeneralTopicHidden
             GeneralTopicUnhidden
             Reaction
+            ReactionTypePaid
             ReactionCount
             ReactionType
             MessageReactionUpdated
@@ -765,6 +767,68 @@ def pyrogram_api():
 
                     f2.write(title + "\n" + "=" * len(title) + "\n\n")
                     f2.write(f".. automethod:: pyrogram.types.{bm}()")
+
+        f.write(template.format(**fmt_keys))
+    
+    # Enumerations
+
+    categories = dict(
+        enums="""
+        Enumerations
+            AccentColor,
+            BusinessSchedule,
+            ChatAction,
+            ChatEventAction,
+            ChatMemberStatus,
+            ChatMembersFilter,
+            ChatType,
+            ChatJoinType,
+            ClientPlatform,
+            FolderColor,
+            ListenerTypes,
+            MessageEntityType,
+            MessageMediaType,
+            MessageServiceType,
+            MessagesFilter,
+            NextCodeType,
+            ParseMode,
+            PollType,
+            ProfileColor,
+            PrivacyKey,
+            ReactionType,
+            ReplyColor,
+            SentCodeType,
+            StoriesPrivacyRules,
+            StoryPrivacy,
+            UserStatus,
+        """,
+    )
+
+    root = PYROGRAM_API_DEST + "/enums"
+
+    with open(HOME + "/template/enums.rst") as f:
+        template = f.read()
+
+    with open(root + "/index.rst", "w") as f:
+        fmt_keys = {}
+
+        for k, v in categories.items():
+            name, *enums = get_title_list(v)
+
+            fmt_keys.update({"{}_hlist".format(k): "\n    ".join("{}".format(enum) for enum in enums)})
+
+            fmt_keys.update(
+                {"{}_toctree".format(k): "\n    ".join("{}".format(enum) for enum in enums)})
+
+            # noinspection PyShadowingBuiltins
+            for enum in enums:
+                with open(root + "/{}.rst".format(enum), "w") as f2:
+                    title = "{}".format(enum)
+
+                    f2.write(title + "\n" + "=" * len(title) + "\n\n")
+                    f2.write(".. autoclass:: pyrogram.enums.{}()".format(enum))
+                    f2.write("\n    :members:\n")
+                    f2.write("\n.. raw:: html\n    :file: ./cleanup.html\n")
 
         f.write(template.format(**fmt_keys))
 
