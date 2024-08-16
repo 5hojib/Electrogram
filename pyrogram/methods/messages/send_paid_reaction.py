@@ -17,21 +17,29 @@ class SendPaidReaction:
         is_anonymous: bool = False,
     ) -> types.MessageReactions:
         """Adds the paid message reaction to a message.
+
         .. include:: /_includes/usable-by/users.rst
+
         Parameters:
             chat_id (``int`` | ``str``):
                 Unique identifier (int) or username (str) of the target chat.
+
             message_id (``int``):
                 Identifier of the target message. If the message belongs to a media group, the reaction is set to the first non-deleted message in the group instead.
+
             star_count (``int``, *optional*):
                 Number of Telegram Stars to be used for the reaction; 1-2500.
+
             is_anonymous (``bool``, *optional*):
                 Pass True to make paid reaction of the user on the message anonymous; pass False to make the user's profile visible among top reactors.
                 Defaults to False.
+
         Returns:
             On success, :obj:`~pyrogram.types.MessageReactions`: is returned.
+
         Example:
             .. code-block:: python
+
                 # Add a paid reaction to a message
                 await app.add_paid_message_reaction(chat_id, message_id, 1, False)
         """
