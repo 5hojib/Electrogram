@@ -5,8 +5,13 @@ from pyrogram.raw.core import TLObject
 from pyrogram import raw
 from typing import List, Optional, Any
 
+{warning}
 
-class {name}(TLObject):
+
+class {name}(TLObject):  # type: ignore
+    """{docstring}
+    """
+
     __slots__: List[str] = [{slots}]
 
     ID = {id}

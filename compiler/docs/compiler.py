@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import ast
+import os
 import re
 import shutil
 from pathlib import Path
@@ -7,14 +9,106 @@ from pathlib import Path
 HOME = "compiler/docs"
 DESTINATION = "docs/source/telegram"
 PYROGRAM_API_DEST = "docs/source/api"
+
+FUNCTIONS_PATH = "pyrogram/raw/functions"
+TYPES_PATH = "pyrogram/raw/types"
+BASE_PATH = "pyrogram/raw/base"
+
 FUNCTIONS_BASE = "functions"
 TYPES_BASE = "types"
 BASE_BASE = "base"
 
 
-def snake(s: str):
+def snek(s: str):
     s = re.sub(r"(.)([A-Z][a-z]+)", r"\1_\2", s)
     return re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", s).lower()
+
+
+def generate(source_path, base):
+    all_entities = {}
+
+    def build(path, level=0):
+        last = path.split("/")[-1]
+
+        for i in os.listdir(path):
+            try:
+                if not i.startswith("__"):
+                    build("/".join([path, i]), level=level + 1)
+            except NotADirectoryError:
+                with open(path + "/" + i, encoding="utf-8") as f:
+                    p = ast.parse(f.read())
+
+                for node in ast.walk(p):
+                    if isinstance(node, ast.ClassDef):
+                        name = node.name
+                        break
+                else:
+                    continue
+
+                full_path = os.path.basename(path) + "/" + snek(name).replace("_", "-") + ".rst"
+
+                if level:
+                    full_path = base + "/" + full_path
+
+                namespace = path.split("/")[-1]
+                if namespace in ["base", "types", "functions"]:
+                    namespace = ""
+
+                full_name = f"{(namespace + '.') if namespace else ''}{name}"
+
+                os.makedirs(os.path.dirname(DESTINATION + "/" + full_path), exist_ok=True)
+
+                with open(DESTINATION + "/" + full_path, "w", encoding="utf-8") as f:
+                    f.write(
+                        page_template.format(
+                            title=full_name,
+                            title_markup="=" * len(full_name),
+                            full_class_path="pyrogram.raw.{}".format(
+                                ".".join(full_path.split("/")[:-1]) + "." + name
+                            )
+                        )
+                    )
+
+                if last not in all_entities:
+                    all_entities[last] = []
+
+                all_entities[last].append(name)
+
+    build(source_path)
+
+    for k, v in sorted(all_entities.items()):
+        v = sorted(v)
+        entities = []
+
+        for i in v:
+            entities.append(f'{i} <{snek(i).replace("_", "-")}>')
+
+        if k != base:
+            inner_path = base + "/" + k + "/index" + ".rst"
+            module = "pyrogram.raw.{}.{}".format(base, k)
+        else:
+            for i in sorted(list(all_entities), reverse=True):
+                if i != base:
+                    entities.insert(0, "{0}/index".format(i))
+
+            inner_path = base + "/index" + ".rst"
+            module = "pyrogram.raw.{}".format(base)
+
+        with open(DESTINATION + "/" + inner_path, "w", encoding="utf-8") as f:
+            if k == base:
+                f.write(":tocdepth: 1\n\n")
+                k = "Raw " + k
+
+            f.write(
+                toctree.format(
+                    title=k.title(),
+                    title_markup="=" * len(k),
+                    module=module,
+                    entities="\n    ".join(entities)
+                )
+            )
+
+            f.write("\n")
 
 
 def pyrogram_api():
@@ -303,33 +397,33 @@ def pyrogram_api():
     root = PYROGRAM_API_DEST + "/methods"
 
     shutil.rmtree(root, ignore_errors=True)
-    Path(root).mkdir()
+    os.mkdir(root)
 
-    with Path(HOME, "template/methods.rst").open() as f:
+    with open(HOME + "/template/methods.rst") as f:
         template = f.read()
 
-    with Path(root, "index.rst").open("w") as f:
+    with open(root + "/index.rst", "w") as f:
         fmt_keys = {}
 
         for k, v in categories.items():
             name, *methods = get_title_list(v)
-            fmt_keys.update({k: "\n    ".join(f"{m} <{m}>" for m in methods)})
+            fmt_keys.update({k: "\n    ".join("{0} <{0}>".format(m) for m in methods)})
 
             for method in methods:
-                with Path(root, f"{method}.rst").open("w") as f2:
-                    title = f"{method}()"
+                with open(root + "/{}.rst".format(method), "w") as f2:
+                    title = "{}()".format(method)
 
                     f2.write(title + "\n" + "=" * len(title) + "\n\n")
-                    f2.write(f".. automethod:: pyrogram.Client.{method}()")
+                    f2.write(".. automethod:: pyrogram.Client.{}()".format(method))
 
             functions = ["idle", "compose"]
 
             for func in functions:
-                with Path(root, f"{func}.rst").open("w") as f2:
-                    title = f"{func}()"
+                with open(root + "/{}.rst".format(func), "w") as f2:
+                    title = "{}()".format(func)
 
                     f2.write(title + "\n" + "=" * len(title) + "\n\n")
-                    f2.write(f".. autofunction:: pyrogram.{func}()")
+                    f2.write(".. autofunction:: pyrogram.{}()".format(func))
 
         f.write(template.format(**fmt_keys))
 
@@ -738,100 +832,24 @@ def pyrogram_api():
     with Path(HOME, "template/bound-methods.rst").open() as f:
         template = f.read()
 
-    with Path(root, "index.rst").open("w") as f:
+    with open(root + "/index.rst", "w") as f:
         fmt_keys = {}
 
         for k, v in categories.items():
             name, *bound_methods = get_title_list(v)
 
-            fmt_keys.update(
-                {
-                    f"{k}_hlist": "\n    ".join(
-                        f"- :meth:`~{bm}`" for bm in bound_methods
-                    )
-                }
-            )
+            fmt_keys.update({"{}_hlist".format(k): "\n    ".join("- :meth:`~{}`".format(bm) for bm in bound_methods)})
 
             fmt_keys.update(
-                {
-                    f"{k}_toctree": "\n    ".join(
-                        "{} <{}>".format(bm.split(".")[1], bm)
-                        for bm in bound_methods
-                    )
-                }
-            )
-
-            for bm in bound_methods:
-                with Path(root, f"{bm}.rst").open("w") as f2:
-                    title = f"{bm}()"
-
-                    f2.write(title + "\n" + "=" * len(title) + "\n\n")
-                    f2.write(f".. automethod:: pyrogram.types.{bm}()")
-
-        f.write(template.format(**fmt_keys))
-
-    # Enumerations
-
-    categories = {
-        "enums": """
-        Enumerations
-            AccentColor,
-            BusinessSchedule,
-            ChatAction,
-            ChatEventAction,
-            ChatMemberStatus,
-            ChatMembersFilter,
-            ChatType,
-            ChatJoinType,
-            ClientPlatform,
-            FolderColor,
-            ListenerTypes,
-            MessageEntityType,
-            MessageMediaType,
-            MessageServiceType,
-            MessagesFilter,
-            NextCodeType,
-            ParseMode,
-            PollType,
-            ProfileColor,
-            PrivacyKey,
-            ReactionType,
-            ReplyColor,
-            SentCodeType,
-            StoriesPrivacyRules,
-            StoryPrivacy,
-            UserStatus,
-        """,
-    }
-
-    root = PYROGRAM_API_DEST + "/enums"
-
-    with open(HOME + "/template/enums.rst") as f:
-        template = f.read()
-
-    with open(root + "/index.rst", "w") as f:
-        fmt_keys = {}
-
-        for k, v in categories.items():
-            name, *enums = get_title_list(v)
-
-            fmt_keys.update(
-                {f"{k}_hlist": "\n    ".join(f"{enum}" for enum in enums)}
-            )
-
-            fmt_keys.update(
-                {f"{k}_toctree": "\n    ".join(f"{enum}" for enum in enums)}
-            )
+                {"{}_toctree".format(k): "\n    ".join("{} <{}>".format(bm.split(".")[1], bm) for bm in bound_methods)})
 
             # noinspection PyShadowingBuiltins
-            for enum in enums:
-                with open(root + f"/{enum}.rst", "w") as f2:
-                    title = f"{enum}"
+            for bm in bound_methods:
+                with open(root + "/{}.rst".format(bm), "w") as f2:
+                    title = "{}()".format(bm)
 
                     f2.write(title + "\n" + "=" * len(title) + "\n\n")
-                    f2.write(f".. autoclass:: pyrogram.enums.{enum}()")
-                    f2.write("\n    :members:\n")
-                    f2.write("\n.. raw:: html\n    :file: ./cleanup.html\n")
+                    f2.write(".. automethod:: pyrogram.types.{}()".format(bm))
 
         f.write(template.format(**fmt_keys))
 
@@ -847,10 +865,16 @@ def start():
     with Path(HOME, "template/toctree.txt").open(encoding="utf-8") as f:
         toctree = f.read()
 
+    generate(TYPES_PATH, TYPES_BASE)
+    generate(FUNCTIONS_PATH, FUNCTIONS_BASE)
+    generate(BASE_PATH, BASE_BASE)
     pyrogram_api()
 
 
-if __name__ == "__main__":
+if "__main__" == __name__:
+    FUNCTIONS_PATH = "../../pyrogram/raw/functions"
+    TYPES_PATH = "../../pyrogram/raw/types"
+    BASE_PATH = "../../pyrogram/raw/base"
     HOME = "."
     DESTINATION = "../../docs/source/telegram"
     PYROGRAM_API_DEST = "../../docs/source/api"
