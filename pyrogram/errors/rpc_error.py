@@ -32,7 +32,6 @@ class RPCError(Exception):
                 self.CODE,
                 self.ID or self.NAME,
                 self.MESSAGE.format(value=value),
-                f'(caused by "{rpc_name}")' if rpc_name else "",
             )
         )
 
