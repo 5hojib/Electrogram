@@ -45,7 +45,12 @@ def generate(source_path, base):
                 else:
                     continue
 
-                full_path = os.path.basename(path) + "/" + snek(name).replace("_", "-") + ".rst"
+                full_path = (
+                    os.path.basename(path)
+                    + "/"
+                    + snek(name).replace("_", "-")
+                    + ".rst"
+                )
 
                 if level:
                     full_path = base + "/" + full_path
@@ -56,7 +61,9 @@ def generate(source_path, base):
 
                 full_name = f"{(namespace + '.') if namespace else ''}{name}"
 
-                os.makedirs(os.path.dirname(DESTINATION + "/" + full_path), exist_ok=True)
+                os.makedirs(
+                    os.path.dirname(DESTINATION + "/" + full_path), exist_ok=True
+                )
 
                 with open(DESTINATION + "/" + full_path, "w", encoding="utf-8") as f:
                     f.write(
@@ -65,7 +72,7 @@ def generate(source_path, base):
                             title_markup="=" * len(full_name),
                             full_class_path="pyrogram.raw.{}".format(
                                 ".".join(full_path.split("/")[:-1]) + "." + name
-                            )
+                            ),
                         )
                     )
 
@@ -85,14 +92,14 @@ def generate(source_path, base):
 
         if k != base:
             inner_path = base + "/" + k + "/index" + ".rst"
-            module = "pyrogram.raw.{}.{}".format(base, k)
+            module = f"pyrogram.raw.{base}.{k}"
         else:
-            for i in sorted(list(all_entities), reverse=True):
+            for i in sorted(all_entities, reverse=True):
                 if i != base:
-                    entities.insert(0, "{0}/index".format(i))
+                    entities.insert(0, f"{i}/index")
 
             inner_path = base + "/index" + ".rst"
-            module = "pyrogram.raw.{}".format(base)
+            module = f"pyrogram.raw.{base}"
 
         with open(DESTINATION + "/" + inner_path, "w", encoding="utf-8") as f:
             if k == base:
@@ -104,7 +111,7 @@ def generate(source_path, base):
                     title=k.title(),
                     title_markup="=" * len(k),
                     module=module,
-                    entities="\n    ".join(entities)
+                    entities="\n    ".join(entities),
                 )
             )
 
@@ -407,23 +414,23 @@ def pyrogram_api():
 
         for k, v in categories.items():
             name, *methods = get_title_list(v)
-            fmt_keys.update({k: "\n    ".join("{0} <{0}>".format(m) for m in methods)})
+            fmt_keys.update({k: "\n    ".join(f"{m} <{m}>" for m in methods)})
 
             for method in methods:
-                with open(root + "/{}.rst".format(method), "w") as f2:
-                    title = "{}()".format(method)
+                with open(root + f"/{method}.rst", "w") as f2:
+                    title = f"{method}()"
 
                     f2.write(title + "\n" + "=" * len(title) + "\n\n")
-                    f2.write(".. automethod:: pyrogram.Client.{}()".format(method))
+                    f2.write(f".. automethod:: pyrogram.Client.{method}()")
 
             functions = ["idle", "compose"]
 
             for func in functions:
-                with open(root + "/{}.rst".format(func), "w") as f2:
-                    title = "{}()".format(func)
+                with open(root + f"/{func}.rst", "w") as f2:
+                    title = f"{func}()"
 
                     f2.write(title + "\n" + "=" * len(title) + "\n\n")
-                    f2.write(".. autofunction:: pyrogram.{}()".format(func))
+                    f2.write(f".. autofunction:: pyrogram.{func}()")
 
         f.write(template.format(**fmt_keys))
 
@@ -838,18 +845,30 @@ def pyrogram_api():
         for k, v in categories.items():
             name, *bound_methods = get_title_list(v)
 
-            fmt_keys.update({"{}_hlist".format(k): "\n    ".join("- :meth:`~{}`".format(bm) for bm in bound_methods)})
+            fmt_keys.update(
+                {
+                    f"{k}_hlist": "\n    ".join(
+                        f"- :meth:`~{bm}`" for bm in bound_methods
+                    )
+                }
+            )
 
             fmt_keys.update(
-                {"{}_toctree".format(k): "\n    ".join("{} <{}>".format(bm.split(".")[1], bm) for bm in bound_methods)})
+                {
+                    f"{k}_toctree": "\n    ".join(
+                        "{} <{}>".format(bm.split(".")[1], bm)
+                        for bm in bound_methods
+                    )
+                }
+            )
 
             # noinspection PyShadowingBuiltins
             for bm in bound_methods:
-                with open(root + "/{}.rst".format(bm), "w") as f2:
-                    title = "{}()".format(bm)
+                with open(root + f"/{bm}.rst", "w") as f2:
+                    title = f"{bm}()"
 
                     f2.write(title + "\n" + "=" * len(title) + "\n\n")
-                    f2.write(".. automethod:: pyrogram.types.{}()".format(bm))
+                    f2.write(f".. automethod:: pyrogram.types.{bm}()")
 
         f.write(template.format(**fmt_keys))
 
@@ -871,7 +890,7 @@ def start():
     pyrogram_api()
 
 
-if "__main__" == __name__:
+if __name__ == "__main__":
     FUNCTIONS_PATH = "../../pyrogram/raw/functions"
     TYPES_PATH = "../../pyrogram/raw/types"
     BASE_PATH = "../../pyrogram/raw/base"
