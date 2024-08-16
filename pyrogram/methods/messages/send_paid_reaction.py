@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 import logging
-from typing import Union
 
 import pyrogram
 from pyrogram import raw, types
@@ -9,12 +10,12 @@ log = logging.getLogger(__name__)
 
 class SendPaidReaction:
     async def send_paid_reaction(
-        self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        self: pyrogram.Client,
+        chat_id: int | str,
         message_id: int,
-        star_count: int = None,
-        is_anonymous: bool = False
-    ) -> "types.MessageReactions":
+        star_count: int | None = None,
+        is_anonymous: bool = False,
+    ) -> types.MessageReactions:
         """Adds the paid message reaction to a message.
         .. include:: /_includes/usable-by/users.rst
         Parameters:
@@ -41,7 +42,7 @@ class SendPaidReaction:
                 msg_id=message_id,
                 random_id=self.rnd_id(),
                 count=star_count,
-                private=is_anonymous
+                private=is_anonymous,
             )
         )
         for i in r.updates:

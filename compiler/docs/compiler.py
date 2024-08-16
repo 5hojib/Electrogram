@@ -769,11 +769,11 @@ def pyrogram_api():
                     f2.write(f".. automethod:: pyrogram.types.{bm}()")
 
         f.write(template.format(**fmt_keys))
-    
+
     # Enumerations
 
-    categories = dict(
-        enums="""
+    categories = {
+        "enums": """
         Enumerations
             AccentColor,
             BusinessSchedule,
@@ -802,7 +802,7 @@ def pyrogram_api():
             StoryPrivacy,
             UserStatus,
         """,
-    )
+    }
 
     root = PYROGRAM_API_DEST + "/enums"
 
@@ -815,18 +815,21 @@ def pyrogram_api():
         for k, v in categories.items():
             name, *enums = get_title_list(v)
 
-            fmt_keys.update({"{}_hlist".format(k): "\n    ".join("{}".format(enum) for enum in enums)})
+            fmt_keys.update(
+                {f"{k}_hlist": "\n    ".join(f"{enum}" for enum in enums)}
+            )
 
             fmt_keys.update(
-                {"{}_toctree".format(k): "\n    ".join("{}".format(enum) for enum in enums)})
+                {f"{k}_toctree": "\n    ".join(f"{enum}" for enum in enums)}
+            )
 
             # noinspection PyShadowingBuiltins
             for enum in enums:
-                with open(root + "/{}.rst".format(enum), "w") as f2:
-                    title = "{}".format(enum)
+                with open(root + f"/{enum}.rst", "w") as f2:
+                    title = f"{enum}"
 
                     f2.write(title + "\n" + "=" * len(title) + "\n\n")
-                    f2.write(".. autoclass:: pyrogram.enums.{}()".format(enum))
+                    f2.write(f".. autoclass:: pyrogram.enums.{enum}()")
                     f2.write("\n    :members:\n")
                     f2.write("\n.. raw:: html\n    :file: ./cleanup.html\n")
 

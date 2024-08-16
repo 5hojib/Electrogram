@@ -44,6 +44,7 @@ from .send_location import SendLocation
 from .send_media_group import SendMediaGroup
 from .send_message import SendMessage
 from .send_paid_media import SendPaidMedia
+from .send_paid_reaction import SendPaidReaction
 from .send_photo import SendPhoto
 from .send_poll import SendPoll
 from .send_reaction import SendReaction
@@ -57,7 +58,6 @@ from .stop_poll import StopPoll
 from .stream_media import StreamMedia
 from .translate_text import TranslateText
 from .vote_poll import VotePoll
-from .send_paid_reaction import SendPaidReaction
 
 
 class Messages(

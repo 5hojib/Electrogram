@@ -59,7 +59,7 @@ class Chat(Object):
         is_antispam (``bool``, *optional*):
             True, if Aggressive Anti-Spam is enabled in chat.
             Returned only in :meth:`~pyrogram.Client.get_chat`.
-        
+
         is_paid_reactions_available (``bool``, *optional*):
             True, if paid reactions enabled in this chat.
 
@@ -182,7 +182,7 @@ class Chat(Object):
         personal_chat (:obj:`~pyrogram.types.Chat`, *optional*):
             For private chats, the personal channel of the user.
             Returned only in :meth:`~pyrogram.Client.get_chat`.
-        
+
         subscription_until_date (:py:obj:`~datetime.datetime`, *optional*):
             Date when the the subscription will end.
 
@@ -209,7 +209,7 @@ class Chat(Object):
         is_antispam: bool | None = None,
         is_slowmode_enabled: bool | None = None,
         title: str | None = None,
-        is_paid_reactions_available: bool = None,
+        is_paid_reactions_available: bool | None = None,
         username: str | None = None,
         first_name: str | None = None,
         last_name: str | None = None,
@@ -240,7 +240,7 @@ class Chat(Object):
         business_info: types.BusinessInfo = None,
         birthday: types.Birthday = None,
         personal_chat: types.Chat = None,
-        subscription_until_date: datetime = None,
+        subscription_until_date: datetime | None = None,
         max_reaction_count: int | None = None,
     ) -> None:
         super().__init__(client)
@@ -412,7 +412,9 @@ class Chat(Object):
             members_count=getattr(channel, "participants_count", None),
             dc_id=getattr(getattr(channel, "photo", None), "dc_id", None),
             has_protected_content=getattr(channel, "noforwards", None),
-            subscription_until_date=utils.timestamp_to_datetime(getattr(channel, "subscription_until_date", None)),
+            subscription_until_date=utils.timestamp_to_datetime(
+                getattr(channel, "subscription_until_date", None)
+            ),
             reply_color=types.ChatColor._parse(getattr(channel, "color", None)),
             client=client,
         )
@@ -527,7 +529,9 @@ class Chat(Object):
                 parsed_chat.slow_mode_delay = getattr(
                     full_chat, "slowmode_seconds", None
                 )
-                parsed_chat.is_paid_reactions_available = getattr(full_chat, "paid_reactions_available", None)
+                parsed_chat.is_paid_reactions_available = getattr(
+                    full_chat, "paid_reactions_available", None
+                )
                 parsed_chat.description = full_chat.about or None
                 parsed_chat.can_set_sticker_set = full_chat.can_set_stickers
                 parsed_chat.sticker_set_name = getattr(

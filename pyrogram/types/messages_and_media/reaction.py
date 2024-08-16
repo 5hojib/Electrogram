@@ -1,8 +1,8 @@
-from typing import Optional
+from __future__ import annotations
 
 import pyrogram
 from pyrogram import raw
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class Reaction(Object):
@@ -30,11 +30,11 @@ class Reaction(Object):
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
-        type: "types.ReactionType" = None,
-        count: Optional[int] = None,
-        chosen_order: Optional[int] = None,
-        is_paid: Optional[bool] = None
+        client: pyrogram.Client = None,
+        type: types.ReactionType = None,
+        count: int | None = None,
+        chosen_order: int | None = None,
+        is_paid: bool | None = None,
     ):
         super().__init__(client)
 
@@ -43,37 +43,26 @@ class Reaction(Object):
         self.chosen_order = chosen_order
 
     @staticmethod
-    def _parse(
-        client: "pyrogram.Client",
-        reaction: "raw.base.Reaction"
-    ) -> "Reaction":
+    def _parse(client: pyrogram.Client, reaction: raw.base.Reaction) -> Reaction:
         if isinstance(reaction, raw.types.ReactionEmoji):
             return Reaction(
-                client=client,
-                type=ReactionTypeEmoji(
-                    emoji=reaction.emoticon
-                )
+                client=client, type=ReactionTypeEmoji(emoji=reaction.emoticon)
             )
 
         if isinstance(reaction, raw.types.ReactionCustomEmoji):
             return Reaction(
                 client=client,
-                type=ReactionTypeCustomEmoji(
-                    custom_emoji_id=reaction.document_id
-                )
+                type=ReactionTypeCustomEmoji(custom_emoji_id=reaction.document_id),
             )
 
         if isinstance(reaction, raw.types.ReactionPaid):
-            return Reaction(
-                client=client,
-                type=ReactionTypePaid()
-            )
+            return Reaction(client=client, type=ReactionTypePaid())
+        return None
 
     @staticmethod
     def _parse_count(
-        client: "pyrogram.Client",
-        reaction_count: "raw.base.ReactionCount"
-    ) -> "Reaction":
+        client: pyrogram.Client, reaction_count: raw.base.ReactionCount
+    ) -> Reaction:
         reaction = Reaction._parse(client, reaction_count.reaction)
         reaction.count = reaction_count.count
         reaction.chosen_order = reaction_count.chosen_order
@@ -93,9 +82,9 @@ class ReactionType(Object):
     def __init__(
         self,
         *,
-        type: str = None,
-        emoji: str = None,
-        custom_emoji_id: str = None
+        type: str | None = None,
+        emoji: str | None = None,
+        custom_emoji_id: str | None = None,
     ):
         super().__init__()
         self.type = type
@@ -104,23 +93,20 @@ class ReactionType(Object):
 
     @staticmethod
     def _parse(
-        client: "pyrogram.Client",
-        update: "raw.types.Reaction",
-    ) -> Optional["ReactionType"]:
+        client: pyrogram.Client,
+        update: raw.types.Reaction,
+    ) -> ReactionType | None:
         if isinstance(update, raw.types.ReactionEmpty):
             return None
         elif isinstance(update, raw.types.ReactionEmoji):
-            return ReactionTypeEmoji(
-                emoji=update.emoticon
-            )
+            return ReactionTypeEmoji(emoji=update.emoticon)
         elif isinstance(update, raw.types.ReactionCustomEmoji):
-            return ReactionTypeCustomEmoji(
-                custom_emoji_id=update.document_id
-            )
+            return ReactionTypeCustomEmoji(custom_emoji_id=update.document_id)
         elif isinstance(update, raw.types.ReactionPaid):
             return ReactionTypePaid()
+        return None
 
-    def write(self, client: "pyrogram.Client"):
+    def write(self, client: pyrogram.Client):
         raise NotImplementedError
 
 
@@ -132,21 +118,12 @@ class ReactionTypeEmoji(ReactionType):
             Reaction emoji.
     """
 
-    def __init__(
-        self,
-        *,
-        emoji: str = None
-    ):
-        super().__init__(
-            type="emoji",
-            emoji=emoji
-        )
+    def __init__(self, *, emoji: str | None = None):
+        super().__init__(type="emoji", emoji=emoji)
 
-    def write(self, client: "pyrogram.Client") -> "raw.base.Reaction":
-        return raw.types.ReactionEmoji(
-            emoticon=self.emoji
-        )
-        
+    def write(self, client: pyrogram.Client) -> raw.base.Reaction:
+        return raw.types.ReactionEmoji(emoticon=self.emoji)
+
 
 class ReactionTypeCustomEmoji(ReactionType):
     """The reaction is based on a custom emoji.
@@ -156,31 +133,20 @@ class ReactionTypeCustomEmoji(ReactionType):
             Custom emoji id.
     """
 
-    def __init__(
-        self,
-        *,
-        custom_emoji_id: str = None
-    ):
-        super().__init__(
-            type="custom_emoji",
-            custom_emoji_id=custom_emoji_id
-        )
-    
-    def write(self, client: "pyrogram.Client") -> "raw.base.Reaction":
-        return raw.types.ReactionCustomEmoji(
-            document_id=self.custom_emoji_id
-        )
+    def __init__(self, *, custom_emoji_id: str | None = None):
+        super().__init__(type="custom_emoji", custom_emoji_id=custom_emoji_id)
+
+    def write(self, client: pyrogram.Client) -> raw.base.Reaction:
+        return raw.types.ReactionCustomEmoji(document_id=self.custom_emoji_id)
 
 
 class ReactionTypePaid(ReactionType):
     """The paid reaction in a channel chat."""
 
     def __init__(self):
-        super().__init__(
-            type="paid"
-        )
-    
-    def write(self, client: "pyrogram.Client") -> "raw.base.Reaction":
+        super().__init__(type="paid")
+
+    def write(self, client: pyrogram.Client) -> raw.base.Reaction:
         return raw.types.ReactionPaid()
 
 
@@ -199,13 +165,7 @@ class ReactionCount(Object):
             Available for chosen reactions.
     """
 
-    def __init__(
-        self,
-        *,
-        type: ReactionType,
-        total_count: int,
-        chosen_order: int
-    ):
+    def __init__(self, *, type: ReactionType, total_count: int, chosen_order: int):
         super().__init__()
         self.type = type
         self.total_count = total_count
@@ -213,14 +173,11 @@ class ReactionCount(Object):
 
     @staticmethod
     def _parse(
-        client: "pyrogram.Client",
-        update: "raw.types.ReactionCount",
-    ) -> Optional["ReactionCount"]:
+        client: pyrogram.Client,
+        update: raw.types.ReactionCount,
+    ) -> ReactionCount | None:
         return ReactionCount(
-            type=ReactionType._parse(
-                client,
-                update.reaction
-            ),
+            type=ReactionType._parse(client, update.reaction),
             total_count=update.count,
-            chosen_order=update.chosen_order
+            chosen_order=update.chosen_order,
         )
