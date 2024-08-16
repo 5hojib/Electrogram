@@ -31,7 +31,7 @@ class RPCError(Exception):
                 "-" if is_signed else "",
                 self.CODE,
                 self.ID or self.NAME,
-                # NextTime self.MESSAGE.format(value=value),
+                self.MESSAGE.format(value=value),
                 f'(caused by "{rpc_name}")' if rpc_name else "",
             )
         )
