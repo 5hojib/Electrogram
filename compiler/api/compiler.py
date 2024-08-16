@@ -15,7 +15,9 @@ DESTINATION_PATH = REPO_HOME_PATH / "pyrogram" / "raw"
 
 SECTION_RE = re.compile(r"---(\w+)---")
 LAYER_RE = re.compile(r"//\sLAYER\s(\d+)")
-COMBINATOR_RE = re.compile(r"^([\w.]+)#([0-9a-f]+)\s(?:.*)=\s([\w<>.]+);$", re.MULTILINE)
+COMBINATOR_RE = re.compile(
+    r"^([\w.]+)#([0-9a-f]+)\s(?:.*)=\s([\w<>.]+);$", re.MULTILINE
+)
 ARGS_RE = re.compile(r"[^{](\w+):([\w?!.<>#]+)")
 FLAGS_RE = re.compile(r"flags(\d?)\.(\d+)\?")
 FLAGS_RE_2 = re.compile(r"flags(\d?)\.(\d+)\?([\w<>.]+)")
@@ -151,7 +153,9 @@ def get_docstring_arg_type(t: str):
             return "``int`` ``64-bit``"
         if "int" in t:
             size = INT_RE.match(t)
-            return f"``int`` ``{size.group(1)}-bit``" if size else "``int`` ``32-bit``"
+            return (
+                f"``int`` ``{size.group(1)}-bit``" if size else "``int`` ``32-bit``"
+            )
         if t == "double":
             return "``float`` ``64-bit``"
         if t == "string":
@@ -214,11 +218,15 @@ def start(format: bool = False):
         if combinator_match := COMBINATOR_RE.match(line):
             qualname, id, qualtype = combinator_match.groups()
 
-            namespace, name = qualname.split(".") if "." in qualname else ("", qualname)
+            namespace, name = (
+                qualname.split(".") if "." in qualname else ("", qualname)
+            )
             name = camel(name)
             qualname = ".".join([namespace, name]).lstrip(".")
 
-            typespace, type = qualtype.split(".") if "." in qualtype else ("", qualtype)
+            typespace, type = (
+                qualtype.split(".") if "." in qualtype else ("", qualtype)
+            )
             type = camel(type)
             qualtype = ".".join([typespace, type]).lstrip(".")
 
@@ -332,7 +340,9 @@ def start(format: bool = False):
         )
 
         fields = (
-            "\n        ".join([f"self.{i[0]} = {i[0]}  # {i[1]}" for i in sorted_args])
+            "\n        ".join(
+                [f"self.{i[0]} = {i[0]}  # {i[1]}" for i in sorted_args]
+            )
             if sorted_args
             else "pass"
         )
@@ -340,7 +350,9 @@ def start(format: bool = False):
         docstring = ""
         docstring_args = []
 
-        combinator_docs = docs["method"] if c.section == "functions" else docs["constructor"]
+        combinator_docs = (
+            docs["method"] if c.section == "functions" else docs["constructor"]
+        )
 
         for arg in sorted_args:
             arg_name, arg_type = arg
@@ -359,10 +371,14 @@ def start(format: bool = False):
             constructor_docs = docs["constructor"].get(c.qualname, None)
 
             constructor_docs = (
-                constructor_docs["desc"] if constructor_docs else "Telegram API type."
+                constructor_docs["desc"]
+                if constructor_docs
+                else "Telegram API type."
             )
             docstring += constructor_docs + "\n"
-            docstring += f"\n    Constructor of :obj:`~pyrogram.raw.base.{c.qualtype}`."
+            docstring += (
+                f"\n    Constructor of :obj:`~pyrogram.raw.base.{c.qualtype}`."
+            )
         elif function_docs := docs["method"].get(c.qualname, None):
             docstring += function_docs["desc"] + "\n"
         else:
@@ -370,11 +386,15 @@ def start(format: bool = False):
 
         docstring += f"\n\n    Details:\n        - Layer: ``{layer}``\n        - ID: ``{c.id[2:].upper()}``\n\n"
         docstring += "    Parameters:\n        " + (
-            "\n        ".join(docstring_args) if docstring_args else "No parameters required.\n"
+            "\n        ".join(docstring_args)
+            if docstring_args
+            else "No parameters required.\n"
         )
 
         if c.section == "functions":
-            docstring += "\n    Returns:\n        " + get_docstring_arg_type(c.qualtype)
+            docstring += "\n    Returns:\n        " + get_docstring_arg_type(
+                c.qualtype
+            )
         else:
             references, count = get_references(c.qualname, "constructors")
 
@@ -396,7 +416,9 @@ def start(format: bool = False):
                         if arg_name != f"flags{flag.group(1)}":
                             continue
 
-                        if flag.group(3) == "true" or flag.group(3).startswith("Vector"):
+                        if flag.group(3) == "true" or flag.group(3).startswith(
+                            "Vector"
+                        ):
                             write_flags.append(
                                 f"{arg_name} |= (1 << {flag.group(2)}) if self.{i[0]} else 0"
                             )
@@ -405,11 +427,13 @@ def start(format: bool = False):
                                 f"{arg_name} |= (1 << {flag.group(2)}) if self.{i[0]} is not None else 0"
                             )
 
-                write_flags = "\n        ".join([
-                    f"{arg_name} = 0",
-                    "\n        ".join(write_flags),
-                    f"b.write(Int({arg_name}))\n        ",
-                ])
+                write_flags = "\n        ".join(
+                    [
+                        f"{arg_name} = 0",
+                        "\n        ".join(write_flags),
+                        f"b.write(Int({arg_name}))\n        ",
+                    ]
+                )
 
                 write_types += write_flags
                 read_types += f"\n        {arg_name} = Int.read(b)\n        "
@@ -425,7 +449,9 @@ def start(format: bool = False):
                 elif flag_type in CORE_TYPES:
                     write_types += "\n        "
                     write_types += f"if self.{arg_name} is not None:\n            "
-                    write_types += f"b.write({flag_type.title()}(self.{arg_name}))\n        "
+                    write_types += (
+                        f"b.write({flag_type.title()}(self.{arg_name}))\n        "
+                    )
 
                     read_types += "\n        "
                     read_types += f"{arg_name} = {flag_type.title()}.read(b) if flags{number} & (1 << {index}) else None"
@@ -448,10 +474,14 @@ def start(format: bool = False):
             else:
                 write_types += "\n        "
                 if arg_type in CORE_TYPES:
-                    write_types += f"b.write({arg_type.title()}(self.{arg_name}))\n        "
+                    write_types += (
+                        f"b.write({arg_type.title()}(self.{arg_name}))\n        "
+                    )
 
                     read_types += "\n        "
-                    read_types += f"{arg_name} = {arg_type.title()}.read(b)\n        "
+                    read_types += (
+                        f"{arg_name} = {arg_type.title()}.read(b)\n        "
+                    )
                 elif "vector" in arg_type.lower():
                     sub_type = arg_type.split("<")[1][:-1]
 
@@ -496,7 +526,11 @@ def start(format: bool = False):
         with open(dir_path / f"{snake(module)}.py", "w") as f:
             f.write(compiled_combinator)
 
-        d = namespaces_to_constructors if c.section == "types" else namespaces_to_functions
+        d = (
+            namespaces_to_constructors
+            if c.section == "types"
+            else namespaces_to_functions
+        )
 
         if c.namespace not in d:
             d[c.namespace] = []
@@ -520,7 +554,9 @@ def start(format: bool = False):
                 f.write(f"from .{snake(module)} import {t}\n")
 
             if not namespace:
-                f.write(f"from . import {', '.join(filter(bool, namespaces_to_types))}")
+                f.write(
+                    f"from . import {', '.join(filter(bool, namespaces_to_types))}"
+                )
 
             all.extend(filter(bool, namespaces_to_types))
 
@@ -546,7 +582,9 @@ def start(format: bool = False):
                 f.write(f"from .{snake(module)} import {t}\n")
 
             if not namespace:
-                f.write(f"from . import {', '.join(filter(bool, namespaces_to_constructors))}\n")
+                f.write(
+                    f"from . import {', '.join(filter(bool, namespaces_to_constructors))}\n"
+                )
 
             all.extend(filter(bool, namespaces_to_constructors))
 
@@ -556,7 +594,9 @@ def start(format: bool = False):
             f.write("]\n")
 
     for namespace, types in namespaces_to_functions.items():
-        with open(DESTINATION_PATH / "functions" / namespace / "__init__.py", "w") as f:
+        with open(
+            DESTINATION_PATH / "functions" / namespace / "__init__.py", "w"
+        ) as f:
             f.write(f"{WARNING}\n\n")
 
             all = []
@@ -572,7 +612,9 @@ def start(format: bool = False):
                 f.write(f"from .{snake(module)} import {t}\n")
 
             if not namespace:
-                f.write(f"from . import {', '.join(filter(bool, namespaces_to_functions))}")
+                f.write(
+                    f"from . import {', '.join(filter(bool, namespaces_to_functions))}"
+                )
 
             all.extend(filter(bool, namespaces_to_functions))
 
