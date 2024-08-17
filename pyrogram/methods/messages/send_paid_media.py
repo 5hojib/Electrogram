@@ -28,7 +28,7 @@ class SendPaidMedia:
         protect_content: bool | None = None,
         reply_parameters: types.ReplyParameters = None,
         business_connection_id: str | None = None,
-        reply_markup: types.InlineKeyboardMarkup # NextTime 
+        reply_markup: types.InlineKeyboardMarkup  # NextTime
         | types.ReplyKeyboardMarkup
         | types.ReplyKeyboardRemove
         | types.ForceReply = None,

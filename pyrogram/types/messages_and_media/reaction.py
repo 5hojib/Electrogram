@@ -34,7 +34,7 @@ class Reaction(Object):
         type: types.ReactionType = None,
         count: int | None = None,
         chosen_order: int | None = None,
-        is_paid: bool | None = None, # NextTime 
+        is_paid: bool | None = None,  # NextTime
     ):
         super().__init__(client)
 
@@ -122,7 +122,8 @@ class ReactionTypeEmoji(ReactionType):
         super().__init__(type="emoji", emoji=emoji)
 
     def write(
-        self, client: pyrogram.Client  # noqa: ARG002
+        self,
+        client: pyrogram.Client,  # noqa: ARG002
     ) -> raw.base.Reaction:
         return raw.types.ReactionEmoji(emoticon=self.emoji)
 
@@ -139,7 +140,8 @@ class ReactionTypeCustomEmoji(ReactionType):
         super().__init__(type="custom_emoji", custom_emoji_id=custom_emoji_id)
 
     def write(
-        self, client: pyrogram.Client  # noqa: ARG002
+        self,
+        client: pyrogram.Client,  # noqa: ARG002
     ) -> raw.base.Reaction:
         return raw.types.ReactionCustomEmoji(document_id=self.custom_emoji_id)
 
@@ -151,7 +153,8 @@ class ReactionTypePaid(ReactionType):
         super().__init__(type="paid")
 
     def write(
-        self, client: pyrogram.Client  # noqa: ARG002
+        self,
+        client: pyrogram.Client,  # noqa: ARG002
     ) -> raw.base.Reaction:
         return raw.types.ReactionPaid()
 
