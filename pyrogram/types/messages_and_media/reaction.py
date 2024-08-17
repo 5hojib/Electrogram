@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import pyrogram
-from pyrogram import raw
+from pyrogram import raw, types
 from pyrogram.types.object import Object
 
 
@@ -34,7 +34,7 @@ class Reaction(Object):
         type: types.ReactionType = None,
         count: int | None = None,
         chosen_order: int | None = None,
-        is_paid: bool | None = None,
+        is_paid: bool | None = None, # NextTime 
     ):
         super().__init__(client)
 
@@ -93,16 +93,16 @@ class ReactionType(Object):
 
     @staticmethod
     def _parse(
-        client: pyrogram.Client,
+        client: pyrogram.Client,  # noqa: ARG004
         update: raw.types.Reaction,
     ) -> ReactionType | None:
         if isinstance(update, raw.types.ReactionEmpty):
             return None
-        elif isinstance(update, raw.types.ReactionEmoji):
+        if isinstance(update, raw.types.ReactionEmoji):
             return ReactionTypeEmoji(emoji=update.emoticon)
-        elif isinstance(update, raw.types.ReactionCustomEmoji):
+        if isinstance(update, raw.types.ReactionCustomEmoji):
             return ReactionTypeCustomEmoji(custom_emoji_id=update.document_id)
-        elif isinstance(update, raw.types.ReactionPaid):
+        if isinstance(update, raw.types.ReactionPaid):
             return ReactionTypePaid()
         return None
 
@@ -121,7 +121,9 @@ class ReactionTypeEmoji(ReactionType):
     def __init__(self, *, emoji: str | None = None):
         super().__init__(type="emoji", emoji=emoji)
 
-    def write(self, client: pyrogram.Client) -> raw.base.Reaction:
+    def write(
+        self, client: pyrogram.Client  # noqa: ARG002
+    ) -> raw.base.Reaction:
         return raw.types.ReactionEmoji(emoticon=self.emoji)
 
 
@@ -136,7 +138,9 @@ class ReactionTypeCustomEmoji(ReactionType):
     def __init__(self, *, custom_emoji_id: str | None = None):
         super().__init__(type="custom_emoji", custom_emoji_id=custom_emoji_id)
 
-    def write(self, client: pyrogram.Client) -> raw.base.Reaction:
+    def write(
+        self, client: pyrogram.Client  # noqa: ARG002
+    ) -> raw.base.Reaction:
         return raw.types.ReactionCustomEmoji(document_id=self.custom_emoji_id)
 
 
@@ -146,7 +150,9 @@ class ReactionTypePaid(ReactionType):
     def __init__(self):
         super().__init__(type="paid")
 
-    def write(self, client: pyrogram.Client) -> raw.base.Reaction:
+    def write(
+        self, client: pyrogram.Client  # noqa: ARG002
+    ) -> raw.base.Reaction:
         return raw.types.ReactionPaid()
 
 

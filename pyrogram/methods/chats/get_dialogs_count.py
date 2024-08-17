@@ -38,8 +38,7 @@ class GetDialogsCount:
                     )
                 ).dialogs
             )
-        else:
-            r = await self.invoke(
+        r = await self.invoke(
                 raw.functions.messages.GetDialogs(
                     offset_date=0,
                     offset_id=0,
@@ -50,6 +49,6 @@ class GetDialogsCount:
                 )
             )
 
-            if isinstance(r, raw.types.messages.Dialogs):
-                return len(r.dialogs)
-            return r.count
+        if isinstance(r, raw.types.messages.Dialogs):
+            return len(r.dialogs)
+        return r.count

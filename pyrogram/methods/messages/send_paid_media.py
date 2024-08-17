@@ -28,7 +28,7 @@ class SendPaidMedia:
         protect_content: bool | None = None,
         reply_parameters: types.ReplyParameters = None,
         business_connection_id: str | None = None,
-        reply_markup: types.InlineKeyboardMarkup
+        reply_markup: types.InlineKeyboardMarkup # NextTime 
         | types.ReplyKeyboardMarkup
         | types.ReplyKeyboardRemove
         | types.ForceReply = None,
@@ -292,7 +292,7 @@ class SendPaidMedia:
                     is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
                     replies=self.fetch_replies,
                 )
-            elif isinstance(i, (raw.types.UpdateBotNewBusinessMessage)):
+            if isinstance(i, (raw.types.UpdateBotNewBusinessMessage)):
                 return await types.Message._parse(
                     self,
                     i.message,
