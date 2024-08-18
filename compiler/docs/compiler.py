@@ -59,7 +59,7 @@ def generate(source_path, base):
                 full_name = f"{(namespace + '.') if namespace else ''}{name}"
 
                 Path(DESTINATION, full_path).parent.mkdir(
-                                    parents=True, exist_ok=True
+                    parents=True, exist_ok=True
                 )
 
                 with Path(DESTINATION, full_path).open("w", encoding="utf-8") as f:
