@@ -30,6 +30,12 @@ jobs:
             echo "RELEASE_EXISTS=false" >> $GITHUB_ENV
           fi
 
+      - name: Get Commit Messages
+        id: get_commits
+        run: |
+          COMMITS=$(git log -1 --pretty=format:"%s" HEAD)
+          echo "COMMITS=$COMMITS" >> $GITHUB_ENV
+
       - name: Create New Release
         if: env.RELEASE_EXISTS == 'false'
         uses: actions/create-release@v1
@@ -38,7 +44,11 @@ jobs:
         with:
           tag_name: ${{ env.VERSION }}
           release_name: Release ${{ env.VERSION }}
-          body: Release ${{ env.VERSION }}
+          body: |
+            Release ${{ env.VERSION }}
+
+            ## Commit Description:
+            ${{ env.COMMITS }}
 
       - name: Build and Publish Python Package
         if: env.RELEASE_EXISTS == 'false'

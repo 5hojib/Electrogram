@@ -29,12 +29,8 @@ from .read_chat_history import ReadChatHistory
 from .retract_vote import RetractVote
 from .search_global import SearchGlobal
 from .search_global_count import SearchGlobalCount
-from .search_global_hashtag_messages import (
-    SearchGlobalHashtagMessages,
-)
-from .search_global_hashtag_messages_count import (
-    SearchGlobalHashtagMessagesCount,
-)
+from .search_global_hashtag_messages import SearchGlobalHashtagMessages
+from .search_global_hashtag_messages_count import SearchGlobalHashtagMessagesCount
 from .search_messages import SearchMessages
 from .search_messages_count import SearchMessagesCount
 from .send_animation import SendAnimation
@@ -47,6 +43,8 @@ from .send_document import SendDocument
 from .send_location import SendLocation
 from .send_media_group import SendMediaGroup
 from .send_message import SendMessage
+from .send_paid_media import SendPaidMedia
+from .send_paid_reaction import SendPaidReaction
 from .send_photo import SendPhoto
 from .send_poll import SendPoll
 from .send_reaction import SendReaction
@@ -58,6 +56,7 @@ from .send_voice import SendVoice
 from .send_web_page import SendWebPage
 from .stop_poll import StopPoll
 from .stream_media import StreamMedia
+from .translate_text import TranslateText
 from .vote_poll import VotePoll
 
 
@@ -89,7 +88,10 @@ class Messages(
     SendVideoNote,
     SendVoice,
     SendWebPage,
+    SendPaidMedia,
+    SendPaidReaction,
     SendPoll,
+    TranslateText,
     VotePoll,
     StopPoll,
     RetractVote,

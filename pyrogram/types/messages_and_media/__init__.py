@@ -26,12 +26,18 @@ from .message_reaction_count_updated import (
 from .message_reaction_updated import MessageReactionUpdated
 from .message_reactions import MessageReactions
 from .message_story import MessageStory
+from .payment_form import PaymentForm
 from .photo import Photo
 from .poll import Poll
 from .poll_option import PollOption
-from .reaction import Reaction
-from .reaction_count import ReactionCount
-from .reaction_type import ReactionType
+from .reaction import (
+    Reaction,
+    ReactionCount,
+    ReactionType,
+    ReactionTypeCustomEmoji,
+    ReactionTypeEmoji,
+    ReactionTypePaid,
+)
 from .screenshot_taken import ScreenshotTaken
 from .sticker import Sticker
 from .stickerset import StickerSet
@@ -43,6 +49,7 @@ from .story_skipped import StorySkipped
 from .story_views import StoryViews
 from .stripped_thumbnail import StrippedThumbnail
 from .thumbnail import Thumbnail
+from .translated_text import TranslatedText
 from .venue import Venue
 from .video import Video
 from .video_note import VideoNote
@@ -76,6 +83,7 @@ __all__ = [
     "StrippedThumbnail",
     "Poll",
     "PollOption",
+    "PaymentForm",
     "Sticker",
     "StickerSet",
     "Venue",
@@ -86,11 +94,8 @@ __all__ = [
     "WebPageEmpty",
     "WebPagePreview",
     "Dice",
-    "Reaction",
     "WebAppData",
     "MessageReactions",
-    "ReactionCount",
-    "ReactionType",
     "MessageReactionUpdated",
     "MessageReactionCountUpdated",
     "MessageStory",
@@ -99,6 +104,13 @@ __all__ = [
     "StorySkipped",
     "StoryViews",
     "StoryForwardHeader",
+    "Reaction",
+    "ReactionType",
+    "ReactionTypeEmoji",
+    "ReactionTypeCustomEmoji",
+    "ReactionTypePaid",
+    "ReactionCount",
+    "TranslatedText",
     "StoriesPrivacyRules",
     "ExportedStoryLink",
     "ScreenshotTaken",

@@ -121,10 +121,7 @@ class SendMessage:
                 # Reply to a message using its id
                 await app.send_message("me", "this is a reply", reply_to_message_id=123)
 
-            .. code-block:: python
-
                 # For bots only, send messages with keyboards attached
-
                 from pyrogram.types import (
                     ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton)
 

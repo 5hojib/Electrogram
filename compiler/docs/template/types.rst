@@ -60,19 +60,6 @@ Stories
 
     {stories}
 
-Pyromod
--------
-
-.. autosummary::
-    :nosignatures:
-
-    {pyromod}
-
-.. toctree::
-    :hidden:
-
-    {pyromod}
-
 Bot
 ---
 
@@ -100,7 +87,7 @@ Bot keyboards
     {bot_keyboards}
 
 Bot commands
--------------
+------------
 
 .. autosummary::
     :nosignatures:
@@ -113,7 +100,7 @@ Bot commands
     {bot_commands}
 
 Telegram Business
--------------
+-----------------
 
 .. autosummary::
     :nosignatures:
@@ -176,3 +163,16 @@ Authorization
     :hidden:
 
     {authorization}
+
+InputPrivacyRule
+----------------
+
+.. autosummary::
+    :nosignatures:
+
+    {input_privacy_rule}
+
+.. toctree::
+    :hidden:
+
+    {input_privacy_rule}

@@ -6,9 +6,11 @@ from pyrogram.types.object import Object
 
 class StarsStatus(Object):
     """Contains information about stars status.
+
     Parameters:
         balance (``int``):
             Current balance of stars.
+
         history (List of :obj:`~pyrogram.types.StarsTransaction`):
             Stars transactions history.
     """

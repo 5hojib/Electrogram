@@ -1,5 +1,5 @@
 Welcome to Electrogram
-===================
+======================
 
 .. raw:: html
 
@@ -134,3 +134,11 @@ Meta
 
     faq/index
     support
+
+.. toctree::
+    :hidden:
+    :caption: Telegram Raw API
+
+    telegram/functions/index
+    telegram/types/index
+    telegram/base/index

@@ -4,7 +4,6 @@ from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types, utils
-from pyrogram.errors import ChannelPrivate
 
 if TYPE_CHECKING:
     from collections.abc import AsyncGenerator
@@ -12,7 +11,10 @@ if TYPE_CHECKING:
 
 class GetDialogs:
     async def get_dialogs(
-        self: pyrogram.Client, limit: int = 0
+        self: pyrogram.Client,
+        limit: int = 0,
+        pinned_only: bool = False,
+        chat_list: int = 0,
     ) -> AsyncGenerator[types.Dialog, None] | None:
         """Get a user's dialogs sequentially.
 
@@ -22,6 +24,13 @@ class GetDialogs:
             limit (``int``, *optional*):
                 Limits the number of dialogs to be retrieved.
                 By default, no limit is applied and all dialogs are returned.
+
+            pinned_only (``bool``, *optional*):
+                Pass True if you want to get only pinned dialogs.
+                Defaults to False.
+
+            chat_list (``int``, *optional*):
+                Chat list from which to get the dialogs; Only Main (0) and Archive (1) chat lists are supported. Defaults to (0) Main chat list.
 
         Returns:
             ``Generator``: A generator yielding :obj:`~pyrogram.types.Dialog` objects.
@@ -49,6 +58,8 @@ class GetDialogs:
                     offset_peer=offset_peer,
                     limit=limit,
                     hash=0,
+                    exclude_pinned=not pinned_only,
+                    folder_id=chat_list,
                 ),
                 sleep_threshold=60,
             )
@@ -63,12 +74,9 @@ class GetDialogs:
                     continue
 
                 chat_id = utils.get_peer_id(message.peer_id)
-                try:
-                    messages[chat_id] = await types.Message._parse(
-                        self, message, users, chats
-                    )
-                except ChannelPrivate:
-                    continue
+                messages[chat_id] = await types.Message._parse(
+                    self, message, users, chats, replies=self.fetch_replies
+                )
 
             dialogs = []
 

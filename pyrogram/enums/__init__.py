@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from .accent_color import AccentColor
 from .business_schedule import BusinessSchedule
 from .chat_action import ChatAction
 from .chat_event_action import ChatEventAction
@@ -27,6 +28,7 @@ from .story_privacy import StoryPrivacy
 from .user_status import UserStatus
 
 __all__ = [
+    "AccentColor",
     "BusinessSchedule",
     "ChatAction",
     "ChatEventAction",

@@ -100,9 +100,9 @@ class MessageReactionUpdated(Object, Update):
             chat=chat,
             actor_chat=actor_chat,
             old_reaction=[
-                types.ReactionType._parse(rt) for rt in update.old_reactions
+                types.ReactionType._parse(client, rt) for rt in update.old_reactions
             ],
             new_reaction=[
-                types.ReactionType._parse(rt) for rt in update.new_reactions
+                types.ReactionType._parse(client, rt) for rt in update.new_reactions
             ],
         )

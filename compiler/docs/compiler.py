@@ -9,9 +9,11 @@ from pathlib import Path
 HOME = "compiler/docs"
 DESTINATION = "docs/source/telegram"
 PYROGRAM_API_DEST = "docs/source/api"
+
 FUNCTIONS_PATH = "pyrogram/raw/functions"
 TYPES_PATH = "pyrogram/raw/types"
 BASE_PATH = "pyrogram/raw/base"
+
 FUNCTIONS_BASE = "functions"
 TYPES_BASE = "types"
 BASE_BASE = "base"
@@ -130,21 +132,6 @@ def pyrogram_api():
             export_session_string
             set_parse_mode
         """,
-        "conversation": """
-        Conversation
-            ask
-            listen
-            get_listener_matching_with_data
-            get_listener_matching_with_identifier_pattern
-            get_many_listeners_matching_with_data
-            get_many_listeners_matching_with_identifier_pattern
-            register_next_step_handler
-            remove_listener
-            stop_listener
-            stop_listening
-            wait_for_callback_query
-            wait_for_message
-        """,
         "messages": """
         Messages
             send_message
@@ -166,6 +153,8 @@ def pyrogram_api():
             send_contact
             send_cached_media
             send_reaction
+            send_paid_reaction
+            send_paid_media
             edit_message_text
             edit_message_caption
             edit_message_media
@@ -201,6 +190,7 @@ def pyrogram_api():
             get_discussion_replies
             get_discussion_replies_count
             get_custom_emoji_stickers
+            translate_text
         """,
         "chats": """
         Chats
@@ -215,7 +205,6 @@ def pyrogram_api():
             delete_chat_photo
             delete_folder
             export_folder_link
-            update_folder
             set_chat_title
             set_chat_description
             set_chat_permissions
@@ -265,6 +254,7 @@ def pyrogram_api():
         """,
         "users": """
         Users
+            delete_account
             get_me
             get_users
             get_chat_photos
@@ -366,7 +356,8 @@ def pyrogram_api():
             get_stars_transactions_by_id
             refund_star_payment
             send_invoice
-            send_paid_media
+            get_payment_form
+            send_payment_form
         """,
         "authorization": """
         Authorization
@@ -446,7 +437,6 @@ def pyrogram_api():
             BusinessInfo
             BusinessMessage
             BusinessRecipients
-            BusinessSchedule
             BusinessWeeklyOpen
             BusinessWorkingHours
             User
@@ -510,7 +500,6 @@ def pyrogram_api():
             Poll
             PollOption
             Dice
-            Reaction
             VideoChatScheduled
             VideoChatStarted
             VideoChatEnded
@@ -525,10 +514,12 @@ def pyrogram_api():
             GeneralTopicHidden
             GeneralTopicUnhidden
             Reaction
+            ReactionTypePaid
             ReactionCount
             ReactionType
             MessageReactionUpdated
             MessageReactionCountUpdated
+            TranslatedText
         """,
         "stories": """
         Stories
@@ -543,11 +534,6 @@ def pyrogram_api():
             MediaAreaCoordinates
             InputMediaArea
             InputMediaAreaChannelPost
-        """,
-        "pyromod": """
-        Pyromod
-            Identifier
-            Listener
         """,
         "bot": """
         Bot
@@ -601,6 +587,7 @@ def pyrogram_api():
             Invoice
             PaidMedia
             PaidMediaPreview
+            PaymentForm
             PaymentInfo
             PaymentRefunded
             ShippingAddress
@@ -749,6 +736,7 @@ def pyrogram_api():
             Message.get_media_group
             Message.react
             Message.wait_for_click
+            Message.pay
         """,
         "chat": """
         Chat

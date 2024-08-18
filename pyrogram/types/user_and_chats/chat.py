@@ -60,6 +60,9 @@ class Chat(Object):
             True, if Aggressive Anti-Spam is enabled in chat.
             Returned only in :meth:`~pyrogram.Client.get_chat`.
 
+        is_paid_reactions_available (``bool``, *optional*):
+            True, if paid reactions enabled in this chat.
+
         title (``str``, *optional*):
             Title, for supergroups, channels and basic group chats.
 
@@ -180,6 +183,9 @@ class Chat(Object):
             For private chats, the personal channel of the user.
             Returned only in :meth:`~pyrogram.Client.get_chat`.
 
+        subscription_until_date (:py:obj:`~datetime.datetime`, *optional*):
+            Date when the the subscription will end.
+
         max_reaction_count (``int``):
             The maximum number of reactions that can be set on a message in the chat
     """
@@ -203,6 +209,7 @@ class Chat(Object):
         is_antispam: bool | None = None,
         is_slowmode_enabled: bool | None = None,
         title: str | None = None,
+        is_paid_reactions_available: bool | None = None,
         username: str | None = None,
         first_name: str | None = None,
         last_name: str | None = None,
@@ -233,6 +240,7 @@ class Chat(Object):
         business_info: types.BusinessInfo = None,
         birthday: types.Birthday = None,
         personal_chat: types.Chat = None,
+        subscription_until_date: datetime | None = None,
         max_reaction_count: int | None = None,
     ) -> None:
         super().__init__(client)
@@ -252,6 +260,7 @@ class Chat(Object):
         self.is_antispam = is_antispam
         self.is_slowmode_enabled = is_slowmode_enabled
         self.title = title
+        self.is_paid_reactions_available = is_paid_reactions_available
         self.username = username
         self.first_name = first_name
         self.last_name = last_name
@@ -282,6 +291,7 @@ class Chat(Object):
         self.business_info = business_info
         self.birthday = birthday
         self.personal_chat = personal_chat
+        self.subscription_until_date = subscription_until_date
         self.max_reaction_count = max_reaction_count
 
     @property
@@ -402,6 +412,9 @@ class Chat(Object):
             members_count=getattr(channel, "participants_count", None),
             dc_id=getattr(getattr(channel, "photo", None), "dc_id", None),
             has_protected_content=getattr(channel, "noforwards", None),
+            subscription_until_date=utils.timestamp_to_datetime(
+                getattr(channel, "subscription_until_date", None)
+            ),
             reply_color=types.ChatColor._parse(getattr(channel, "color", None)),
             client=client,
         )
@@ -515,6 +528,9 @@ class Chat(Object):
                 parsed_chat.members_count = full_chat.participants_count
                 parsed_chat.slow_mode_delay = getattr(
                     full_chat, "slowmode_seconds", None
+                )
+                parsed_chat.is_paid_reactions_available = getattr(
+                    full_chat, "paid_reactions_available", None
                 )
                 parsed_chat.description = full_chat.about or None
                 parsed_chat.can_set_sticker_set = full_chat.can_set_stickers

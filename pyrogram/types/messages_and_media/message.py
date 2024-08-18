@@ -761,7 +761,7 @@ class Message(Object, Update):
             chat_join_type = None
             screenshot_taken = None
 
-            service_type = enums.MessageServiceType.UNKNOWN_EMPTY
+            service_type = enums.MessageServiceType.UNKNOWN
 
             from_user = types.User._parse(client, users.get(user_id))
             sender_chat = (
@@ -5373,3 +5373,26 @@ class Message(Object, Update):
 
         reply_message.request = request
         return reply_message
+
+    async def pay(self) -> bool:
+        """Bound method *pay* of :obj:`~pyrogram.types.Message`.
+        Use as a shortcut for:
+
+        .. code-block:: python
+
+            await client.send_payment_form(
+                chat_id=message.chat.id,
+                message_id=message_id
+            )
+
+        Example:
+            .. code-block:: python
+
+                await message.pay()
+
+        Returns:
+            True on success.
+        """
+        return await self._client.send_payment_form(
+            chat_id=self.chat.id, message_id=self.id
+        )

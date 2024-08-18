@@ -13,6 +13,7 @@ to apply only a valid value among the expected ones.
 .. autosummary::
     :nosignatures:
 
+    AccentColor
     BusinessSchedule
     ChatAction
     ChatEventAction
@@ -42,6 +43,7 @@ to apply only a valid value among the expected ones.
 .. toctree::
     :hidden:
 
+    AccentColor
     BusinessSchedule
     ChatAction
     ChatEventAction

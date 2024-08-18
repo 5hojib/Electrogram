@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import contextlib
+import json
 import re
 import shutil
 from functools import partial
@@ -11,7 +12,6 @@ API_HOME_PATH = Path(__file__).parent.resolve()
 REPO_HOME_PATH = API_HOME_PATH.parent.parent
 
 DESTINATION_PATH = REPO_HOME_PATH / "pyrogram" / "raw"
-
 
 SECTION_RE = re.compile(r"---(\w+)---")
 LAYER_RE = re.compile(r"//\sLAYER\s(\d+)")
@@ -35,6 +35,15 @@ CORE_TYPES = [
     "Bool",
     "true",
 ]
+
+WARNING = """
+# # # # # # # # # # # # # # # # # # # # # # # #
+#               !!! WARNING !!!               #
+#          This is a generated file!          #
+# All changes made in this file will be lost! #
+# # # # # # # # # # # # # # # # # # # # # # # #
+""".strip()
+
 open = partial(open, encoding="utf-8")
 
 types_to_constructors: dict[str, list[str]] = {}
@@ -43,6 +52,12 @@ constructors_to_functions: dict[str, list[str]] = {}
 namespaces_to_types: dict[str, list[str]] = {}
 namespaces_to_constructors: dict[str, list[str]] = {}
 namespaces_to_functions: dict[str, list[str]] = {}
+
+try:
+    with open(API_HOME_PATH / "docs.json") as f:
+        docs = json.load(f)
+except FileNotFoundError:
+    docs = {"type": {}, "constructor": {}, "method": {}}
 
 
 class Combinator(NamedTuple):
@@ -59,6 +74,7 @@ class Combinator(NamedTuple):
 
 
 def snake(s: str):
+    # https://stackoverflow.com/q/1175208
     s = re.sub(r"(.)([A-Z][a-z]+)", r"\1_\2", s)
     return re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", s).lower()
 
@@ -85,7 +101,7 @@ def get_type_hint(type: str) -> str:
             type = "str"
         elif type in {"Bool", "true"}:
             type = "bool"
-        else:
+        else:  # bytes and object
             type = "bytes"
 
     if type in {"Object", "!X"}:
@@ -131,7 +147,43 @@ def remove_whitespaces(source: str) -> str:
     return "\n".join(lines)
 
 
-def start() -> None:
+def get_docstring_arg_type(t: str):
+    if t in CORE_TYPES:
+        if t == "long":
+            return "``int`` ``64-bit``"
+        if "int" in t:
+            size = INT_RE.match(t)
+            return (
+                f"``int`` ``{size.group(1)}-bit``" if size else "``int`` ``32-bit``"
+            )
+        if t == "double":
+            return "``float`` ``64-bit``"
+        if t == "string":
+            return "``str``"
+        if t == "true":
+            return "``bool``"
+        return f"``{t.lower()}``"
+    if t in {"TLObject", "X"}:
+        return "Any object from :obj:`~pyrogram.raw.types`"
+    if t == "!X":
+        return "Any function from :obj:`~pyrogram.raw.functions`"
+    if t.lower().startswith("vector"):
+        return "List of " + get_docstring_arg_type(t.split("<", 1)[1][:-1])
+    return f":obj:`{t} <pyrogram.raw.base.{t}>`"
+
+
+def get_references(t: str, kind: str):
+    if kind == "constructors":
+        items = constructors_to_functions.get(t)
+    elif kind == "types":
+        items = types_to_functions.get(t)
+    else:
+        raise ValueError("Invalid kind")
+
+    return ("\n            ".join(items), len(items)) if items else (None, 0)
+
+
+def start():
     shutil.rmtree(DESTINATION_PATH / "types", ignore_errors=True)
     shutil.rmtree(DESTINATION_PATH / "functions", ignore_errors=True)
     shutil.rmtree(DESTINATION_PATH / "base", ignore_errors=True)
@@ -182,6 +234,7 @@ def start() -> None:
 
             args = ARGS_RE.findall(line)
 
+            # Fix arg name being "self" or "from" (reserved python keywords)
             for i, item in enumerate(args):
                 if item[0] == "self":
                     args[i] = ("is_self", item[1])
@@ -242,12 +295,34 @@ def start() -> None:
         dir_path.mkdir(parents=True, exist_ok=True)
 
         constructors = sorted(qualval)
-        len(constructors)
-        "\n            ".join([f"{c}" for c in constructors])
+        constr_count = len(constructors)
+        items = "\n            ".join([f"{c}" for c in constructors])
+
+        type_docs = docs["type"].get(qualtype, None)
+
+        type_docs = type_docs["desc"] if type_docs else "Telegram API base type."
+
+        docstring = type_docs
+
+        docstring += (
+            f"\n\n    Constructors:\n"
+            f"        This base type has {constr_count} constructor{'s' if constr_count > 1 else ''} available.\n\n"
+            f"        .. currentmodule:: pyrogram.raw.types\n\n"
+            f"        .. autosummary::\n"
+            f"            :nosignatures:\n\n"
+            f"            {items}"
+        )
+
+        references, ref_count = get_references(qualtype, "types")
+
+        if references:
+            docstring += f"\n\n    Functions:\n        This object can be returned by {ref_count} function{'s' if ref_count > 1 else ''}.\n\n        .. currentmodule:: pyrogram.raw.functions\n\n        .. autosummary::\n            :nosignatures:\n\n            {references}"
 
         with open(dir_path / f"{snake(module)}.py", "w") as f:
             f.write(
                 type_tmpl.format(
+                    warning=WARNING,
+                    docstring=docstring,
                     name=type,
                     qualname=qualtype,
                     types=", ".join([f'"raw.types.{c}"' for c in constructors]),
@@ -272,10 +347,59 @@ def start() -> None:
             else "pass"
         )
 
+        docstring = ""
+        docstring_args = []
+
+        combinator_docs = (
+            docs["method"] if c.section == "functions" else docs["constructor"]
+        )
+
         for arg in sorted_args:
             arg_name, arg_type = arg
-            FLAGS_RE.match(arg_type)
+            is_optional = FLAGS_RE.match(arg_type)
             arg_type = arg_type.split("?")[-1]
+
+            arg_docs = combinator_docs.get(c.qualname, None)
+
+            arg_docs = arg_docs["params"].get(arg_name, "N/A") if arg_docs else "N/A"
+
+            docstring_args.append(
+                f'{arg_name} ({get_docstring_arg_type(arg_type)}{", *optional*" if is_optional else ""}):\n            {arg_docs}\n'
+            )
+
+        if c.section == "types":
+            constructor_docs = docs["constructor"].get(c.qualname, None)
+
+            constructor_docs = (
+                constructor_docs["desc"]
+                if constructor_docs
+                else "Telegram API type."
+            )
+            docstring += constructor_docs + "\n"
+            docstring += (
+                f"\n    Constructor of :obj:`~pyrogram.raw.base.{c.qualtype}`."
+            )
+        elif function_docs := docs["method"].get(c.qualname, None):
+            docstring += function_docs["desc"] + "\n"
+        else:
+            docstring += "Telegram API function."
+
+        docstring += f"\n\n    Details:\n        - Layer: ``{layer}``\n        - ID: ``{c.id[2:].upper()}``\n\n"
+        docstring += "    Parameters:\n        " + (
+            "\n        ".join(docstring_args)
+            if docstring_args
+            else "No parameters required.\n"
+        )
+
+        if c.section == "functions":
+            docstring += "\n    Returns:\n        " + get_docstring_arg_type(
+                c.qualtype
+            )
+        else:
+            references, count = get_references(c.qualname, "constructors")
+
+            if references:
+                docstring += f"\n    Functions:\n        This object can be returned by {count} function{'s' if count > 1 else ''}.\n\n        .. currentmodule:: pyrogram.raw.functions\n\n        .. autosummary::\n            :nosignatures:\n\n            {references}"
 
         write_types = read_types = "" if c.has_flags else "# No flags\n        "
 
@@ -375,7 +499,9 @@ def start() -> None:
         return_arguments = ", ".join([f"{i[0]}={i[0]}" for i in sorted_args])
 
         compiled_combinator = combinator_tmpl.format(
+            warning=WARNING,
             name=c.name,
+            docstring=docstring,
             slots=slots,
             id=c.id,
             qualname=f"{c.section}.{c.qualname}",
@@ -413,6 +539,8 @@ def start() -> None:
 
     for namespace, types in namespaces_to_types.items():
         with open(DESTINATION_PATH / "base" / namespace / "__init__.py", "w") as f:
+            f.write(f"{WARNING}\n\n")
+
             all = []
 
             for t in types:
@@ -438,10 +566,9 @@ def start() -> None:
             f.write("]\n")
 
     for namespace, types in namespaces_to_constructors.items():
-        with open(
-            DESTINATION_PATH / "types" / namespace / "__init__.py",
-            "w",
-        ) as f:
+        with open(DESTINATION_PATH / "types" / namespace / "__init__.py", "w") as f:
+            f.write(f"{WARNING}\n\n")
+
             all = []
 
             for t in types:
@@ -468,9 +595,10 @@ def start() -> None:
 
     for namespace, types in namespaces_to_functions.items():
         with open(
-            DESTINATION_PATH / "functions" / namespace / "__init__.py",
-            "w",
+            DESTINATION_PATH / "functions" / namespace / "__init__.py", "w"
         ) as f:
+            f.write(f"{WARNING}\n\n")
+
             all = []
 
             for t in types:
@@ -496,6 +624,7 @@ def start() -> None:
             f.write("]\n")
 
     with open(DESTINATION_PATH / "all.py", "w", encoding="utf-8") as f:
+        f.write(WARNING + "\n\n")
         f.write(f"layer = {layer}\n\n")
         f.write("objects = {")
 
