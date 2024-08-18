@@ -19,7 +19,7 @@ TYPES_BASE = "types"
 BASE_BASE = "base"
 
 
-def snek(s: str):
+def snake(s: str):
     s = re.sub(r"(.)([A-Z][a-z]+)", r"\1_\2", s)
     return re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", s).lower()
 
@@ -35,7 +35,7 @@ def generate(source_path, base):
                 if not i.startswith("__"):
                     build("/".join([path, i]), level=level + 1)
             except NotADirectoryError:
-                with open(path + "/" + i, encoding="utf-8") as f:
+                with Path(path, i).open(encoding="utf-8") as f:
                     p = ast.parse(f.read())
 
                 for node in ast.walk(p):
@@ -46,10 +46,7 @@ def generate(source_path, base):
                     continue
 
                 full_path = (
-                    os.path.basename(path)
-                    + "/"
-                    + snek(name).replace("_", "-")
-                    + ".rst"
+                    Path(path).name + "/" + snake(name).replace("_", "-") + ".rst"
                 )
 
                 if level:
@@ -61,11 +58,11 @@ def generate(source_path, base):
 
                 full_name = f"{(namespace + '.') if namespace else ''}{name}"
 
-                os.makedirs(
-                    os.path.dirname(DESTINATION + "/" + full_path), exist_ok=True
+                Path(DESTINATION, full_path).parent.mkdir(
+                                    parents=True, exist_ok=True
                 )
 
-                with open(DESTINATION + "/" + full_path, "w", encoding="utf-8") as f:
+                with Path(DESTINATION, full_path).open("w", encoding="utf-8") as f:
                     f.write(
                         page_template.format(
                             title=full_name,
@@ -85,10 +82,7 @@ def generate(source_path, base):
 
     for k, v in sorted(all_entities.items()):
         v = sorted(v)
-        entities = []
-
-        for i in v:
-            entities.append(f'{i} <{snek(i).replace("_", "-")}>')
+        entities = [f'{i} <{snake(i).replace("_", "-")}>' for i in v]
 
         if k != base:
             inner_path = base + "/" + k + "/index" + ".rst"
@@ -101,7 +95,7 @@ def generate(source_path, base):
             inner_path = base + "/index" + ".rst"
             module = f"pyrogram.raw.{base}"
 
-        with open(DESTINATION + "/" + inner_path, "w", encoding="utf-8") as f:
+        with Path(DESTINATION, inner_path).open("w", encoding="utf-8") as f:
             if k == base:
                 f.write(":tocdepth: 1\n\n")
                 k = "Raw " + k
@@ -404,12 +398,12 @@ def pyrogram_api():
     root = PYROGRAM_API_DEST + "/methods"
 
     shutil.rmtree(root, ignore_errors=True)
-    os.mkdir(root)
+    Path(root).mkdir()
 
-    with open(HOME + "/template/methods.rst") as f:
+    with Path(HOME, "template/methods.rst").open() as f:
         template = f.read()
 
-    with open(root + "/index.rst", "w") as f:
+    with Path(root, "index.rst").open("w") as f:
         fmt_keys = {}
 
         for k, v in categories.items():
@@ -417,7 +411,7 @@ def pyrogram_api():
             fmt_keys.update({k: "\n    ".join(f"{m} <{m}>" for m in methods)})
 
             for method in methods:
-                with open(root + f"/{method}.rst", "w") as f2:
+                with Path(root, f"{method}.rst").open("w") as f2:
                     title = f"{method}()"
 
                     f2.write(title + "\n" + "=" * len(title) + "\n\n")
@@ -426,7 +420,7 @@ def pyrogram_api():
             functions = ["idle", "compose"]
 
             for func in functions:
-                with open(root + f"/{func}.rst", "w") as f2:
+                with Path(root, f"{func}.rst").open("w") as f2:
                     title = f"{func}()"
 
                     f2.write(title + "\n" + "=" * len(title) + "\n\n")
@@ -839,7 +833,7 @@ def pyrogram_api():
     with Path(HOME, "template/bound-methods.rst").open() as f:
         template = f.read()
 
-    with open(root + "/index.rst", "w") as f:
+    with Path(root, "index.rst").open("w") as f:
         fmt_keys = {}
 
         for k, v in categories.items():
@@ -862,9 +856,8 @@ def pyrogram_api():
                 }
             )
 
-            # noinspection PyShadowingBuiltins
             for bm in bound_methods:
-                with open(root + f"/{bm}.rst", "w") as f2:
+                with Path(root, f"{bm}.rst").open("w") as f2:
                     title = f"{bm}()"
 
                     f2.write(title + "\n" + "=" * len(title) + "\n\n")
