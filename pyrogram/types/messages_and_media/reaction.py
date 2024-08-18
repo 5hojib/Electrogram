@@ -34,13 +34,14 @@ class Reaction(Object):
         type: types.ReactionType = None,
         count: int | None = None,
         chosen_order: int | None = None,
-        is_paid: bool | None = None,  # NextTime
+        is_paid: bool | None = None,
     ):
         super().__init__(client)
 
         self.type = type
         self.count = count
         self.chosen_order = chosen_order
+        self.is_paid = is_paid
 
     @staticmethod
     def _parse(client: pyrogram.Client, reaction: raw.base.Reaction) -> Reaction:

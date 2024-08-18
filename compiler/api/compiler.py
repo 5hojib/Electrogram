@@ -183,7 +183,7 @@ def get_references(t: str, kind: str):
     return ("\n            ".join(items), len(items)) if items else (None, 0)
 
 
-def start(format: bool = False):
+def start():
     shutil.rmtree(DESTINATION_PATH / "types", ignore_errors=True)
     shutil.rmtree(DESTINATION_PATH / "functions", ignore_errors=True)
     shutil.rmtree(DESTINATION_PATH / "base", ignore_errors=True)
@@ -644,4 +644,4 @@ def start(format: bool = False):
 
 
 if __name__ == "__main__":
-    start(format=False)
+    start()
