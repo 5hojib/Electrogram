@@ -5,6 +5,8 @@ import os
 import re
 import shutil
 
+from pathlib import Path
+
 HOME = "compiler/errors"
 DEST = "pyrogram/errors/exceptions"
 
@@ -21,11 +23,10 @@ def camel(s):
 
 def start():
     shutil.rmtree(DEST, ignore_errors=True)
-    os.makedirs(DEST)
-
+    Path(DEST).mkdir(parents=True, exist_ok=True)
     files = list(os.listdir(f"{HOME}/source"))
 
-    with open(f"{DEST}/all.py", "w", encoding="utf-8") as f_all:
+    with Path(DEST, "all.py").open("w", encoding="utf-8") as f_all:
         f_all.write("count = {count}\n\n")
         f_all.write("exceptions = {\n")
 

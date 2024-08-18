@@ -66,5 +66,5 @@ class MessageReactionCountUpdated(Object, Update):
             chat=chat,
             message_id=update.msg_id,
             date=utils.timestamp_to_datetime(update.date),
-            reactions=[types.ReactionCount._parse(rt) for rt in update.reactions],
+            reactions=[types.ReactionCount._parse(client, rt) for rt in update.reactions],
         )
