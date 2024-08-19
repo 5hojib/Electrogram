@@ -33,19 +33,15 @@ def start():
 
         for i in files:
             code, name = re.search(r"(\d+)_([A-Z_]+)", i).groups()
-
             f_all.write(f"    {code}: {{\n")
-
             init = f"{DEST}/__init__.py"
 
-            with open(init, "a", encoding="utf-8") as f_init:
+            with Path(init).open("a", encoding="utf-8") as f_init:
                 f_init.write(f"from .{name.lower()}_{code} import *\n")
 
             with (
-                open(f"{HOME}/source/{i}", encoding="utf-8") as f_csv,
-                open(
-                    f"{DEST}/{name.lower()}_{code}.py", "w", encoding="utf-8"
-                ) as f_class,
+                Path(HOME, "source", i).open(encoding="utf-8") as f_csv,
+                Path(DEST, f"{name.lower()}_{code}.py").open("w", encoding="utf-8") as f_class
             ):
                 reader = csv.reader(f_csv, delimiter="\t")
 
@@ -80,14 +76,10 @@ def start():
 
                     sub_classes.append((sub_class, error_id, error_message))
 
-                with open(
-                    f"{HOME}/template/class.txt", encoding="utf-8"
-                ) as f_class_template:
+                with Path(HOME, "template/class.txt").open(encoding="utf-8") as f_class_template:
                     class_template = f_class_template.read()
 
-                    with open(
-                        f"{HOME}/template/sub_class.txt", encoding="utf-8"
-                    ) as f_sub_class_template:
+                    with Path(HOME, "template/sub_class.txt").open(encoding="utf-8") as f_sub_class_template:
                         sub_class_template = f_sub_class_template.read()
 
                     class_template = class_template.format(
@@ -113,10 +105,10 @@ def start():
 
         f_all.write("}\n")
 
-    with open(f"{DEST}/all.py", encoding="utf-8") as f:
+    with Path(DEST, "all.py").open(encoding="utf-8") as f:
         content = f.read()
 
-    with open(f"{DEST}/all.py", "w", encoding="utf-8") as f:
+    with Path(DEST, "all.py").open("w", encoding="utf-8") as f:
         f.write(re.sub("{count}", str(count), content))
 
 
