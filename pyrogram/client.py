@@ -562,8 +562,8 @@ class Client(Methods):
                 )
                 if peer.usernames is not None and len(peer.usernames) > 1:
                     usernames.extend(
-                                            (peer.id, uname.username.lower()) for uname in peer.usernames
-                                        )
+                        (peer.id, uname.username.lower()) for uname in peer.usernames
+                    )
                 phone_number = peer.phone
                 peer_type = "bot" if peer.bot else "user"
             elif isinstance(peer, raw.types.Chat | raw.types.ChatForbidden):
@@ -582,8 +582,8 @@ class Client(Methods):
                 )
                 if peer.usernames is not None and len(peer.usernames) > 1:
                     usernames.extend(
-                                            (peer.id, uname.username.lower()) for uname in peer.usernames
-                                        )
+                        (peer.id, uname.username.lower()) for uname in peer.usernames
+                    )
                 peer_type = "channel" if peer.broadcast else "supergroup"
             elif isinstance(peer, raw.types.ChannelForbidden):
                 peer_id = utils.get_channel_id(peer.id)
@@ -841,12 +841,12 @@ class Client(Methods):
                                     self.add_handler(handler, group)
 
                                     log.info(
-                                                                            '[%s] [LOAD] %s("%s") in group %s from "%s"',
-                                                                            self.name,
-                                                                            type(handler).__name__,
-                                                                            name,
-                                                                            group,
-                                                                            module_path,
+                                        '[%s] [LOAD] %s("%s") in group %s from "%s"',
+                                        self.name,
+                                        type(handler).__name__,
+                                        name,
+                                        group,
+                                        module_path,
                                     )
 
                                     count += 1
