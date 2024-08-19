@@ -41,7 +41,9 @@ def start():
 
             with (
                 Path(HOME, "source", i).open(encoding="utf-8") as f_csv,
-                Path(DEST, f"{name.lower()}_{code}.py").open("w", encoding="utf-8") as f_class
+                Path(DEST, f"{name.lower()}_{code}.py").open(
+                    "w", encoding="utf-8"
+                ) as f_class,
             ):
                 reader = csv.reader(f_csv, delimiter="\t")
 
@@ -76,10 +78,14 @@ def start():
 
                     sub_classes.append((sub_class, error_id, error_message))
 
-                with Path(HOME, "template/class.txt").open(encoding="utf-8") as f_class_template:
+                with Path(HOME, "template/class.txt").open(
+                    encoding="utf-8"
+                ) as f_class_template:
                     class_template = f_class_template.read()
 
-                    with Path(HOME, "template/sub_class.txt").open(encoding="utf-8") as f_sub_class_template:
+                    with Path(HOME, "template/sub_class.txt").open(
+                        encoding="utf-8"
+                    ) as f_sub_class_template:
                         sub_class_template = f_sub_class_template.read()
 
                     class_template = class_template.format(
