@@ -198,15 +198,12 @@ class Client(Methods):
     APP_VERSION = f"Pyrogram {__version__}"
     DEVICE_MODEL = f"{platform.python_implementation()} {platform.python_version()}"
     SYSTEM_VERSION = f"{platform.system()} {platform.release()}"
-
     LANG_CODE = "en"
-
     PARENT_DIR = Path(sys.argv[0]).parent
-
     INVITE_LINK_RE = re.compile(
         r"^(?:https?://)?(?:www\.)?(?:t(?:elegram)?\.(?:org|me|dog)/(?:joinchat/|\+))([\w-]+)$"
     )
-    WORKERS = min(32, (os.cpu_count() or 0) + 4)  # os.cpu_count() can be None
+    WORKERS = min(32, (os.cpu_count() or 0) + 4)
     WORKDIR = PARENT_DIR
     UPDATES_WATCHDOG_INTERVAL = 15 * 60
     MAX_CONCURRENT_TRANSMISSIONS = 100
@@ -393,8 +390,7 @@ class Client(Methods):
                     if ":" in value:
                         self.bot_token = value
                         return await self.sign_in_bot(value)
-                    else:
-                        self.phone_number = value
+                    self.phone_number = value
 
                 sent_code = await self.send_code(self.phone_number)
             except BadRequest as e:
@@ -565,8 +561,9 @@ class Client(Methods):
                     else None
                 )
                 if peer.usernames is not None and len(peer.usernames) > 1:
-                    for uname in peer.usernames:
-                        usernames.append((peer.id, uname.username.lower()))
+                    usernames.extend(
+                                            (peer.id, uname.username.lower()) for uname in peer.usernames
+                                        )
                 phone_number = peer.phone
                 peer_type = "bot" if peer.bot else "user"
             elif isinstance(peer, raw.types.Chat | raw.types.ChatForbidden):
@@ -584,8 +581,9 @@ class Client(Methods):
                     else None
                 )
                 if peer.usernames is not None and len(peer.usernames) > 1:
-                    for uname in peer.usernames:
-                        usernames.append((peer.id, uname.username.lower()))
+                    usernames.extend(
+                                            (peer.id, uname.username.lower()) for uname in peer.usernames
+                                        )
                 peer_type = "channel" if peer.broadcast else "supergroup"
             elif isinstance(peer, raw.types.ChannelForbidden):
                 peer_id = utils.get_channel_id(peer.id)
@@ -698,7 +696,7 @@ class Client(Methods):
                         {c.id: c for c in diff.chats},
                     )
                 )
-            elif diff.other_updates:  # The other_updates list can be empty
+            elif diff.other_updates:
                 self.dispatcher.updates_queue.put_nowait(
                     (diff.other_updates[0], {}, {})
                 )
@@ -722,8 +720,7 @@ class Client(Methods):
         if session_empty:
             if not self.api_id or not self.api_hash:
                 raise AttributeError(
-                    "The API key is required for new authorizations. "
-                    "More info: https://pyrofork.mayuri.my.id/main/start/auth"
+                    "The API key is required for new authorizations."
                 )
 
             await self.storage.api_id(self.api_id)
@@ -844,7 +841,12 @@ class Client(Methods):
                                     self.add_handler(handler, group)
 
                                     log.info(
-                                        f'[{self.name}] [LOAD] {type(handler).__name__}("{name}") in group {group} from "{module_path}"'
+                                                                            '[%s] [LOAD] %s("%s") in group %s from "%s"',
+                                                                            self.name,
+                                                                            type(handler).__name__,
+                                                                            name,
+                                                                            group,
+                                                                            module_path,
                                     )
 
                                     count += 1
@@ -961,11 +963,10 @@ class Client(Methods):
             if in_memory:
                 file.name = file_name
                 return file
-            else:
-                file.close()
-                file_path = os.path.splitext(temp_file_path)[0]
-                shutil.move(temp_file_path, file_path)
-                return file_path
+            file.close()
+            file_path = os.path.splitext(temp_file_path)[0]
+            shutil.move(temp_file_path, file_path)
+            return file_path
 
     async def get_file(
         self,
