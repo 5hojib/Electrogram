@@ -246,9 +246,8 @@ class Client(Methods):
         client_platform: enums.ClientPlatform = enums.ClientPlatform.OTHER,
         max_message_cache_size: int = MAX_CACHE_SIZE,
         max_business_user_connection_cache_size: int = MAX_CACHE_SIZE,
-    ):
+    ) -> None:
         super().__init__()
-
         self.name = name
         self.api_id = int(api_id) if api_id else None
         self.api_hash = api_hash
@@ -287,7 +286,6 @@ class Client(Methods):
         self.executor = ThreadPoolExecutor(
             self.workers, thread_name_prefix="Handler"
         )
-
         if storage:
             self.storage = storage
         elif self.session_string:
@@ -313,6 +311,7 @@ class Client(Methods):
         self.get_file_semaphore = asyncio.Semaphore(
             self.max_concurrent_transmissions
         )
+
         self.is_connected = None
         self.is_initialized = None
         self.takeout_id = None
@@ -344,7 +343,7 @@ class Client(Methods):
         with contextlib.suppress(ConnectionError):
             await self.stop()
 
-    async def updates_watchdog(self):
+    async def updates_watchdog(self) -> None:
         while True:
             try:
                 await asyncio.wait_for(
@@ -497,7 +496,7 @@ class Client(Methods):
 
         return signed_up
 
-    def set_parse_mode(self, parse_mode: enums.ParseMode | None):
+    def set_parse_mode(self, parse_mode: enums.ParseMode | None) -> None:
         """Set the parse mode to be used globally by the client.
 
         When setting the parse mode with this method, all other methods having a *parse_mode* parameter will follow the
@@ -601,7 +600,7 @@ class Client(Methods):
 
         return is_min
 
-    async def handle_updates(self, updates):
+    async def handle_updates(self, updates) -> None:
         self.last_update_time = datetime.now()
 
         if isinstance(updates, raw.types.Updates | raw.types.UpdatesCombined):
@@ -705,7 +704,7 @@ class Client(Methods):
         elif isinstance(updates, raw.types.UpdatesTooLong):
             log.info(updates)
 
-    async def load_session(self):
+    async def load_session(self) -> None:
         await self.storage.open()
 
         session_empty = any(
@@ -924,7 +923,7 @@ class Client(Methods):
             else:
                 log.warning('[%s] No plugin loaded from "%s"', self.name, root)
 
-    async def handle_download(self, packet):
+    async def handle_download(self, packet) -> str:
         (
             file_id,
             directory,
@@ -935,12 +934,15 @@ class Client(Methods):
             progress_args,
         ) = packet
 
-        os.makedirs(directory, exist_ok=True) if not in_memory else None
+        Path(directory).mkdir(parents=True, exist_ok=True) if not in_memory else None
         temp_file_path = (
-            os.path.abspath(re.sub("\\\\", "/", os.path.join(directory, file_name)))
+            Path(directory)
+            .joinpath(re.sub(r"\\", "/", file_name))
+            .resolve()
+            .as_posix()
             + ".temp"
         )
-        file = BytesIO() if in_memory else open(temp_file_path, "wb")
+        file = BytesIO() if in_memory else Path(temp_file_path).open("wb")
 
         try:
             async for chunk in self.get_file(
@@ -950,7 +952,7 @@ class Client(Methods):
         except BaseException as e:
             if not in_memory:
                 file.close()
-                os.remove(temp_file_path)
+                Path(temp_file_path).unlink()
 
             if isinstance(e, asyncio.CancelledError):
                 raise e
@@ -964,9 +966,9 @@ class Client(Methods):
                 file.name = file_name
                 return file
             file.close()
-            file_path = os.path.splitext(temp_file_path)[0]
-            shutil.move(temp_file_path, file_path)
-            return file_path
+            file_path = Path(temp_file_path).with_suffix("")
+            shutil.move(str(temp_file_path), str(file_path))
+            return str(file_path)
 
     async def get_file(
         self,
@@ -1207,9 +1209,7 @@ class Cache:
     def __setitem__(self, key, value) -> None:
         if key in self.store:
             del self.store[key]
-
         self.store[key] = value
-
         if len(self.store) > self.capacity:
             for _ in range(self.capacity // 2 + 1):
                 del self.store[next(iter(self.store))]
