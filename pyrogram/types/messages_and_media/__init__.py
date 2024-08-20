@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from .animation import Animation
+from .draft_message import DraftMessage
 from .audio import Audio
 from .available_effect import AvailableEffect
 from .contact import Contact
@@ -65,6 +66,7 @@ __all__ = [
     "AvailableEffect",
     "Contact",
     "ContactRegistered",
+    "DraftMessage",
     "Document",
     "Game",
     "GiftedPremium",

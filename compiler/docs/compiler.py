@@ -520,6 +520,7 @@ def pyrogram_api():
             MessageReactionUpdated
             MessageReactionCountUpdated
             TranslatedText
+            DraftMessage
         """,
         "stories": """
         Stories
@@ -775,6 +776,7 @@ def pyrogram_api():
         Story
             Story.delete
             Story.download
+            Story.react
             Story.edit
             Story.edit_animation
             Story.edit_caption
