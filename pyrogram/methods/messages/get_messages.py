@@ -1,27 +1,28 @@
+from __future__ import annotations
+
 import logging
-from typing import Union, List, Iterable
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw, types, utils
 from pyrogram.types.messages_and_media.message import Str
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 log = logging.getLogger(__name__)
 
 
 class GetMessages:
     async def get_messages(
-        self: "pyrogram.Client",
-        chat_id: Union[int, str] = None,
-        message_ids: Union[int, Iterable[int]] = None,
-        reply_to_message_ids: Union[int, Iterable[int]] = None,
+        self: pyrogram.Client,
+        chat_id: int | str | None = None,
+        message_ids: int | Iterable[int] | None = None,
+        reply_to_message_ids: int | Iterable[int] | None = None,
         replies: int = 1,
         is_scheduled: bool = False,
-        link: str = None,
-    ) -> Union[
-            "types.Message",
-            List["types.Message"],
-            "types.DraftMessage"
-        ]:
+        link: str | None = None,
+    ) -> types.Message | list[types.Message] | types.DraftMessage:
         """Get one or more messages from a chat by using message identifiers.
 
         You can retrieve up to 200 messages at once.
@@ -83,13 +84,17 @@ class GetMessages:
         """
         if chat_id:
             ids, ids_type = (
-                (message_ids, raw.types.InputMessageID) if message_ids
-                else (reply_to_message_ids, raw.types.InputMessageReplyTo) if reply_to_message_ids
+                (message_ids, raw.types.InputMessageID)
+                if message_ids
+                else (reply_to_message_ids, raw.types.InputMessageReplyTo)
+                if reply_to_message_ids
                 else (None, None)
             )
 
             if ids is None:
-                raise ValueError("No argument supplied. Either pass message_ids or reply_to_message_ids")
+                raise ValueError(
+                    "No argument supplied. Either pass message_ids or reply_to_message_ids"
+                )
 
             peer = await self.resolve_peer(chat_id)
 
@@ -100,10 +105,7 @@ class GetMessages:
                 replies = (1 << 31) - 1
 
             if is_scheduled:
-                rpc = raw.functions.messages.GetScheduledMessages(
-                    peer=peer,
-                    id=ids
-                )
+                rpc = raw.functions.messages.GetScheduledMessages(peer=peer, id=ids)
             else:
                 ids = [ids_type(id=i) for i in ids]
                 if isinstance(peer, raw.types.InputPeerChannel):
@@ -114,58 +116,38 @@ class GetMessages:
             r = await self.invoke(rpc, sleep_threshold=-1)
 
             messages = await utils.parse_messages(
-                self,
-                r,
-                is_scheduled=is_scheduled,
-                replies=replies
+                self, r, is_scheduled=is_scheduled, replies=replies
             )
 
             return messages if is_iterable else messages[0] if messages else None
 
         if link:
             linkps = link.split("/")
-            raw_chat_id, message_thread_id, message_id = None, None, None
-            if (
-                len(linkps) == 7 and
-                linkps[3] == "c"
-            ):
-                raw_chat_id = utils.get_channel_id(
-                    int(linkps[4])
-                )
-                message_thread_id = int(linkps[5])
+            raw_chat_id, _message_thread_id, message_id = None, None, None
+            if len(linkps) == 7 and linkps[3] == "c":
+                raw_chat_id = utils.get_channel_id(int(linkps[4]))
+                int(linkps[5])
                 message_id = int(linkps[6])
             elif len(linkps) == 6:
                 if linkps[3] == "c":
-                    raw_chat_id = utils.get_channel_id(
-                        int(linkps[4])
-                    )
+                    raw_chat_id = utils.get_channel_id(int(linkps[4]))
                     message_id = int(linkps[5])
                 else:
                     raw_chat_id = linkps[3]
-                    message_thread_id = int(linkps[4])
+                    int(linkps[4])
                     message_id = int(linkps[5])
 
-            elif (
-                not self.me.is_bot and
-                len(linkps) == 5 and
-                linkps[3] == "m"
-            ):
+            elif not self.me.is_bot and len(linkps) == 5 and linkps[3] == "m":
                 r = await self.invoke(
-                    raw.functions.account.ResolveBusinessChatLink(
-                        slug=linkps[4]
-                    )
+                    raw.functions.account.ResolveBusinessChatLink(slug=linkps[4])
                 )
                 users = {i.id: i for i in r.users}
-                chats = {i.id: i for i in r.chats}
+                {i.id: i for i in r.chats}
                 entities = [
-                    types.MessageEntity._parse(
-                        self, entity, users
-                    )
+                    types.MessageEntity._parse(self, entity, users)
                     for entity in getattr(r, "entities", [])
                 ]
-                entities = types.List(
-                    filter(lambda x: x is not None, entities)
-                )
+                entities = types.List(filter(lambda x: x is not None, entities))
                 chat = None
                 cat_id = utils.get_raw_peer_id(r.peer)
                 if isinstance(r.peer, raw.types.PeerUser):
@@ -186,8 +168,9 @@ class GetMessages:
                 message_id = int(linkps[4])
 
             return await self.get_messages(
-                chat_id=raw_chat_id,
-                message_ids=message_id
+                chat_id=raw_chat_id, message_ids=message_id
             )
 
-        raise ValueError("No argument supplied. Either pass link OR (chat_id, message_ids or reply_to_message_ids)")
+        raise ValueError(
+            "No argument supplied. Either pass link OR (chat_id, message_ids or reply_to_message_ids)"
+        )

@@ -1,10 +1,14 @@
-from datetime import datetime
-from typing import Optional, List, Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 import pyrogram
-from pyrogram import raw, types, utils, enums
-from ..object import Object
-from ..messages_and_media.message import Str
+from pyrogram import enums, raw, types, utils
+from pyrogram.types.messages_and_media.message import Str
+from pyrogram.types.object import Object
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class DraftMessage(Object):
@@ -16,7 +20,7 @@ class DraftMessage(Object):
 
         reply_to_message (:obj:`~pyrogram.types.Message`, *optional*):
             Information about the message to be replied.
-        
+
         date (:py:obj:`~datetime.datetime`, *optional*):
             Date the message was sent.
 
@@ -43,16 +47,16 @@ class DraftMessage(Object):
 
         show_caption_above_media (``bool``, *optional*):
             True, if the caption must be shown above the message media.
-        
+
         media (:obj:`~pyrogram.enums.MessageMediaType`, *optional*):
             The message is a media message.
             This field will contain the enumeration type of the media message.
             You can use ``media = getattr(message, message.media.value)`` to access the media message.
-        
+
         empty (``bool``, *optional*):
             The message is empty.
             A message can be empty in case it was deleted or you tried to retrieve a message that doesn't exist yet.
-        
+
         chat (:obj:`~pyrogram.types.Chat`, *optional*):
             Conversation the message belongs to. Can be None if unknown.
 
@@ -61,21 +65,20 @@ class DraftMessage(Object):
     def __init__(
         self,
         *,
-        reply_to_message_id: int = None,
-        reply_to_message: "types.Message" = None,
-        date: datetime = None,
+        reply_to_message_id: int | None = None,
+        reply_to_message: types.Message = None,
+        date: datetime | None = None,
         text: Str = None,
-        entities: List["types.MessageEntity"] = None,
-        link_preview_options: "types.LinkPreviewOptions" = None,
-        effect_id: str = None,
-        video_note: "types.VideoNote" = None,
-        voice: "types.Voice" = None,
-        show_caption_above_media: bool = None,
-        media: "enums.MessageMediaType" = None,
-        empty: bool = None,
-        chat: "types.Chat" = None,
-        _raw: "raw.types.DraftMessage" = None
-
+        entities: list[types.MessageEntity] | None = None,
+        link_preview_options: types.LinkPreviewOptions = None,
+        effect_id: str | None = None,
+        video_note: types.VideoNote = None,
+        voice: types.Voice = None,
+        show_caption_above_media: bool | None = None,
+        media: enums.MessageMediaType = None,
+        empty: bool | None = None,
+        chat: types.Chat = None,
+        _raw: raw.types.DraftMessage = None,
     ):
         super().__init__()
 
@@ -95,27 +98,26 @@ class DraftMessage(Object):
 
         self._raw = _raw
 
-
     @staticmethod
     def _parse(
-        client: "pyrogram.Client",
-        raw_draft_message: Union[
-            "raw.types.DraftMessage",
-            "raw.types.DraftMessageEmpty",
-        ],
-        users: dict, # raw
-        chats: dict, # raw 
-    ) -> "DraftMessage":
+        client: pyrogram.Client,
+        raw_draft_message: raw.types.DraftMessage | raw.types.DraftMessageEmpty,
+        users: dict,  # raw
+        chats: dict,  # raw
+    ) -> DraftMessage:
         if not raw_draft_message:
             return None
         if isinstance(raw_draft_message, raw.types.DraftMessageEmpty):
             return DraftMessage(
                 date=utils.timestamp_to_datetime(raw_draft_message.date),
                 empty=True,
-                _raw=raw_draft_message
+                _raw=raw_draft_message,
             )
 
-        entities = [types.MessageEntity._parse(client, entity, users) for entity in raw_draft_message.entities]
+        entities = [
+            types.MessageEntity._parse(client, entity, users)
+            for entity in raw_draft_message.entities
+        ]
         entities = types.List(filter(lambda x: x is not None, entities))
 
         voice = None
@@ -132,24 +134,32 @@ class DraftMessage(Object):
                 if isinstance(doc, raw.types.Document):
                     attributes = {type(i): i for i in doc.attributes}
 
-                    file_name = getattr(
-                        attributes.get(
-                            raw.types.DocumentAttributeFilename, None
-                        ), "file_name", None
+                    getattr(
+                        attributes.get(raw.types.DocumentAttributeFilename, None),
+                        "file_name",
+                        None,
                     )
 
                     if raw.types.DocumentAttributeVideo in attributes:
-                        video_attributes = attributes[raw.types.DocumentAttributeVideo]
+                        video_attributes = attributes[
+                            raw.types.DocumentAttributeVideo
+                        ]
 
                         if video_attributes.round_message:
-                            video_note = types.VideoNote._parse(client, doc, video_attributes, media.ttl_seconds)
+                            video_note = types.VideoNote._parse(
+                                client, doc, video_attributes, media.ttl_seconds
+                            )
                             media_type = enums.MessageMediaType.VIDEO_NOTE
 
                     elif raw.types.DocumentAttributeAudio in attributes:
-                        audio_attributes = attributes[raw.types.DocumentAttributeAudio]
+                        audio_attributes = attributes[
+                            raw.types.DocumentAttributeAudio
+                        ]
 
                         if audio_attributes.voice:
-                            voice = types.Voice._parse(client, doc, audio_attributes, media.ttl_seconds)
+                            voice = types.Voice._parse(
+                                client, doc, audio_attributes, media.ttl_seconds
+                            )
                             media_type = enums.MessageMediaType.VOICE
 
             elif isinstance(media, raw.types.MessageMediaWebPage):
@@ -166,37 +176,32 @@ class DraftMessage(Object):
                     client,
                     media,
                     web_page_url,
-                    getattr(raw_draft_message, "invert_media", False)
+                    getattr(raw_draft_message, "invert_media", False),
                 )
 
-        if (
-            not link_preview_options and
-            web_page_url
-        ):
+        if not link_preview_options and web_page_url:
             link_preview_options = types.LinkPreviewOptions._parse(
                 client,
                 None,
                 web_page_url,
-                getattr(raw_draft_message, "invert_media", False)
+                getattr(raw_draft_message, "invert_media", False),
             )
 
-        draft_message = DraftMessage(
+        return DraftMessage(
             date=utils.timestamp_to_datetime(raw_draft_message.date),
-            text=(
-                Str(raw_draft_message.message).init(entities) or None
-            ),
+            text=(Str(raw_draft_message.message).init(entities) or None),
             entities=entities or None,
             link_preview_options=link_preview_options,
             effect_id=raw_draft_message.effect,
             video_note=video_note,
             voice=voice,
-            show_caption_above_media=getattr(raw_draft_message, "invert_media", False),
+            show_caption_above_media=getattr(
+                raw_draft_message, "invert_media", False
+            ),
             media=media_type,
-            _raw=raw_draft_message
+            _raw=raw_draft_message,
         )
         # if raw_draft_message.reply_to:
         #     # TODO reply_to:flags.4?InputReplyTo
         #     draft_message.reply_to_message_id
-        #     draft_message.reply_to_message 
-
-        return draft_message
+        #     draft_message.reply_to_message
