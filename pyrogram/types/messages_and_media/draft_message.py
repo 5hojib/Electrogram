@@ -102,8 +102,7 @@ class DraftMessage(Object):
     def _parse(
         client: pyrogram.Client,
         raw_draft_message: raw.types.DraftMessage | raw.types.DraftMessageEmpty,
-        users: dict,  # raw
-        chats: dict,  # raw
+        users: dict,
     ) -> DraftMessage:
         if not raw_draft_message:
             return None
@@ -124,6 +123,7 @@ class DraftMessage(Object):
         video_note = None
         link_preview_options = None
         web_page_url = None
+        file_name = None
         media = raw_draft_message.media
         media_type = None
 
@@ -134,7 +134,7 @@ class DraftMessage(Object):
                 if isinstance(doc, raw.types.Document):
                     attributes = {type(i): i for i in doc.attributes}
 
-                    getattr(
+                    file_name = getattr(
                         attributes.get(raw.types.DocumentAttributeFilename, None),
                         "file_name",
                         None,
@@ -198,10 +198,7 @@ class DraftMessage(Object):
             show_caption_above_media=getattr(
                 raw_draft_message, "invert_media", False
             ),
+            file_name=file_name
             media=media_type,
             _raw=raw_draft_message,
         )
-        # if raw_draft_message.reply_to:
-        #     # TODO reply_to:flags.4?InputReplyTo
-        #     draft_message.reply_to_message_id
-        #     draft_message.reply_to_message

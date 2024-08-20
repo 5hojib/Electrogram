@@ -11,9 +11,6 @@ class MessageServiceType(AutoName):
     NEW_CHAT_MEMBERS = auto()
     "New members join"
 
-    CHAT_JOINED_BY_REQUEST = auto()
-    "a member chat join request approved by admin."
-
     LEFT_CHAT_MEMBERS = auto()
     "Left chat members"
 

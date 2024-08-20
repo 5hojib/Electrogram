@@ -134,7 +134,6 @@ class GetMessages:
                     message_id = int(linkps[5])
                 else:
                     raw_chat_id = linkps[3]
-                    int(linkps[4])
                     message_id = int(linkps[5])
 
             elif not self.me.is_bot and len(linkps) == 5 and linkps[3] == "m":
@@ -142,7 +141,6 @@ class GetMessages:
                     raw.functions.account.ResolveBusinessChatLink(slug=linkps[4])
                 )
                 users = {i.id: i for i in r.users}
-                {i.id: i for i in r.chats}
                 entities = [
                     types.MessageEntity._parse(self, entity, users)
                     for entity in getattr(r, "entities", [])

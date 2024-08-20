@@ -53,8 +53,9 @@ class SendPaidReaction:
                 private=is_anonymous,
             )
         )
+        users = {i.id: i for i in r.users}
         for i in r.updates:
             if isinstance(i, raw.types.UpdateMessageReactions):
-                return types.MessageReactions._parse(self, i.reactions)
+                return types.MessageReactions._parse(self, i.reactions, users)
         # TODO
         return r
