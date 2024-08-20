@@ -25,7 +25,6 @@ from . import enums, errors, filters, handlers, raw, types
 from .client import Client
 from .sync import compose, idle
 
-
 __all__ = [
     "Client",
     "ContinuePropagationError",
