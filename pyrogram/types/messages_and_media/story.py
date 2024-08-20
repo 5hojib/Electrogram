@@ -6,7 +6,6 @@ import pyrogram
 from pyrogram import enums, raw, types, utils
 from pyrogram.types.object import Object
 from pyrogram.types.update import Update
-from typing import Optional, List, Dict
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -372,7 +371,7 @@ class Story(Object, Update):
         """
         sr = None
 
-        if isinstance(reaction, List):
+        if isinstance(reaction, list):
             sr = []
             for i in reaction:
                 if isinstance(i, types.ReactionType):
