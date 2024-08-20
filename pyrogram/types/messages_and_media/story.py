@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, BinaryIO, Union
+from typing import TYPE_CHECKING, BinaryIO
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
@@ -331,7 +331,7 @@ class Story(Object, Update):
         )
 
     async def react(
-        self, reaction: Union[int, str] = None, add_to_recent: bool = True
+        self, reaction: int | str | None = None, add_to_recent: bool = True
     ) -> types.MessageReactions:
         """Bound method *react* of :obj:`~pyrogram.types.Story`.
 
