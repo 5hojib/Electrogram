@@ -198,7 +198,7 @@ class DraftMessage(Object):
             show_caption_above_media=getattr(
                 raw_draft_message, "invert_media", False
             ),
-            file_name=file_name
+            file_name=file_name,
             media=media_type,
             _raw=raw_draft_message,
         )
