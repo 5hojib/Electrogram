@@ -51,7 +51,7 @@ class ChatInviteLink(Object):
 
         pending_join_request_count (``int``, *optional*):
             Number of pending join requests created using this link
-            
+
         subscription_expired (``int``, *optional*):
             Number of subscription which already expired.
 
@@ -77,9 +77,9 @@ class ChatInviteLink(Object):
         member_limit: int | None = None,
         member_count: int | None = None,
         pending_join_request_count: int | None = None,
-        subscription_expired: int = None,
-        subscription_period: int = None,
-        subscription_price: int = None,
+        subscription_expired: int | None = None,
+        subscription_period: int | None = None,
+        subscription_price: int | None = None,
     ) -> None:
         super().__init__()
 
@@ -129,6 +129,10 @@ class ChatInviteLink(Object):
             member_count=invite.usage,
             pending_join_request_count=invite.requested,
             subscription_expired=invite.subscription_expired,
-            subscription_period=subscription_pricing.period if subscription_pricing is not None else None,
-            subscription_price=subscription_pricing.amount if subscription_pricing is not None else None,
+            subscription_period=subscription_pricing.period
+            if subscription_pricing is not None
+            else None,
+            subscription_price=subscription_pricing.amount
+            if subscription_pricing is not None
+            else None,
         )

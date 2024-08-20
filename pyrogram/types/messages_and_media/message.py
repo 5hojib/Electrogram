@@ -1200,7 +1200,9 @@ class Message(Object, Update):
                 else None
             )
 
-            reactions = types.MessageReactions._parse(client, message.reactions, users)
+            reactions = types.MessageReactions._parse(
+                client, message.reactions, users
+            )
 
             if message.via_business_bot_id:
                 sender_business_bot = types.User._parse(

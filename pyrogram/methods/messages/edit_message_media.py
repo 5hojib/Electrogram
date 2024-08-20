@@ -80,7 +80,11 @@ class EditMessageMedia:
         message, entities = None, None
 
         if caption is not None:
-            message, entities = (await utils.parse_text_entities(self, caption, parse_mode, caption_entities)).values()
+            message, entities = (
+                await utils.parse_text_entities(
+                    self, caption, parse_mode, caption_entities
+                )
+            ).values()
 
         if isinstance(media, types.InputMediaPhoto):
             if isinstance(media.media, io.BytesIO) or Path(media.media).is_file():

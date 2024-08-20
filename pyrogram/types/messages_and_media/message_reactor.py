@@ -1,8 +1,8 @@
-from typing import Optional, Dict
+from __future__ import annotations
 
 import pyrogram
 from pyrogram import raw, types
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class MessageReactor(Object):
@@ -23,15 +23,16 @@ class MessageReactor(Object):
         from_user (:obj:`~pyrogram.types.User`, *optional*):
             Information about the reactor.
     """
+
     def __init__(
         self,
         *,
-        client: "pyrogram.Client" = None,
+        client: pyrogram.Client = None,
         amount: int,
-        is_top: bool = None,
-        is_my: bool = None,
-        is_anonymous: bool = None,
-        from_user: "types.User" = None
+        is_top: bool | None = None,
+        is_my: bool | None = None,
+        is_anonymous: bool | None = None,
+        from_user: types.User = None,
     ):
         super().__init__(client)
 
@@ -43,17 +44,19 @@ class MessageReactor(Object):
 
     @staticmethod
     def _parse(
-        client: "pyrogram.Client",
-        message_reactor: Optional["raw.base.MessageReactor"] = None,
-        users: Dict[int, "raw.types.User"] = None
-    ) -> Optional["MessageReactor"]:
+        client: pyrogram.Client,
+        message_reactor: raw.base.MessageReactor | None = None,
+        users: dict[int, raw.types.User] | None = None,
+    ) -> MessageReactor | None:
         if not message_reactor:
             return None
 
         is_anonymous = message_reactor.anonymous
         from_user = None
         if not is_anonymous:
-            from_user = types.User._parse(client, users.get(message_reactor.peer_id.user_id))
+            from_user = types.User._parse(
+                client, users.get(message_reactor.peer_id.user_id)
+            )
 
         return MessageReactor(
             client=client,
@@ -61,5 +64,5 @@ class MessageReactor(Object):
             is_top=message_reactor.top,
             is_my=message_reactor.my,
             is_anonymous=is_anonymous,
-            from_user=from_user
+            from_user=from_user,
         )

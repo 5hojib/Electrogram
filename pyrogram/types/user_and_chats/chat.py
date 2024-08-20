@@ -1125,8 +1125,11 @@ class Chat(Object):
 
         return await self._client.leave_chat(self.id)
 
-    async def export_invite_link(self, subscription_period: int = None,
-        subscription_price: int = None):
+    async def export_invite_link(
+        self,
+        subscription_period: int | None = None,
+        subscription_price: int | None = None,
+    ):
         """Bound method *export_invite_link* of :obj:`~pyrogram.types.Chat`.
 
         Use as a shortcut for:
@@ -1156,10 +1159,10 @@ class Chat(Object):
         """
 
         return await self._client.export_chat_invite_link(
-                    self.id,
-                    subscription_period=subscription_period,
-                    subscription_price=subscription_price
-                )
+            self.id,
+            subscription_period=subscription_period,
+            subscription_price=subscription_price,
+        )
 
     async def get_member(
         self,
