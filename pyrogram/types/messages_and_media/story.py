@@ -6,6 +6,7 @@ import pyrogram
 from pyrogram import enums, raw, types, utils
 from pyrogram.types.object import Object
 from pyrogram.types.update import Update
+from typing import Optional, List, Dict
 
 if TYPE_CHECKING:
     from collections.abc import Callable
