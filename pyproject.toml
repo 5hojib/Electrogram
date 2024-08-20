@@ -10,7 +10,6 @@ dependencies = [
     "pymediainfo",
     "pymongo",
     "TgCrypto-pyrofork",
-    "uvloop"
 ]
 requires-python = ">=3.10"
 
