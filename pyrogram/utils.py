@@ -80,124 +80,73 @@ def get_input_media_from_file_id(
 async def parse_messages(
     client,
     messages: raw.types.messages.Messages,
+    is_scheduled: bool = False,
     replies: int = 1,
-    business_connection_id: str | None = None,
+    business_connection_id: str = "",
+    r: raw.base.Updates = None,
 ) -> list[types.Message]:
+    parsed_messages = []
+
+    if not messages and r:
+        users = {i.id: i for i in getattr(r, "users", [])}
+        chats = {i.id: i for i in getattr(r, "chats", [])}
+
+        for u in getattr(r, "updates", []):
+            if isinstance(
+                u,
+                raw.types.UpdateNewMessage
+                | raw.types.UpdateNewChannelMessage
+                | raw.types.UpdateNewScheduledMessage,
+            ):
+                parsed_messages.append(
+                    await types.Message._parse(
+                        client,
+                        u.message,
+                        users,
+                        chats,
+                        is_scheduled=isinstance(
+                            u, raw.types.UpdateNewScheduledMessage
+                        ),
+                        replies=client.fetch_replies,
+                    )
+                )
+
+            elif isinstance(u, raw.types.UpdateBotNewBusinessMessage):
+                parsed_messages.append(
+                    await types.Message._parse(
+                        client,
+                        u.message,
+                        users,
+                        chats,
+                        business_connection_id=getattr(
+                            u, "connection_id", business_connection_id
+                        ),
+                        raw_reply_to_message=u.reply_to_message,
+                        replies=0,
+                    )
+                )
+
+        return types.List(parsed_messages)
+
     users = {i.id: i for i in messages.users}
     chats = {i.id: i for i in messages.chats}
-    if hasattr(messages, "topics"):
-        topics = {i.id: i for i in messages.topics}
-    else:
-        topics = None
+
     if not messages.messages:
         return types.List()
 
-    parsed_messages = [
-        await types.Message._parse(
-            client,
-            message,
-            users,
-            chats,
-            topics,
-            replies=0,
-            business_connection_id=business_connection_id,
-        )
-        for message in messages.messages
-    ]
-
-    if replies:
-        messages_with_replies = {
-            i.id: i.reply_to
-            for i in messages.messages
-            if not isinstance(i, raw.types.MessageEmpty)
-            and i.reply_to
-            and isinstance(i.reply_to, raw.types.MessageReplyHeader)
-        }
-
-        message_reply_to_story = {
-            i.id: {
-                "user_id": i.reply_to.user_id,
-                "story_id": i.reply_to.story_id,
-            }
-            for i in messages.messages
-            if not isinstance(i, raw.types.MessageEmpty)
-            and i.reply_to
-            and isinstance(i.reply_to, raw.types.MessageReplyStoryHeader)
-        }
-
-        if messages_with_replies:
-            for m in parsed_messages:
-                if not isinstance(m, types.Message):
-                    continue
-
-                if m.chat:
-                    chat_id = m.chat.id
-                    break
-            else:
-                chat_id = 0
-
-            is_all_within_chat = not any(
-                value.reply_to_peer_id for value in messages_with_replies.values()
+    parsed_messages.extend(
+        [
+            await types.Message._parse(
+                client,
+                message,
+                users,
+                chats,
+                is_scheduled=is_scheduled,
+                replies=client.fetch_replies,
             )
-            reply_messages: list[pyrogram.types.Message] = []
-            if is_all_within_chat:
-                # fast path: fetch all messages within the same chat
-                reply_messages = await client.get_messages(
-                    chat_id,
-                    reply_to_message_ids=messages_with_replies.keys(),
-                    replies=replies - 1,
-                )
-            else:
-                for target_reply_to in messages_with_replies.values():
-                    to_be_added_msg = None
-                    the_chat_id = chat_id
-                    if target_reply_to.reply_to_peer_id:
-                        the_chat_id = get_channel_id(
-                            target_reply_to.reply_to_peer_id.channel_id
-                        )
-                    to_be_added_msg = await client.get_messages(
-                        chat_id=the_chat_id,
-                        message_ids=target_reply_to.reply_to_msg_id,
-                        replies=replies - 1,
-                    )
-                    if isinstance(to_be_added_msg, list):
-                        for current_to_be_added in to_be_added_msg:
-                            reply_messages.append(current_to_be_added)
-                    elif to_be_added_msg:
-                        reply_messages.append(to_be_added_msg)
-
-            for message in parsed_messages:
-                reply_to = messages_with_replies.get(message.id, None)
-                if not reply_to:
-                    continue
-
-                reply_id = reply_to.reply_to_msg_id
-
-                for reply in reply_messages:
-                    if reply.id == reply_id and not reply.forum_topic_created:
-                        message.reply_to_message = reply
-
-        if message_reply_to_story:
-            for m in parsed_messages:
-                if not isinstance(m, types.Message):
-                    continue
-
-                if m.chat:
-                    chat_id = m.chat.id
-                    break
-            else:
-                chat_id = 0
-
-            reply_messages = {}
-            for msg_id in message_reply_to_story:
-                reply_messages[msg_id] = await client.get_stories(
-                    message_reply_to_story[msg_id]["user_id"],
-                    message_reply_to_story[msg_id]["story_id"],
-                )
-
-            for message in parsed_messages:
-                if message.id in reply_messages:
-                    message.reply_to_story = reply_messages[message.id]
+            for message in messages.messages
+        ]
+    )
 
     return types.List(parsed_messages)
 

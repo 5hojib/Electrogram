@@ -193,6 +193,10 @@ class Client(Methods):
         client_platform (:obj:`~pyrogram.enums.ClientPlatform`, *optional*):
             The platform where this client is running.
             Defaults to 'other'
+
+        fetch_replies (``int``, *optional*):
+            Set the number of replies to be fetched when parsing the :obj:`~pyrogram.types.Message` object. Defaults to 1.
+            :doc:`More on Errors <../../api/errors/index>`
     """
 
     APP_VERSION = f"Pyrogram {__version__}"
@@ -246,6 +250,7 @@ class Client(Methods):
         client_platform: enums.ClientPlatform = enums.ClientPlatform.OTHER,
         max_message_cache_size: int = MAX_CACHE_SIZE,
         max_business_user_connection_cache_size: int = MAX_CACHE_SIZE,
+        fetch_replies: int = 1,
     ) -> None:
         super().__init__()
         self.name = name
@@ -321,6 +326,7 @@ class Client(Methods):
         self.business_user_connection_cache = Cache(
             self.max_business_user_connection_cache_size
         )
+        self.fetch_replies = fetch_replies
         self.updates_watchdog_task = None
         self.updates_watchdog_event = asyncio.Event()
         self.last_update_time = datetime.now()
