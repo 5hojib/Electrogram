@@ -148,34 +148,6 @@ async def parse_messages(
         ]
     )
 
-    if False:
-        messages_with_replies = {
-            i.id: i.reply_to.reply_to_msg_id
-            for i in messages.messages
-            if not isinstance(i, raw.types.MessageEmpty) and i.reply_to
-        }
-
-        if messages_with_replies:
-            for m in parsed_messages:
-                if m.chat:
-                    chat_id = m.chat.id
-                    break
-            else:
-                chat_id = 0
-
-            reply_messages = await client.get_messages(
-                chat_id=chat_id,
-                reply_to_message_ids=messages_with_replies.keys(),
-                replies=replies - 1,
-            )
-
-            for message in parsed_messages:
-                reply_id = messages_with_replies.get(message.id, None)
-
-                for reply in reply_messages:
-                    if reply.id == reply_id:
-                        message.reply_to_message = reply
-
     return types.List(parsed_messages)
 
 
