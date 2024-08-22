@@ -51,6 +51,15 @@ class ChatInviteLink(Object):
 
         pending_join_request_count (``int``, *optional*):
             Number of pending join requests created using this link
+
+        subscription_expired (``int``, *optional*):
+            Number of subscription which already expired.
+
+        subscription_period (``int``, *optional*):
+            The period of Subscription.
+
+        subscription_price (``int``, *optional*):
+            The price of Subscription (stars).
     """
 
     def __init__(
@@ -68,6 +77,9 @@ class ChatInviteLink(Object):
         member_limit: int | None = None,
         member_count: int | None = None,
         pending_join_request_count: int | None = None,
+        subscription_expired: int | None = None,
+        subscription_period: int | None = None,
+        subscription_price: int | None = None,
     ) -> None:
         super().__init__()
 
@@ -83,6 +95,9 @@ class ChatInviteLink(Object):
         self.member_limit = member_limit
         self.member_count = member_count
         self.pending_join_request_count = pending_join_request_count
+        self.subscription_expired = subscription_expired
+        self.subscription_period = subscription_period
+        self.subscription_price = subscription_price
 
     @staticmethod
     def _parse(
@@ -98,6 +113,7 @@ class ChatInviteLink(Object):
             if users is not None
             else None
         )
+        subscription_pricing = getattr(invite, "subscription_pricing", None)
 
         return ChatInviteLink(
             invite_link=invite.link,
@@ -112,4 +128,11 @@ class ChatInviteLink(Object):
             member_limit=invite.usage_limit,
             member_count=invite.usage,
             pending_join_request_count=invite.requested,
+            subscription_expired=invite.subscription_expired,
+            subscription_period=subscription_pricing.period
+            if subscription_pricing is not None
+            else None,
+            subscription_price=subscription_pricing.amount
+            if subscription_pricing is not None
+            else None,
         )

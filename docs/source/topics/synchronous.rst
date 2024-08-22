@@ -71,18 +71,3 @@ possible.
     @app.on_edited_message()
     def handler2(client, message):
         message.forward("me")
-
-uvloop usage
-------------
-
-When using Electrogram in its synchronous mode combined with uvloop, you need to call ``uvloop.install()`` before importing
-Electrogram.
-
-.. code-block:: python
-
-    import uvloop
-    uvloop.install()
-
-    from pyrogram import Client
-
-    ...

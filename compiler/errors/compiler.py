@@ -4,6 +4,7 @@ import csv
 import os
 import re
 import shutil
+from pathlib import Path
 
 HOME = "compiler/errors"
 DEST = "pyrogram/errors/exceptions"
@@ -21,11 +22,10 @@ def camel(s):
 
 def start():
     shutil.rmtree(DEST, ignore_errors=True)
-    os.makedirs(DEST)
-
+    Path(DEST).mkdir(parents=True, exist_ok=True)
     files = list(os.listdir(f"{HOME}/source"))
 
-    with open(f"{DEST}/all.py", "w", encoding="utf-8") as f_all:
+    with Path(DEST, "all.py").open("w", encoding="utf-8") as f_all:
         f_all.write("count = {count}\n\n")
         f_all.write("exceptions = {\n")
 
@@ -33,18 +33,16 @@ def start():
 
         for i in files:
             code, name = re.search(r"(\d+)_([A-Z_]+)", i).groups()
-
             f_all.write(f"    {code}: {{\n")
-
             init = f"{DEST}/__init__.py"
 
-            with open(init, "a", encoding="utf-8") as f_init:
+            with Path(init).open("a", encoding="utf-8") as f_init:
                 f_init.write(f"from .{name.lower()}_{code} import *\n")
 
             with (
-                open(f"{HOME}/source/{i}", encoding="utf-8") as f_csv,
-                open(
-                    f"{DEST}/{name.lower()}_{code}.py", "w", encoding="utf-8"
+                Path(HOME, "source", i).open(encoding="utf-8") as f_csv,
+                Path(DEST, f"{name.lower()}_{code}.py").open(
+                    "w", encoding="utf-8"
                 ) as f_class,
             ):
                 reader = csv.reader(f_csv, delimiter="\t")
@@ -80,13 +78,13 @@ def start():
 
                     sub_classes.append((sub_class, error_id, error_message))
 
-                with open(
-                    f"{HOME}/template/class.txt", encoding="utf-8"
+                with Path(HOME, "template/class.txt").open(
+                    encoding="utf-8"
                 ) as f_class_template:
                     class_template = f_class_template.read()
 
-                    with open(
-                        f"{HOME}/template/sub_class.txt", encoding="utf-8"
+                    with Path(HOME, "template/sub_class.txt").open(
+                        encoding="utf-8"
                     ) as f_sub_class_template:
                         sub_class_template = f_sub_class_template.read()
 
@@ -113,10 +111,10 @@ def start():
 
         f_all.write("}\n")
 
-    with open(f"{DEST}/all.py", encoding="utf-8") as f:
+    with Path(DEST, "all.py").open(encoding="utf-8") as f:
         content = f.read()
 
-    with open(f"{DEST}/all.py", "w", encoding="utf-8") as f:
+    with Path(DEST, "all.py").open("w", encoding="utf-8") as f:
         f.write(re.sub("{count}", str(count), content))
 
 

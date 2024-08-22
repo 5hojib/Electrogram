@@ -76,11 +76,14 @@ class EditMessageMedia:
                     InputMediaAudio("new_audio.mp3"))
         """
         caption = media.caption
+        caption_entities = media.caption_entities
         message, entities = None, None
 
         if caption is not None:
             message, entities = (
-                await self.parser.parse(caption, parse_mode)
+                await utils.parse_text_entities(
+                    self, caption, parse_mode, caption_entities
+                )
             ).values()
 
         if isinstance(media, types.InputMediaPhoto):

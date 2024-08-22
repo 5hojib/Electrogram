@@ -7,6 +7,7 @@ from .contact import Contact
 from .contact_registered import ContactRegistered
 from .dice import Dice
 from .document import Document
+from .draft_message import DraftMessage
 from .exported_story_link import ExportedStoryLink
 from .game import Game
 from .gifted_premium import GiftedPremium
@@ -25,6 +26,7 @@ from .message_reaction_count_updated import (
 )
 from .message_reaction_updated import MessageReactionUpdated
 from .message_reactions import MessageReactions
+from .message_reactor import MessageReactor
 from .message_story import MessageStory
 from .payment_form import PaymentForm
 from .photo import Photo
@@ -65,6 +67,7 @@ __all__ = [
     "AvailableEffect",
     "Contact",
     "ContactRegistered",
+    "DraftMessage",
     "Document",
     "Game",
     "GiftedPremium",
@@ -96,6 +99,7 @@ __all__ = [
     "Dice",
     "WebAppData",
     "MessageReactions",
+    "MessageReactor",
     "MessageReactionUpdated",
     "MessageReactionCountUpdated",
     "MessageStory",

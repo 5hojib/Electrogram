@@ -186,6 +186,9 @@ class Chat(Object):
         subscription_until_date (:py:obj:`~datetime.datetime`, *optional*):
             Date when the the subscription will end.
 
+        can_enable_paid_reaction (``bool``, *optional*):
+            True, if paid reaction can be enabled in the channel chat; for channels only.
+
         max_reaction_count (``int``):
             The maximum number of reactions that can be set on a message in the chat
     """
@@ -241,6 +244,7 @@ class Chat(Object):
         birthday: types.Birthday = None,
         personal_chat: types.Chat = None,
         subscription_until_date: datetime | None = None,
+        can_enable_paid_reaction: bool | None = None,
         max_reaction_count: int | None = None,
     ) -> None:
         super().__init__(client)
@@ -292,6 +296,7 @@ class Chat(Object):
         self.birthday = birthday
         self.personal_chat = personal_chat
         self.subscription_until_date = subscription_until_date
+        self.can_enable_paid_reaction = can_enable_paid_reaction
         self.max_reaction_count = max_reaction_count
 
     @property
@@ -540,6 +545,9 @@ class Chat(Object):
                 parsed_chat.is_participants_hidden = full_chat.participants_hidden
                 parsed_chat.is_antispam = full_chat.antispam
                 parsed_chat.folder_id = getattr(full_chat, "folder_id", None)
+                parsed_chat.can_enable_paid_reaction = (
+                    full_chat.paid_reactions_available
+                )
 
                 linked_chat_raw = chats.get(full_chat.linked_chat_id, None)
 
@@ -1117,7 +1125,11 @@ class Chat(Object):
 
         return await self._client.leave_chat(self.id)
 
-    async def export_invite_link(self):
+    async def export_invite_link(
+        self,
+        subscription_period: int | None = None,
+        subscription_price: int | None = None,
+    ):
         """Bound method *export_invite_link* of :obj:`~pyrogram.types.Chat`.
 
         Use as a shortcut for:
@@ -1131,6 +1143,14 @@ class Chat(Object):
 
                 chat.export_invite_link()
 
+        Parameters:
+            subscription_period (``int``, *optional*):
+                Channel members only. Date when the subscription expires.
+                for now, only 30 days is supported (30*24*60*60).
+
+            subscription_price (``int``, *optional*):
+                Channel members only. Price of the subscription in the smallest units of the currency.
+
         Returns:
             ``str``: On success, the exported invite link is returned.
 
@@ -1138,7 +1158,11 @@ class Chat(Object):
             ValueError: In case the chat_id belongs to a user.
         """
 
-        return await self._client.export_chat_invite_link(self.id)
+        return await self._client.export_chat_invite_link(
+            self.id,
+            subscription_period=subscription_period,
+            subscription_price=subscription_price,
+        )
 
     async def get_member(
         self,

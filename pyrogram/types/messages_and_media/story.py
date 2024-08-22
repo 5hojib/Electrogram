@@ -91,6 +91,9 @@ class Story(Object, Update):
         media_areas (List of :obj:`~pyrogram.types.MediaArea`, *optional*):
             List of :obj:`~pyrogram.types.MediaArea` object in story.
 
+        link (``str``, *property*):
+            Generate a link to this story, only for Telegram Premium chats having usernames. Can be None if the story cannot have a link.
+
         raw (``pyrogram.raw.types.StoryItem``, *optional*):
             The raw story object, as received from the Telegram API.
     """
@@ -325,6 +328,70 @@ class Story(Object, Update):
             media_areas=media_areas,
             raw=stories,
             client=client,
+        )
+
+    async def react(
+        self, reaction: int | str | None = None, add_to_recent: bool = True
+    ) -> types.MessageReactions:
+        """Bound method *react* of :obj:`~pyrogram.types.Story`.
+
+        Use as a shortcut for:
+
+        .. code-block:: python
+
+            await client.set_reaction(
+                chat_id=chat_id,
+                story_id=message.id,
+                reaction=[ReactionTypeEmoji(emoji="👍")]
+            )
+
+        Example:
+            .. code-block:: python
+
+                # Send a reaction
+                await story.react([ReactionTypeEmoji(emoji="👍")])
+
+                # Retract a reaction
+                await story.react()
+
+        Parameters:
+            reaction (``int`` | ``str``, *optional*):
+                New list of reaction types to set on the message.
+                Pass None as emoji (default) to retract the reaction.
+
+            add_to_recent (``bool``, *optional*):
+                Pass True if the reaction should appear in the recently used reactions.
+                This option is applicable only for users.
+                Defaults to True.
+        Returns:
+            On success, :obj:`~pyrogram.types.MessageReactions`: is returned.
+
+        Raises:
+            RPCError: In case of a Telegram RPC error.
+        """
+        sr = None
+
+        if isinstance(reaction, list):
+            sr = []
+            for i in reaction:
+                if isinstance(i, types.ReactionType):
+                    sr.append(i)
+                elif isinstance(i, int):
+                    sr.append(types.ReactionTypeCustomEmoji(custom_emoji_id=str(i)))
+                else:
+                    sr.append(types.ReactionTypeEmoji(emoji=i))
+
+        elif isinstance(reaction, int):
+            sr = [types.ReactionTypeCustomEmoji(custom_emoji_id=str(reaction))]
+
+        elif isinstance(reaction, str):
+            sr = [types.ReactionTypeEmoji(emoji=reaction)]
+
+        return await self._client.set_reaction(
+            chat_id=self.chat.id,
+            story_id=self.id,
+            reaction=sr,
+            add_to_recent=add_to_recent,
         )
 
     async def reply_text(
@@ -1914,3 +1981,9 @@ class Story(Object, Update):
             progress=progress,
             progress_args=progress_args,
         )
+
+    @property
+    def link(self) -> str:
+        if self.chat and self.chat.username:
+            return f"https://t.me/{self.chat.username}/s/{self.id}"
+        return None

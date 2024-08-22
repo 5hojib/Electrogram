@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import os
 import re
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pyrogram
@@ -90,7 +90,7 @@ class SendPaidMedia:
         for i in media:
             if isinstance(i, types.InputPaidMediaPhoto):
                 if isinstance(i.media, str):
-                    if os.path.isfile(i.media):
+                    if Path(i.media).is_file():
                         media = await self.invoke(
                             raw.functions.messages.UploadMedia(
                                 peer=await self.resolve_peer(chat_id),
@@ -145,7 +145,7 @@ class SendPaidMedia:
                     )
             elif isinstance(i, types.InputPaidMediaVideo):
                 if isinstance(i.media, str):
-                    if os.path.isfile(i.media):
+                    if Path(i.media).is_file():
                         attributes = [
                             raw.types.DocumentAttributeVideo(
                                 supports_streaming=i.supports_streaming or None,
@@ -154,7 +154,7 @@ class SendPaidMedia:
                                 h=i.height,
                             ),
                             raw.types.DocumentAttributeFilename(
-                                file_name=os.path.basename(i.media)
+                                file_name=Path(i.media).name
                             ),
                         ]
                         media = await self.invoke(
