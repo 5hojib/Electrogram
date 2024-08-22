@@ -10,7 +10,6 @@ from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime, timezone
 from getpass import getpass
 from typing import TYPE_CHECKING, Any, TypeVar
-from typing import Union, List, Dict, Optional
 
 import pyrogram
 from pyrogram import enums, raw, types
@@ -80,12 +79,12 @@ def get_input_media_from_file_id(
 
 async def parse_messages(
     client,
-    messages: "raw.types.messages.Messages",
+    messages: raw.types.messages.Messages,
     is_scheduled: bool = False,
     replies: int = 1,
     business_connection_id: str = "",
-    r: "raw.base.Updates" = None
-) -> List["types.Message"]:
+    r: raw.base.Updates = None,
+) -> list[types.Message]:
     parsed_messages = []
 
     if not messages and r:
@@ -95,11 +94,9 @@ async def parse_messages(
         for u in getattr(r, "updates", []):
             if isinstance(
                 u,
-                (
-                    raw.types.UpdateNewMessage,
-                    raw.types.UpdateNewChannelMessage,
-                    raw.types.UpdateNewScheduledMessage,
-                )
+                raw.types.UpdateNewMessage
+                | raw.types.UpdateNewChannelMessage
+                | raw.types.UpdateNewScheduledMessage,
             ):
                 parsed_messages.append(
                     await types.Message._parse(
@@ -107,26 +104,25 @@ async def parse_messages(
                         u.message,
                         users,
                         chats,
-                        is_scheduled=isinstance(u, raw.types.UpdateNewScheduledMessage),
-                        replies=client.fetch_replies
+                        is_scheduled=isinstance(
+                            u, raw.types.UpdateNewScheduledMessage
+                        ),
+                        replies=client.fetch_replies,
                     )
                 )
 
-            elif isinstance(
-                u,
-                (
-                    raw.types.UpdateBotNewBusinessMessage,
-                )
-            ):
+            elif isinstance(u, raw.types.UpdateBotNewBusinessMessage):
                 parsed_messages.append(
                     await types.Message._parse(
                         client,
                         u.message,
                         users,
                         chats,
-                        business_connection_id=getattr(u, "connection_id", business_connection_id),
+                        business_connection_id=getattr(
+                            u, "connection_id", business_connection_id
+                        ),
                         raw_reply_to_message=u.reply_to_message,
-                        replies=0
+                        replies=0,
                     )
                 )
 
@@ -146,11 +142,11 @@ async def parse_messages(
                 users,
                 chats,
                 is_scheduled=is_scheduled,
-                replies=client.fetch_replies
+                replies=client.fetch_replies,
             )
         )
 
-    if replies and False:
+    if False:
         messages_with_replies = {
             i.id: i.reply_to.reply_to_msg_id
             for i in messages.messages
@@ -168,7 +164,7 @@ async def parse_messages(
             reply_messages = await client.get_messages(
                 chat_id=chat_id,
                 reply_to_message_ids=messages_with_replies.keys(),
-                replies=replies - 1
+                replies=replies - 1,
             )
 
             for message in parsed_messages:
