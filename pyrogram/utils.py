@@ -134,17 +134,19 @@ async def parse_messages(
     if not messages.messages:
         return types.List()
 
-    parsed_messages.extend([
-        await types.Message._parse(
-            client,
-            message,
-            users,
-            chats,
-            is_scheduled=is_scheduled,
-            replies=client.fetch_replies
-        )
-        for message in messages.messages
-    ])
+    parsed_messages.extend(
+        [
+            await types.Message._parse(
+                client,
+                message,
+                users,
+                chats,
+                is_scheduled=is_scheduled,
+                replies=client.fetch_replies,
+            )
+            for message in messages.messages
+        ]
+    )
 
     if False:
         messages_with_replies = {

@@ -193,7 +193,7 @@ class Client(Methods):
         client_platform (:obj:`~pyrogram.enums.ClientPlatform`, *optional*):
             The platform where this client is running.
             Defaults to 'other'
-        
+
         fetch_replies (``int``, *optional*):
             Set the number of replies to be fetched when parsing the :obj:`~pyrogram.types.Message` object. Defaults to 1.
             :doc:`More on Errors <../../api/errors/index>`
