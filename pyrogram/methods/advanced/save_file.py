@@ -11,7 +11,7 @@ from pathlib import PurePath
 from typing import TYPE_CHECKING, BinaryIO
 
 import pyrogram
-from pyrogram import StopTransmission, raw
+from pyrogram import StopTransmissionError, raw
 from pyrogram.session import Session
 
 if TYPE_CHECKING:
@@ -22,11 +22,11 @@ log = getLogger(__name__)
 
 class SaveFile:
     async def save_file(
-        self: pyrogram.Client,  # type: ignore
+        self: pyrogram.Client,
         path: str | BinaryIO,
-        file_id: int | None = None,  # type: ignore
+        file_id: int | None = None, 
         file_part: int = 0,
-        progress: Callable | None = None,  # type: ignore
+        progress: Callable | None = None,  
         progress_args: tuple = (),
     ):
         """Upload a file onto Telegram servers, without actually sending the message to anyone.
@@ -127,7 +127,7 @@ class SaveFile:
 
                 file_size_limit_mib = (
                     4000
-                    if self.me.is_premium  # type: ignore
+                    if self.me.is_premium  
                     else 2000
                 )
 
@@ -147,9 +147,9 @@ class SaveFile:
                 pool = [
                     Session(
                         self,
-                        await self.storage.dc_id(),  # type: ignore
-                        await self.storage.auth_key(),  # type: ignore
-                        await self.storage.test_mode(),  # type: ignore
+                        await self.storage.dc_id(),  
+                        await self.storage.auth_key(),
+                        await self.storage.test_mode(),  
                         is_media=True,
                     )
                     for _ in range(pool_size)
@@ -178,7 +178,7 @@ class SaveFile:
 
                         if not chunk:
                             if not is_big and not is_missing_part:
-                                md5_sum = md5_sum.hexdigest()  # type: ignore
+                                md5_sum = md5_sum.hexdigest() 
                             break
 
                         await queue.put(
@@ -191,7 +191,7 @@ class SaveFile:
                             return None
 
                         if not is_big and not is_missing_part:
-                            md5_sum.update(chunk)  # type: ignore
+                            md5_sum.update(chunk)  
 
                         file_part += 1
 
@@ -207,7 +207,7 @@ class SaveFile:
                                 await func()
                             else:
                                 await self.loop.run_in_executor(self.executor, func)
-                except StopTransmission:
+                except StopTransmissionError:
                     raise
                 except Exception as e:
                     log.error(
@@ -226,7 +226,7 @@ class SaveFile:
                             id=file_id,
                             parts=file_total_parts,
                             name=file_name,
-                            md5_checksum=md5_sum,  # type: ignore
+                            md5_checksum=md5_sum,  
                         )
                 finally:
                     for _ in workers:
