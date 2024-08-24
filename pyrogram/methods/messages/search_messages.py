@@ -9,7 +9,6 @@ if TYPE_CHECKING:
     from collections.abc import AsyncGenerator
 
 
-# noinspection PyShadowingBuiltins
 async def get_chunk(
     client,
     chat_id: int | str,
@@ -41,7 +40,6 @@ async def get_chunk(
 
 
 class SearchMessages:
-    # noinspection PyShadowingBuiltins
     async def search_messages(
         self: pyrogram.Client,
         chat_id: int | str,
