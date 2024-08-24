@@ -24,9 +24,9 @@ class SaveFile:
     async def save_file(
         self: pyrogram.Client,
         path: str | BinaryIO,
-        file_id: int | None = None, 
+        file_id: int | None = None,
         file_part: int = 0,
-        progress: Callable | None = None,  
+        progress: Callable | None = None,
         progress_args: tuple = (),
     ):
         """Upload a file onto Telegram servers, without actually sending the message to anyone.
@@ -125,11 +125,7 @@ class SaveFile:
                 if file_size == 0:
                     raise ValueError("File size equals to 0 B")
 
-                file_size_limit_mib = (
-                    4000
-                    if self.me.is_premium  
-                    else 2000
-                )
+                file_size_limit_mib = 4000 if self.me.is_premium else 2000
 
                 if file_size > file_size_limit_mib * 1024 * 1024:
                     raise ValueError(
@@ -147,9 +143,9 @@ class SaveFile:
                 pool = [
                     Session(
                         self,
-                        await self.storage.dc_id(),  
+                        await self.storage.dc_id(),
                         await self.storage.auth_key(),
-                        await self.storage.test_mode(),  
+                        await self.storage.test_mode(),
                         is_media=True,
                     )
                     for _ in range(pool_size)
@@ -178,7 +174,7 @@ class SaveFile:
 
                         if not chunk:
                             if not is_big and not is_missing_part:
-                                md5_sum = md5_sum.hexdigest() 
+                                md5_sum = md5_sum.hexdigest()
                             break
 
                         await queue.put(
@@ -191,7 +187,7 @@ class SaveFile:
                             return None
 
                         if not is_big and not is_missing_part:
-                            md5_sum.update(chunk)  
+                            md5_sum.update(chunk)
 
                         file_part += 1
 
@@ -226,7 +222,7 @@ class SaveFile:
                             id=file_id,
                             parts=file_total_parts,
                             name=file_name,
-                            md5_checksum=md5_sum,  
+                            md5_checksum=md5_sum,
                         )
                 finally:
                     for _ in workers:
