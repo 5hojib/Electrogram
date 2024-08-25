@@ -217,8 +217,7 @@ class SaveFile:
                             parts=file_total_parts,
                             name=file_name,
                         )
-                    else:
-                        return raw.types.InputFile(
+                    return raw.types.InputFile(
                             id=file_id,
                             parts=file_total_parts,
                             name=file_name,
