@@ -218,11 +218,11 @@ class SaveFile:
                             name=file_name,
                         )
                     return raw.types.InputFile(
-                            id=file_id,
-                            parts=file_total_parts,
-                            name=file_name,
-                            md5_checksum=md5_sum,
-                        )
+                        id=file_id,
+                        parts=file_total_parts,
+                        name=file_name,
+                        md5_checksum=md5_sum,
+                    )
                 finally:
                     for _ in workers:
                         await queue.put(None)

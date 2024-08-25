@@ -5,7 +5,6 @@ import contextlib
 import functools
 import inspect
 import logging
-import os
 import platform
 import re
 import shutil
