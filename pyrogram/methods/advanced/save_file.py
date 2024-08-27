@@ -115,7 +115,7 @@ class SaveFile:
                 Path(path).open("rb", buffering=4096)
                 if isinstance(path, str | PurePath)
                 else path
-            ):
+            ) as fp:
                 file_name = getattr(fp, "name", "file.jpg")
                 fp.seek(0, SEEK_END)
                 file_size = fp.tell()
