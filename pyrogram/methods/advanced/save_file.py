@@ -7,7 +7,7 @@ from inspect import iscoroutinefunction
 from io import SEEK_END
 from logging import getLogger
 from math import ceil
-from pathlib import PurePath
+from pathlib import PurePath, Path
 from typing import TYPE_CHECKING, BinaryIO
 
 import pyrogram
