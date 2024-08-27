@@ -35,7 +35,7 @@ async def get_chunk(
         sleep_threshold=60,
     )
 
-    return await utils.parse_messages(client, messages, replies=0)
+    return await utils.parse_messages(client, messages)
 
 
 class GetChatHistory:

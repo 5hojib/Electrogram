@@ -81,7 +81,6 @@ async def parse_messages(
     client,
     messages: raw.types.messages.Messages,
     is_scheduled: bool = False,
-    replies: int = 1,
     business_connection_id: str = "",
     r: raw.base.Updates = None,
 ) -> list[types.Message]:

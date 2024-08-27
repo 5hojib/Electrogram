@@ -93,7 +93,7 @@ class SaveFile:
                             await session.invoke(data)
                             break
                         except Exception as e:
-                            log.warning(f"Retrying part due to error: {e}")
+                            log.warning("Retrying part due to error: %s", e)
                             await sleep(2**attempt)
 
             def create_rpc(chunk, file_part, is_big, file_id, file_total_parts):
@@ -104,19 +104,14 @@ class SaveFile:
                         file_total_parts=file_total_parts,
                         bytes=chunk,
                     )
-                else:
-                    return raw.functions.upload.SaveFilePart(
+                return raw.functions.upload.SaveFilePart(
                         file_id=file_id, file_part=file_part, bytes=chunk
                     )
 
             part_size = 512 * 1024
             queue = Queue(16)
 
-            with (
-                open(path, "rb", buffering=4096)
-                if isinstance(path, str | PurePath)
-                else path
-            ) as fp:
+            with Path(path).open("rb", buffering=4096) if isinstance(path, (str, PurePath)) else path as file:
                 file_name = getattr(fp, "name", "file.jpg")
                 fp.seek(0, SEEK_END)
                 file_size = fp.tell()
@@ -207,8 +202,8 @@ class SaveFile:
                     raise
                 except Exception as e:
                     log.error(
-                        f"Error during file upload at part {file_part}: {e}",
-                        exc_info=True,
+                        f"Error during file upload at part %s: %s",
+                        file_part, e
                     )
                 else:
                     if is_big:
