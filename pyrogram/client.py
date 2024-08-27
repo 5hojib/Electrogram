@@ -206,7 +206,7 @@ class Client(Methods):
     INVITE_LINK_RE = re.compile(
         r"^(?:https?://)?(?:www\.)?(?:t(?:elegram)?\.(?:org|me|dog)/(?:joinchat/|\+))([\w-]+)$"
     )
-    WORKERS = 100
+    WORKERS = 32
     WORKDIR = PARENT_DIR
     UPDATES_WATCHDOG_INTERVAL = 15 * 60
     MAX_CONCURRENT_TRANSMISSIONS = 100
