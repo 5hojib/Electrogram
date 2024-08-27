@@ -105,13 +105,17 @@ class SaveFile:
                         bytes=chunk,
                     )
                 return raw.functions.upload.SaveFilePart(
-                        file_id=file_id, file_part=file_part, bytes=chunk
-                    )
+                    file_id=file_id, file_part=file_part, bytes=chunk
+                )
 
             part_size = 512 * 1024
             queue = Queue(16)
 
-            with Path(path).open("rb", buffering=4096) if isinstance(path, (str, PurePath)) else path as file:
+            with (
+                Path(path).open("rb", buffering=4096)
+                if isinstance(path, str | PurePath)
+                else path
+            ):
                 file_name = getattr(fp, "name", "file.jpg")
                 fp.seek(0, SEEK_END)
                 file_size = fp.tell()
@@ -202,8 +206,7 @@ class SaveFile:
                     raise
                 except Exception as e:
                     log.error(
-                        f"Error during file upload at part %s: %s",
-                        file_part, e
+                        "Error during file upload at part %s: %s", file_part, e
                     )
                 else:
                     if is_big:
