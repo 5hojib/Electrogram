@@ -205,7 +205,7 @@ class Client(Methods):
             Defaults to 'other'
 
     """
-    
+
     APP_VERSION = f"Electrogram {__version__}"
     DEVICE_MODEL = f"{python_implementation()} {python_version()}"
     SYSTEM_VERSION = f"{system()} {release()}"
