@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import contextlib
+import shutil
 from asyncio import (
     CancelledError,
     Event,
