@@ -61,7 +61,152 @@ log = getLogger(__name__)
 
 
 class Client(Methods):
-    APP_VERSION = f"NekoZee {__version__}"
+    """Pyrogram Client, the main means for interacting with Telegram.
+
+    Parameters:
+        name (``str``):
+            A name for the client, e.g.: "my_account".
+
+        api_id (``int`` | ``str``, *optional*):
+            The *api_id* part of the Telegram API key, as integer or string.
+            E.g.: 12345 or "12345".
+
+        api_hash (``str``, *optional*):
+            The *api_hash* part of the Telegram API key, as string.
+            E.g.: "0123456789abcdef0123456789abcdef".
+
+        app_version (``str``, *optional*):
+            Application version.
+            Defaults to "Pyrogram x.y.z".
+
+        device_model (``str``, *optional*):
+            Device model.
+            Defaults to *platform.python_implementation() + " " + platform.python_version()*.
+
+        system_version (``str``, *optional*):
+            Operating System version.
+            Defaults to *platform.system() + " " + platform.release()*.
+
+        lang_code (``str``, *optional*):
+            Code of the language used on the client, in ISO 639-1 standard.
+            Defaults to "en".
+
+        ipv6 (``bool``, *optional*):
+            Pass True to connect to Telegram using IPv6.
+            Defaults to False (IPv4).
+
+        alt_port (``bool``, *optional*):
+            Pass True to connect to Telegram using alternative port (5222).
+            Defaults to False (443).
+
+        proxy (``dict``, *optional*):
+            The Proxy settings as dict.
+            E.g.: *dict(scheme="socks5", hostname="11.22.33.44", port=1234, username="user", password="pass")*.
+            The *username* and *password* can be omitted if the proxy doesn't require authorization.
+
+        test_mode (``bool``, *optional*):
+            Enable or disable login to the test servers.
+            Only applicable for new sessions and will be ignored in case previously created sessions are loaded.
+            Defaults to False.
+
+        bot_token (``str``, *optional*):
+            Pass the Bot API token to create a bot session, e.g.: "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"
+            Only applicable for new sessions.
+
+        session_string (``str``, *optional*):
+            Pass a session string to load the session in-memory.
+            Implies ``in_memory=True``.
+
+        in_memory (``bool``, *optional*):
+            Pass True to start an in-memory session that will be discarded as soon as the client stops.
+            In order to reconnect again using an in-memory session without having to login again, you can use
+            :meth:`~pyrogram.Client.export_session_string` before stopping the client to get a session string you can
+            pass to the ``session_string`` parameter.
+            Defaults to False.
+
+        mongodb (``dict``, *optional*):
+            Mongodb config as dict, e.g.: *dict(connection=async_pymongo.AsyncClient("mongodb://..."), remove_peers=False)*.
+            Only applicable for new sessions.
+
+        storage (:obj:`~pyrogram.storage.Storage`, *optional*):
+            Custom session storage.
+
+        phone_number (``str``, *optional*):
+            Pass the phone number as string (with the Country Code prefix included) to avoid entering it manually.
+            Only applicable for new sessions.
+
+        phone_code (``str``, *optional*):
+            Pass the phone code as string (for test numbers only) to avoid entering it manually.
+            Only applicable for new sessions.
+
+        password (``str``, *optional*):
+            Pass the Two-Step Verification password as string (if required) to avoid entering it manually.
+            Only applicable for new sessions.
+
+        workers (``int``, *optional*):
+            Number of maximum concurrent workers for handling incoming updates.
+            Defaults to ``min(32, os.cpu_count() + 4)``.
+
+        workdir (``str``, *optional*):
+            Define a custom working directory.
+            The working directory is the location in the filesystem where Pyrogram will store the session files.
+            Defaults to the parent directory of the main script.
+
+        plugins (``dict``, *optional*):
+            Smart Plugins settings as dict, e.g.: *dict(root="plugins")*.
+
+        parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+            Set the global parse mode of the client. By default, texts are parsed using both Markdown and HTML styles.
+            You can combine both syntaxes together.
+
+        no_updates (``bool``, *optional*):
+            Pass True to disable incoming updates.
+            When updates are disabled the client can't receive messages or other updates.
+            Useful for batch programs that don't need to deal with updates.
+            Defaults to False (updates enabled and received).
+
+        skip_updates (``bool``, *optional*):
+            Pass True to skip pending updates that arrived while the client was offline.
+            Defaults to True.
+
+        takeout (``bool``, *optional*):
+            Pass True to let the client use a takeout session instead of a normal one, implies *no_updates=True*.
+            Useful for exporting Telegram data. Methods invoked inside a takeout session (such as get_chat_history,
+            download_media, ...) are less prone to throw FloodWait exceptions.
+            Only available for users, bots will ignore this parameter.
+            Defaults to False (normal session).
+
+        sleep_threshold (``int``, *optional*):
+            Set a sleep threshold for flood wait exceptions happening globally in this client instance, below which any
+            request that raises a flood wait will be automatically invoked again after sleeping for the required amount
+            of time. Flood wait exceptions requiring higher waiting times will be raised.
+            Defaults to 10 seconds.
+
+        hide_password (``bool``, *optional*):
+            Pass True to hide the password when typing it during the login.
+            Defaults to False, because ``getpass`` (the library used) is known to be problematic in some
+            terminal environments.
+
+        max_concurrent_transmissions (``bool``, *optional*):
+            Set the maximum amount of concurrent transmissions (uploads & downloads).
+            A value that is too high may result in network related issues.
+            Defaults to 100.
+
+        max_message_cache_size (``int``, *optional*):
+            Set the maximum size of the message cache.
+            Defaults to 10000.
+
+        max_business_user_connection_cache_size (``int``, *optional*):
+            Set the maximum size of the message cache.
+            Defaults to 10000.
+
+        client_platform (:obj:`~pyrogram.enums.ClientPlatform`, *optional*):
+            The platform where this client is running.
+            Defaults to 'other'
+
+    """
+    
+    APP_VERSION = f"Electrogram {__version__}"
     DEVICE_MODEL = f"{python_implementation()} {python_version()}"
     SYSTEM_VERSION = f"{system()} {release()}"
 
