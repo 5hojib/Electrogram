@@ -190,7 +190,11 @@ class SaveFile:
 
                         file_part += 1
 
-                        if progress and file_total_parts > 10 and file_part % (file_total_parts // 10) == 0:
+                        if (
+                            progress
+                            and file_total_parts > 10
+                            and file_part % (file_total_parts // 10) == 0
+                        ):
                             func = functools.partial(
                                 progress,
                                 min(file_part * part_size, file_size),
