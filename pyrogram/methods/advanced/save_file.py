@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from asyncio import Queue, gather, sleep
-from functools import partial
+import asyncio
+import functools
+import inspect
+import io
+import logging
+import math
 from hashlib import md5
-from inspect import iscoroutinefunction
-from io import SEEK_END
-from logging import getLogger
-from math import ceil
 from pathlib import Path, PurePath
 from typing import TYPE_CHECKING, BinaryIO
 
@@ -17,7 +17,7 @@ from pyrogram.session import Session
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-log = getLogger(__name__)
+log = logging.getLogger(__name__)
 
 
 class SaveFile:
@@ -94,7 +94,7 @@ class SaveFile:
                             break
                         except Exception as e:
                             log.warning("Retrying part due to error: %s", e)
-                            await sleep(2**attempt)
+                            await asyncio.sleep(2**attempt)
 
             def create_rpc(chunk, file_part, is_big, file_id, file_total_parts):
                 if is_big:
@@ -109,7 +109,7 @@ class SaveFile:
                 )
 
             part_size = 512 * 1024
-            queue = Queue(16)
+            queue = asyncio.Queue(16)
 
             with (
                 Path(path).open("rb", buffering=4096)
@@ -117,7 +117,7 @@ class SaveFile:
                 else path
             ) as fp:
                 file_name = getattr(fp, "name", "file.jpg")
-                fp.seek(0, SEEK_END)
+                fp.seek(0, io.SEEK_END)
                 file_size = fp.tell()
                 fp.seek(0)
 
@@ -131,7 +131,7 @@ class SaveFile:
                         f"Can't upload files bigger than {file_size_limit_mib} MiB"
                     )
 
-                file_total_parts = ceil(file_size / part_size)
+                file_total_parts = math.ceil(file_size / part_size)
                 is_big = file_size > 100 * 1024 * 1024
                 pool_size = 2 if is_big else 1
                 workers_count = 10 if is_big else 1
@@ -190,15 +190,15 @@ class SaveFile:
 
                         file_part += 1
 
-                        if progress and file_part % (file_total_parts // 10) == 0:
-                            func = partial(
+                        if progress and file_total_parts > 10 and file_part % (file_total_parts // 10) == 0:
+                            func = functools.partial(
                                 progress,
                                 min(file_part * part_size, file_size),
                                 file_size,
                                 *progress_args,
                             )
 
-                            if iscoroutinefunction(progress):
+                            if inspect.iscoroutinefunction(progress):
                                 await func()
                             else:
                                 await self.loop.run_in_executor(self.executor, func)
@@ -225,7 +225,7 @@ class SaveFile:
                     for _ in workers:
                         await queue.put(None)
 
-                    await gather(*workers)
+                    await asyncio.gather(*workers)
 
                     for session in pool:
                         await session.stop()
