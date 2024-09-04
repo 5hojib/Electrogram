@@ -1,11 +1,11 @@
-from abc import ABC, abstractmethod
+from __future__ import annotations
+
 import base64
 import struct
-from typing import List, Tuple
+from abc import ABC, abstractmethod
 
 
 class Storage(ABC):
-
     OLD_SESSION_STRING_FORMAT = ">B?256sI?"
     OLD_SESSION_STRING_FORMAT_64 = ">B?256sQ?"
     SESSION_STRING_SIZE = 351
@@ -37,11 +37,13 @@ class Storage(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def update_peers(self, peers: List[Tuple[int, int, str, List[str], str]]):
+    async def update_peers(self, peers: list[tuple[int, int, str, list[str], str]]):
         raise NotImplementedError
 
     @abstractmethod
-    async def update_state(self, update_state: Tuple[int, int, int, int, int] = object):
+    async def update_state(
+        self, update_state: tuple[int, int, int, int, int] = object
+    ):
         raise NotImplementedError
 
     @abstractmethod

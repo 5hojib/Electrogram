@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import base64
 import logging
 import struct
@@ -13,8 +15,8 @@ class MemoryStorage(SQLiteStorage):
     def __init__(
         self,
         name: str,
-        session_string: str = None,
-        is_telethon_string: bool = False
+        session_string: str | None = None,
+        is_telethon_string: bool = False,
     ):
         super().__init__(name)
 
@@ -58,7 +60,7 @@ class MemoryStorage(SQLiteStorage):
                 string = self.session_string[1:]
                 ip_len = 4 if len(string) == 352 else 16
                 dc_id, ip, port, auth_key = struct.unpack(
-                    ">B{}sH256s".format(ip_len), base64.urlsafe_b64decode(string)
+                    f">B{ip_len}sH256s", base64.urlsafe_b64decode(string)
                 )
                 api_id = 0
                 test_mode = False
