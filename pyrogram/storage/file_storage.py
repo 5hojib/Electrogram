@@ -1,13 +1,11 @@
-from __future__ import annotations
-
 import logging
-import sqlite3
 from pathlib import Path
+
+import aiosqlite
 
 from .sqlite_storage import SQLiteStorage
 
 log = logging.getLogger(__name__)
-
 
 UPDATE_STATE_SCHEMA = """
 CREATE TABLE update_state
@@ -24,47 +22,49 @@ CREATE TABLE update_state
 class FileStorage(SQLiteStorage):
     FILE_EXTENSION = ".session"
 
-    def __init__(self, name: str, workdir: Path) -> None:
+    def __init__(self, name: str, workdir: Path):
         super().__init__(name)
 
         self.database = workdir / (self.name + self.FILE_EXTENSION)
 
-    def update(self) -> None:
-        version = self.version()
+    async def update(self):
+        version = await self.version()
 
         if version == 1:
-            with self.conn:
-                self.conn.execute("DELETE FROM peers")
+            await self.conn.execute("DELETE FROM peers")
+            await self.conn.commit()
 
             version += 1
 
         if version == 2:
-            with self.conn:
-                self.conn.execute("ALTER TABLE sessions ADD api_id INTEGER")
+            await self.conn.execute("ALTER TABLE sessions ADD api_id INTEGER")
+            await self.conn.commit()
 
             version += 1
 
         if version == 3:
-            with self.conn:
-                self.conn.executescript(UPDATE_STATE_SCHEMA)
+            await self.conn.execute(UPDATE_STATE_SCHEMA)
+            await self.conn.commit()
 
             version += 1
 
-        self.version(version)
+        await self.version(version)
 
-    async def open(self) -> None:
+    async def open(self):
         path = self.database
         file_exists = path.is_file()
 
-        self.conn = sqlite3.connect(str(path), timeout=1, check_same_thread=False)
+        self.conn = await aiosqlite.connect(str(path), timeout=1)
+
+        await self.conn.execute("PRAGMA journal_mode=WAL")
 
         if not file_exists:
-            self.create()
+            await self.create()
         else:
-            self.update()
+            await self.update()
 
-        with self.conn:
-            self.conn.execute("VACUUM")
+        await self.conn.execute("VACUUM")
+        await self.conn.commit()
 
-    async def delete(self) -> None:
+    async def delete(self):
         Path(self.database).unlink()
