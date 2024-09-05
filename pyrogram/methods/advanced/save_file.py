@@ -11,7 +11,7 @@ from pathlib import PurePath
 from typing import TYPE_CHECKING, BinaryIO
 
 import pyrogram
-from pyrogram import StopTransmission, raw
+from pyrogram import StopTransmissionError, raw
 from pyrogram.session import Session
 
 if TYPE_CHECKING:
@@ -207,7 +207,7 @@ class SaveFile:
                                 await func()
                             else:
                                 await self.loop.run_in_executor(self.executor, func)
-                except StopTransmission:
+                except StopTransmissionError:
                     raise
                 except Exception as e:
                     log.error(
