@@ -95,7 +95,7 @@ class SaveFile:
                             break
                         except Exception as e:
                             log.warning("Retrying part due to error: %s", e)
-                            await asyncio.sleep(2 ** attempt)
+                            await asyncio.sleep(2**attempt)
                         if attempt == 2:  # On final failure, log and raise an error
                             log.error("Failed to upload part after retries.")
                             raise StopTransmissionError()
@@ -113,13 +113,16 @@ class SaveFile:
                 )
 
             part_size = 512 * 1024
-            queue = asyncio.Queue(10)  # Reduce queue size for less aggressive parallelism
+            queue = asyncio.Queue(
+                10
+            )  # Reduce queue size for less aggressive parallelism
 
             # Open the file for reading
-            with (Path(path).open("rb", buffering=4096)
-                  if isinstance(path, str | PurePath)
-                  else path) as fp:
-
+            with (
+                Path(path).open("rb", buffering=4096)
+                if isinstance(path, str | PurePath)
+                else path
+            ) as fp:
                 file_name = getattr(fp, "name", "file.jpg")
                 fp.seek(0, io.SEEK_END)
                 file_size = fp.tell()
@@ -130,7 +133,9 @@ class SaveFile:
 
                 file_size_limit_mib = 4000 if self.me.is_premium else 2000
                 if file_size > file_size_limit_mib * 1024 * 1024:
-                    raise ValueError(f"Can't upload files bigger than {file_size_limit_mib} MiB")
+                    raise ValueError(
+                        f"Can't upload files bigger than {file_size_limit_mib} MiB"
+                    )
 
                 file_total_parts = math.ceil(file_size / part_size)
                 is_big = file_size > 100 * 1024 * 1024
@@ -148,25 +153,35 @@ class SaveFile:
 
                 workers = [
                     self.loop.create_task(worker(session, file_total_parts, is_big))
-                    for _ in range(5)  # Limit workers to 5 for a balance between speed and reliability
+                    for _ in range(
+                        5
+                    )  # Limit workers to 5 for a balance between speed and reliability
                 ]
 
                 try:
                     await session.start()
 
                     fp.seek(part_size * file_part)
-                    next_chunk_task = self.loop.create_task(self.preload(fp, part_size))
+                    next_chunk_task = self.loop.create_task(
+                        self.preload(fp, part_size)
+                    )
 
                     while True:
                         chunk = await next_chunk_task
-                        next_chunk_task = self.loop.create_task(self.preload(fp, part_size))
+                        next_chunk_task = self.loop.create_task(
+                            self.preload(fp, part_size)
+                        )
 
                         if not chunk:
                             if not is_big and not is_missing_part:
                                 md5_sum = md5_sum.hexdigest()
                             break
 
-                        await queue.put(create_rpc(chunk, file_part, is_big, file_id, file_total_parts))
+                        await queue.put(
+                            create_rpc(
+                                chunk, file_part, is_big, file_id, file_total_parts
+                            )
+                        )
 
                         if is_missing_part:
                             return None
@@ -192,11 +207,20 @@ class SaveFile:
                 except StopTransmissionError:
                     raise
                 except Exception as e:
-                    log.error("Error during file upload at part %s: %s", file_part, e)
+                    log.error(
+                        "Error during file upload at part %s: %s", file_part, e
+                    )
                 else:
                     if is_big:
-                        return raw.types.InputFileBig(id=file_id, parts=file_total_parts, name=file_name)
-                    return raw.types.InputFile(id=file_id, parts=file_total_parts, name=file_name, md5_checksum=md5_sum)
+                        return raw.types.InputFileBig(
+                            id=file_id, parts=file_total_parts, name=file_name
+                        )
+                    return raw.types.InputFile(
+                        id=file_id,
+                        parts=file_total_parts,
+                        name=file_name,
+                        md5_checksum=md5_sum,
+                    )
                 finally:
                     for _ in workers:
                         await queue.put(None)
