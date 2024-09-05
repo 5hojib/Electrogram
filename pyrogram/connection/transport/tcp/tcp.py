@@ -98,7 +98,7 @@ class TCP:
 
     async def close(self) -> None:
         if self.writer is None:
-            return
+            return None
 
         try:
             self.writer.close()
@@ -108,7 +108,7 @@ class TCP:
 
     async def send(self, data: bytes) -> None:
         if self.writer is None:
-            return
+            return None
 
         async with self.lock:
             try:

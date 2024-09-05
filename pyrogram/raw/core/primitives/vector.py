@@ -15,8 +15,6 @@ if TYPE_CHECKING:
 class Vector(bytes, TLObject):
     ID = 0x1CB5C415
 
-    # Method added to handle the special case when a query returns a bare Vector (of Ints);
-    # i.e., RpcResult body starts with 0x1cb5c415 (Vector Id) - e.g., messages.GetMessagesViews.
     @staticmethod
     def read_bare(b: BytesIO, size: int) -> int | Any:
         if size == 4:
