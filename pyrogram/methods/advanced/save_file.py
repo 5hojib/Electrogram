@@ -19,6 +19,7 @@ if TYPE_CHECKING:
 
 log = logging.getLogger(__name__)
 
+
 class SaveFile:
     async def save_file(
         self: pyrogram.Client,
@@ -143,24 +144,35 @@ class SaveFile:
                     is_media=True,
                 )
 
-                workers = [self.loop.create_task(worker(session)) for _ in range(workers_count)]
+                workers = [
+                    self.loop.create_task(worker(session))
+                    for _ in range(workers_count)
+                ]
 
                 try:
                     await session.start()
 
                     fp.seek(part_size * file_part)
-                    next_chunk_task = self.loop.create_task(self.preload(fp, part_size))
+                    next_chunk_task = self.loop.create_task(
+                        self.preload(fp, part_size)
+                    )
 
                     while True:
                         chunk = await next_chunk_task
-                        next_chunk_task = self.loop.create_task(self.preload(fp, part_size))
+                        next_chunk_task = self.loop.create_task(
+                            self.preload(fp, part_size)
+                        )
 
                         if not chunk:
                             if not is_big and not is_missing_part:
                                 md5_sum = md5_sum.hexdigest()
                             break
 
-                        await queue.put(create_rpc(chunk, file_part, is_big, file_id, file_total_parts))
+                        await queue.put(
+                            create_rpc(
+                                chunk, file_part, is_big, file_id, file_total_parts
+                            )
+                        )
 
                         if is_missing_part:
                             return None
@@ -192,8 +204,15 @@ class SaveFile:
                     log.error(f"Error during file upload at part {file_part}: {e}")
                 else:
                     if is_big:
-                        return raw.types.InputFileBig(id=file_id, parts=file_total_parts, name=file_name)
-                    return raw.types.InputFile(id=file_id, parts=file_total_parts, name=file_name, md5_checksum=md5_sum)
+                        return raw.types.InputFileBig(
+                            id=file_id, parts=file_total_parts, name=file_name
+                        )
+                    return raw.types.InputFile(
+                        id=file_id,
+                        parts=file_total_parts,
+                        name=file_name,
+                        md5_checksum=md5_sum,
+                    )
                 finally:
                     for _ in workers:
                         await queue.put(None)
