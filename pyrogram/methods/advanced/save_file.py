@@ -19,6 +19,7 @@ if TYPE_CHECKING:
 
 log = logging.getLogger(__name__)
 
+
 class SaveFile:
     async def save_file(
         self: pyrogram.Client,
@@ -156,13 +157,19 @@ class SaveFile:
                         )
 
                         if not is_missing_part:
-                            file_part += 1  # Ensure this only increments after success
+                            file_part += (
+                                1  # Ensure this only increments after success
+                            )
 
                         if not is_big and not is_missing_part:
                             md5_sum.update(chunk)
 
                         # Progress handling
-                        if progress and file_total_parts > 10 and file_part % (file_total_parts // 10) == 0:
+                        if (
+                            progress
+                            and file_total_parts > 10
+                            and file_part % (file_total_parts // 10) == 0
+                        ):
                             func = functools.partial(
                                 progress,
                                 min(file_part * part_size, file_size),

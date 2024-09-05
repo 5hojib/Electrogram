@@ -157,14 +157,14 @@ class SQLiteStorage(Storage):
             ).fetchall()
         if isinstance(value, int):
             await self.conn.execute(
-                    "DELETE FROM update_state WHERE id = ?", (value,)
-                )
+                "DELETE FROM update_state WHERE id = ?", (value,)
+            )
         else:
             await self.conn.execute(
-                    "REPLACE INTO update_state (id, pts, qts, date, seq)"
-                    "VALUES (?, ?, ?, ?, ?)",
-                    value,
-                )
+                "REPLACE INTO update_state (id, pts, qts, date, seq)"
+                "VALUES (?, ?, ?, ?, ?)",
+                value,
+            )
         await self.conn.commit()
         return None
 
