@@ -81,7 +81,7 @@ class SaveFile:
         """
         async with self.save_file_semaphore:
             if path is None:
-                return None
+                return
 
             async def worker(session) -> None:
                 while True:
@@ -102,7 +102,7 @@ class SaveFile:
                 if isinstance(path, str | PurePath)
                 else path
             ) as fp:
-                file_name = getattr(fp, "name", "file.jpg")
+                getattr(fp, "name", "file.jpg")
                 fp.seek(0, io.SEEK_END)
                 file_size = fp.tell()
                 fp.seek(0)
@@ -112,11 +112,12 @@ class SaveFile:
 
                 file_size_limit_mib = 4000 if self.me.is_premium else 2000
                 if file_size > file_size_limit_mib * 1024 * 1024:
-                    raise ValueError(f"Can't upload files bigger than {file_size_limit_mib} MiB")
+                    raise ValueError(
+                        f"Can't upload files bigger than {file_size_limit_mib} MiB"
+                    )
 
-                file_total_parts = math.ceil(file_size / part_size)
+                math.ceil(file_size / part_size)
                 is_big = file_size > 100 * 1024 * 1024
-                workers_count = 4 if is_big else 1  # Fewer workers
                 is_missing_part = file_id is not None
                 file_id = file_id or self.rnd_id()
                 md5_sum = md5() if not is_big and not is_missing_part else None
@@ -131,25 +132,35 @@ class SaveFile:
                     )
                 ]
 
-                workers = [self.loop.create_task(worker(session)) for session in pool]
+                workers = [
+                    self.loop.create_task(worker(session)) for session in pool
+                ]
 
                 try:
                     for session in pool:
                         await session.start()
 
                     fp.seek(part_size * file_part)
-                    next_chunk_task = self.loop.create_task(self.preload(fp, part_size))
+                    next_chunk_task = self.loop.create_task(
+                        self.preload(fp, part_size)
+                    )
 
                     while True:
                         chunk = await next_chunk_task
-                        next_chunk_task = self.loop.create_task(self.preload(fp, part_size))
+                        next_chunk_task = self.loop.create_task(
+                            self.preload(fp, part_size)
+                        )
 
                         if not chunk:
                             if not is_big and not is_missing_part:
                                 md5_sum = md5_sum.hexdigest()
                             break
 
-                        await queue.put(raw.functions.upload.SaveFilePart(file_id=file_id, file_part=file_part, bytes=chunk))
+                        await queue.put(
+                            raw.functions.upload.SaveFilePart(
+                                file_id=file_id, file_part=file_part, bytes=chunk
+                            )
+                        )
 
                         if not is_big and not is_missing_part:
                             md5_sum.update(chunk)
@@ -171,7 +182,9 @@ class SaveFile:
                 except StopTransmissionError:
                     raise
                 except Exception as e:
-                    log.error("Error during file upload at part %s: %s", file_part, e)
+                    log.error(
+                        "Error during file upload at part %s: %s", file_part, e
+                    )
                 finally:
                     for _ in workers:
                         await queue.put(None)
