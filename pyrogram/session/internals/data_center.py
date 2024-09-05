@@ -19,7 +19,10 @@ class DataCenter:
         203: "91.105.192.100",
     }
 
-    PROD_MEDIA = {2: "149.154.167.151", 4: "149.154.164.250"}
+    PROD_MEDIA: ClassVar[dict[int, str]] = {
+        2: "149.154.167.151",
+        4: "149.154.164.250",
+    }
 
     TEST_IPV6: ClassVar[dict[int, str]] = {
         1: "2001:b28:f23d:f001::e",
@@ -42,20 +45,24 @@ class DataCenter:
     }
 
     def __new__(
-        cls, dc_id: int, test_mode: bool, ipv6: bool, alt_port: bool, media: bool
+        cls,
+        dc_id: int,
+        test_mode: bool,
+        ipv6: bool,
+        alt_port: bool,
+        media: bool,
     ) -> tuple[str, int]:
         if test_mode:
             ip = cls.TEST_IPV6[dc_id] if ipv6 else cls.TEST[dc_id]
 
             return ip, 80
-        else:
-            if ipv6:
-                if media:
-                    ip = cls.PROD_IPV6_MEDIA.get(dc_id, cls.PROD_IPV6[dc_id])
-                else:
-                    ip = cls.PROD_IPV6[dc_id]
-            elif media:
-                ip = cls.PROD_MEDIA.get(dc_id, cls.PROD[dc_id])
+        if ipv6:
+            if media:
+                ip = cls.PROD_IPV6_MEDIA.get(dc_id, cls.PROD_IPV6[dc_id])
             else:
-                ip = cls.PROD[dc_id]
-            return ip, 5222 if alt_port else 443
+                ip = cls.PROD_IPV6[dc_id]
+        elif media:
+            ip = cls.PROD_MEDIA.get(dc_id, cls.PROD[dc_id])
+        else:
+            ip = cls.PROD[dc_id]
+        return ip, 5222 if alt_port else 443
