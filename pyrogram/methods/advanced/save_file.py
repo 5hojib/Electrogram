@@ -19,7 +19,6 @@ if TYPE_CHECKING:
 
 log = logging.getLogger(__name__)
 
-
 class SaveFile:
     async def save_file(
         self: pyrogram.Client,
@@ -32,52 +31,24 @@ class SaveFile:
         """Upload a file onto Telegram servers, without actually sending the message to anyone.
         Useful whenever an InputFile type is required.
 
-        .. note::
-
-            This is a utility method intended to be used **only** when working with raw
-            :obj:`functions <pyrogram.api.functions>` (i.e: a Telegram API method you wish to use which is not
-            available yet in the Client class as an easy-to-use method).
-
-        .. include:: /_includes/usable-by/users-bots.rst
-
         Parameters:
             path (``str`` | ``BinaryIO``):
-                The path of the file you want to upload that exists on your local machine or a binary file-like object
-                with its attribute ".name" set for in-memory uploads.
+                The path of the file you want to upload or a binary file-like object.
 
             file_id (``int``, *optional*):
-                In case a file part expired, pass the file_id and the file_part to retry uploading that specific chunk.
+                File ID to resume an upload.
 
             file_part (``int``, *optional*):
-                In case a file part expired, pass the file_id and the file_part to retry uploading that specific chunk.
+                The file part to resume from if a previous upload was interrupted.
 
             progress (``Callable``, *optional*):
-                Pass a callback function to view the file transmission progress.
-                The function must take *(current, total)* as positional arguments (look at Other Parameters below for a
-                detailed description) and will be called back each time a new file chunk has been successfully
-                transmitted.
+                Callback function for progress updates.
 
             progress_args (``tuple``, *optional*):
-                Extra custom arguments for the progress callback function.
-                You can pass anything you need to be available in the progress callback scope; for example, a Message
-                object or a Client instance in order to edit the message with the updated progress status.
-
-        Other Parameters:
-            current (``int``):
-                The amount of bytes transmitted so far.
-
-            total (``int``):
-                The total size of the file.
-
-            *args (``tuple``, *optional*):
-                Extra custom arguments as defined in the ``progress_args`` parameter.
-                You can either keep ``*args`` or add every single extra argument in your function signature.
+                Extra arguments for the progress callback function.
 
         Returns:
-            ``InputFile``: On success, the uploaded file is returned in form of an InputFile object.
-
-        Raises:
-            RPCError: In case of a Telegram RPC error.
+            ``InputFile`` or ``InputFileBig`` object on success.
         """
         async with self.save_file_semaphore:
             if path is None:
@@ -95,6 +66,8 @@ class SaveFile:
                         except Exception as e:
                             log.warning("Retrying part due to error: %s", e)
                             await asyncio.sleep(2**attempt)
+                    else:
+                        log.error("Failed to upload part after 3 attempts")
 
             def create_rpc(chunk, file_part, is_big, file_id, file_total_parts):
                 if is_big:
@@ -182,19 +155,14 @@ class SaveFile:
                             )
                         )
 
-                        if is_missing_part:
-                            return None
+                        if not is_missing_part:
+                            file_part += 1  # Ensure this only increments after success
 
                         if not is_big and not is_missing_part:
                             md5_sum.update(chunk)
 
-                        file_part += 1
-
-                        if (
-                            progress
-                            and file_total_parts > 10
-                            and file_part % (file_total_parts // 10) == 0
-                        ):
+                        # Progress handling
+                        if progress and file_total_parts > 10 and file_part % (file_total_parts // 10) == 0:
                             func = functools.partial(
                                 progress,
                                 min(file_part * part_size, file_size),
@@ -206,6 +174,7 @@ class SaveFile:
                                 await func()
                             else:
                                 await self.loop.run_in_executor(self.executor, func)
+
                 except StopTransmissionError:
                     raise
                 except Exception as e:
