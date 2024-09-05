@@ -19,7 +19,6 @@ if TYPE_CHECKING:
 
 log = logging.getLogger(__name__)
 
-
 class SaveFile:
     async def save_file(
         self: pyrogram.Client,
@@ -88,13 +87,11 @@ class SaveFile:
                     data = await queue.get()
                     if data is None:
                         return
-                    for attempt in range(3):
-                        try:
-                            await session.invoke(data)
-                            break
-                        except Exception as e:
-                            log.warning("Retrying part due to error: %s", e)
-                            await asyncio.sleep(2**attempt)
+                    try:
+                        await session.invoke(data)
+                    except Exception as e:
+                        log.warning(f"Retrying part due to error: {e}")
+                        await asyncio.sleep(2)
 
             def create_rpc(chunk, file_part, is_big, file_id, file_total_parts):
                 if is_big:
@@ -108,8 +105,8 @@ class SaveFile:
                     file_id=file_id, file_part=file_part, bytes=chunk
                 )
 
-            part_size = 512 * 1024
-            queue = asyncio.Queue(1)
+            part_size = 512 * 1024  # 512 KB
+            queue = asyncio.Queue(4)
 
             with (
                 Path(path).open("rb", buffering=4096)
@@ -133,54 +130,37 @@ class SaveFile:
 
                 file_total_parts = math.ceil(file_size / part_size)
                 is_big = file_size > 100 * 1024 * 1024
-                pool_size = 2 if is_big else 1
-                workers_count = 10 if is_big else 1
+                workers_count = 4 if is_big else 1
                 is_missing_part = file_id is not None
                 file_id = file_id or self.rnd_id()
                 md5_sum = md5() if not is_big and not is_missing_part else None
 
-                pool = [
-                    Session(
-                        self,
-                        await self.storage.dc_id(),
-                        await self.storage.auth_key(),
-                        await self.storage.test_mode(),
-                        is_media=True,
-                    )
-                    for _ in range(pool_size)
-                ]
+                session = Session(
+                    self,
+                    await self.storage.dc_id(),
+                    await self.storage.auth_key(),
+                    await self.storage.test_mode(),
+                    is_media=True,
+                )
 
-                workers = [
-                    self.loop.create_task(worker(session))
-                    for session in pool
-                    for _ in range(workers_count)
-                ]
+                workers = [self.loop.create_task(worker(session)) for _ in range(workers_count)]
 
                 try:
-                    for session in pool:
-                        await session.start()
+                    await session.start()
 
                     fp.seek(part_size * file_part)
-                    next_chunk_task = self.loop.create_task(
-                        self.preload(fp, part_size)
-                    )
+                    next_chunk_task = self.loop.create_task(self.preload(fp, part_size))
 
                     while True:
                         chunk = await next_chunk_task
-                        next_chunk_task = self.loop.create_task(
-                            self.preload(fp, part_size)
-                        )
+                        next_chunk_task = self.loop.create_task(self.preload(fp, part_size))
 
                         if not chunk:
                             if not is_big and not is_missing_part:
                                 md5_sum = md5_sum.hexdigest()
                             break
 
-                        await queue.put(
-                            create_rpc(
-                                chunk, file_part, is_big, file_id, file_total_parts
-                            )
-                        )
+                        await queue.put(create_rpc(chunk, file_part, is_big, file_id, file_total_parts))
 
                         if is_missing_part:
                             return None
@@ -209,30 +189,17 @@ class SaveFile:
                 except StopTransmissionError:
                     raise
                 except Exception as e:
-                    log.error(
-                        "Error during file upload at part %s: %s", file_part, e
-                    )
+                    log.error(f"Error during file upload at part {file_part}: {e}")
                 else:
                     if is_big:
-                        return raw.types.InputFileBig(
-                            id=file_id,
-                            parts=file_total_parts,
-                            name=file_name,
-                        )
-                    return raw.types.InputFile(
-                        id=file_id,
-                        parts=file_total_parts,
-                        name=file_name,
-                        md5_checksum=md5_sum,
-                    )
+                        return raw.types.InputFileBig(id=file_id, parts=file_total_parts, name=file_name)
+                    return raw.types.InputFile(id=file_id, parts=file_total_parts, name=file_name, md5_checksum=md5_sum)
                 finally:
                     for _ in workers:
                         await queue.put(None)
 
                     await asyncio.gather(*workers)
-
-                    for session in pool:
-                        await session.stop()
+                    await session.stop()
 
     async def preload(self, fp, part_size):
         return fp.read(part_size)
