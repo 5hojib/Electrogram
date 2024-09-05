@@ -1,30 +1,32 @@
-from asyncio import get_event_loop, Event, create_task, TimeoutError, sleep, wait_for
+from __future__ import annotations
+
+import contextlib
+from asyncio import Event, TimeoutError, create_task, get_event_loop, sleep, wait_for
 from bisect import insort
+from hashlib import sha1
+from io import BytesIO
 from logging import getLogger
 from os import urandom
 from time import time
-from hashlib import sha1
-from io import BytesIO
-
-from pyrogram.raw.all import layer
 
 import pyrogram
 from pyrogram import raw
-from pyrogram.connection import Connection
 from pyrogram.crypto import mtproto
 from pyrogram.errors import (
-    RPCError,
-    InternalServerError,
     AuthKeyDuplicated,
-    FloodWait,
-    FloodPremiumWait,
-    ServiceUnavailable,
     BadMsgNotification,
+    FloodPremiumWait,
+    FloodWait,
+    InternalServerError,
+    RPCError,
     SecurityCheckMismatch,
+    ServiceUnavailable,
     Unauthorized,
 )
-from pyrogram.raw.core import TLObject, MsgContainer, FutureSalts
-from .internals import MsgId, MsgFactory
+from pyrogram.raw.all import layer
+from pyrogram.raw.core import FutureSalts, MsgContainer, TLObject
+
+from .internals import MsgFactory, MsgId
 
 log = getLogger(__name__)
 
@@ -33,6 +35,7 @@ class Result:
     def __init__(self):
         self.value = None
         self.event = Event()
+
 
 class Session:
     START_TIMEOUT = 5
@@ -54,7 +57,7 @@ class Session:
 
     def __init__(
         self,
-        client: "pyrogram.Client",
+        client: pyrogram.Client,
         dc_id: int,
         auth_key: bytes,
         test_mode: bool,
@@ -116,7 +119,7 @@ class Session:
                         raw.functions.InvokeWithLayer(
                             layer=layer,
                             query=raw.functions.InitConnection(
-                                api_id=await self.client.storage.api_id(), # type: ignore
+                                api_id=await self.client.storage.api_id(),  # type: ignore
                                 app_version=self.client.app_version,
                                 device_model=self.client.device_model,
                                 system_version=self.client.system_version,
@@ -124,7 +127,7 @@ class Session:
                                 lang_code=self.client.lang_code,
                                 lang_pack=self.client.lang_pack,
                                 query=raw.functions.help.GetConfig(),
-                                params=self.client.init_params, # type: ignore
+                                params=self.client.init_params,  # type: ignore
                             ),
                         ),
                         timeout=self.START_TIMEOUT,
@@ -134,10 +137,14 @@ class Session:
 
                 log.info("Session initialized: Layer %s", layer)
                 log.info(
-                    "Device: %s - %s", self.client.device_model, self.client.app_version
+                    "Device: %s - %s",
+                    self.client.device_model,
+                    self.client.app_version,
                 )
                 log.info(
-                    "System: %s (%s)", self.client.system_version, self.client.lang_code
+                    "System: %s (%s)",
+                    self.client.system_version,
+                    self.client.lang_code,
                 )
             except AuthKeyDuplicated as e:
                 await self.stop()
@@ -177,12 +184,10 @@ class Session:
             self.ping_task_event.clear()
 
             if self.connection:
-                try:
+                with contextlib.suppress(Exception):
                     await wait_for(
                         self.connection.close(), timeout=self.RECONN_TIMEOUT
                     )
-                except Exception:
-                    pass
 
             if self.recv_task:
                 try:
@@ -192,7 +197,7 @@ class Session:
 
             if not self.is_media and callable(self.client.disconnect_handler):
                 try:
-                    await self.client.disconnect_handler(self.client) # type: ignore
+                    await self.client.disconnect_handler(self.client)  # type: ignore
                 except Exception as e:
                     log.exception(e)
 
@@ -269,7 +274,9 @@ class Session:
             self.auth_key_id,
         )
 
-        messages = data.body.messages if isinstance(data.body, MsgContainer) else [data]
+        messages = (
+            data.body.messages if isinstance(data.body, MsgContainer) else [data]
+        )
 
         log.debug("Received: %s", data)
 
@@ -314,46 +321,30 @@ class Session:
             else:
                 insort(self.stored_msg_ids, msg.msg_id)
 
-            if isinstance(msg.body, (
-                raw.types.MsgDetailedInfo,
-                raw.types.MsgNewDetailedInfo
-            )):
+            if isinstance(
+                msg.body, raw.types.MsgDetailedInfo | raw.types.MsgNewDetailedInfo
+            ):
                 self.pending_acks.add(msg.body.answer_msg_id)
                 continue
 
-            if isinstance(
-                msg.body,
-                raw.types.NewSessionCreated
-            ):
+            if isinstance(msg.body, raw.types.NewSessionCreated):
                 continue
 
             msg_id = None
 
-            if isinstance(msg.body, (
-                raw.types.BadMsgNotification,
-                raw.types.BadServerSalt
-            )):
-                msg_id = msg.body.bad_msg_id
-            elif isinstance(msg.body, (
-                FutureSalts,
-                raw.types.RpcResult
-            )):
-                msg_id = msg.body.req_msg_id
-            elif isinstance(
-                msg.body,
-                raw.types.Pong
+            if isinstance(
+                msg.body, raw.types.BadMsgNotification | raw.types.BadServerSalt
             ):
+                msg_id = msg.body.bad_msg_id
+            elif isinstance(msg.body, FutureSalts | raw.types.RpcResult):
+                msg_id = msg.body.req_msg_id
+            elif isinstance(msg.body, raw.types.Pong):
                 msg_id = msg.body.msg_id
-            else:
-                if self.client:
-                    self.loop.create_task(self.client.handle_updates(msg.body))
+            elif self.client:
+                self.loop.create_task(self.client.handle_updates(msg.body))
 
             if msg_id and msg_id in self.results:
-                self.results[msg_id].value = getattr(
-                    msg.body,
-                    "result",
-                    msg.body
-                )
+                self.results[msg_id].value = getattr(msg.body, "result", msg.body)
                 self.results[msg_id].event.set()
 
         if len(self.pending_acks) >= self.ACKS_THRESHOLD:
@@ -361,8 +352,7 @@ class Session:
 
             try:
                 await self.send(
-                    raw.types.MsgsAck(msg_ids=list(self.pending_acks)),
-                    False
+                    raw.types.MsgsAck(msg_ids=list(self.pending_acks)), False
                 )
             except OSError:
                 pass
@@ -411,7 +401,7 @@ class Session:
 
             if packet is None or len(packet) == 4:
                 if packet:
-                    error_code = -int.from_bytes(packet, byteorder='little')
+                    error_code = -int.from_bytes(packet, byteorder="little")
 
                     if error_code == 404:
                         raise Unauthorized(
@@ -443,7 +433,7 @@ class Session:
         retry: int = 0,
     ):
         if self.instant_stop:
-            return  # stop instantly
+            return None  # stop instantly
 
         message = self.msg_factory(data)
         msg_id = message.msg_id
@@ -470,10 +460,8 @@ class Session:
             raise e
 
         if wait_response:
-            try:
+            with contextlib.suppress(TimeoutError):
                 await wait_for(self.results[msg_id].event.wait(), timeout)
-            except TimeoutError:
-                pass
 
             result = self.results.pop(msg_id).value
 
@@ -483,10 +471,8 @@ class Session:
             if isinstance(result, raw.types.RpcError):
                 if isinstance(
                     data,
-                    (
-                        raw.functions.InvokeWithoutUpdates,
-                        raw.functions.InvokeWithTakeout,
-                    ),
+                    raw.functions.InvokeWithoutUpdates
+                    | raw.functions.InvokeWithTakeout,
                 ):
                     data = data.query
 
@@ -504,6 +490,7 @@ class Session:
                 return await self.send(data, wait_response, timeout)
 
             return result
+        return None
 
     def _handle_bad_notification(self):
         new_msg_id = MsgId()
@@ -524,7 +511,8 @@ class Session:
         sleep_threshold: float = SLEEP_THRESHOLD,
     ):
         if isinstance(
-            query, (raw.functions.InvokeWithoutUpdates, raw.functions.InvokeWithTakeout)
+            query,
+            raw.functions.InvokeWithoutUpdates | raw.functions.InvokeWithTakeout,
         ):
             inner_query = query.query
         else:
@@ -539,7 +527,7 @@ class Session:
                     await sleep(1)
 
             if self.instant_stop:
-                return  # stop instantly
+                return None  # stop instantly
 
             if not self.is_started.is_set():
                 await self.is_started.wait()
@@ -549,7 +537,7 @@ class Session:
             except (FloodWait, FloodPremiumWait) as e:
                 amount = e.value
 
-                if amount > sleep_threshold >= 0: # type: ignore
+                if amount > sleep_threshold >= 0:  # type: ignore
                     raise
 
                 log.warning(
@@ -559,7 +547,7 @@ class Session:
                     query_name,
                 )
 
-                await sleep(amount) # type: ignore
+                await sleep(amount)  # type: ignore
             except (
                 OSError,
                 RuntimeError,
@@ -569,12 +557,12 @@ class Session:
             ) as e:
                 retries -= 1
                 if retries == 0:
-                    self.client.updates_invoke_error = e # type: ignore
+                    self.client.updates_invoke_error = e  # type: ignore
                     raise
 
-                if (isinstance(e, (OSError, RuntimeError)) and "handler" in str(e)) or (
-                    isinstance(e, TimeoutError)
-                ):
+                if (
+                    isinstance(e, OSError | RuntimeError) and "handler" in str(e)
+                ) or (isinstance(e, TimeoutError)):
                     (log.warning if retries < 2 else log.info)(
                         '[%s] [%s] Reconnecting session requesting "%s", due to: %s',
                         self.client.name,
@@ -594,7 +582,7 @@ class Session:
 
                 await sleep(1)
             except Exception as e:
-                self.client.updates_invoke_error = e # type: ignore
+                self.client.updates_invoke_error = e  # type: ignore
                 raise
 
         raise TimeoutError("Exceeded maximum number of retries")
