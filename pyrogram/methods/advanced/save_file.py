@@ -88,28 +88,14 @@ class SaveFile:
                     data = await queue.get()
                     if data is None:
                         return
-                    for attempt in range(3):
-                        try:
-                            await session.invoke(data)
-                            break
-                        except Exception as e:
-                            log.warning("Retrying part due to error: %s", e)
-                            await asyncio.sleep(2**attempt)
-
-            def create_rpc(chunk, file_part, is_big, file_id, file_total_parts):
-                if is_big:
-                    return raw.functions.upload.SaveBigFilePart(
-                        file_id=file_id,
-                        file_part=file_part,
-                        file_total_parts=file_total_parts,
-                        bytes=chunk,
-                    )
-                return raw.functions.upload.SaveFilePart(
-                    file_id=file_id, file_part=file_part, bytes=chunk
-                )
+                    try:
+                        await session.invoke(data)
+                    except Exception as e:
+                        log.warning("Retrying part due to error: %s", e)
+                        await queue.put(data)  # Retry once by re-queuing
 
             part_size = 512 * 1024
-            queue = asyncio.Queue(16)
+            queue = asyncio.Queue(4)  # Smaller queue size
 
             with (
                 Path(path).open("rb", buffering=4096)
@@ -125,16 +111,12 @@ class SaveFile:
                     raise ValueError("File size equals to 0 B")
 
                 file_size_limit_mib = 4000 if self.me.is_premium else 2000
-
                 if file_size > file_size_limit_mib * 1024 * 1024:
-                    raise ValueError(
-                        f"Can't upload files bigger than {file_size_limit_mib} MiB"
-                    )
+                    raise ValueError(f"Can't upload files bigger than {file_size_limit_mib} MiB")
 
                 file_total_parts = math.ceil(file_size / part_size)
                 is_big = file_size > 100 * 1024 * 1024
-                pool_size = 2 if is_big else 1
-                workers_count = 10 if is_big else 1
+                workers_count = 4 if is_big else 1  # Fewer workers
                 is_missing_part = file_id is not None
                 file_id = file_id or self.rnd_id()
                 md5_sum = md5() if not is_big and not is_missing_part else None
@@ -147,84 +129,49 @@ class SaveFile:
                         await self.storage.test_mode(),
                         is_media=True,
                     )
-                    for _ in range(pool_size)
                 ]
 
-                workers = [
-                    self.loop.create_task(worker(session))
-                    for session in pool
-                    for _ in range(workers_count)
-                ]
+                workers = [self.loop.create_task(worker(session)) for session in pool]
 
                 try:
                     for session in pool:
                         await session.start()
 
                     fp.seek(part_size * file_part)
-                    next_chunk_task = self.loop.create_task(
-                        self.preload(fp, part_size)
-                    )
+                    next_chunk_task = self.loop.create_task(self.preload(fp, part_size))
 
                     while True:
                         chunk = await next_chunk_task
-                        next_chunk_task = self.loop.create_task(
-                            self.preload(fp, part_size)
-                        )
+                        next_chunk_task = self.loop.create_task(self.preload(fp, part_size))
 
                         if not chunk:
                             if not is_big and not is_missing_part:
                                 md5_sum = md5_sum.hexdigest()
                             break
 
-                        await queue.put(
-                            create_rpc(
-                                chunk, file_part, is_big, file_id, file_total_parts
-                            )
-                        )
-
-                        if is_missing_part:
-                            return None
+                        await queue.put(raw.functions.upload.SaveFilePart(file_id=file_id, file_part=file_part, bytes=chunk))
 
                         if not is_big and not is_missing_part:
                             md5_sum.update(chunk)
 
                         file_part += 1
 
-                        if (
-                            progress
-                            and file_total_parts > 10
-                            and file_part % (file_total_parts // 10) == 0
-                        ):
+                        if progress:
                             func = functools.partial(
                                 progress,
                                 min(file_part * part_size, file_size),
                                 file_size,
                                 *progress_args,
                             )
-
                             if inspect.iscoroutinefunction(progress):
                                 await func()
                             else:
                                 await self.loop.run_in_executor(self.executor, func)
+
                 except StopTransmissionError:
                     raise
                 except Exception as e:
-                    log.error(
-                        "Error during file upload at part %s: %s", file_part, e
-                    )
-                else:
-                    if is_big:
-                        return raw.types.InputFileBig(
-                            id=file_id,
-                            parts=file_total_parts,
-                            name=file_name,
-                        )
-                    return raw.types.InputFile(
-                        id=file_id,
-                        parts=file_total_parts,
-                        name=file_name,
-                        md5_checksum=md5_sum,
-                    )
+                    log.error("Error during file upload at part %s: %s", file_part, e)
                 finally:
                     for _ in workers:
                         await queue.put(None)
