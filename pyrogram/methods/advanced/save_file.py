@@ -83,12 +83,11 @@ class SaveFile:
             if path is None:
                 return None
 
-            async def worker(session, file_total_parts, is_big) -> None:
+            async def worker(session) -> None:
                 while True:
                     data = await queue.get()
                     if data is None:
                         return
-
                     for attempt in range(3):
                         try:
                             await session.invoke(data)
@@ -96,9 +95,6 @@ class SaveFile:
                         except Exception as e:
                             log.warning("Retrying part due to error: %s", e)
                             await asyncio.sleep(2**attempt)
-                        if attempt == 2:  # On final failure, log and raise an error
-                            log.error("Failed to upload part after retries.")
-                            raise StopTransmissionError()
 
             def create_rpc(chunk, file_part, is_big, file_id, file_total_parts):
                 if is_big:
@@ -113,11 +109,8 @@ class SaveFile:
                 )
 
             part_size = 512 * 1024
-            queue = asyncio.Queue(
-                10
-            )  # Reduce queue size for less aggressive parallelism
+            queue = asyncio.Queue(1)
 
-            # Open the file for reading
             with (
                 Path(path).open("rb", buffering=4096)
                 if isinstance(path, str | PurePath)
@@ -129,9 +122,10 @@ class SaveFile:
                 fp.seek(0)
 
                 if file_size == 0:
-                    raise ValueError("File size equals 0 B")
+                    raise ValueError("File size equals to 0 B")
 
                 file_size_limit_mib = 4000 if self.me.is_premium else 2000
+
                 if file_size > file_size_limit_mib * 1024 * 1024:
                     raise ValueError(
                         f"Can't upload files bigger than {file_size_limit_mib} MiB"
@@ -139,27 +133,32 @@ class SaveFile:
 
                 file_total_parts = math.ceil(file_size / part_size)
                 is_big = file_size > 100 * 1024 * 1024
+                pool_size = 2 if is_big else 1
+                workers_count = 10 if is_big else 1
                 is_missing_part = file_id is not None
                 file_id = file_id or self.rnd_id()
                 md5_sum = md5() if not is_big and not is_missing_part else None
 
-                session = Session(
-                    self,
-                    await self.storage.dc_id(),
-                    await self.storage.auth_key(),
-                    await self.storage.test_mode(),
-                    is_media=True,
-                )
+                pool = [
+                    Session(
+                        self,
+                        await self.storage.dc_id(),
+                        await self.storage.auth_key(),
+                        await self.storage.test_mode(),
+                        is_media=True,
+                    )
+                    for _ in range(pool_size)
+                ]
 
                 workers = [
-                    self.loop.create_task(worker(session, file_total_parts, is_big))
-                    for _ in range(
-                        5
-                    )  # Limit workers to 5 for a balance between speed and reliability
+                    self.loop.create_task(worker(session))
+                    for session in pool
+                    for _ in range(workers_count)
                 ]
 
                 try:
-                    await session.start()
+                    for session in pool:
+                        await session.start()
 
                     fp.seek(part_size * file_part)
                     next_chunk_task = self.loop.create_task(
@@ -191,19 +190,22 @@ class SaveFile:
 
                         file_part += 1
 
-                        # Update progress
-                        if progress:
+                        if (
+                            progress
+                            and file_total_parts > 10
+                            and file_part % (file_total_parts // 10) == 0
+                        ):
                             func = functools.partial(
                                 progress,
                                 min(file_part * part_size, file_size),
                                 file_size,
                                 *progress_args,
                             )
+
                             if inspect.iscoroutinefunction(progress):
                                 await func()
                             else:
                                 await self.loop.run_in_executor(self.executor, func)
-
                 except StopTransmissionError:
                     raise
                 except Exception as e:
@@ -213,7 +215,9 @@ class SaveFile:
                 else:
                     if is_big:
                         return raw.types.InputFileBig(
-                            id=file_id, parts=file_total_parts, name=file_name
+                            id=file_id,
+                            parts=file_total_parts,
+                            name=file_name,
                         )
                     return raw.types.InputFile(
                         id=file_id,
@@ -224,8 +228,11 @@ class SaveFile:
                 finally:
                     for _ in workers:
                         await queue.put(None)
+
                     await asyncio.gather(*workers)
-                    await session.stop()
+
+                    for session in pool:
+                        await session.stop()
 
     async def preload(self, fp, part_size):
         return fp.read(part_size)
