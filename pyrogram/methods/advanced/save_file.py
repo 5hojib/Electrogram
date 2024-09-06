@@ -29,6 +29,56 @@ class SaveFile:
         progress: Callable | None = None,
         progress_args: tuple = (),
     ):
+        """Upload a file onto Telegram servers, without actually sending the message to anyone.
+        Useful whenever an InputFile type is required.
+
+        .. note::
+
+            This is a utility method intended to be used **only** when working with raw
+            :obj:`functions <pyrogram.api.functions>` (i.e: a Telegram API method you wish to use which is not
+            available yet in the Client class as an easy-to-use method).
+
+        .. include:: /_includes/usable-by/users-bots.rst
+
+        Parameters:
+            path (``str`` | ``BinaryIO``):
+                The path of the file you want to upload that exists on your local machine or a binary file-like object
+                with its attribute ".name" set for in-memory uploads.
+
+            file_id (``int``, *optional*):
+                In case a file part expired, pass the file_id and the file_part to retry uploading that specific chunk.
+
+            file_part (``int``, *optional*):
+                In case a file part expired, pass the file_id and the file_part to retry uploading that specific chunk.
+
+            progress (``Callable``, *optional*):
+                Pass a callback function to view the file transmission progress.
+                The function must take *(current, total)* as positional arguments (look at Other Parameters below for a
+                detailed description) and will be called back each time a new file chunk has been successfully
+                transmitted.
+
+            progress_args (``tuple``, *optional*):
+                Extra custom arguments for the progress callback function.
+                You can pass anything you need to be available in the progress callback scope; for example, a Message
+                object or a Client instance in order to edit the message with the updated progress status.
+
+        Other Parameters:
+            current (``int``):
+                The amount of bytes transmitted so far.
+
+            total (``int``):
+                The total size of the file.
+
+            *args (``tuple``, *optional*):
+                Extra custom arguments as defined in the ``progress_args`` parameter.
+                You can either keep ``*args`` or add every single extra argument in your function signature.
+
+        Returns:
+            ``InputFile``: On success, the uploaded file is returned in form of an InputFile object.
+
+        Raises:
+            RPCError: In case of a Telegram RPC error.
+        """
         async with self.save_file_semaphore:
             if path is None:
                 return None
