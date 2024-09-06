@@ -84,6 +84,14 @@ class Client(Methods):
             Code of the language used on the client, in ISO 639-1 standard.
             Defaults to "en".
 
+        system_lang_code (``str``, *optional*):
+            Code of the language used on the system.
+            Defaults to "en-US".
+
+        lang_pack (``str``, *optional*):
+            Internal parameter.
+            Defaults to "".
+
         ipv6 (``bool``, *optional*):
             Pass True to connect to Telegram using IPv6.
             Defaults to False (IPv4).
@@ -110,16 +118,16 @@ class Client(Methods):
             Pass a session string to load the session in-memory.
             Implies ``in_memory=True``.
 
+        is_telethon_string (``bool``, *optional*):
+            ``True`` if your provided session_string is in the telethon format.
+            Requires ``session_string`` to be filled.
+
         in_memory (``bool``, *optional*):
             Pass True to start an in-memory session that will be discarded as soon as the client stops.
             In order to reconnect again using an in-memory session without having to login again, you can use
             :meth:`~pyrogram.Client.export_session_string` before stopping the client to get a session string you can
             pass to the ``session_string`` parameter.
             Defaults to False.
-
-        mongodb (``dict``, *optional*):
-            Mongodb config as dict, e.g.: *dict(connection=async_pymongo.AsyncClient("mongodb://..."), remove_peers=False)*.
-            Only applicable for new sessions.
 
         storage (:obj:`~pyrogram.storage.Storage`, *optional*):
             Custom session storage.
@@ -180,23 +188,22 @@ class Client(Methods):
             Defaults to False, because ``getpass`` (the library used) is known to be problematic in some
             terminal environments.
 
-        max_concurrent_transmissions (``bool``, *optional*):
+        max_concurrent_transmissions (``int``, *optional*):
             Set the maximum amount of concurrent transmissions (uploads & downloads).
             A value that is too high may result in network related issues.
-            Defaults to 100.
+            Defaults to 20.
+
+        init_params (``raw.types.JsonObject``, *optional*):
+            Additional initConnection parameters.
+            Defaults to None.
 
         max_message_cache_size (``int``, *optional*):
-            Set the maximum size of the message cache.
-            Defaults to 10000.
-
-        max_business_user_connection_cache_size (``int``, *optional*):
             Set the maximum size of the message cache.
             Defaults to 10000.
 
         client_platform (:obj:`~pyrogram.enums.ClientPlatform`, *optional*):
             The platform where this client is running.
             Defaults to 'other'
-
     """
 
     APP_VERSION = f"Electrogram {__version__}"
