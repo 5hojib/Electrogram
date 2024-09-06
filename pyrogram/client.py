@@ -21,7 +21,7 @@ from inspect import iscoroutinefunction
 from io import BytesIO, StringIO
 from logging import getLogger
 from mimetypes import MimeTypes
-from os import cpu_count, makedirs, path, remove
+from os import cpu_count, path
 from pathlib import Path
 from platform import python_implementation, python_version, release, system
 from re import compile, sub
