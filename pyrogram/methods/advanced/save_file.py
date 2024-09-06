@@ -61,7 +61,9 @@ class SaveFile:
 
             file_total_parts = int(math.ceil(file_size / part_size))
             is_big = file_size > 10 * 1024 * 1024
-            workers_count = min(8, (file_size // (100 * 1024 * 1024)) + 1)  # Max 8 workers
+            workers_count = min(
+                8, (file_size // (100 * 1024 * 1024)) + 1
+            )  # Max 8 workers
             is_missing_part = file_id is not None
             file_id = file_id or self.rnd_id()
             md5_sum = md5() if not is_big and not is_missing_part else None
