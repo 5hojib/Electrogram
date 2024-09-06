@@ -26,12 +26,7 @@ class SendPaidMedia:
         show_caption_above_media: bool | None = None,
         disable_notification: bool | None = None,
         protect_content: bool | None = None,
-        reply_parameters: types.ReplyParameters = None,
         business_connection_id: str | None = None,
-        reply_markup: types.InlineKeyboardMarkup  # NextTime
-        | types.ReplyKeyboardMarkup
-        | types.ReplyKeyboardRemove
-        | types.ForceReply = None,
         schedule_date: datetime | None = None,
     ) -> types.Message:
         """Use this method to send paid media.
@@ -67,15 +62,8 @@ class SendPaidMedia:
             protect_content (``bool``, *optional*):
                 Pass True if the content of the message must be protected from forwarding and saving; for bots only.
 
-            reply_parameters (:obj:`~pyrogram.types.ReplyParameters`, *optional*):
-                Description of the message to reply to
-
             business_connection_id (``str``, *optional*):
                 Unique identifier of the business connection on behalf of which the message will be sent.
-
-            reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup` | :obj:`~pyrogram.types.ReplyKeyboardMarkup` | :obj:`~pyrogram.types.ReplyKeyboardRemove` | :obj:`~pyrogram.types.ForceReply`, *optional*):
-                Additional interface options. An object for an inline keyboard, custom reply keyboard,
-                instructions to remove reply keyboard or to force a reply from the user.
 
             schedule_date (:obj:`~datetime.datetime`, *optional*):
                 Date when the message will be automatically sent. Pass a :obj:`~datetime.datetime` object.

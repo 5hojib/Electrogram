@@ -573,8 +573,9 @@ class Client(Methods):
                     else None
                 )
                 if peer.usernames is not None and len(peer.usernames) > 1:
-                    for uname in peer.usernames:
-                        usernames.append((peer.id, uname.username.lower()))
+                    usernames.extend(
+                        (peer.id, uname.username.lower()) for uname in peer.usernames
+                    )
                 phone_number = peer.phone
                 peer_type = "bot" if peer.bot else "user"
             elif isinstance(peer, raw.types.Chat | raw.types.ChatForbidden):
@@ -592,8 +593,9 @@ class Client(Methods):
                     else None
                 )
                 if peer.usernames is not None and len(peer.usernames) > 1:
-                    for uname in peer.usernames:
-                        usernames.append((peer.id, uname.username.lower()))
+                    usernames.extend(
+                        (peer.id, uname.username.lower()) for uname in peer.usernames
+                    )
                 peer_type = "channel" if peer.broadcast else "supergroup"
             elif isinstance(peer, raw.types.ChannelForbidden):
                 peer_id = utils.get_channel_id(peer.id)
@@ -951,7 +953,11 @@ class Client(Methods):
 
         Path(directory).mkdir(parents=True, exist_ok=True) if not in_memory else None
         temp_file_path = (
-            path.abspath(sub("\\\\", "/", path.join(directory, file_name))) + ".temp"
+            Path(directory)
+            .joinpath(re.sub(r"\\", "/", file_name))
+            .resolve()
+            .as_posix()
+            + ".temp"
         )
         file = BytesIO() if in_memory else Path(temp_file_path).open("wb")
 
@@ -1199,7 +1205,7 @@ class Client(Methods):
                         raise e
                     finally:
                         await cdn_session.stop()
-            except pyrogram.StopTransmission:
+            except pyrogram.StopTransmissionError:
                 raise
             except (FloodWait, FloodPremiumWait):
                 raise
