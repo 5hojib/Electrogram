@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import re
+import os
 import contextlib
 import shutil
+import asyncio
 from asyncio import (
     CancelledError,
     Event,
@@ -217,10 +220,10 @@ class Client(Methods):
 
     PARENT_DIR = Path(argv[0]).parent
 
-    INVITE_LINK_RE = compile(
+    INVITE_LINK_RE = re.compile(
         r"^(?:https?://)?(?:www\.)?(?:t(?:elegram)?\.(?:org|me|dog)/(?:joinchat/|\+))([\w-]+)$"
     )
-    WORKERS = min(64, (cpu_count() or 0) + 4)
+    WORKERS = min(64, (os.cpu_count() or 0) + 4)
     WORKDIR = PARENT_DIR
     UPDATES_WATCHDOG_INTERVAL = 10 * 60
     MAX_CONCURRENT_TRANSMISSIONS = 1000
@@ -324,9 +327,9 @@ class Client(Methods):
         self.parser = Parser(self)
         self.session = None
         self.media_sessions = {}
-        self.media_sessions_lock = Lock()
-        self.save_file_semaphore = Semaphore(self.max_concurrent_transmissions)
-        self.get_file_semaphore = Semaphore(self.max_concurrent_transmissions)
+        self.media_sessions_lock = asyncio.Lock()
+        self.save_file_semaphore = asyncio.Semaphore(self.max_concurrent_transmissions)
+        self.get_file_semaphore = asyncio.Semaphore(self.max_concurrent_transmissions)
         self.is_connected = None
         self.is_initialized = None
         self.takeout_id = None
@@ -334,13 +337,13 @@ class Client(Methods):
         self.me: User | None = None
         self.message_cache = Cache(self.max_message_cache_size)
         self.updates_watchdog_task = None
-        self.updates_watchdog_event = Event()
+        self.updates_watchdog_event = asyncio.Event()
         self.updates_invoke_error = None
         self.last_update_time = datetime.now()
         self.listeners = {
             listener_type: [] for listener_type in pyrogram.enums.ListenerTypes
         }
-        self.loop = get_event_loop()
+        self.loop = asyncio.get_event_loop()
 
     def __enter__(self):
         return self.start()
@@ -359,11 +362,11 @@ class Client(Methods):
     async def updates_watchdog(self) -> None:
         while True:
             try:
-                await wait_for(
+                await asyncio.wait_for(
                     self.updates_watchdog_event.wait(),
                     self.UPDATES_WATCHDOG_INTERVAL,
                 )
-            except TimeoutError:
+            except asyncio.TimeoutError:
                 pass
             else:
                 break
@@ -971,7 +974,7 @@ class Client(Methods):
                 file.close()
                 Path(temp_file_path).unlink()
 
-            if isinstance(e, CancelledError):
+            if isinstance(e, asyncio.CancelledError):
                 raise e
 
             if isinstance(e, FloodWait | FloodPremiumWait):
