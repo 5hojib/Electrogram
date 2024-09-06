@@ -1,19 +1,10 @@
 from __future__ import annotations
 
-import re
-import os
-import contextlib
-import shutil
 import asyncio
-from asyncio import (
-    CancelledError,
-    Event,
-    Lock,
-    Semaphore,
-    TimeoutError,
-    get_event_loop,
-    wait_for,
-)
+import contextlib
+import os
+import re
+import shutil
 from collections import OrderedDict
 from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime, timedelta
@@ -24,10 +15,8 @@ from inspect import iscoroutinefunction
 from io import BytesIO, StringIO
 from logging import getLogger
 from mimetypes import MimeTypes
-from os import cpu_count
 from pathlib import Path
 from platform import python_implementation, python_version, release, system
-from re import compile
 from sys import argv
 from typing import TYPE_CHECKING
 
@@ -328,8 +317,12 @@ class Client(Methods):
         self.session = None
         self.media_sessions = {}
         self.media_sessions_lock = asyncio.Lock()
-        self.save_file_semaphore = asyncio.Semaphore(self.max_concurrent_transmissions)
-        self.get_file_semaphore = asyncio.Semaphore(self.max_concurrent_transmissions)
+        self.save_file_semaphore = asyncio.Semaphore(
+            self.max_concurrent_transmissions
+        )
+        self.get_file_semaphore = asyncio.Semaphore(
+            self.max_concurrent_transmissions
+        )
         self.is_connected = None
         self.is_initialized = None
         self.takeout_id = None
