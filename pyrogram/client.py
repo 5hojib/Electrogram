@@ -12,15 +12,11 @@ import shutil
 from collections import OrderedDict
 from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime, timedelta
-from functools import lru_cache, partial
 from hashlib import sha256
 from importlib import import_module
-from inspect import iscoroutinefunction
 from io import BytesIO, StringIO
-from logging import getLogger
 from mimetypes import MimeTypes
 from pathlib import Path
-from platform import python_implementation, python_version, release, system
 from sys import argv
 from typing import TYPE_CHECKING
 
