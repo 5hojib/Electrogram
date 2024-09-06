@@ -2,7 +2,11 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
+import functools
+import inspect
+import logging
 import os
+import platform
 import re
 import shutil
 from collections import OrderedDict
@@ -50,7 +54,7 @@ from .session.internals import MsgId
 if TYPE_CHECKING:
     from collections.abc import AsyncGenerator, Callable
 
-log = getLogger(__name__)
+log = logging.getLogger(__name__)
 
 
 class Client(Methods):
@@ -200,8 +204,8 @@ class Client(Methods):
     """
 
     APP_VERSION = f"Electrogram {__version__}"
-    DEVICE_MODEL = f"{python_implementation()} {python_version()}"
-    SYSTEM_VERSION = f"{system()} {release()}"
+    DEVICE_MODEL = f"{platform.python_implementation()} {platform.python_version()}"
+    SYSTEM_VERSION = f"{platform.system()} {platform.release()}"
 
     LANG_CODE = "en"
     SYSTEM_LANG_CODE = "en-US"
@@ -1078,7 +1082,7 @@ class Client(Methods):
                         offset_bytes += chunk_size
 
                         if progress:
-                            func = partial(
+                            func = functools.partial(
                                 progress,
                                 (
                                     min(offset_bytes, file_size)
@@ -1089,7 +1093,7 @@ class Client(Methods):
                                 *progress_args,
                             )
 
-                            if iscoroutinefunction(progress):
+                            if inspect.iscoroutinefunction(progress):
                                 await func()
                             else:
                                 await self.loop.run_in_executor(self.executor, func)
@@ -1177,7 +1181,7 @@ class Client(Methods):
                             offset_bytes += chunk_size
 
                             if progress:
-                                func = partial(
+                                func = functools.partial(
                                     progress,
                                     (
                                         min(offset_bytes, file_size)
@@ -1188,7 +1192,7 @@ class Client(Methods):
                                     *progress_args,
                                 )
 
-                                if iscoroutinefunction(progress):
+                                if inspect.iscoroutinefunction(progress):
                                     await func()
                                 else:
                                     await self.loop.run_in_executor(
@@ -1210,11 +1214,11 @@ class Client(Methods):
             finally:
                 await session.stop()
 
-    @lru_cache(maxsize=128)
+    @functools.lru_cache(maxsize=128)
     def guess_mime_type(self, filename: str) -> str | None:
         return self.mimetypes.guess_type(filename)[0]
 
-    @lru_cache(maxsize=128)
+    @functools.lru_cache(maxsize=128)
     def guess_extension(self, mime_type: str) -> str | None:
         return self.mimetypes.guess_extension(mime_type)
 
