@@ -9,6 +9,7 @@ import os
 import platform
 import re
 import shutil
+import sys
 from collections import OrderedDict
 from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime, timedelta
@@ -17,7 +18,6 @@ from importlib import import_module
 from io import BytesIO, StringIO
 from mimetypes import MimeTypes
 from pathlib import Path
-from sys import argv
 from typing import TYPE_CHECKING
 
 import pyrogram
@@ -214,7 +214,7 @@ class Client(Methods):
     SYSTEM_LANG_CODE = "en-US"
     LANG_PACK = ""
 
-    PARENT_DIR = Path(argv[0]).parent
+    PARENT_DIR = Path(sys.argv[0]).parent
 
     INVITE_LINK_RE = re.compile(
         r"^(?:https?://)?(?:www\.)?(?:t(?:elegram)?\.(?:org|me|dog)/(?:joinchat/|\+))([\w-]+)$"
