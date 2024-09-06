@@ -10,6 +10,7 @@ import platform
 import re
 import shutil
 import sys
+from collections import OrderedDict
 from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime, timedelta
 from hashlib import sha256
@@ -26,18 +27,20 @@ from pyrogram.errors import (
     BadRequest,
     CDNFileHashMismatch,
     ChannelPrivate,
+    FloodPremiumWait,
+    FloodWait,
     SessionPasswordNeeded,
     VolumeLocNotFound,
 )
 from pyrogram.handlers.handler import Handler
 from pyrogram.methods import Methods
 from pyrogram.session import Auth, Session
-from pyrogram.storage import FileStorage, MemoryStorage, MongoStorage, Storage
+from pyrogram.storage import FileStorage, MemoryStorage, Storage
 from pyrogram.types import TermsOfService, User
 from pyrogram.utils import ainput
 
 from .connection import Connection
-from .connection.transport import TCPAbridged
+from .connection.transport import TCP, TCPAbridged
 from .dispatcher import Dispatcher
 from .file_id import FileId, FileType, ThumbnailSource
 from .mime_types import mime_types
@@ -81,6 +84,14 @@ class Client(Methods):
             Code of the language used on the client, in ISO 639-1 standard.
             Defaults to "en".
 
+        system_lang_code (``str``, *optional*):
+            Code of the language used on the system.
+            Defaults to "en-US".
+
+        lang_pack (``str``, *optional*):
+            Internal parameter.
+            Defaults to "".
+
         ipv6 (``bool``, *optional*):
             Pass True to connect to Telegram using IPv6.
             Defaults to False (IPv4).
@@ -107,16 +118,16 @@ class Client(Methods):
             Pass a session string to load the session in-memory.
             Implies ``in_memory=True``.
 
+        is_telethon_string (``bool``, *optional*):
+            ``True`` if your provided session_string is in the telethon format.
+            Requires ``session_string`` to be filled.
+
         in_memory (``bool``, *optional*):
             Pass True to start an in-memory session that will be discarded as soon as the client stops.
             In order to reconnect again using an in-memory session without having to login again, you can use
             :meth:`~pyrogram.Client.export_session_string` before stopping the client to get a session string you can
             pass to the ``session_string`` parameter.
             Defaults to False.
-
-        mongodb (``dict``, *optional*):
-            Mongodb config as dict, e.g.: *dict(connection=async_pymongo.AsyncClient("mongodb://..."), remove_peers=False)*.
-            Only applicable for new sessions.
 
         storage (:obj:`~pyrogram.storage.Storage`, *optional*):
             Custom session storage.
@@ -177,42 +188,42 @@ class Client(Methods):
             Defaults to False, because ``getpass`` (the library used) is known to be problematic in some
             terminal environments.
 
-        max_concurrent_transmissions (``bool``, *optional*):
+        max_concurrent_transmissions (``int``, *optional*):
             Set the maximum amount of concurrent transmissions (uploads & downloads).
             A value that is too high may result in network related issues.
-            Defaults to 100.
+            Defaults to 20.
+
+        init_params (``raw.types.JsonObject``, *optional*):
+            Additional initConnection parameters.
+            Defaults to None.
 
         max_message_cache_size (``int``, *optional*):
-            Set the maximum size of the message cache.
-            Defaults to 10000.
-
-        max_business_user_connection_cache_size (``int``, *optional*):
             Set the maximum size of the message cache.
             Defaults to 10000.
 
         client_platform (:obj:`~pyrogram.enums.ClientPlatform`, *optional*):
             The platform where this client is running.
             Defaults to 'other'
-
-        fetch_replies (``int``, *optional*):
-            Set the number of replies to be fetched when parsing the :obj:`~pyrogram.types.Message` object. Defaults to 1.
-            :doc:`More on Errors <../../api/errors/index>`
     """
 
-    APP_VERSION = f"Pyrogram {__version__}"
+    APP_VERSION = f"Electrogram {__version__}"
     DEVICE_MODEL = f"{platform.python_implementation()} {platform.python_version()}"
     SYSTEM_VERSION = f"{platform.system()} {platform.release()}"
+
     LANG_CODE = "en"
+    SYSTEM_LANG_CODE = "en-US"
+    LANG_PACK = ""
+
     PARENT_DIR = Path(sys.argv[0]).parent
+
     INVITE_LINK_RE = re.compile(
         r"^(?:https?://)?(?:www\.)?(?:t(?:elegram)?\.(?:org|me|dog)/(?:joinchat/|\+))([\w-]+)$"
     )
-    WORKERS = min(32, (os.cpu_count() or 0) + 4)
+    WORKERS = min(64, (os.cpu_count() or 0) + 4)
     WORKDIR = PARENT_DIR
-    UPDATES_WATCHDOG_INTERVAL = 15 * 60
-    MAX_CONCURRENT_TRANSMISSIONS = 100
-    MAX_CACHE_SIZE = 10000
-
+    UPDATES_WATCHDOG_INTERVAL = 10 * 60
+    MAX_CONCURRENT_TRANSMISSIONS = 1000
+    MAX_MESSAGE_CACHE_SIZE = 10000
     mimetypes = MimeTypes()
     mimetypes.readfp(StringIO(mime_types))
 
@@ -225,34 +236,38 @@ class Client(Methods):
         device_model: str = DEVICE_MODEL,
         system_version: str = SYSTEM_VERSION,
         lang_code: str = LANG_CODE,
-        ipv6: bool | None = False,
-        alt_port: bool | None = False,
+        system_lang_code: str = SYSTEM_LANG_CODE,
+        lang_pack: str = LANG_PACK,
+        ipv6: bool = False,
+        alt_port: bool = False,
         proxy: dict | None = None,
-        test_mode: bool | None = False,
+        test_mode: bool = False,
         bot_token: str | None = None,
         session_string: str | None = None,
+        is_telethon_string: bool = False,
         in_memory: bool | None = None,
-        mongodb: dict | None = None,
-        storage: Storage | None = None,
+        storage: Storage = None,
         phone_number: str | None = None,
         phone_code: str | None = None,
         password: str | None = None,
         workers: int = WORKERS,
-        workdir: str | Path = WORKDIR,
+        workdir: str = WORKDIR,
         plugins: dict | None = None,
         parse_mode: enums.ParseMode = enums.ParseMode.DEFAULT,
         no_updates: bool | None = None,
         skip_updates: bool = True,
         takeout: bool | None = None,
         sleep_threshold: int = Session.SLEEP_THRESHOLD,
-        hide_password: bool | None = False,
+        hide_password: bool = False,
         max_concurrent_transmissions: int = MAX_CONCURRENT_TRANSMISSIONS,
+        init_params: raw.types.JsonObject = None,
+        max_message_cache_size: int = MAX_MESSAGE_CACHE_SIZE,
         client_platform: enums.ClientPlatform = enums.ClientPlatform.OTHER,
-        max_message_cache_size: int = MAX_CACHE_SIZE,
-        max_business_user_connection_cache_size: int = MAX_CACHE_SIZE,
-        fetch_replies: int = 1,
+        connection_factory: type[Connection] = Connection,
+        protocol_factory: type[TCP] = TCPAbridged,
     ) -> None:
         super().__init__()
+
         self.name = name
         self.api_id = int(api_id) if api_id else None
         self.api_hash = api_hash
@@ -260,14 +275,16 @@ class Client(Methods):
         self.device_model = device_model
         self.system_version = system_version
         self.lang_code = lang_code.lower()
+        self.system_lang_code = system_lang_code
+        self.lang_pack = lang_pack.lower()
         self.ipv6 = ipv6
         self.alt_port = alt_port
         self.proxy = proxy
         self.test_mode = test_mode
         self.bot_token = bot_token
         self.session_string = session_string
+        self.is_telethon_string = is_telethon_string
         self.in_memory = in_memory
-        self.mongodb = mongodb
         self.phone_number = phone_number
         self.phone_code = phone_code
         self.password = password
@@ -281,29 +298,26 @@ class Client(Methods):
         self.sleep_threshold = sleep_threshold
         self.hide_password = hide_password
         self.max_concurrent_transmissions = max_concurrent_transmissions
+        self.init_params = init_params
+        self.max_message_cache_size = max_message_cache_size
         self.client_platform = client_platform
-        self.max_message_cache_size = max_message_cache_size
-        self.max_message_cache_size = max_message_cache_size
-        self.max_business_user_connection_cache_size = (
-            max_business_user_connection_cache_size
-        )
+        self.connection_factory = connection_factory
+        self.protocol_factory = protocol_factory
 
         self.executor = ThreadPoolExecutor(
             self.workers, thread_name_prefix="Handler"
         )
+
         if storage:
             self.storage = storage
         elif self.session_string:
-            self.storage = MemoryStorage(self.name, self.session_string)
+            self.storage = MemoryStorage(
+                self.name, self.session_string, self.is_telethon_string
+            )
         elif self.in_memory:
             self.storage = MemoryStorage(self.name)
-        elif self.mongodb:
-            self.storage = MongoStorage(self.name, **self.mongodb)
         else:
             self.storage = FileStorage(self.name, self.workdir)
-
-        self.connection_factory = Connection
-        self.protocol_factory = TCPAbridged
         self.dispatcher = Dispatcher(self)
         self.rnd_id = MsgId
         self.parser = Parser(self)
@@ -316,19 +330,15 @@ class Client(Methods):
         self.get_file_semaphore = asyncio.Semaphore(
             self.max_concurrent_transmissions
         )
-
         self.is_connected = None
         self.is_initialized = None
         self.takeout_id = None
         self.disconnect_handler = None
         self.me: User | None = None
         self.message_cache = Cache(self.max_message_cache_size)
-        self.business_user_connection_cache = Cache(
-            self.max_business_user_connection_cache_size
-        )
-        self.fetch_replies = fetch_replies
         self.updates_watchdog_task = None
         self.updates_watchdog_event = asyncio.Event()
+        self.updates_invoke_error = None
         self.last_update_time = datetime.now()
         self.listeners = {
             listener_type: [] for listener_type in pyrogram.enums.ListenerTypes
@@ -630,14 +640,14 @@ class Client(Methods):
                 pts = getattr(update, "pts", None)
                 pts_count = getattr(update, "pts_count", None)
 
-                if pts:
+                if pts and not self.skip_updates:
                     await self.storage.update_state(
                         (
                             utils.get_channel_id(channel_id) if channel_id else 0,
                             pts,
                             None,
                             updates.date,
-                            None,
+                            updates.seq,
                         )
                     )
 
@@ -669,8 +679,11 @@ class Client(Methods):
                         except ChannelPrivate:
                             pass
                         else:
-                            if not isinstance(
-                                diff, raw.types.updates.ChannelDifferenceEmpty
+                            if (
+                                not isinstance(
+                                    diff, raw.types.updates.ChannelDifferenceEmpty
+                                )
+                                and diff
                             ):
                                 users.update({u.id: u for u in diff.users})
                                 chats.update({c.id: c for c in diff.chats})
@@ -679,9 +692,10 @@ class Client(Methods):
         elif isinstance(
             updates, raw.types.UpdateShortMessage | raw.types.UpdateShortChatMessage
         ):
-            await self.storage.update_state(
-                (0, updates.pts, None, updates.date, None)
-            )
+            if not self.skip_updates:
+                await self.storage.update_state(
+                    (0, updates.pts, None, updates.date, None)
+                )
 
             diff = await self.invoke(
                 raw.functions.updates.GetDifference(
@@ -701,7 +715,7 @@ class Client(Methods):
                         {c.id: c for c in diff.chats},
                     )
                 )
-            elif diff.other_updates:
+            elif diff.other_updates:  # The other_updates list can be empty
                 self.dispatcher.updates_queue.put_nowait(
                     (diff.other_updates[0], {}, {})
                 )
@@ -963,7 +977,7 @@ class Client(Methods):
             if isinstance(e, asyncio.CancelledError):
                 raise e
 
-            if isinstance(e, pyrogram.errors.FloodWait):
+            if isinstance(e, FloodWait | FloodPremiumWait):
                 raise e
 
             return None
@@ -1031,9 +1045,11 @@ class Client(Methods):
             session = Session(
                 self,
                 dc_id,
-                await Auth(self, dc_id, await self.storage.test_mode()).create()
-                if dc_id != await self.storage.dc_id()
-                else await self.storage.auth_key(),
+                (
+                    await Auth(self, dc_id, await self.storage.test_mode()).create()
+                    if dc_id != await self.storage.dc_id()
+                    else await self.storage.auth_key()
+                ),
                 await self.storage.test_mode(),
                 is_media=True,
             )
@@ -1071,9 +1087,11 @@ class Client(Methods):
                         if progress:
                             func = functools.partial(
                                 progress,
-                                min(offset_bytes, file_size)
-                                if file_size != 0
-                                else offset_bytes,
+                                (
+                                    min(offset_bytes, file_size)
+                                    if file_size != 0
+                                    else offset_bytes
+                                ),
                                 file_size,
                                 *progress_args,
                             )
@@ -1168,9 +1186,11 @@ class Client(Methods):
                             if progress:
                                 func = functools.partial(
                                     progress,
-                                    min(offset_bytes, file_size)
-                                    if file_size != 0
-                                    else offset_bytes,
+                                    (
+                                        min(offset_bytes, file_size)
+                                        if file_size != 0
+                                        else offset_bytes
+                                    ),
                                     file_size,
                                     *progress_args,
                                 )
@@ -1190,16 +1210,18 @@ class Client(Methods):
                         await cdn_session.stop()
             except pyrogram.StopTransmissionError:
                 raise
-            except pyrogram.errors.FloodWait:
+            except (FloodWait, FloodPremiumWait):
                 raise
             except Exception as e:
                 log.exception(e)
             finally:
                 await session.stop()
 
+    @functools.lru_cache(maxsize=128)
     def guess_mime_type(self, filename: str) -> str | None:
         return self.mimetypes.guess_type(filename)[0]
 
+    @functools.lru_cache(maxsize=128)
     def guess_extension(self, mime_type: str) -> str | None:
         return self.mimetypes.guess_extension(mime_type)
 
@@ -1207,15 +1229,20 @@ class Client(Methods):
 class Cache:
     def __init__(self, capacity: int) -> None:
         self.capacity = capacity
-        self.store = {}
+        self.store = OrderedDict()
 
     def __getitem__(self, key):
-        return self.store.get(key, None)
+        value = self.store.pop(key, None)
+        if value is not None:
+            # Reinsert the accessed item as the most recent one
+            self.store[key] = value
+        return value
 
     def __setitem__(self, key, value) -> None:
         if key in self.store:
             del self.store[key]
+
         self.store[key] = value
+
         if len(self.store) > self.capacity:
-            for _ in range(self.capacity // 2 + 1):
-                del self.store[next(iter(self.store))]
+            self.store.popitem(last=False)  # Remove the oldest item

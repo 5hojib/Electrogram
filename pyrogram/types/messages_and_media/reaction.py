@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import NoReturn
+
 import pyrogram
 from pyrogram import raw, types
 from pyrogram.types.object import Object
@@ -35,7 +37,7 @@ class Reaction(Object):
         count: int | None = None,
         chosen_order: int | None = None,
         is_paid: bool | None = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.type = type
@@ -86,7 +88,7 @@ class ReactionType(Object):
         type: str | None = None,
         emoji: str | None = None,
         custom_emoji_id: str | None = None,
-    ):
+    ) -> None:
         super().__init__()
         self.type = type
         self.emoji = emoji
@@ -107,7 +109,7 @@ class ReactionType(Object):
             return ReactionTypePaid()
         return None
 
-    def write(self, client: pyrogram.Client):
+    def write(self, client: pyrogram.Client) -> NoReturn:
         raise NotImplementedError
 
 
@@ -119,7 +121,7 @@ class ReactionTypeEmoji(ReactionType):
             Reaction emoji.
     """
 
-    def __init__(self, *, emoji: str | None = None):
+    def __init__(self, *, emoji: str | None = None) -> None:
         super().__init__(type="emoji", emoji=emoji)
 
     def write(
@@ -137,7 +139,7 @@ class ReactionTypeCustomEmoji(ReactionType):
             Custom emoji id.
     """
 
-    def __init__(self, *, custom_emoji_id: str | None = None):
+    def __init__(self, *, custom_emoji_id: str | None = None) -> None:
         super().__init__(type="custom_emoji", custom_emoji_id=custom_emoji_id)
 
     def write(
@@ -150,7 +152,7 @@ class ReactionTypeCustomEmoji(ReactionType):
 class ReactionTypePaid(ReactionType):
     """The paid reaction in a channel chat."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(type="paid")
 
     def write(
@@ -175,7 +177,9 @@ class ReactionCount(Object):
             Available for chosen reactions.
     """
 
-    def __init__(self, *, type: ReactionType, total_count: int, chosen_order: int):
+    def __init__(
+        self, *, type: ReactionType, total_count: int, chosen_order: int
+    ) -> None:
         super().__init__()
         self.type = type
         self.total_count = total_count

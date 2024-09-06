@@ -19,7 +19,7 @@ class TranslatedText(Object):
 
     def __init__(
         self, *, text: str, entities: list[types.MessageEntity] | None = None
-    ):
+    ) -> None:
         self.text = text
         self.entities = entities
 

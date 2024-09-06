@@ -81,7 +81,6 @@ async def parse_messages(
     client,
     messages: raw.types.messages.Messages,
     is_scheduled: bool = False,
-    replies: int = 1,
     business_connection_id: str = "",
     r: raw.base.Updates = None,
 ) -> list[types.Message]:
@@ -107,7 +106,7 @@ async def parse_messages(
                         is_scheduled=isinstance(
                             u, raw.types.UpdateNewScheduledMessage
                         ),
-                        replies=client.fetch_replies,
+                        replies=1,
                     )
                 )
 
@@ -142,7 +141,7 @@ async def parse_messages(
                 users,
                 chats,
                 is_scheduled=is_scheduled,
-                replies=client.fetch_replies,
+                replies=1,
             )
             for message in messages.messages
         ]

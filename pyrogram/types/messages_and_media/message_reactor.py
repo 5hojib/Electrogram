@@ -33,7 +33,7 @@ class MessageReactor(Object):
         is_my: bool | None = None,
         is_anonymous: bool | None = None,
         from_user: types.User = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.amount = amount

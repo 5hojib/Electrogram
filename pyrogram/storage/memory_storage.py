@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import base64
 import logging
-import sqlite3
 import struct
+
+import aiosqlite
 
 from .sqlite_storage import SQLiteStorage
 
@@ -11,14 +12,20 @@ log = logging.getLogger(__name__)
 
 
 class MemoryStorage(SQLiteStorage):
-    def __init__(self, name: str, session_string: str | None = None) -> None:
+    def __init__(
+        self,
+        name: str,
+        session_string: str | None = None,
+        is_telethon_string: bool = False,
+    ) -> None:
         super().__init__(name)
 
         self.session_string = session_string
+        self.is_telethon_string = is_telethon_string
 
     async def open(self) -> None:
-        self.conn = sqlite3.connect(":memory:", check_same_thread=False)
-        self.create()
+        self.conn = await aiosqlite.connect(":memory:")
+        await self.create()
 
         if self.session_string:
             # Old format
@@ -48,13 +55,24 @@ class MemoryStorage(SQLiteStorage):
                     "You are using an old session string format. Use export_session_string to update"
                 )
                 return
-
-            dc_id, api_id, test_mode, auth_key, user_id, is_bot = struct.unpack(
-                self.SESSION_STRING_FORMAT,
-                base64.urlsafe_b64decode(
-                    self.session_string + "=" * (-len(self.session_string) % 4)
-                ),
-            )
+            if self.is_telethon_string:
+                # Telethon format
+                string = self.session_string[1:]
+                ip_len = 4 if len(string) == 352 else 16
+                dc_id, ip, port, auth_key = struct.unpack(
+                    f">B{ip_len}sH256s", base64.urlsafe_b64decode(string)
+                )
+                api_id = 0
+                test_mode = False
+                user_id = 9999
+                is_bot = False
+            else:
+                dc_id, api_id, test_mode, auth_key, user_id, is_bot = struct.unpack(
+                    self.SESSION_STRING_FORMAT,
+                    base64.urlsafe_b64decode(
+                        self.session_string + "=" * (-len(self.session_string) % 4)
+                    ),
+                )
 
             await self.dc_id(dc_id)
             await self.api_id(api_id)

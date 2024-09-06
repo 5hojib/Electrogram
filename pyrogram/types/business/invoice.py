@@ -94,7 +94,7 @@ class Invoice(Object):
         suggested_tip_amounts: list[int] | None = None,
         terms_url: str | None = None,
         raw: raw.types.MessageMediaInvoice | raw.types.Invoice = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.currency = currency

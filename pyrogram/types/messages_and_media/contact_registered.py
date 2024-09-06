@@ -8,5 +8,5 @@ class ContactRegistered(Object):
     Currently holds no information.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()

@@ -83,18 +83,6 @@ class SaveFile:
             if path is None:
                 return None
 
-            async def worker(session) -> None:
-                while True:
-                    data = await queue.get()
-
-                    if data is None:
-                        return
-
-                    try:
-                        await session.invoke(data)
-                    except Exception as e:
-                        log.exception(e)
-
             part_size = 512 * 1024
 
             if isinstance(path, str | PurePath):
@@ -116,7 +104,6 @@ class SaveFile:
                 raise ValueError("File size equals to 0 B")
 
             file_size_limit_mib = 4000 if self.me.is_premium else 2000
-
             if file_size > file_size_limit_mib * 1024 * 1024:
                 raise ValueError(
                     f"Can't upload files bigger than {file_size_limit_mib} MiB"
@@ -124,30 +111,47 @@ class SaveFile:
 
             file_total_parts = int(math.ceil(file_size / part_size))
             is_big = file_size > 10 * 1024 * 1024
-            workers_count = 4 if is_big else 1
+            workers_count = min(
+                8, (file_size // (100 * 1024 * 1024)) + 1
+            )  # Max 8 workers
             is_missing_part = file_id is not None
             file_id = file_id or self.rnd_id()
             md5_sum = md5() if not is_big and not is_missing_part else None
-            session = Session(
-                self,
-                await self.storage.dc_id(),
-                await self.storage.auth_key(),
-                await self.storage.test_mode(),
-                is_media=True,
-            )
-            workers = [
-                self.loop.create_task(worker(session)) for _ in range(workers_count)
-            ]
-            queue = asyncio.Queue(1)
+
+            async def worker(session, queue) -> None:
+                while True:
+                    data = await queue.get()
+                    if data is None:
+                        return
+                    try:
+                        await session.invoke(data)
+                    except Exception as e:
+                        log.exception(e)
+
+            # Create multiple sessions for parallel uploads
+            async def session_factory():
+                return Session(
+                    self,
+                    await self.storage.dc_id(),
+                    await self.storage.auth_key(),
+                    await self.storage.test_mode(),
+                    is_media=True,
+                )
+
+            sessions = [await session_factory() for _ in range(workers_count)]
+            workers = []
+            queue = asyncio.Queue(maxsize=workers_count)
 
             try:
-                await session.start()
+                # Start all sessions
+                for session in sessions:
+                    await session.start()
+                    workers.append(self.loop.create_task(worker(session, queue)))
 
                 fp.seek(part_size * file_part)
 
                 while True:
                     chunk = fp.read(part_size)
-
                     if not chunk:
                         if not is_big and not is_missing_part:
                             md5_sum = "".join(
@@ -214,7 +218,8 @@ class SaveFile:
 
                 await asyncio.gather(*workers)
 
-                await session.stop()
+                for session in sessions:
+                    await session.stop()
 
                 if isinstance(path, str | PurePath):
                     fp.close()

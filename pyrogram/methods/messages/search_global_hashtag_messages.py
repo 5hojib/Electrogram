@@ -68,7 +68,6 @@ class SearchGlobalHashtagMessages:
                     ),
                     sleep_threshold=60,
                 ),
-                replies=0,
             )
 
             if not messages:

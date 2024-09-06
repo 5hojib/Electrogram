@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, NoReturn
 
 from pyrogram.types.object import Object
 
@@ -24,8 +24,8 @@ class InputPrivacyRule(Object):
     - :obj:`~pyrogram.types.InputPrivacyRuleDisallowChats`
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
-    async def write(self, client: pyrogram.Client):
+    async def write(self, client: pyrogram.Client) -> NoReturn:
         raise NotImplementedError
