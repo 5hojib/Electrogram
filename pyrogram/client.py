@@ -266,7 +266,7 @@ class Client(Methods):
         client_platform: enums.ClientPlatform = enums.ClientPlatform.OTHER,
         connection_factory: type[Connection] = Connection,
         protocol_factory: type[TCP] = TCPAbridged,
-    ):
+    ) -> None:
         super().__init__()
 
         self.name = name
@@ -356,7 +356,7 @@ class Client(Methods):
         with contextlib.suppress(ConnectionError):
             await self.stop()
 
-    async def updates_watchdog(self):
+    async def updates_watchdog(self) -> None:
         while True:
             try:
                 await wait_for(
@@ -611,7 +611,7 @@ class Client(Methods):
 
         return is_min
 
-    async def handle_updates(self, updates):
+    async def handle_updates(self, updates) -> None:
         self.last_update_time = datetime.now()
 
         if isinstance(updates, raw.types.Updates | raw.types.UpdatesCombined):
@@ -719,7 +719,7 @@ class Client(Methods):
         elif isinstance(updates, raw.types.UpdatesTooLong):
             log.info(updates)
 
-    async def load_session(self):
+    async def load_session(self) -> None:
         await self.storage.open()
 
         session_empty = any(
@@ -1218,7 +1218,7 @@ class Client(Methods):
 
 
 class Cache:
-    def __init__(self, capacity: int):
+    def __init__(self, capacity: int) -> None:
         self.capacity = capacity
         self.store = OrderedDict()
 
@@ -1229,7 +1229,7 @@ class Cache:
             self.store[key] = value
         return value
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key, value) -> None:
         if key in self.store:
             del self.store[key]
 

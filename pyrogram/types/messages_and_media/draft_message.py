@@ -79,7 +79,7 @@ class DraftMessage(Object):
         empty: bool | None = None,
         chat: types.Chat = None,
         _raw: raw.types.DraftMessage = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.reply_to_message_id = reply_to_message_id

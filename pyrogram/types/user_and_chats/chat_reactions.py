@@ -29,7 +29,7 @@ class ChatReactions(Object):
         allow_custom_emoji: bool | None = None,
         reactions: list[types.Reaction] | None = None,
         max_reaction_count: int = 11,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.all_are_enabled = all_are_enabled

@@ -11,7 +11,7 @@ class InputPrivacyRuleAllowContacts(InputPrivacyRule):
 
     def __init__(
         self,
-    ):
+    ) -> None:
         super().__init__()
 
     async def write(

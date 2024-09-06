@@ -17,13 +17,13 @@ class MemoryStorage(SQLiteStorage):
         name: str,
         session_string: str | None = None,
         is_telethon_string: bool = False,
-    ):
+    ) -> None:
         super().__init__(name)
 
         self.session_string = session_string
         self.is_telethon_string = is_telethon_string
 
-    async def open(self):
+    async def open(self) -> None:
         self.conn = await aiosqlite.connect(":memory:")
         await self.create()
 
@@ -82,5 +82,5 @@ class MemoryStorage(SQLiteStorage):
             await self.is_bot(is_bot)
             await self.date(0)
 
-    async def delete(self):
+    async def delete(self) -> None:
         pass

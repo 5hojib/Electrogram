@@ -24,10 +24,10 @@ def snake(s: str):
     return re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", s).lower()
 
 
-def generate(source_path, base):
+def generate(source_path, base) -> None:
     all_entities = {}
 
-    def build(path, level=0):
+    def build(path, level=0) -> None:
         last = path.split("/")[-1]
 
         for i in os.listdir(path):
@@ -112,7 +112,7 @@ def generate(source_path, base):
             f.write("\n")
 
 
-def pyrogram_api():
+def pyrogram_api() -> None:
     def get_title_list(s: str) -> list:
         return [i.strip() for i in [j.strip() for j in s.split("\n") if j] if i]
 
@@ -869,7 +869,7 @@ def pyrogram_api():
         f.write(template.format(**fmt_keys))
 
 
-def start():
+def start() -> None:
     global page_template, toctree  # noqa: PLW0603
 
     shutil.rmtree(DESTINATION, ignore_errors=True)

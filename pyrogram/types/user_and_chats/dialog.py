@@ -62,7 +62,7 @@ class Dialog(Object):
         view_as_topics: bool,
         draft: types.DraftMessage = None,
         _raw: raw.types.Dialog = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.chat = chat

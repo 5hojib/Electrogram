@@ -40,7 +40,7 @@ class PrivacyRule(Object):
         allow_users: bool | None = None,
         users: list[types.User] | None = None,
         chats: list[types.Chat] | None = None,
-    ):
+    ) -> None:
         super().__init__(None)
 
         self.allow_all = allow_all

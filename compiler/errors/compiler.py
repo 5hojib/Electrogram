@@ -20,7 +20,7 @@ def camel(s):
     return "".join([str(i.title()) for i in s])
 
 
-def start():
+def start() -> None:
     shutil.rmtree(DEST, ignore_errors=True)
     Path(DEST).mkdir(parents=True, exist_ok=True)
     files = list(os.listdir(f"{HOME}/source"))
