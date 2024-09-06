@@ -21,10 +21,10 @@ from inspect import iscoroutinefunction
 from io import BytesIO, StringIO
 from logging import getLogger
 from mimetypes import MimeTypes
-from os import cpu_count, path
+from os import cpu_count
 from pathlib import Path
 from platform import python_implementation, python_version, release, system
-from re import compile, sub
+from re import compile
 from sys import argv
 from typing import TYPE_CHECKING
 
