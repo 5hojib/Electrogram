@@ -1,11 +1,10 @@
-from __future__ import annotations
-
 from collections import namedtuple
 
 PublicKey = namedtuple("PublicKey", ["m", "e"])
 
 server_public_keys = {
-    0xC3B42B026CE86B21 - (1 << 64): PublicKey(
+    0xC3B42B026CE86B21
+    - (1 << 64): PublicKey(
         int(
             "C150023E2F70DB7985DED064759CFECF0AF328E69A41DAF4D6F01B538135A6F9"
             "1F8F8B2A0EC9BA9720CE352EFCF6C5680FFC424BD634864902DE0B4BD6D49F4E"
@@ -19,7 +18,8 @@ server_public_keys = {
         ),
         int("010001", 16),
     ),
-    0x10BC35F3509F7B7A5 - (1 << 64): PublicKey(
+    0x10BC35F3509F7B7A5
+    - (1 << 64): PublicKey(
         int(
             "AEEC36C8FFC109CB099624685B97815415657BD76D8C9C3E398103D7AD16C9BB"
             "A6F525ED0412D7AE2C2DE2B44E77D72CBF4B7438709A4E646A05C43427C7F184"
@@ -33,7 +33,8 @@ server_public_keys = {
         ),
         int("010001", 16),
     ),
-    0x115AE5FA8B5529542 - (1 << 64): PublicKey(
+    0x115AE5FA8B5529542
+    - (1 << 64): PublicKey(
         int(
             "BDF2C77D81F6AFD47BD30F29AC76E55ADFE70E487E5E48297E5A9055C9C07D2B"
             "93B4ED3994D3ECA5098BF18D978D54F8B7C713EB10247607E69AF9EF44F38E28"
@@ -47,7 +48,8 @@ server_public_keys = {
         ),
         int("010001", 16),
     ),
-    0xAEAE98E13CD7F94F - (1 << 64): PublicKey(
+    0xAEAE98E13CD7F94F
+    - (1 << 64): PublicKey(
         int(
             "B3F762B739BE98F343EB1921CF0148CFA27FF7AF02B6471213FED9DAA0098976"
             "E667750324F1ABCEA4C31E43B7D11F1579133F2B3D9FE27474E462058884E5E1"
@@ -61,7 +63,8 @@ server_public_keys = {
         ),
         int("010001", 16),
     ),
-    0x15A181B2235057D98 - (1 << 64): PublicKey(
+    0x15A181B2235057D98
+    - (1 << 64): PublicKey(
         int(
             "BE6A71558EE577FF03023CFA17AAB4E6C86383CFF8A7AD38EDB9FAFE6F323F2D"
             "5106CBC8CAFB83B869CFFD1CCF121CD743D509E589E68765C96601E813DC5B9D"
@@ -75,7 +78,8 @@ server_public_keys = {
         ),
         int("010001", 16),
     ),
-    0x995EFFD323B5DB80 - (1 << 64): PublicKey(
+    0x995EFFD323B5DB80
+    - (1 << 64): PublicKey(
         int(
             "E2D587706265125931BB129027016325ABA59951E0771340DF0808D84F176CD9"
             "C0F3CCB9D57A205799BC04462E4D23F89655D9638652256E559455E79AC253FE"
@@ -89,7 +93,8 @@ server_public_keys = {
         ),
         int("010001", 16),
     ),
-    0x1254672538E935938 - (1 << 64): PublicKey(
+    0x1254672538E935938
+    - (1 << 64): PublicKey(
         int(
             "CEE1D50BBB04E742A1A3FC83559B569E5980E417FF68CF0A658DD6CD2D7AC3AC"
             "35B01AA2A63F2880C186ED42DB181B5898A11A23B20824EE963369B531A5D59E"
@@ -103,7 +108,8 @@ server_public_keys = {
         ),
         int("010001", 16),
     ),
-    0xC884B3E62D09E5C5 - (1 << 64): PublicKey(
+    0xC884B3E62D09E5C5
+    - (1 << 64): PublicKey(
         int(
             "BA0E9F11355BECD917618BB9B9E66E334A6AC3585EBAA52B64D628990374952D"
             "28EE2EA6016C1BD7F162B1C14AFB2E0B412484C7EA14CD70218E6965F5F99BE1"
@@ -117,7 +123,8 @@ server_public_keys = {
         ),
         int("010001", 16),
     ),
-    0xBB27580FD5B01626 - (1 << 64): PublicKey(
+    0xBB27580FD5B01626
+    - (1 << 64): PublicKey(
         int(
             "BFF2FAB5DFA68FB0E5F353477EEF977F528DB6F64F475B52E7116A92252CA27D"
             "6EEC3DAE94AD398CCF072AFA55D68FB51CF3EA85A5E16ACBEC5FDD2EDD320745"

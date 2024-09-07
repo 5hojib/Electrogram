@@ -1,16 +1,11 @@
-from __future__ import annotations
-
-import contextlib
 import inspect
 import time
-from typing import TYPE_CHECKING, Any, NoReturn
+from typing import List, Tuple, Any
+
+import aiosqlite
 
 from pyrogram import raw, utils
-
 from .storage import Storage
-
-if TYPE_CHECKING:
-    import aiosqlite
 
 # language=SQLite
 SCHEMA = """
@@ -102,12 +97,12 @@ class SQLiteStorage(Storage):
     VERSION = 4
     USERNAME_TTL = 8 * 60 * 60
 
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str):
         super().__init__(name)
 
         self.conn: aiosqlite.Connection = None
 
-    async def create(self) -> None:
+    async def create(self):
         await self.conn.executescript(SCHEMA)
         await self.conn.execute("INSERT INTO version VALUES (?)", (self.VERSION,))
         await self.conn.execute(
@@ -116,59 +111,57 @@ class SQLiteStorage(Storage):
         )
         await self.conn.commit()
 
-    async def open(self) -> NoReturn:
+    async def open(self):
         raise NotImplementedError
 
-    async def save(self) -> None:
+    async def save(self):
         await self.date(int(time.time()))
         await self.conn.commit()
 
-    async def close(self) -> None:
+    async def close(self):
         await self.conn.close()
 
-    async def delete(self) -> NoReturn:
+    async def delete(self):
         raise NotImplementedError
 
-    async def update_peers(
-        self, peers: list[tuple[int, int, str, str, str]]
-    ) -> None:
-        with contextlib.suppress(Exception):
+    async def update_peers(self, peers: List[Tuple[int, int, str, str, str]]):
+        try:
             await self.conn.executemany(
                 "REPLACE INTO peers (id, access_hash, type, username, phone_number)"
                 "VALUES (?, ?, ?, ?, ?)",
                 peers,
             )
+        except Exception:
+            pass
 
-    async def update_usernames(self, usernames: list[tuple[int, str]]) -> None:
+    async def update_usernames(self, usernames: List[Tuple[int, str]]):
         await self.conn.executescript(UNAME_SCHEMA)
         for user in usernames:
-            await self.conn.execute(
-                "DELETE FROM usernames WHERE peer_id=?", (user[0],)
-            )
+            await self.conn.execute("DELETE FROM usernames WHERE peer_id=?", (user[0],))
         await self.conn.executemany(
             "REPLACE INTO usernames (peer_id, id)" "VALUES (?, ?)", usernames
         )
 
-    async def update_state(self, value: tuple[int, int, int, int, int] = object):
-        if value is object:
+    async def update_state(self, value: Tuple[int, int, int, int, int] = object):
+        if value == object:
             return await (
                 await self.conn.execute(
                     "SELECT id, pts, qts, date, seq FROM update_state "
                     "ORDER BY date ASC"
                 )
             ).fetchall()
-        if isinstance(value, int):
-            await self.conn.execute(
-                "DELETE FROM update_state WHERE id = ?", (value,)
-            )
         else:
-            await self.conn.execute(
-                "REPLACE INTO update_state (id, pts, qts, date, seq)"
-                "VALUES (?, ?, ?, ?, ?)",
-                value,
-            )
-        await self.conn.commit()
-        return None
+            if isinstance(value, int):
+                await self.conn.execute(
+                    "DELETE FROM update_state WHERE id = ?", (value,)
+                )
+            else:
+                await self.conn.execute(
+                    "REPLACE INTO update_state (id, pts, qts, date, seq)"
+                    "VALUES (?, ?, ?, ?, ?)",
+                    value,
+                )
+            await self.conn.commit()
 
     async def get_peer_by_id(self, peer_id: int):
         q = await self.conn.execute(
@@ -233,13 +226,13 @@ class SQLiteStorage(Storage):
         row = await q.fetchone()
         return row[0] if row else None
 
-    async def _set(self, value: Any) -> None:
+    async def _set(self, value: Any):
         attr = inspect.stack()[2].function
         await self.conn.execute(f"UPDATE sessions SET {attr} = ?", (value,))
         await self.conn.commit()
 
     async def _accessor(self, value: Any = object):
-        return await self._get() if value is object else await self._set(value)
+        return await self._get() if value == object else await self._set(value)
 
     async def dc_id(self, value: int = object):
         return await self._accessor(value)
@@ -263,7 +256,7 @@ class SQLiteStorage(Storage):
         return await self._accessor(value)
 
     async def version(self, value: int = object):
-        if value is object:
+        if value == object:
             q = await self.conn.execute("SELECT number FROM version")
             row = await q.fetchone()
             return row[0] if row else None

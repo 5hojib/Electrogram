@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import base64
 import logging
 import struct
@@ -15,15 +13,15 @@ class MemoryStorage(SQLiteStorage):
     def __init__(
         self,
         name: str,
-        session_string: str | None = None,
-        is_telethon_string: bool = False,
-    ) -> None:
+        session_string: str = None,
+        is_telethon_string: bool = False
+    ):
         super().__init__(name)
 
         self.session_string = session_string
         self.is_telethon_string = is_telethon_string
 
-    async def open(self) -> None:
+    async def open(self):
         self.conn = await aiosqlite.connect(":memory:")
         await self.create()
 
@@ -55,12 +53,12 @@ class MemoryStorage(SQLiteStorage):
                     "You are using an old session string format. Use export_session_string to update"
                 )
                 return
-            if self.is_telethon_string:
+            elif self.is_telethon_string:
                 # Telethon format
                 string = self.session_string[1:]
                 ip_len = 4 if len(string) == 352 else 16
                 dc_id, ip, port, auth_key = struct.unpack(
-                    f">B{ip_len}sH256s", base64.urlsafe_b64decode(string)
+                    ">B{}sH256s".format(ip_len), base64.urlsafe_b64decode(string)
                 )
                 api_id = 0
                 test_mode = False
@@ -82,5 +80,5 @@ class MemoryStorage(SQLiteStorage):
             await self.is_bot(is_bot)
             await self.date(0)
 
-    async def delete(self) -> None:
+    async def delete(self):
         pass

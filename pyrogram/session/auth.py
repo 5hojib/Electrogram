@@ -1,23 +1,18 @@
-from __future__ import annotations
-
 import asyncio
 import logging
 import time
 from hashlib import sha1
 from io import BytesIO
 from os import urandom
-from typing import TYPE_CHECKING
+from typing import Optional
 
 import pyrogram
 from pyrogram import raw
-from pyrogram.crypto import aes, prime, rsa
+from pyrogram.connection import Connection
+from pyrogram.crypto import aes, rsa, prime
 from pyrogram.errors import SecurityCheckMismatch
-from pyrogram.raw.core import Int, Long, TLObject
-
+from pyrogram.raw.core import TLObject, Long, Int
 from .internals import MsgId
-
-if TYPE_CHECKING:
-    from pyrogram.connection import Connection
 
 log = logging.getLogger(__name__)
 
@@ -25,7 +20,7 @@ log = logging.getLogger(__name__)
 class Auth:
     MAX_RETRIES = 5
 
-    def __init__(self, client: pyrogram.Client, dc_id: int, test_mode: bool) -> None:
+    def __init__(self, client: "pyrogram.Client", dc_id: int, test_mode: bool):
         self.dc_id = dc_id
         self.test_mode = test_mode
         self.ipv6 = client.ipv6
@@ -34,7 +29,7 @@ class Auth:
         self.connection_factory = client.connection_factory
         self.protocol_factory = client.protocol_factory
 
-        self.connection: Connection | None = None
+        self.connection: Optional[Connection] = None
 
     @staticmethod
     def pack(data: TLObject) -> bytes:
@@ -73,10 +68,7 @@ class Auth:
             )
 
             try:
-                log.info(
-                    "Start creating a new auth key on DC%s",
-                    self.dc_id,
-                )
+                log.info("Start creating a new auth key on DC%s", self.dc_id)
 
                 await self.connection.connect()
 
@@ -95,7 +87,8 @@ class Auth:
                         log.debug("Using fingerprint: %s", i)
                         public_key_fingerprint = i
                         break
-                    log.debug("Fingerprint unknown: %s", i)
+                    else:
+                        log.debug("Fingerprint unknown: %s", i)
                 else:
                     raise Exception("Public key not found")
 
@@ -185,10 +178,7 @@ class Auth:
                 retry_id = 0
 
                 data = raw.types.ClientDHInnerData(
-                    nonce=nonce,
-                    server_nonce=server_nonce,
-                    retry_id=retry_id,
-                    g_b=g_b,
+                    nonce=nonce, server_nonce=server_nonce, retry_id=retry_id, g_b=g_b
                 ).write()
 
                 sha = sha1(data).digest()
@@ -207,9 +197,18 @@ class Auth:
                     )
                 )
 
+                # TODO: Handle "auth_key_aux_hash" if the previous step fails
+
+                # Step 7; Step 8
                 g_a = int.from_bytes(server_dh_inner_data.g_a, "big")
                 auth_key = pow(g_a, b, dh_prime).to_bytes(256, "big")
                 server_nonce = server_nonce.to_bytes(16, "little", signed=True)
+
+                # TODO: Handle errors
+
+                #######################
+                # Security checks
+                #######################
 
                 SecurityCheckMismatch.check(
                     dh_prime == prime.CURRENT_DH_PRIME,
@@ -217,6 +216,7 @@ class Auth:
                 )
                 log.debug("DH parameters check: OK")
 
+                # https://core.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
                 g_b = int.from_bytes(g_b, "big")
                 SecurityCheckMismatch.check(
                     1 < g < dh_prime - 1, "1 < g < dh_prime - 1"
@@ -237,23 +237,23 @@ class Auth:
                 )
                 log.debug("g_a and g_b validation: OK")
 
-                answer = (
-                    server_dh_inner_data.write()
-                )  # Call .write() to remove padding
+                # https://core.telegram.org/mtproto/security_guidelines#checking-sha1-hash-values
+                answer = server_dh_inner_data.write()  # Call .write() to remove padding
                 SecurityCheckMismatch.check(
                     answer_with_hash[:20] == sha1(answer).digest(),
                     "answer_with_hash[:20] == sha1(answer).digest()",
                 )
                 log.debug("SHA1 hash values check: OK")
 
+                # https://core.telegram.org/mtproto/security_guidelines#checking-nonce-server-nonce-and-new-nonce-fields
+                # 1st message
                 SecurityCheckMismatch.check(
                     nonce == res_pq.nonce, "nonce == res_pq.nonce"
                 )
                 # 2nd message
                 server_nonce = int.from_bytes(server_nonce, "little", signed=True)
                 SecurityCheckMismatch.check(
-                    nonce == server_dh_params.nonce,
-                    "nonce == server_dh_params.nonce",
+                    nonce == server_dh_params.nonce, "nonce == server_dh_params.nonce"
                 )
                 SecurityCheckMismatch.check(
                     server_nonce == server_dh_params.server_nonce,
@@ -274,10 +274,7 @@ class Auth:
                 # Step 9
                 server_salt = aes.xor(new_nonce[:8], server_nonce[:8])
 
-                log.debug(
-                    "Server salt: %s",
-                    int.from_bytes(server_salt, "little"),
-                )
+                log.debug("Server salt: %s", int.from_bytes(server_salt, "little"))
 
                 log.info(
                     "Done auth key exchange: %s",

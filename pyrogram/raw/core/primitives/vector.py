@@ -1,35 +1,33 @@
-from __future__ import annotations
+from io import BytesIO
+from typing import cast, Union, Any
 
-from typing import TYPE_CHECKING, Any, cast
-
-from pyrogram.raw.core.list import List
-from pyrogram.raw.core.tl_object import TLObject
-
-from .bool import Bool, BoolFalse, BoolTrue
+from .bool import BoolFalse, BoolTrue, Bool
 from .int import Int, Long
-
-if TYPE_CHECKING:
-    from io import BytesIO
+from ..list import List
+from ..tl_object import TLObject
 
 
 class Vector(bytes, TLObject):
     ID = 0x1CB5C415
 
-    # Method added to handle the special case when a query returns a bare Vector (of Ints);
-    # i.e., RpcResult body starts with 0x1cb5c415 (Vector Id) - e.g., messages.GetMessagesViews.
     @staticmethod
-    def read_bare(b: BytesIO, size: int) -> int | Any:
+    def read_bare(b: BytesIO, size: int) -> Union[int, Any]:
         if size == 4:
             e = int.from_bytes(b.read(4), "little")
             b.seek(-4, 1)
+
             if e in {BoolFalse.ID, BoolTrue.ID}:
                 return Bool.read(b)
+
             return Int.read(b)
 
-        return Long.read(b) if size == 8 else TLObject.read(b)
+        if size == 8:
+            return Long.read(b)
+
+        return TLObject.read(b)
 
     @classmethod
-    def read(cls, data: BytesIO, t: Any = None, *args: Any) -> List:  # noqa: ARG003
+    def read(cls, data: BytesIO, t: Any = None, *args: Any) -> List:
         count = Int.read(data)
         left = len(data.read())
         size = (left / count) if count else 0

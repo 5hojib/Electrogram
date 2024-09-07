@@ -1,11 +1,9 @@
-from __future__ import annotations
-
 import asyncio
 import logging
-
-from pyrogram.session.internals import DataCenter
+from typing import Optional, Type
 
 from .transport import TCP, TCPAbridged
+from ..session.internals import DataCenter
 
 log = logging.getLogger(__name__)
 
@@ -21,7 +19,7 @@ class Connection:
         alt_port: bool,
         proxy: dict,
         media: bool = False,
-        protocol_factory: type[TCP] = TCPAbridged,
+        protocol_factory: Type[TCP] = TCPAbridged,
     ) -> None:
         self.dc_id = dc_id
         self.test_mode = test_mode
@@ -32,7 +30,7 @@ class Connection:
         self.protocol_factory = protocol_factory
 
         self.address = DataCenter(dc_id, test_mode, ipv6, alt_port, media)
-        self.protocol: TCP | None = None
+        self.protocol: Optional[TCP] = None
 
     async def connect(self) -> None:
         for i in range(Connection.MAX_CONNECTION_ATTEMPTS):
@@ -65,5 +63,5 @@ class Connection:
     async def send(self, data: bytes) -> None:
         await self.protocol.send(data)
 
-    async def recv(self) -> bytes | None:
+    async def recv(self) -> Optional[bytes]:
         return await self.protocol.recv()

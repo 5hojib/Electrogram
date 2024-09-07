@@ -1,16 +1,12 @@
-from __future__ import annotations
-
+from io import BytesIO
 from json import dumps
-from typing import TYPE_CHECKING, Any, cast
+from typing import cast, List, Any, Union, Dict
 
-from pyrogram.raw.all import objects
-
-if TYPE_CHECKING:
-    from io import BytesIO
+from ..all import objects
 
 
 class TLObject:
-    __slots__: list[str] = []
+    __slots__: List[str] = []
 
     QUALNAME = "Base"
 
@@ -24,7 +20,7 @@ class TLObject:
         pass
 
     @staticmethod
-    def default(obj: TLObject) -> str | dict[str, str]:
+    def default(obj: "TLObject") -> Union[str, Dict[str, str]]:
         if isinstance(obj, bytes):
             return repr(obj)
 
@@ -38,18 +34,19 @@ class TLObject:
         }
 
     def __str__(self) -> str:
-        return dumps(
-            self,
-            indent=4,
-            default=TLObject.default,
-            ensure_ascii=False,
-        )
+        return dumps(self, indent=4, default=TLObject.default, ensure_ascii=False)
 
     def __repr__(self) -> str:
-        return (
-            f'pyrogram.raw.{self.QUALNAME}({", ".join(f"{attr}={getattr(self, attr)!r}" for attr in self.__slots__ if getattr(self, attr) is not None)})'
-            if hasattr(self, "QUALNAME")
-            else repr(self)
+        if not hasattr(self, "QUALNAME"):
+            return repr(self)
+
+        return "pyrogram.raw.{}({})".format(
+            self.QUALNAME,
+            ", ".join(
+                f"{attr}={repr(getattr(self, attr))}"
+                for attr in self.__slots__
+                if getattr(self, attr) is not None
+            ),
         )
 
     def __eq__(self, other: Any) -> bool:
@@ -67,15 +64,3 @@ class TLObject:
 
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
         pass
-
-    def __hash__(self) -> int:
-        return hash(
-            (
-                self.__class__,
-                *tuple(
-                    getattr(self, attr)
-                    for attr in self.__slots__
-                    if getattr(self, attr) is not None
-                ),
-            )
-        )

@@ -1,16 +1,15 @@
-from __future__ import annotations
-
 import asyncio
 import ipaddress
 import logging
 import socket
-from typing import TypedDict
+from concurrent.futures import ThreadPoolExecutor
+from typing import Tuple, Dict, TypedDict, Optional
 
 import socks
 
 log = logging.getLogger(__name__)
 
-proxy_type_by_scheme: dict[str, int] = {
+proxy_type_by_scheme: Dict[str, int] = {
     "SOCKS4": socks.SOCKS4,
     "SOCKS5": socks.SOCKS5,
     "HTTP": socks.HTTP,
@@ -21,8 +20,8 @@ class Proxy(TypedDict):
     scheme: str
     hostname: str
     port: int
-    username: str | None
-    password: str | None
+    username: Optional[str]
+    password: Optional[str]
 
 
 class TCP:
@@ -32,13 +31,13 @@ class TCP:
         self.ipv6 = ipv6
         self.proxy = proxy
 
-        self.reader: asyncio.StreamReader | None = None
-        self.writer: asyncio.StreamWriter | None = None
+        self.reader: Optional[asyncio.StreamReader] = None
+        self.writer: Optional[asyncio.StreamWriter] = None
 
         self.lock = asyncio.Lock()
         self.loop = asyncio.get_event_loop()
 
-    async def _connect_via_proxy(self, destination: tuple[str, int]) -> None:
+    async def _connect_via_proxy(self, destination: Tuple[str, int]) -> None:
         scheme = self.proxy.get("scheme")
         if scheme is None:
             raise ValueError("No scheme specified")
@@ -77,28 +76,30 @@ class TCP:
 
         self.reader, self.writer = await asyncio.open_connection(sock=sock)
 
-    async def _connect_via_direct(self, destination: tuple[str, int]) -> None:
+    async def _connect_via_direct(self, destination: Tuple[str, int]) -> None:
         host, port = destination
         family = socket.AF_INET6 if self.ipv6 else socket.AF_INET
         self.reader, self.writer = await asyncio.open_connection(
             host=host, port=port, family=family
         )
 
-    async def _connect(self, destination: tuple[str, int]) -> None:
+    async def _connect(self, destination: Tuple[str, int]) -> None:
         if self.proxy:
             await self._connect_via_proxy(destination)
         else:
             await self._connect_via_direct(destination)
 
-    async def connect(self, address: tuple[str, int]) -> None:
+    async def connect(self, address: Tuple[str, int]) -> None:
         try:
             await asyncio.wait_for(self._connect(address), TCP.TIMEOUT)
-        except asyncio.TimeoutError:
+        except (
+            asyncio.TimeoutError
+        ):  # Re-raise as TimeoutError. asyncio.TimeoutError is deprecated in 3.11
             raise TimeoutError("Connection timed out")
 
     async def close(self) -> None:
         if self.writer is None:
-            return
+            return None
 
         try:
             self.writer.close()
@@ -108,7 +109,7 @@ class TCP:
 
     async def send(self, data: bytes) -> None:
         if self.writer is None:
-            return
+            return None
 
         async with self.lock:
             try:
@@ -118,7 +119,7 @@ class TCP:
                 log.info("Send exception: %s %s", type(e).__name__, e)
                 raise OSError(e)
 
-    async def recv(self, length: int = 0) -> bytes | None:
+    async def recv(self, length: int = 0) -> Optional[bytes]:
         data = b""
 
         while len(data) < length:

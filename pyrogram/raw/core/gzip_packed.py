@@ -1,8 +1,6 @@
-from __future__ import annotations
-
 from gzip import compress, decompress
 from io import BytesIO
-from typing import Any, cast
+from typing import cast, Any
 
 from .primitives.bytes import Bytes
 from .primitives.int import Int
@@ -16,18 +14,15 @@ class GzipPacked(TLObject):
 
     QUALNAME = "GzipPacked"
 
-    def __init__(self, packed_data: TLObject) -> None:
+    def __init__(self, packed_data: TLObject):
         self.packed_data = packed_data
 
     @staticmethod
-    def read(data: BytesIO, *args: Any) -> GzipPacked:  # noqa: ARG004
+    def read(data: BytesIO, *args: Any) -> "GzipPacked":
         # Return the Object itself instead of a GzipPacked wrapping it
-        return cast(
-            GzipPacked,
-            TLObject.read(BytesIO(decompress(Bytes.read(data)))),
-        )
+        return cast(GzipPacked, TLObject.read(BytesIO(decompress(Bytes.read(data)))))
 
-    def write(self, *args: Any) -> bytes:  # noqa: ARG002
+    def write(self, *args: Any) -> bytes:
         b = BytesIO()
 
         b.write(Int(self.ID, False))

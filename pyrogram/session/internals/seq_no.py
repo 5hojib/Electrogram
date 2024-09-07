@@ -1,8 +1,6 @@
-from __future__ import annotations
-
 
 class SeqNo:
-    def __init__(self) -> None:
+    def __init__(self):
         self.content_related_messages_sent = 0
 
     def __call__(self, is_content_related: bool) -> int:

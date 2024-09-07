@@ -1,12 +1,11 @@
-from __future__ import annotations
-
+from abc import ABC, abstractmethod
 import base64
 import struct
-from abc import ABC, abstractmethod
-from typing import NoReturn
+from typing import List, Tuple
 
 
 class Storage(ABC):
+
     OLD_SESSION_STRING_FORMAT = ">B?256sI?"
     OLD_SESSION_STRING_FORMAT_64 = ">B?256sQ?"
     SESSION_STRING_SIZE = 351
@@ -14,79 +13,75 @@ class Storage(ABC):
 
     SESSION_STRING_FORMAT = ">BI?256sQ?"
 
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str):
         self.name = name
 
     @abstractmethod
-    async def open(self) -> NoReturn:
+    async def open(self):
         """Opens the storage engine."""
         raise NotImplementedError
 
     @abstractmethod
-    async def save(self) -> NoReturn:
+    async def save(self):
         """Saves the current state of the storage engine."""
         raise NotImplementedError
 
     @abstractmethod
-    async def close(self) -> NoReturn:
+    async def close(self):
         """Closes the storage engine."""
         raise NotImplementedError
 
     @abstractmethod
-    async def delete(self) -> NoReturn:
+    async def delete(self):
         """Deletes the storage."""
         raise NotImplementedError
 
     @abstractmethod
-    async def update_peers(
-        self, peers: list[tuple[int, int, str, list[str], str]]
-    ) -> NoReturn:
+    async def update_peers(self, peers: List[Tuple[int, int, str, List[str], str]]):
         raise NotImplementedError
 
     @abstractmethod
-    async def update_state(
-        self, update_state: tuple[int, int, int, int, int] = object
-    ) -> NoReturn:
+    async def update_state(self, update_state: Tuple[int, int, int, int, int] = object):
         raise NotImplementedError
 
     @abstractmethod
-    async def get_peer_by_id(self, peer_id: int) -> NoReturn:
+    async def get_peer_by_id(self, peer_id: int):
         raise NotImplementedError
 
     @abstractmethod
-    async def get_peer_by_username(self, username: str) -> NoReturn:
+    async def get_peer_by_username(self, username: str):
         raise NotImplementedError
 
     @abstractmethod
-    async def get_peer_by_phone_number(self, phone_number: str) -> NoReturn:
+    async def get_peer_by_phone_number(self, phone_number: str):
         raise NotImplementedError
 
     @abstractmethod
-    async def dc_id(self, value: int = object) -> NoReturn:
+    async def dc_id(self, value: int = object):
         raise NotImplementedError
 
     @abstractmethod
-    async def api_id(self, value: int = object) -> NoReturn:
+    async def api_id(self, value: int = object):
         raise NotImplementedError
 
     @abstractmethod
-    async def test_mode(self, value: bool = object) -> NoReturn:
+    async def test_mode(self, value: bool = object):
         raise NotImplementedError
 
     @abstractmethod
-    async def auth_key(self, value: bytes = object) -> NoReturn:
+    async def auth_key(self, value: bytes = object):
         raise NotImplementedError
 
     @abstractmethod
-    async def date(self, value: int = object) -> NoReturn:
+    async def date(self, value: int = object):
         raise NotImplementedError
 
     @abstractmethod
-    async def user_id(self, value: int = object) -> NoReturn:
+    async def user_id(self, value: int = object):
         raise NotImplementedError
 
     @abstractmethod
-    async def is_bot(self, value: bool = object) -> NoReturn:
+    async def is_bot(self, value: bool = object):
         raise NotImplementedError
 
     async def export_session_string(self):

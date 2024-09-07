@@ -1,64 +1,59 @@
-# ruff: noqa: ARG001
-from __future__ import annotations
-
 import asyncio
 import inspect
 import logging
 from collections import OrderedDict
 
 import pyrogram
-from pyrogram import errors, raw, utils
+from pyrogram import errors
+from pyrogram import utils
+from pyrogram import raw
 from pyrogram.handlers import (
     BotBusinessConnectHandler,
     BotBusinessMessageHandler,
     CallbackQueryHandler,
-    ChatJoinRequestHandler,
-    ChatMemberUpdatedHandler,
-    ChosenInlineResultHandler,
-    ConversationHandler,
-    DeletedBotBusinessMessagesHandler,
-    DeletedMessagesHandler,
-    EditedBotBusinessMessageHandler,
-    EditedMessageHandler,
-    InlineQueryHandler,
     MessageHandler,
-    MessageReactionCountUpdatedHandler,
+    EditedMessageHandler,
+    EditedBotBusinessMessageHandler,
+    DeletedMessagesHandler,
+    DeletedBotBusinessMessagesHandler,
     MessageReactionUpdatedHandler,
+    MessageReactionCountUpdatedHandler,
+    UserStatusHandler,
+    RawUpdateHandler,
+    InlineQueryHandler,
     PollHandler,
     PreCheckoutQueryHandler,
-    RawUpdateHandler,
-    ShippingQueryHandler,
+    ConversationHandler,
+    ChosenInlineResultHandler,
+    ChatMemberUpdatedHandler,
+    ChatJoinRequestHandler,
     StoryHandler,
-    UserStatusHandler,
 )
 from pyrogram.raw.types import (
+    UpdateNewMessage,
+    UpdateNewChannelMessage,
+    UpdateNewScheduledMessage,
     UpdateBotBusinessConnect,
-    UpdateBotCallbackQuery,
-    UpdateBotChatInviteRequester,
+    UpdateBotNewBusinessMessage,
     UpdateBotDeleteBusinessMessage,
     UpdateBotEditBusinessMessage,
+    UpdateEditMessage,
+    UpdateEditChannelMessage,
+    UpdateDeleteMessages,
+    UpdateDeleteChannelMessages,
+    UpdateBotCallbackQuery,
+    UpdateInlineBotCallbackQuery,
+    UpdateBotPrecheckoutQuery,
+    UpdateUserStatus,
     UpdateBotInlineQuery,
+    UpdateMessagePoll,
     UpdateBotInlineSend,
+    UpdateChatParticipant,
+    UpdateChannelParticipant,
+    UpdateBotChatInviteRequester,
+    UpdateStory,
     UpdateBotMessageReaction,
     UpdateBotMessageReactions,
-    UpdateBotNewBusinessMessage,
-    UpdateBotPrecheckoutQuery,
-    UpdateBotShippingQuery,
-    UpdateBotStopped,
-    UpdateBusinessBotCallbackQuery,
-    UpdateChannelParticipant,
-    UpdateChatParticipant,
-    UpdateDeleteChannelMessages,
-    UpdateDeleteMessages,
-    UpdateEditChannelMessage,
-    UpdateEditMessage,
-    UpdateInlineBotCallbackQuery,
-    UpdateMessagePoll,
-    UpdateNewChannelMessage,
-    UpdateNewMessage,
-    UpdateNewScheduledMessage,
-    UpdateStory,
-    UpdateUserStatus,
 )
 
 log = logging.getLogger(__name__)
@@ -71,26 +66,12 @@ class Dispatcher:
         UpdateNewScheduledMessage,
     )
     NEW_BOT_BUSINESS_MESSAGE_UPDATES = (UpdateBotNewBusinessMessage,)
-    EDIT_MESSAGE_UPDATES = (
-        UpdateEditMessage,
-        UpdateEditChannelMessage,
-    )
+    EDIT_MESSAGE_UPDATES = (UpdateEditMessage, UpdateEditChannelMessage)
     EDIT_BOT_BUSINESS_MESSAGE_UPDATES = (UpdateBotEditBusinessMessage,)
-    DELETE_MESSAGES_UPDATES = (
-        UpdateDeleteMessages,
-        UpdateDeleteChannelMessages,
-    )
+    DELETE_MESSAGES_UPDATES = (UpdateDeleteMessages, UpdateDeleteChannelMessages)
     DELETE_BOT_BUSINESS_MESSAGES_UPDATES = (UpdateBotDeleteBusinessMessage,)
-    CALLBACK_QUERY_UPDATES = (
-        UpdateBotCallbackQuery,
-        UpdateInlineBotCallbackQuery,
-        UpdateBusinessBotCallbackQuery,
-    )
-    CHAT_MEMBER_UPDATES = (
-        UpdateChatParticipant,
-        UpdateChannelParticipant,
-        UpdateBotStopped,
-    )
+    CALLBACK_QUERY_UPDATES = (UpdateBotCallbackQuery, UpdateInlineBotCallbackQuery)
+    CHAT_MEMBER_UPDATES = (UpdateChatParticipant, UpdateChannelParticipant)
     USER_STATUS_UPDATES = (UpdateUserStatus,)
     BOT_INLINE_QUERY_UPDATES = (UpdateBotInlineQuery,)
     POLL_UPDATES = (UpdateMessagePoll,)
@@ -99,17 +80,19 @@ class Dispatcher:
     NEW_STORY_UPDATES = (UpdateStory,)
     MESSAGE_BOT_NA_REACTION_UPDATES = (UpdateBotMessageReaction,)
     MESSAGE_BOT_A_REACTION_UPDATES = (UpdateBotMessageReactions,)
-    BOT_BUSSINESS_CONNECT_UPDATES = (UpdateBotBusinessConnect,)
+    BOT_BUSINESS_CONNECT_UPDATES = (UpdateBotBusinessConnect,)
     PRE_CHECKOUT_QUERY_UPDATES = (UpdateBotPrecheckoutQuery,)
-    SHIPPING_QUERY_UPDATES = (UpdateBotShippingQuery,)
 
-    def __init__(self, client: pyrogram.Client) -> None:
+    def __init__(self, client: "pyrogram.Client"):
         self.client = client
         self.loop = asyncio.get_event_loop()
+
         self.handler_worker_tasks = []
         self.locks_list = []
+
         self.updates_queue = asyncio.Queue()
         self.groups = OrderedDict()
+
         self.conversation_handler = ConversationHandler()
         self.groups[0] = [self.conversation_handler]
 
@@ -139,12 +122,10 @@ class Dispatcher:
 
         async def edited_message_parser(update, users, chats):
             parsed, _ = await message_parser(update, users, chats)
-
             return (parsed, EditedMessageHandler)
 
         async def edited_bot_business_message_parser(update, users, chats):
             parsed, _ = await bot_business_message_parser(update, users, chats)
-
             return (parsed, EditedBotBusinessMessageHandler)
 
         async def deleted_messages_parser(update, users, chats):
@@ -156,18 +137,14 @@ class Dispatcher:
         async def deleted_bot_business_messages_parser(update, users, chats):
             return (
                 utils.parse_deleted_messages(
-                    self.client,
-                    update,
-                    business_connection_id=update.connection_id,
+                    self.client, update, business_connection_id=update.connection_id
                 ),
                 DeletedBotBusinessMessagesHandler,
             )
 
         async def callback_query_parser(update, users, chats):
             return (
-                await pyrogram.types.CallbackQuery._parse(
-                    self.client, update, users
-                ),
+                await pyrogram.types.CallbackQuery._parse(self.client, update, users),
                 CallbackQueryHandler,
             )
 
@@ -184,10 +161,7 @@ class Dispatcher:
             )
 
         async def poll_parser(update, users, chats):
-            return (
-                await pyrogram.types.Poll._parse_update(self.client, update, users),
-                PollHandler,
-            )
+            return (pyrogram.types.Poll._parse_update(self.client, update), PollHandler)
 
         async def chosen_inline_result_parser(update, users, chats):
             return (
@@ -217,14 +191,6 @@ class Dispatcher:
                     self.client, update.story, update.peer
                 ),
                 StoryHandler,
-            )
-
-        async def shipping_query_parser(update, users, chats):
-            return (
-                await pyrogram.types.ShippingQuery._parse(
-                    self.client, update, users
-                ),
-                ShippingQueryHandler,
             )
 
         async def pre_checkout_query_parser(update, users, chats):
@@ -274,11 +240,10 @@ class Dispatcher:
             Dispatcher.CHAT_MEMBER_UPDATES: chat_member_updated_parser,
             Dispatcher.CHAT_JOIN_REQUEST_UPDATES: chat_join_request_parser,
             Dispatcher.NEW_STORY_UPDATES: story_parser,
-            Dispatcher.SHIPPING_QUERY_UPDATES: shipping_query_parser,
             Dispatcher.PRE_CHECKOUT_QUERY_UPDATES: pre_checkout_query_parser,
             Dispatcher.MESSAGE_BOT_NA_REACTION_UPDATES: message_bot_na_reaction_parser,
             Dispatcher.MESSAGE_BOT_A_REACTION_UPDATES: message_bot_a_reaction_parser,
-            Dispatcher.BOT_BUSSINESS_CONNECT_UPDATES: bot_business_connect_parser,
+            Dispatcher.BOT_BUSINESS_CONNECT_UPDATES: bot_business_connect_parser,
         }
 
         self.update_parsers = {
@@ -287,7 +252,7 @@ class Dispatcher:
             for key in key_tuple
         }
 
-    async def start(self) -> None:
+    async def start(self):
         if not self.client.no_updates:
             for i in range(self.client.workers):
                 self.locks_list.append(asyncio.Lock())
@@ -324,24 +289,17 @@ class Dispatcher:
                                 )
                                 if id < 0
                                 else raw.functions.updates.GetDifference(
-                                    pts=local_pts,
-                                    date=local_date,
-                                    qts=0,
+                                    pts=local_pts, date=local_date, qts=0
                                 )
                             )
-                        except (
-                            errors.ChannelPrivate,
-                            errors.ChannelInvalid,
-                        ):
+                        except (errors.ChannelPrivate, errors.ChannelInvalid):
                             break
 
-                        if isinstance(
-                            diff,
-                            raw.types.updates.DifferenceEmpty
-                            | raw.types.updates.DifferenceTooLong,
-                        ):
+                        if isinstance(diff, raw.types.updates.DifferenceEmpty):
                             break
-                        if isinstance(diff, raw.types.updates.Difference):
+                        elif isinstance(diff, raw.types.updates.DifferenceTooLong):
+                            break
+                        elif isinstance(diff, raw.types.updates.Difference):
                             local_pts = diff.state.pts
                         elif isinstance(diff, raw.types.updates.DifferenceSlice):
                             local_pts = diff.intermediate_state.pts
@@ -351,13 +309,13 @@ class Dispatcher:
                                 break
 
                             prev_pts = local_pts
+                        elif isinstance(diff, raw.types.updates.ChannelDifferenceEmpty):
+                            break
                         elif isinstance(
-                            diff,
-                            raw.types.updates.ChannelDifferenceEmpty
-                            | raw.types.updates.ChannelDifferenceTooLong,
+                            diff, raw.types.updates.ChannelDifferenceTooLong
                         ):
                             break
-                        if isinstance(diff, raw.types.updates.ChannelDifference):
+                        elif isinstance(diff, raw.types.updates.ChannelDifference):
                             local_pts = diff.pts
 
                         users = {i.id: i for i in diff.users}
@@ -367,16 +325,14 @@ class Dispatcher:
                             message_updates_counter += 1
                             self.updates_queue.put_nowait(
                                 (
-                                    raw.types.UpdateNewMessage(
-                                        message=message,
-                                        pts=local_pts,
-                                        pts_count=-1,
-                                    )
-                                    if id == self.client.me.id
-                                    else raw.types.UpdateNewChannelMessage(
-                                        message=message,
-                                        pts=local_pts,
-                                        pts_count=-1,
+                                    (
+                                        raw.types.UpdateNewMessage(
+                                            message=message, pts=local_pts, pts_count=-1
+                                        )
+                                        if id == self.client.me.id
+                                        else raw.types.UpdateNewChannelMessage(
+                                            message=message, pts=local_pts, pts_count=-1
+                                        )
                                     ),
                                     users,
                                     chats,
@@ -389,8 +345,10 @@ class Dispatcher:
 
                         if isinstance(
                             diff,
-                            raw.types.updates.Difference
-                            | raw.types.updates.ChannelDifference,
+                            (
+                                raw.types.updates.Difference,
+                                raw.types.updates.ChannelDifference,
+                            ),
                         ):
                             break
 
@@ -402,7 +360,7 @@ class Dispatcher:
                     other_updates_counter,
                 )
 
-    async def stop(self) -> None:
+    async def stop(self):
         if not self.client.no_updates:
             for i in range(self.client.workers):
                 self.updates_queue.put_nowait(None)
@@ -415,8 +373,8 @@ class Dispatcher:
 
             log.info("Stopped %s HandlerTasks", self.client.workers)
 
-    def add_handler(self, handler, group: int) -> None:
-        async def fn() -> None:
+    def add_handler(self, handler, group: int):
+        async def fn():
             for lock in self.locks_list:
                 await lock.acquire()
 
@@ -432,8 +390,8 @@ class Dispatcher:
 
         self.loop.create_task(fn())
 
-    def remove_handler(self, handler, group: int) -> None:
-        async def fn() -> None:
+    def remove_handler(self, handler, group: int):
+        async def fn():
             for lock in self.locks_list:
                 await lock.acquire()
 
@@ -450,7 +408,7 @@ class Dispatcher:
 
         self.loop.create_task(fn())
 
-    async def handler_worker(self, lock) -> None:
+    async def handler_worker(self, lock):
         while True:
             packet = await self.updates_queue.get()
 
@@ -478,9 +436,7 @@ class Dispatcher:
 
                             if isinstance(handler, handler_type):
                                 try:
-                                    if await handler.check(
-                                        self.client, parsed_update
-                                    ):
+                                    if await handler.check(self.client, parsed_update):
                                         args = (parsed_update,)
                                 except Exception as e:
                                     log.exception(e)
@@ -502,15 +458,15 @@ class Dispatcher:
                                         self.client,
                                         *args,
                                     )
-                            except pyrogram.StopPropagationError:
+                            except pyrogram.StopPropagation:
                                 raise
-                            except pyrogram.ContinuePropagationError:
+                            except pyrogram.ContinuePropagation:
                                 continue
                             except Exception as e:
                                 log.exception(e)
 
                             break
-            except pyrogram.StopPropagationError:
+            except pyrogram.StopPropagation:
                 pass
             except Exception as e:
                 log.exception(e)

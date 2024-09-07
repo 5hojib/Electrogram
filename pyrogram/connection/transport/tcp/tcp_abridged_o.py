@@ -1,12 +1,9 @@
-# ruff: noqa: ARG002
-from __future__ import annotations
-
 import logging
 import os
+from typing import Optional, Tuple
 
 import pyrogram
 from pyrogram.crypto import aes
-
 from .tcp import TCP, Proxy
 
 log = logging.getLogger(__name__)
@@ -21,7 +18,7 @@ class TCPAbridgedO(TCP):
         self.encrypt = None
         self.decrypt = None
 
-    async def connect(self, address: tuple[str, int]) -> None:
+    async def connect(self, address: Tuple[str, int]) -> None:
         await super().connect(address)
 
         while True:
@@ -47,20 +44,15 @@ class TCPAbridgedO(TCP):
     async def send(self, data: bytes, *args) -> None:
         length = len(data) // 4
         data = (
-            bytes([length])
-            if length <= 126
-            else b"\x7f" + length.to_bytes(3, "little")
+            bytes([length]) if length <= 126 else b"\x7f" + length.to_bytes(3, "little")
         ) + data
         payload = await self.loop.run_in_executor(
-            pyrogram.crypto_executor,
-            aes.ctr256_encrypt,
-            data,
-            *self.encrypt,
+            pyrogram.crypto_executor, aes.ctr256_encrypt, data, *self.encrypt
         )
 
         await super().send(payload)
 
-    async def recv(self, length: int = 0) -> bytes | None:
+    async def recv(self, length: int = 0) -> Optional[bytes]:
         length = await super().recv(1)
 
         if length is None:
@@ -82,8 +74,5 @@ class TCPAbridgedO(TCP):
             return None
 
         return await self.loop.run_in_executor(
-            pyrogram.crypto_executor,
-            aes.ctr256_decrypt,
-            data,
-            *self.decrypt,
+            pyrogram.crypto_executor, aes.ctr256_decrypt, data, *self.decrypt
         )
