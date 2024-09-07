@@ -1,16 +1,12 @@
 from __future__ import annotations
 
-import contextlib
 import asyncio
-import os
 import bisect
+import contextlib
 import logging
-from asyncio import Event, TimeoutError, create_task, get_event_loop, sleep, wait_for
-from bisect import insort
+import os
 from hashlib import sha1
 from io import BytesIO
-from logging import getLogger
-from os import urandom
 from time import time
 
 import pyrogram
@@ -182,7 +178,9 @@ class Session:
             self.ping_task_event.set()
             if self.ping_task:
                 try:
-                    await asyncio.wait_for(self.ping_task, timeout=self.RECONN_TIMEOUT)
+                    await asyncio.wait_for(
+                        self.ping_task, timeout=self.RECONN_TIMEOUT
+                    )
                 except asyncio.TimeoutError:
                     self.ping_task.cancel()
             self.ping_task_event.clear()
@@ -195,7 +193,9 @@ class Session:
 
             if self.recv_task:
                 try:
-                    await asyncio.wait_for(self.recv_task, timeout=self.RECONN_TIMEOUT)
+                    await asyncio.wait_for(
+                        self.recv_task, timeout=self.RECONN_TIMEOUT
+                    )
                 except asyncio.TimeoutError:
                     self.recv_task.cancel()
 
@@ -372,7 +372,9 @@ class Session:
                 return
 
             try:
-                await asyncio.wait_for(self.ping_task_event.wait(), self.PING_INTERVAL)
+                await asyncio.wait_for(
+                    self.ping_task_event.wait(), self.PING_INTERVAL
+                )
             except asyncio.TimeoutError:
                 pass
             else:
