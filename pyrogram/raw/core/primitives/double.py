@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 class Double(bytes, TLObject):
     @classmethod
-    def read(cls, data: BytesIO, *args: Any) -> float:
+    def read(cls, data: BytesIO, *args: Any) -> float:  # noqa: ARG003
         return cast(float, unpack("d", data.read(8))[0])
 
     def __new__(cls, value: float) -> bytes:  # type: ignore
