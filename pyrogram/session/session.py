@@ -229,7 +229,9 @@ class Session:
                     self.RECONNECT_THRESHOLD - (now - self.last_reconnect_attempt)
                 )
                 log.warning(
-                    "Client [%s] is reconnecting too frequently, sleeping for %s seconds", self.client.name, to_wait
+                    "Client [%s] is reconnecting too frequently, sleeping for %s seconds",
+                    self.client.name,
+                    to_wait,
                 )
                 await asyncio.sleep(to_wait)
 
@@ -243,21 +245,24 @@ class Session:
                     try:
                         await self.client.load_session()
                         log.info(
-                            "Client [%s] re-starting got SQLite error, connected to DB successfully. try %s; exc: %s %s", self.client.name,
+                            "Client [%s] re-starting got SQLite error, connected to DB successfully. try %s; exc: %s %s",
+                            self.client.name,
                             try_,
                             type(e).__name__,
                             e,
                         )
                     except Exception as e:
                         log.warning(
-                            "Client [%s] failed re-starting SQLite DB, try %s; exc: %s %s", self.client.name,
+                            "Client [%s] failed re-starting SQLite DB, try %s; exc: %s %s",
+                            self.client.name,
                             try_,
                             type(e).__name__,
                             e,
                         )
                 except Exception as e:
                     log.warning(
-                        "Client [%s] failed re-starting, try %s; exc: %s %s", self.client.name,
+                        "Client [%s] failed re-starting, try %s; exc: %s %s",
+                        self.client.name,
                         try_,
                         type(e).__name__,
                         e,
