@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from asyncio import Queue, gather, sleep
-from functools import partial
+import asyncio
+import functools
+import inspect
+import io
+import logging
+import math
 from hashlib import md5
-from inspect import iscoroutinefunction
-from io import SEEK_END
-from logging import getLogger
-from math import ceil
 from pathlib import PurePath
 from typing import TYPE_CHECKING, BinaryIO
 
@@ -17,7 +17,7 @@ from pyrogram.session import Session
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-log = getLogger(__name__)
+log = logging.getLogger(__name__)
 
 
 class SaveFile:
@@ -29,6 +29,43 @@ class SaveFile:
         progress: Callable | None = None,  # type: ignore
         progress_args: tuple = (),
     ):
+        """Upload a file onto Telegram servers, without actually sending the message to anyone.
+        Useful whenever an InputFile type is required.
+        .. note::
+            This is a utility method intended to be used **only** when working with raw
+            :obj:`functions <pyrogram.api.functions>` (i.e: a Telegram API method you wish to use which is not
+            available yet in the Client class as an easy-to-use method).
+        .. include:: /_includes/usable-by/users-bots.rst
+        Parameters:
+            path (``str`` | ``BinaryIO``):
+                The path of the file you want to upload that exists on your local machine or a binary file-like object
+                with its attribute ".name" set for in-memory uploads.
+            file_id (``int``, *optional*):
+                In case a file part expired, pass the file_id and the file_part to retry uploading that specific chunk.
+            file_part (``int``, *optional*):
+                In case a file part expired, pass the file_id and the file_part to retry uploading that specific chunk.
+            progress (``Callable``, *optional*):
+                Pass a callback function to view the file transmission progress.
+                The function must take *(current, total)* as positional arguments (look at Other Parameters below for a
+                detailed description) and will be called back each time a new file chunk has been successfully
+                transmitted.
+            progress_args (``tuple``, *optional*):
+                Extra custom arguments for the progress callback function.
+                You can pass anything you need to be available in the progress callback scope; for example, a Message
+                object or a Client instance in order to edit the message with the updated progress status.
+        Other Parameters:
+            current (``int``):
+                The amount of bytes transmitted so far.
+            total (``int``):
+                The total size of the file.
+            *args (``tuple``, *optional*):
+                Extra custom arguments as defined in the ``progress_args`` parameter.
+                You can either keep ``*args`` or add every single extra argument in your function signature.
+        Returns:
+            ``InputFile``: On success, the uploaded file is returned in form of an InputFile object.
+        Raises:
+            RPCError: In case of a Telegram RPC error.
+        """
         if path is None:
             return None
 
@@ -44,7 +81,7 @@ class SaveFile:
                         break
                     except Exception as e:
                         log.warning(f"Retrying part due to error: {e}")
-                        await sleep(2**attempt)
+                        await asyncio.sleep(2**attempt)
 
         def create_rpc(chunk, file_part, is_big, file_id, file_total_parts):
             if is_big:
@@ -60,7 +97,7 @@ class SaveFile:
                 )
 
         part_size = 512 * 1024
-        queue = Queue(32)
+        queue = asyncio.Queue(32)
 
         with (
             open(path, "rb", buffering=4096)
@@ -68,7 +105,7 @@ class SaveFile:
             else path
         ) as fp:
             file_name = getattr(fp, "name", "file.jpg")
-            fp.seek(0, SEEK_END)
+            fp.seek(0, io.SEEK_END)
             file_size = fp.tell()
             fp.seek(0)
 
@@ -86,7 +123,7 @@ class SaveFile:
                     f"Can't upload files bigger than {file_size_limit_mib} MiB"
                 )
 
-            file_total_parts = ceil(file_size / part_size)
+            file_total_parts = math.ceil(file_size / part_size)
             is_big = file_size > 10 * 1024 * 1024
             pool_size = 2 if is_big else 1
             workers_count = 4 if is_big else 1
@@ -144,14 +181,14 @@ class SaveFile:
                     file_part += 1
 
                     if progress:
-                        func = partial(
+                        func = functools.partial(
                             progress,
                             min(file_part * part_size, file_size),
                             file_size,
                             *progress_args,
                         )
 
-                        if iscoroutinefunction(progress):
+                        if inspect.iscoroutinefunction(progress):
                             await func()
                         else:
                             await self.loop.run_in_executor(self.executor, func)
@@ -180,7 +217,7 @@ class SaveFile:
                 for _ in workers:
                     await queue.put(None)
 
-                await gather(*workers)
+                await asyncio.gather(*workers)
 
                 for session in pool:
                     await session.stop()
