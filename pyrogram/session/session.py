@@ -8,6 +8,7 @@ import os
 from hashlib import sha1
 from io import BytesIO
 from time import time
+from typing import ClassVar
 
 import pyrogram
 from pyrogram import raw
@@ -49,7 +50,7 @@ class Session:
     RECONNECT_THRESHOLD = 13
     RE_START_RANGE = range(4)
 
-    TRANSPORT_ERRORS = {
+    TRANSPORT_ERRORS: ClassVar[dict[int, str]] = {
         404: "auth key not found",
         429: "transport flood",
         444: "invalid DC",
@@ -228,7 +229,7 @@ class Session:
                     self.RECONNECT_THRESHOLD - (now - self.last_reconnect_attempt)
                 )
                 log.warning(
-                    f"[nekozee] Client [{self.client.name}] is reconnecting too frequently, sleeping for {to_wait} seconds"
+                    "Client [%s] is reconnecting too frequently, sleeping for %s seconds", self.client.name, to_wait
                 )
                 await asyncio.sleep(to_wait)
 
@@ -242,21 +243,21 @@ class Session:
                     try:
                         await self.client.load_session()
                         log.info(
-                            f"[nekozee] Client [{self.client.name}] re-starting got SQLite error, connected to DB successfully. try %s; exc: %s %s",
+                            "Client [%s] re-starting got SQLite error, connected to DB successfully. try %s; exc: %s %s", self.client.name,
                             try_,
                             type(e).__name__,
                             e,
                         )
                     except Exception as e:
                         log.warning(
-                            f"[nekozee] Client [{self.client.name}] failed re-starting SQLite DB, try %s; exc: %s %s",
+                            "Client [%s] failed re-starting SQLite DB, try %s; exc: %s %s", self.client.name,
                             try_,
                             type(e).__name__,
                             e,
                         )
                 except Exception as e:
                     log.warning(
-                        f"[nekozee] Client [{self.client.name}] failed re-starting, try %s; exc: %s %s",
+                        "Client [%s] failed re-starting, try %s; exc: %s %s", self.client.name,
                         try_,
                         type(e).__name__,
                         e,
