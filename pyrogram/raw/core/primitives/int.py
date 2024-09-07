@@ -12,10 +12,15 @@ class Int(bytes, TLObject):
     SIZE = 4
 
     @classmethod
-    def read(cls, data: BytesIO, signed: bool = True, *args: Any) -> int:
+    def read(
+        cls,
+        data: BytesIO,
+        signed: bool = True,
+        *args: Any,  # noqa: ARG003
+    ) -> int:
         return int.from_bytes(data.read(cls.SIZE), "little", signed=signed)
 
-    def __new__(cls, value: int, signed: bool = True) -> bytes:  # type: ignore
+    def __new__(cls, value: int, signed: bool = True) -> bytes:
         return value.to_bytes(cls.SIZE, "little", signed=signed)
 
 

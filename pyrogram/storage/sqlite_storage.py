@@ -150,7 +150,7 @@ class SQLiteStorage(Storage):
         )
 
     async def update_state(self, value: tuple[int, int, int, int, int] = object):
-        if value == object:
+        if value is object:
             return await (
                 await self.conn.execute(
                     "SELECT id, pts, qts, date, seq FROM update_state "
@@ -240,7 +240,7 @@ class SQLiteStorage(Storage):
         await self.conn.commit()
 
     async def _accessor(self, value: Any = object):
-        return await self._get() if value == object else await self._set(value)
+        return await self._get() if value is object else await self._set(value)
 
     async def dc_id(self, value: int = object):
         return await self._accessor(value)
@@ -264,7 +264,7 @@ class SQLiteStorage(Storage):
         return await self._accessor(value)
 
     async def version(self, value: int = object):
-        if value == object:
+        if value is object:
             q = await self.conn.execute("SELECT number FROM version")
             row = await q.fetchone()
             return row[0] if row else None

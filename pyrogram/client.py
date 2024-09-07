@@ -1,31 +1,23 @@
 from __future__ import annotations
 
+import asyncio
 import contextlib
-from asyncio import (
-    CancelledError,
-    Event,
-    Lock,
-    Semaphore,
-    TimeoutError,
-    get_event_loop,
-    wait_for,
-)
+import functools
+import inspect
+import logging
+import os
+import platform
+import re
+import shutil
+import sys
 from collections import OrderedDict
 from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime, timedelta
-from functools import lru_cache, partial
 from hashlib import sha256
 from importlib import import_module
-from inspect import iscoroutinefunction
 from io import BytesIO, StringIO
-from logging import getLogger
 from mimetypes import MimeTypes
-from os import cpu_count, makedirs, path, remove
 from pathlib import Path
-from platform import python_implementation, python_version, release, system
-from re import compile, sub
-from shutil import move
-from sys import argv
 from typing import TYPE_CHECKING
 
 import pyrogram
@@ -58,24 +50,176 @@ from .session.internals import MsgId
 if TYPE_CHECKING:
     from collections.abc import AsyncGenerator, Callable
 
-log = getLogger(__name__)
+log = logging.getLogger(__name__)
 
 
 class Client(Methods):
-    APP_VERSION = f"NekoZee {__version__}"
-    DEVICE_MODEL = f"{python_implementation()} {python_version()}"
-    SYSTEM_VERSION = f"{system()} {release()}"
+    """Pyrogram Client, the main means for interacting with Telegram.
+
+    Parameters:
+        name (``str``):
+            A name for the client, e.g.: "my_account".
+
+        api_id (``int`` | ``str``, *optional*):
+            The *api_id* part of the Telegram API key, as integer or string.
+            E.g.: 12345 or "12345".
+
+        api_hash (``str``, *optional*):
+            The *api_hash* part of the Telegram API key, as string.
+            E.g.: "0123456789abcdef0123456789abcdef".
+
+        app_version (``str``, *optional*):
+            Application version.
+            Defaults to "Pyrogram x.y.z".
+
+        device_model (``str``, *optional*):
+            Device model.
+            Defaults to *platform.python_implementation() + " " + platform.python_version()*.
+
+        system_version (``str``, *optional*):
+            Operating System version.
+            Defaults to *platform.system() + " " + platform.release()*.
+
+        lang_code (``str``, *optional*):
+            Code of the language used on the client, in ISO 639-1 standard.
+            Defaults to "en".
+
+        system_lang_code (``str``, *optional*):
+            Code of the language used on the system.
+            Defaults to "en-US".
+
+        lang_pack (``str``, *optional*):
+            Internal parameter.
+            Defaults to "".
+
+        ipv6 (``bool``, *optional*):
+            Pass True to connect to Telegram using IPv6.
+            Defaults to False (IPv4).
+
+        alt_port (``bool``, *optional*):
+            Pass True to connect to Telegram using alternative port (5222).
+            Defaults to False (443).
+
+        proxy (``dict``, *optional*):
+            The Proxy settings as dict.
+            E.g.: *dict(scheme="socks5", hostname="11.22.33.44", port=1234, username="user", password="pass")*.
+            The *username* and *password* can be omitted if the proxy doesn't require authorization.
+
+        test_mode (``bool``, *optional*):
+            Enable or disable login to the test servers.
+            Only applicable for new sessions and will be ignored in case previously created sessions are loaded.
+            Defaults to False.
+
+        bot_token (``str``, *optional*):
+            Pass the Bot API token to create a bot session, e.g.: "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"
+            Only applicable for new sessions.
+
+        session_string (``str``, *optional*):
+            Pass a session string to load the session in-memory.
+            Implies ``in_memory=True``.
+
+        is_telethon_string (``bool``, *optional*):
+            ``True`` if your provided session_string is in the telethon format.
+            Requires ``session_string`` to be filled.
+
+        in_memory (``bool``, *optional*):
+            Pass True to start an in-memory session that will be discarded as soon as the client stops.
+            In order to reconnect again using an in-memory session without having to login again, you can use
+            :meth:`~pyrogram.Client.export_session_string` before stopping the client to get a session string you can
+            pass to the ``session_string`` parameter.
+            Defaults to False.
+
+        storage (:obj:`~pyrogram.storage.Storage`, *optional*):
+            Custom session storage.
+
+        phone_number (``str``, *optional*):
+            Pass the phone number as string (with the Country Code prefix included) to avoid entering it manually.
+            Only applicable for new sessions.
+
+        phone_code (``str``, *optional*):
+            Pass the phone code as string (for test numbers only) to avoid entering it manually.
+            Only applicable for new sessions.
+
+        password (``str``, *optional*):
+            Pass the Two-Step Verification password as string (if required) to avoid entering it manually.
+            Only applicable for new sessions.
+
+        workers (``int``, *optional*):
+            Number of maximum concurrent workers for handling incoming updates.
+            Defaults to ``min(32, os.cpu_count() + 4)``.
+
+        workdir (``str``, *optional*):
+            Define a custom working directory.
+            The working directory is the location in the filesystem where Pyrogram will store the session files.
+            Defaults to the parent directory of the main script.
+
+        plugins (``dict``, *optional*):
+            Smart Plugins settings as dict, e.g.: *dict(root="plugins")*.
+
+        parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+            Set the global parse mode of the client. By default, texts are parsed using both Markdown and HTML styles.
+            You can combine both syntaxes together.
+
+        no_updates (``bool``, *optional*):
+            Pass True to disable incoming updates.
+            When updates are disabled the client can't receive messages or other updates.
+            Useful for batch programs that don't need to deal with updates.
+            Defaults to False (updates enabled and received).
+
+        skip_updates (``bool``, *optional*):
+            Pass True to skip pending updates that arrived while the client was offline.
+            Defaults to True.
+
+        takeout (``bool``, *optional*):
+            Pass True to let the client use a takeout session instead of a normal one, implies *no_updates=True*.
+            Useful for exporting Telegram data. Methods invoked inside a takeout session (such as get_chat_history,
+            download_media, ...) are less prone to throw FloodWait exceptions.
+            Only available for users, bots will ignore this parameter.
+            Defaults to False (normal session).
+
+        sleep_threshold (``int``, *optional*):
+            Set a sleep threshold for flood wait exceptions happening globally in this client instance, below which any
+            request that raises a flood wait will be automatically invoked again after sleeping for the required amount
+            of time. Flood wait exceptions requiring higher waiting times will be raised.
+            Defaults to 10 seconds.
+
+        hide_password (``bool``, *optional*):
+            Pass True to hide the password when typing it during the login.
+            Defaults to False, because ``getpass`` (the library used) is known to be problematic in some
+            terminal environments.
+
+        max_concurrent_transmissions (``int``, *optional*):
+            Set the maximum amount of concurrent transmissions (uploads & downloads).
+            A value that is too high may result in network related issues.
+            Defaults to 20.
+
+        init_params (``raw.types.JsonObject``, *optional*):
+            Additional initConnection parameters.
+            Defaults to None.
+
+        max_message_cache_size (``int``, *optional*):
+            Set the maximum size of the message cache.
+            Defaults to 10000.
+
+        client_platform (:obj:`~pyrogram.enums.ClientPlatform`, *optional*):
+            The platform where this client is running.
+            Defaults to 'other'
+    """
+
+    APP_VERSION = f"Electrogram {__version__}"
+    DEVICE_MODEL = f"{platform.python_implementation()} {platform.python_version()}"
+    SYSTEM_VERSION = f"{platform.system()} {platform.release()}"
 
     LANG_CODE = "en"
     SYSTEM_LANG_CODE = "en-US"
     LANG_PACK = ""
 
-    PARENT_DIR = Path(argv[0]).parent
+    PARENT_DIR = Path(sys.argv[0]).parent
 
-    INVITE_LINK_RE = compile(
+    INVITE_LINK_RE = re.compile(
         r"^(?:https?://)?(?:www\.)?(?:t(?:elegram)?\.(?:org|me|dog)/(?:joinchat/|\+))([\w-]+)$"
     )
-    WORKERS = min(64, (cpu_count() or 0) + 4)
+    WORKERS = min(64, (os.cpu_count() or 0) + 4)
     WORKDIR = PARENT_DIR
     UPDATES_WATCHDOG_INTERVAL = 10 * 60
     MAX_CONCURRENT_TRANSMISSIONS = 1000
@@ -179,9 +323,13 @@ class Client(Methods):
         self.parser = Parser(self)
         self.session = None
         self.media_sessions = {}
-        self.media_sessions_lock = Lock()
-        self.save_file_semaphore = Semaphore(self.max_concurrent_transmissions)
-        self.get_file_semaphore = Semaphore(self.max_concurrent_transmissions)
+        self.media_sessions_lock = asyncio.Lock()
+        self.save_file_semaphore = asyncio.Semaphore(
+            self.max_concurrent_transmissions
+        )
+        self.get_file_semaphore = asyncio.Semaphore(
+            self.max_concurrent_transmissions
+        )
         self.is_connected = None
         self.is_initialized = None
         self.takeout_id = None
@@ -189,13 +337,13 @@ class Client(Methods):
         self.me: User | None = None
         self.message_cache = Cache(self.max_message_cache_size)
         self.updates_watchdog_task = None
-        self.updates_watchdog_event = Event()
+        self.updates_watchdog_event = asyncio.Event()
         self.updates_invoke_error = None
         self.last_update_time = datetime.now()
         self.listeners = {
             listener_type: [] for listener_type in pyrogram.enums.ListenerTypes
         }
-        self.loop = get_event_loop()
+        self.loop = asyncio.get_event_loop()
 
     def __enter__(self):
         return self.start()
@@ -214,11 +362,11 @@ class Client(Methods):
     async def updates_watchdog(self) -> None:
         while True:
             try:
-                await wait_for(
+                await asyncio.wait_for(
                     self.updates_watchdog_event.wait(),
                     self.UPDATES_WATCHDOG_INTERVAL,
                 )
-            except TimeoutError:
+            except asyncio.TimeoutError:
                 pass
             else:
                 break
@@ -232,9 +380,9 @@ class Client(Methods):
         if self.bot_token:
             return await self.sign_in_bot(self.bot_token)
 
-        print(f"Welcome to nekozee (version {__version__})")
+        print(f"Welcome to Pyrogram (version {__version__})")
         print(
-            f"nekozee is free software and comes with ABSOLUTELY NO WARRANTY. Licensed\n"
+            f"Pyrogram is free software and comes with ABSOLUTELY NO WARRANTY. Licensed\n"
             f"under the terms of the {__license__}.\n"
         )
 
@@ -257,8 +405,7 @@ class Client(Methods):
                     if ":" in value:
                         self.bot_token = value
                         return await self.sign_in_bot(value)
-                    else:
-                        self.phone_number = value
+                    self.phone_number = value
 
                 sent_code = await self.send_code(self.phone_number)
             except BadRequest as e:
@@ -366,6 +513,41 @@ class Client(Methods):
         return signed_up
 
     def set_parse_mode(self, parse_mode: enums.ParseMode | None) -> None:
+        """Set the parse mode to be used globally by the client.
+
+        When setting the parse mode with this method, all other methods having a *parse_mode* parameter will follow the
+        global value by default.
+
+        Parameters:
+            parse_mode (:obj:`~pyrogram.enums.ParseMode`):
+                By default, texts are parsed using both Markdown and HTML styles.
+                You can combine both syntaxes together.
+
+        Example:
+            .. code-block:: python
+
+                from pyrogram import enums
+
+                # Default combined mode: Markdown + HTML
+                await app.send_message("me", "1. **markdown** and <i>html</i>")
+
+                # Force Markdown-only, HTML is disabled
+                app.set_parse_mode(enums.ParseMode.MARKDOWN)
+                await app.send_message("me", "2. **markdown** and <i>html</i>")
+
+                # Force HTML-only, Markdown is disabled
+                app.set_parse_mode(enums.ParseMode.HTML)
+                await app.send_message("me", "3. **markdown** and <i>html</i>")
+
+                # Disable the parser completely
+                app.set_parse_mode(enums.ParseMode.DISABLED)
+                await app.send_message("me", "4. **markdown** and <i>html</i>")
+
+                # Bring back the default combined mode
+                app.set_parse_mode(enums.ParseMode.DEFAULT)
+                await app.send_message("me", "5. **markdown** and <i>html</i>")
+        """
+
         self.parse_mode = parse_mode
 
     async def fetch_peers(
@@ -394,8 +576,9 @@ class Client(Methods):
                     else None
                 )
                 if peer.usernames is not None and len(peer.usernames) > 1:
-                    for uname in peer.usernames:
-                        usernames.append((peer.id, uname.username.lower()))
+                    usernames.extend(
+                        (peer.id, uname.username.lower()) for uname in peer.usernames
+                    )
                 phone_number = peer.phone
                 peer_type = "bot" if peer.bot else "user"
             elif isinstance(peer, raw.types.Chat | raw.types.ChatForbidden):
@@ -413,8 +596,9 @@ class Client(Methods):
                     else None
                 )
                 if peer.usernames is not None and len(peer.usernames) > 1:
-                    for uname in peer.usernames:
-                        usernames.append((peer.id, uname.username.lower()))
+                    usernames.extend(
+                        (peer.id, uname.username.lower()) for uname in peer.usernames
+                    )
                 peer_type = "channel" if peer.broadcast else "supergroup"
             elif isinstance(peer, raw.types.ChannelForbidden):
                 peer_id = utils.get_channel_id(peer.id)
@@ -555,8 +739,7 @@ class Client(Methods):
         if session_empty:
             if not self.api_id or not self.api_hash:
                 raise AttributeError(
-                    "The API key is required for new authorizations. "
-                    "More info: https://dawn.github.io/nekozee-docs/start/auth"
+                    "The API key is required for new authorizations."
                 )
 
             await self.storage.api_id(self.api_id)
@@ -630,7 +813,12 @@ class Client(Methods):
                                     self.add_handler(handler, group)
 
                                     log.info(
-                                        f'[{self.name}] [LOAD] {type(handler).__name__}("{name}") in group {group} from "{module_path}"'
+                                        '[%s] [LOAD] %s("%s") in group %s from "%s"',
+                                        self.name,
+                                        type(handler).__name__,
+                                        name,
+                                        group,
+                                        module_path,
                                     )
 
                                     count += 1
@@ -672,14 +860,22 @@ class Client(Methods):
                                     self.add_handler(handler, group)
 
                                     log.info(
-                                        f'[{self.name}] [LOAD] {type(handler).__name__}("{name}") in group {group} from "{module_path}"'
+                                        '[%s] [LOAD] %s("%s") in group %s from "%s"',
+                                        self.name,
+                                        type(handler).__name__,
+                                        name,
+                                        group,
+                                        module_path,
                                     )
 
                                     count += 1
                         except Exception:
                             if warn_non_existent_functions:
                                 log.warning(
-                                    f'[{self.name}] [LOAD] Ignoring non-existent function "{name}" from "{module_path}"'
+                                    '[%s] [LOAD] Ignoring non-existent function "%s" from "%s"',
+                                    self.name,
+                                    name,
+                                    module_path,
                                 )
 
             if exclude:
@@ -718,26 +914,36 @@ class Client(Methods):
                                     self.remove_handler(handler, group)
 
                                     log.info(
-                                        f'[{self.name}] [UNLOAD] {type(handler).__name__}("{name}") from group {group} in "{module_path}"'
+                                        '[%s] [UNLOAD] %s("%s") from group %s in "%s"',
+                                        self.name,
+                                        type(handler).__name__,
+                                        name,
+                                        group,
+                                        module_path,
                                     )
 
                                     count -= 1
                         except Exception:
                             if warn_non_existent_functions:
                                 log.warning(
-                                    f'[{self.name}] [UNLOAD] Ignoring non-existent function "{name}" from "{module_path}"'
+                                    '[%s] [UNLOAD] Ignoring non-existent function "%s" from "%s"',
+                                    self.name,
+                                    name,
+                                    module_path,
                                 )
 
             if count > 0:
                 log.info(
-                    '[{}] Successfully loaded {} plugin{} from "{}"'.format(
-                        self.name, count, "s" if count > 1 else "", root
-                    )
+                    '[%s] Successfully loaded %d plugin%s from "%s"',
+                    self.name,
+                    count,
+                    "s" if count > 1 else "",
+                    root,
                 )
             else:
                 log.warning('[%s] No plugin loaded from "%s"', self.name, root)
 
-    async def handle_download(self, packet):
+    async def handle_download(self, packet) -> str:
         (
             file_id,
             directory,
@@ -748,11 +954,15 @@ class Client(Methods):
             progress_args,
         ) = packet
 
-        makedirs(directory, exist_ok=True) if not in_memory else None
+        Path(directory).mkdir(parents=True, exist_ok=True) if not in_memory else None
         temp_file_path = (
-            path.abspath(sub("\\\\", "/", path.join(directory, file_name))) + ".temp"
+            Path(directory)
+            .joinpath(re.sub(r"\\", "/", file_name))
+            .resolve()
+            .as_posix()
+            + ".temp"
         )
-        file = BytesIO() if in_memory else open(temp_file_path, "wb")
+        file = BytesIO() if in_memory else Path(temp_file_path).open("wb")
 
         try:
             async for chunk in self.get_file(
@@ -762,9 +972,9 @@ class Client(Methods):
         except BaseException as e:
             if not in_memory:
                 file.close()
-                remove(temp_file_path)
+                Path(temp_file_path).unlink()
 
-            if isinstance(e, CancelledError):
+            if isinstance(e, asyncio.CancelledError):
                 raise e
 
             if isinstance(e, FloodWait | FloodPremiumWait):
@@ -775,11 +985,10 @@ class Client(Methods):
             if in_memory:
                 file.name = file_name
                 return file
-            else:
-                file.close()
-                file_path = path.splitext(temp_file_path)[0]
-                move(temp_file_path, file_path)
-                return file_path
+            file.close()
+            file_path = Path(temp_file_path).with_suffix("")
+            shutil.move(str(temp_file_path), str(file_path))
+            return str(file_path)
 
     async def get_file(
         self,
@@ -876,7 +1085,7 @@ class Client(Methods):
                         offset_bytes += chunk_size
 
                         if progress:
-                            func = partial(
+                            func = functools.partial(
                                 progress,
                                 (
                                     min(offset_bytes, file_size)
@@ -887,7 +1096,7 @@ class Client(Methods):
                                 *progress_args,
                             )
 
-                            if iscoroutinefunction(progress):
+                            if inspect.iscoroutinefunction(progress):
                                 await func()
                             else:
                                 await self.loop.run_in_executor(self.executor, func)
@@ -975,7 +1184,7 @@ class Client(Methods):
                             offset_bytes += chunk_size
 
                             if progress:
-                                func = partial(
+                                func = functools.partial(
                                     progress,
                                     (
                                         min(offset_bytes, file_size)
@@ -986,7 +1195,7 @@ class Client(Methods):
                                     *progress_args,
                                 )
 
-                                if iscoroutinefunction(progress):
+                                if inspect.iscoroutinefunction(progress):
                                     await func()
                                 else:
                                     await self.loop.run_in_executor(
@@ -999,7 +1208,7 @@ class Client(Methods):
                         raise e
                     finally:
                         await cdn_session.stop()
-            except pyrogram.StopTransmission:
+            except pyrogram.StopTransmissionError:
                 raise
             except (FloodWait, FloodPremiumWait):
                 raise
@@ -1008,11 +1217,11 @@ class Client(Methods):
             finally:
                 await session.stop()
 
-    @lru_cache(maxsize=128)
+    @functools.lru_cache(maxsize=128)
     def guess_mime_type(self, filename: str) -> str | None:
         return self.mimetypes.guess_type(filename)[0]
 
-    @lru_cache(maxsize=128)
+    @functools.lru_cache(maxsize=128)
     def guess_extension(self, mime_type: str) -> str | None:
         return self.mimetypes.guess_extension(mime_type)
 
@@ -1036,4 +1245,4 @@ class Cache:
         self.store[key] = value
 
         if len(self.store) > self.capacity:
-            self.store.popitem(last=False)  # Remove the oldest item
+            self.store.popitem(last=False)

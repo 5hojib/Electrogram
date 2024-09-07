@@ -55,7 +55,7 @@ class MemoryStorage(SQLiteStorage):
                     "You are using an old session string format. Use export_session_string to update"
                 )
                 return
-            elif self.is_telethon_string:
+            if self.is_telethon_string:
                 # Telethon format
                 string = self.session_string[1:]
                 ip_len = 4 if len(string) == 352 else 16

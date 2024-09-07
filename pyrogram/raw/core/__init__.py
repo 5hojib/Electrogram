@@ -13,3 +13,24 @@ from .primitives.int import Int, Int128, Int256, Long
 from .primitives.string import String
 from .primitives.vector import Vector
 from .tl_object import TLObject
+
+__all__ = [
+    "Bool",
+    "BoolFalse",
+    "BoolTrue",
+    "Bytes",
+    "Double",
+    "FutureSalt",
+    "FutureSalts",
+    "GzipPacked",
+    "Int",
+    "Int128",
+    "Int256",
+    "List",
+    "Long",
+    "Message",
+    "MsgContainer",
+    "String",
+    "TLObject",
+    "Vector",
+]
