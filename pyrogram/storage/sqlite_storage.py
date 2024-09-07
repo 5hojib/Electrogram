@@ -157,19 +157,18 @@ class SQLiteStorage(Storage):
                     "ORDER BY date ASC"
                 )
             ).fetchall()
-        else:
-            if isinstance(value, int):
-                await self.conn.execute(
+        if isinstance(value, int):
+            await self.conn.execute(
                     "DELETE FROM update_state WHERE id = ?", (value,)
                 )
-            else:
-                await self.conn.execute(
+        else:
+            await self.conn.execute(
                     "REPLACE INTO update_state (id, pts, qts, date, seq)"
                     "VALUES (?, ?, ?, ?, ?)",
                     value,
                 )
-            await self.conn.commit()
-            return None
+        await self.conn.commit()
+        return None
 
     async def get_peer_by_id(self, peer_id: int):
         q = await self.conn.execute(

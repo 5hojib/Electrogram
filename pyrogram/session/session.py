@@ -1,6 +1,10 @@
 from __future__ import annotations
 
 import contextlib
+import asyncio
+import os
+import bisect
+import logging
 from asyncio import Event, TimeoutError, create_task, get_event_loop, sleep, wait_for
 from bisect import insort
 from hashlib import sha1
@@ -28,13 +32,13 @@ from pyrogram.raw.core import FutureSalts, MsgContainer, TLObject
 
 from .internals import MsgFactory, MsgId
 
-log = getLogger(__name__)
+log = logging.getLogger(__name__)
 
 
 class Result:
     def __init__(self) -> None:
         self.value = None
-        self.event = Event()
+        self.event = asyncio.Event()
 
 
 class Session:
@@ -72,7 +76,7 @@ class Session:
         self.is_cdn = is_cdn
 
         self.auth_key_id = sha1(auth_key).digest()[-8:]
-        self.session_id = urandom(8)
+        self.session_id = os.urandom(8)
         self.msg_factory = MsgFactory()
         self.salt = 0
 
@@ -80,11 +84,11 @@ class Session:
         self.results = {}
         self.stored_msg_ids = []
         self.ping_task = None
-        self.ping_task_event = Event()
+        self.ping_task_event = asyncio.Event()
         self.recv_task = None
-        self.is_started = Event()
+        self.is_started = asyncio.Event()
 
-        self.loop = get_event_loop()
+        self.loop = asyncio.get_event_loop()
         self.instant_stop = False
         self.last_reconnect_attempt = None
         self.currently_restarting = False
@@ -94,7 +98,7 @@ class Session:
         while True:
             if self.instant_stop:
                 log.info("Session init force stopped (loop)")
-                return  # stop instantly
+                return
 
             self.connection = self.client.connection_factory(
                 dc_id=self.dc_id,
@@ -108,7 +112,7 @@ class Session:
 
             try:
                 await self.connection.connect()
-                self.recv_task = create_task(self.recv_worker())
+                self.recv_task = asyncio.create_task(self.recv_worker())
 
                 await self.send(
                     raw.functions.Ping(ping_id=0), timeout=self.START_TIMEOUT
@@ -119,7 +123,7 @@ class Session:
                         raw.functions.InvokeWithLayer(
                             layer=layer,
                             query=raw.functions.InitConnection(
-                                api_id=await self.client.storage.api_id(),  # type: ignore
+                                api_id=await self.client.storage.api_id(),
                                 app_version=self.client.app_version,
                                 device_model=self.client.device_model,
                                 system_version=self.client.system_version,
@@ -127,13 +131,13 @@ class Session:
                                 lang_code=self.client.lang_code,
                                 lang_pack=self.client.lang_pack,
                                 query=raw.functions.help.GetConfig(),
-                                params=self.client.init_params,  # type: ignore
+                                params=self.client.init_params,
                             ),
                         ),
                         timeout=self.START_TIMEOUT,
                     )
 
-                self.ping_task = create_task(self.ping_worker())
+                self.ping_task = asyncio.create_task(self.ping_worker())
 
                 log.info("Session initialized: Layer %s", layer)
                 log.info(
@@ -162,10 +166,10 @@ class Session:
 
     async def stop(self, restart: bool = False) -> None:
         if self.currently_stopping:
-            return  # don't stop twice
+            return
         if self.instant_stop:
             log.info("Session stop process stopped")
-            return  # stop doing anything instantly, client is manually handling
+            return
 
         try:
             self.currently_stopping = True
@@ -173,31 +177,31 @@ class Session:
             self.stored_msg_ids.clear()
 
             if restart:
-                self.instant_stop = True  # tell all funcs that we want to stop
+                self.instant_stop = True
 
             self.ping_task_event.set()
             if self.ping_task:
                 try:
-                    await wait_for(self.ping_task, timeout=self.RECONN_TIMEOUT)
-                except TimeoutError:
+                    await asyncio.wait_for(self.ping_task, timeout=self.RECONN_TIMEOUT)
+                except asyncio.TimeoutError:
                     self.ping_task.cancel()
             self.ping_task_event.clear()
 
             if self.connection:
                 with contextlib.suppress(Exception):
-                    await wait_for(
+                    await asyncio.wait_for(
                         self.connection.close(), timeout=self.RECONN_TIMEOUT
                     )
 
             if self.recv_task:
                 try:
-                    await wait_for(self.recv_task, timeout=self.RECONN_TIMEOUT)
-                except TimeoutError:
+                    await asyncio.wait_for(self.recv_task, timeout=self.RECONN_TIMEOUT)
+                except asyncio.TimeoutError:
                     self.recv_task.cancel()
 
             if not self.is_media and callable(self.client.disconnect_handler):
                 try:
-                    await self.client.disconnect_handler(self.client)  # type: ignore
+                    await self.client.disconnect_handler(self.client)
                 except Exception as e:
                     log.exception(e)
 
@@ -205,13 +209,13 @@ class Session:
         finally:
             self.currently_stopping = False
             if restart:
-                self.instant_stop = False  # reset
+                self.instant_stop = False
 
     async def restart(self) -> None:
         if self.currently_restarting:
-            return  # don't restart twice
+            return
         if self.instant_stop:
-            return  # stop instantly
+            return
 
         try:
             self.currently_restarting = True
@@ -226,15 +230,15 @@ class Session:
                 log.warning(
                     f"[nekozee] Client [{self.client.name}] is reconnecting too frequently, sleeping for {to_wait} seconds"
                 )
-                await sleep(to_wait)
+                await asyncio.sleep(to_wait)
 
             self.last_reconnect_attempt = time()
             await self.stop(restart=True)
-            for try_ in self.RE_START_RANGE:  # sometimes, the DB says "no" 😬
+            for try_ in self.RE_START_RANGE:
                 try:
                     await self.start()
                     break
-                except ValueError as e:  # SQLite error
+                except ValueError as e:
                     try:
                         await self.client.load_session()
                         log.info(
@@ -263,7 +267,7 @@ class Session:
     async def handle_packet(self, packet) -> None:
         if self.instant_stop:
             log.info("Stopped packet handler")
-            return  # stop instantly
+            return
 
         data = await self.loop.run_in_executor(
             pyrogram.crypto_executor,
@@ -319,7 +323,7 @@ class Session:
                 await self.connection.close()
                 return
             else:
-                insort(self.stored_msg_ids, msg.msg_id)
+                bisect.insort(self.stored_msg_ids, msg.msg_id)
 
             if isinstance(
                 msg.body, raw.types.MsgDetailedInfo | raw.types.MsgNewDetailedInfo
@@ -365,11 +369,11 @@ class Session:
         while True:
             if self.instant_stop:
                 log.info("PingTask force stopped (loop)")
-                return  # stop instantly
+                return
 
             try:
-                await wait_for(self.ping_task_event.wait(), self.PING_INTERVAL)
-            except TimeoutError:
+                await asyncio.wait_for(self.ping_task_event.wait(), self.PING_INTERVAL)
+            except asyncio.TimeoutError:
                 pass
             else:
                 break
@@ -382,7 +386,7 @@ class Session:
                     False,
                 )
             except OSError:
-                create_task(self.restart())
+                asyncio.create_task(self.restart())
                 break
             except RPCError:
                 pass
@@ -395,7 +399,7 @@ class Session:
         while True:
             if self.instant_stop:
                 log.info("NetworkTask force stopped (loop)")
-                return  # stop instantly
+                return
 
             packet = await self.connection.recv()
 
@@ -417,11 +421,11 @@ class Session:
                     )
 
                 if self.is_started.is_set():
-                    create_task(self.restart())
+                    asyncio.create_task(self.restart())
 
                 break
 
-            create_task(self.handle_packet(packet))
+            asyncio.create_task(self.handle_packet(packet))
 
         log.info("NetworkTask stopped")
 
@@ -433,7 +437,7 @@ class Session:
         retry: int = 0,
     ):
         if self.instant_stop:
-            return None  # stop instantly
+            return None
 
         message = self.msg_factory(data)
         msg_id = message.msg_id
@@ -460,13 +464,13 @@ class Session:
             raise e
 
         if wait_response:
-            with contextlib.suppress(TimeoutError):
-                await wait_for(self.results[msg_id].event.wait(), timeout)
+            with contextlib.suppress(asyncio.TimeoutError):
+                await asyncio.wait_for(self.results[msg_id].event.wait(), timeout)
 
             result = self.results.pop(msg_id).value
 
             if result is None:
-                raise TimeoutError("Request timed out")
+                raise asyncio.TimeoutError("Request timed out")
 
             if isinstance(result, raw.types.RpcError):
                 if isinstance(
@@ -521,13 +525,12 @@ class Session:
         query_name = ".".join(inner_query.QUALNAME.split(".")[1:])
 
         while retries > 0:
-            # sleep until the restart is performed
             if self.currently_restarting:
                 while self.currently_restarting:
-                    await sleep(1)
+                    await asyncio.sleep(1)
 
             if self.instant_stop:
-                return None  # stop instantly
+                return None
 
             if not self.is_started.is_set():
                 await self.is_started.wait()
@@ -537,7 +540,7 @@ class Session:
             except (FloodWait, FloodPremiumWait) as e:
                 amount = e.value
 
-                if amount > sleep_threshold >= 0:  # type: ignore
+                if amount > sleep_threshold >= 0:
                     raise
 
                 log.warning(
@@ -547,22 +550,22 @@ class Session:
                     query_name,
                 )
 
-                await sleep(amount)  # type: ignore
+                await asyncio.sleep(amount)
             except (
                 OSError,
                 RuntimeError,
                 InternalServerError,
                 ServiceUnavailable,
-                TimeoutError,
+                asyncio.TimeoutError,
             ) as e:
                 retries -= 1
                 if retries == 0:
-                    self.client.updates_invoke_error = e  # type: ignore
+                    self.client.updates_invoke_error = e
                     raise
 
                 if (
                     isinstance(e, OSError | RuntimeError) and "handler" in str(e)
-                ) or (isinstance(e, TimeoutError)):
+                ) or (isinstance(e, asyncio.TimeoutError)):
                     (log.warning if retries < 2 else log.info)(
                         '[%s] [%s] Reconnecting session requesting "%s", due to: %s',
                         self.client.name,
@@ -570,7 +573,7 @@ class Session:
                         query_name,
                         str(e) or repr(e),
                     )
-                    create_task(self.restart())
+                    asyncio.create_task(self.restart())
                 else:
                     (log.warning if retries < 2 else log.info)(
                         '[%s] [%s] Retrying "%s" due to: %s',
@@ -580,9 +583,9 @@ class Session:
                         str(e) or repr(e),
                     )
 
-                await sleep(1)
+                await asyncio.sleep(1)
             except Exception as e:
-                self.client.updates_invoke_error = e  # type: ignore
+                self.client.updates_invoke_error = e
                 raise
 
-        raise TimeoutError("Exceeded maximum number of retries")
+        raise asyncio.TimeoutError("Exceeded maximum number of retries")
