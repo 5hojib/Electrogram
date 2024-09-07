@@ -1,11 +1,16 @@
+from __future__ import annotations
+
+import contextlib
 import inspect
 import time
-from typing import List, Tuple, Any
-
-import aiosqlite
+from typing import TYPE_CHECKING, Any
 
 from pyrogram import raw, utils
+
 from .storage import Storage
+
+if TYPE_CHECKING:
+    import aiosqlite
 
 # language=SQLite
 SCHEMA = """
@@ -124,25 +129,25 @@ class SQLiteStorage(Storage):
     async def delete(self):
         raise NotImplementedError
 
-    async def update_peers(self, peers: List[Tuple[int, int, str, str, str]]):
-        try:
+    async def update_peers(self, peers: list[tuple[int, int, str, str, str]]):
+        with contextlib.suppress(Exception):
             await self.conn.executemany(
                 "REPLACE INTO peers (id, access_hash, type, username, phone_number)"
                 "VALUES (?, ?, ?, ?, ?)",
                 peers,
             )
-        except Exception:
-            pass
 
-    async def update_usernames(self, usernames: List[Tuple[int, str]]):
+    async def update_usernames(self, usernames: list[tuple[int, str]]):
         await self.conn.executescript(UNAME_SCHEMA)
         for user in usernames:
-            await self.conn.execute("DELETE FROM usernames WHERE peer_id=?", (user[0],))
+            await self.conn.execute(
+                "DELETE FROM usernames WHERE peer_id=?", (user[0],)
+            )
         await self.conn.executemany(
             "REPLACE INTO usernames (peer_id, id)" "VALUES (?, ?)", usernames
         )
 
-    async def update_state(self, value: Tuple[int, int, int, int, int] = object):
+    async def update_state(self, value: tuple[int, int, int, int, int] = object):
         if value == object:
             return await (
                 await self.conn.execute(
@@ -162,6 +167,7 @@ class SQLiteStorage(Storage):
                     value,
                 )
             await self.conn.commit()
+            return None
 
     async def get_peer_by_id(self, peer_id: int):
         q = await self.conn.execute(

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from io import BytesIO
 from typing import Any
 
@@ -18,7 +20,7 @@ class FutureSalt(TLObject):
         self.salt = salt
 
     @staticmethod
-    def read(data: BytesIO, *args: Any) -> "FutureSalt":
+    def read(data: BytesIO, *args: Any) -> FutureSalt:
         valid_since = Int.read(data)
         valid_until = Int.read(data)
         salt = Long.read(data)

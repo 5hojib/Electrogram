@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 from io import BytesIO
-from typing import List, Any
+from typing import Any
 
 from .message import Message
 from .primitives.int import Int
@@ -13,11 +15,11 @@ class MsgContainer(TLObject):
 
     QUALNAME = "MsgContainer"
 
-    def __init__(self, messages: List[Message]):
+    def __init__(self, messages: list[Message]):
         self.messages = messages
 
     @staticmethod
-    def read(data: BytesIO, *args: Any) -> "MsgContainer":
+    def read(data: BytesIO, *args: Any) -> MsgContainer:
         count = Int.read(data)
         return MsgContainer([Message.read(data) for _ in range(count)])
 

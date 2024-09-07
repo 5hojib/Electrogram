@@ -1,7 +1,11 @@
-from io import BytesIO
-from typing import Any
+from __future__ import annotations
 
-from ..tl_object import TLObject
+from typing import TYPE_CHECKING, Any
+
+from pyrogram.raw.core.tl_object import TLObject
+
+if TYPE_CHECKING:
+    from io import BytesIO
 
 
 class BoolFalse(bytes, TLObject):

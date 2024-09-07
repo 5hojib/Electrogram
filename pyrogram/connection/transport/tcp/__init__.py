@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .tcp import TCP, Proxy
 from .tcp_abridged import TCPAbridged
 from .tcp_abridged_o import TCPAbridgedO

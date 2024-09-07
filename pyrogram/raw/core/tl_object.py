@@ -1,12 +1,16 @@
-from io import BytesIO
-from json import dumps
-from typing import cast, List, Any, Union, Dict
+from __future__ import annotations
 
-from ..all import objects
+from json import dumps
+from typing import TYPE_CHECKING, Any, cast
+
+from pyrogram.raw.all import objects
+
+if TYPE_CHECKING:
+    from io import BytesIO
 
 
 class TLObject:
-    __slots__: List[str] = []
+    __slots__: list[str] = []
 
     QUALNAME = "Base"
 
@@ -20,7 +24,7 @@ class TLObject:
         pass
 
     @staticmethod
-    def default(obj: "TLObject") -> Union[str, Dict[str, str]]:
+    def default(obj: TLObject) -> str | dict[str, str]:
         if isinstance(obj, bytes):
             return repr(obj)
 
@@ -43,7 +47,7 @@ class TLObject:
         return "pyrogram.raw.{}({})".format(
             self.QUALNAME,
             ", ".join(
-                f"{attr}={repr(getattr(self, attr))}"
+                f"{attr}={getattr(self, attr)!r}"
                 for attr in self.__slots__
                 if getattr(self, attr) is not None
             ),

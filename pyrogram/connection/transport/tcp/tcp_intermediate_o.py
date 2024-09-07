@@ -1,9 +1,11 @@
+from __future__ import annotations
+
 import logging
 import os
 from struct import pack, unpack
-from typing import Optional, Tuple
 
 from pyrogram.crypto import aes
+
 from .tcp import TCP, Proxy
 
 log = logging.getLogger(__name__)
@@ -18,7 +20,7 @@ class TCPIntermediateO(TCP):
         self.encrypt = None
         self.decrypt = None
 
-    async def connect(self, address: Tuple[str, int]) -> None:
+    async def connect(self, address: tuple[str, int]) -> None:
         await super().connect(address)
 
         while True:
@@ -46,7 +48,7 @@ class TCPIntermediateO(TCP):
             aes.ctr256_encrypt(pack("<i", len(data)) + data, *self.encrypt)
         )
 
-    async def recv(self, length: int = 0) -> Optional[bytes]:
+    async def recv(self, length: int = 0) -> bytes | None:
         length = await super().recv(4)
 
         if length is None:

@@ -1,4 +1,4 @@
-from typing import Tuple
+from __future__ import annotations
 
 
 class DataCenter:
@@ -41,12 +41,9 @@ class DataCenter:
 
     def __new__(
         cls, dc_id: int, test_mode: bool, ipv6: bool, alt_port: bool, media: bool
-    ) -> Tuple[str, int]:
+    ) -> tuple[str, int]:
         if test_mode:
-            if ipv6:
-                ip = cls.TEST_IPV6[dc_id]
-            else:
-                ip = cls.TEST[dc_id]
+            ip = cls.TEST_IPV6[dc_id] if ipv6 else cls.TEST[dc_id]
 
             return ip, 80
         else:
@@ -55,9 +52,8 @@ class DataCenter:
                     ip = cls.PROD_IPV6_MEDIA.get(dc_id, cls.PROD_IPV6[dc_id])
                 else:
                     ip = cls.PROD_IPV6[dc_id]
+            elif media:
+                ip = cls.PROD_MEDIA.get(dc_id, cls.PROD[dc_id])
             else:
-                if media:
-                    ip = cls.PROD_MEDIA.get(dc_id, cls.PROD[dc_id])
-                else:
-                    ip = cls.PROD[dc_id]
+                ip = cls.PROD[dc_id]
             return ip, 5222 if alt_port else 443

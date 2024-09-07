@@ -1,9 +1,12 @@
+from __future__ import annotations
+
 from hashlib import sha256
 from io import BytesIO
 from os import urandom
 
 from pyrogram.errors import SecurityCheckMismatch
-from pyrogram.raw.core import Message, Long
+from pyrogram.raw.core import Long, Message
+
 from . import aes
 
 
@@ -20,14 +23,20 @@ def kdf(auth_key: bytes, msg_key: bytes, outgoing: bool) -> tuple:
 
 
 def pack(
-    message: Message, salt: int, session_id: bytes, auth_key: bytes, auth_key_id: bytes
+    message: Message,
+    salt: int,
+    session_id: bytes,
+    auth_key: bytes,
+    auth_key_id: bytes,
 ) -> bytes:
     data = Long(salt) + session_id + message.write()
     padding = urandom(-(len(data) + 12) % 16 + 12)
     msg_key_large = sha256(auth_key[88 : 88 + 32] + data + padding).digest()
     msg_key = msg_key_large[8:24]
     aes_key, aes_iv = kdf(auth_key, msg_key, True)
-    return auth_key_id + msg_key + aes.ige256_encrypt(data + padding, aes_key, aes_iv)
+    return (
+        auth_key_id + msg_key + aes.ige256_encrypt(data + padding, aes_key, aes_iv)
+    )
 
 
 def unpack(
@@ -49,7 +58,7 @@ def unpack(
     except KeyError as e:
         if e.args[0] == 0:
             raise ConnectionError(
-                f"Received empty data. Check your internet connection."
+                "Received empty data. Check your internet connection."
             )
 
         left = data.read().hex()

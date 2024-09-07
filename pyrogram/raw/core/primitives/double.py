@@ -1,8 +1,12 @@
-from io import BytesIO
-from struct import unpack, pack
-from typing import cast, Any
+from __future__ import annotations
 
-from ..tl_object import TLObject
+from struct import pack, unpack
+from typing import TYPE_CHECKING, Any, cast
+
+from pyrogram.raw.core.tl_object import TLObject
+
+if TYPE_CHECKING:
+    from io import BytesIO
 
 
 class Double(bytes, TLObject):

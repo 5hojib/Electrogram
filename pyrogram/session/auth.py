@@ -1,18 +1,23 @@
+from __future__ import annotations
+
 import asyncio
 import logging
 import time
 from hashlib import sha1
 from io import BytesIO
 from os import urandom
-from typing import Optional
+from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import raw
-from pyrogram.connection import Connection
-from pyrogram.crypto import aes, rsa, prime
+from pyrogram.crypto import aes, prime, rsa
 from pyrogram.errors import SecurityCheckMismatch
-from pyrogram.raw.core import TLObject, Long, Int
+from pyrogram.raw.core import Int, Long, TLObject
+
 from .internals import MsgId
+
+if TYPE_CHECKING:
+    from pyrogram.connection import Connection
 
 log = logging.getLogger(__name__)
 
@@ -20,7 +25,7 @@ log = logging.getLogger(__name__)
 class Auth:
     MAX_RETRIES = 5
 
-    def __init__(self, client: "pyrogram.Client", dc_id: int, test_mode: bool):
+    def __init__(self, client: pyrogram.Client, dc_id: int, test_mode: bool):
         self.dc_id = dc_id
         self.test_mode = test_mode
         self.ipv6 = client.ipv6
@@ -29,7 +34,7 @@ class Auth:
         self.connection_factory = client.connection_factory
         self.protocol_factory = client.protocol_factory
 
-        self.connection: Optional[Connection] = None
+        self.connection: Connection | None = None
 
     @staticmethod
     def pack(data: TLObject) -> bytes:
@@ -178,7 +183,10 @@ class Auth:
                 retry_id = 0
 
                 data = raw.types.ClientDHInnerData(
-                    nonce=nonce, server_nonce=server_nonce, retry_id=retry_id, g_b=g_b
+                    nonce=nonce,
+                    server_nonce=server_nonce,
+                    retry_id=retry_id,
+                    g_b=g_b,
                 ).write()
 
                 sha = sha1(data).digest()
@@ -238,7 +246,9 @@ class Auth:
                 log.debug("g_a and g_b validation: OK")
 
                 # https://core.telegram.org/mtproto/security_guidelines#checking-sha1-hash-values
-                answer = server_dh_inner_data.write()  # Call .write() to remove padding
+                answer = (
+                    server_dh_inner_data.write()
+                )  # Call .write() to remove padding
                 SecurityCheckMismatch.check(
                     answer_with_hash[:20] == sha1(answer).digest(),
                     "answer_with_hash[:20] == sha1(answer).digest()",
@@ -253,7 +263,8 @@ class Auth:
                 # 2nd message
                 server_nonce = int.from_bytes(server_nonce, "little", signed=True)
                 SecurityCheckMismatch.check(
-                    nonce == server_dh_params.nonce, "nonce == server_dh_params.nonce"
+                    nonce == server_dh_params.nonce,
+                    "nonce == server_dh_params.nonce",
                 )
                 SecurityCheckMismatch.check(
                     server_nonce == server_dh_params.server_nonce,

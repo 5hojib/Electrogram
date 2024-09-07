@@ -1,17 +1,22 @@
-from io import BytesIO
-from typing import cast, Union, Any
+from __future__ import annotations
 
-from .bool import BoolFalse, BoolTrue, Bool
+from typing import TYPE_CHECKING, Any, cast
+
+from pyrogram.raw.core.list import List
+from pyrogram.raw.core.tl_object import TLObject
+
+from .bool import Bool, BoolFalse, BoolTrue
 from .int import Int, Long
-from ..list import List
-from ..tl_object import TLObject
+
+if TYPE_CHECKING:
+    from io import BytesIO
 
 
 class Vector(bytes, TLObject):
     ID = 0x1CB5C415
 
     @staticmethod
-    def read_bare(b: BytesIO, size: int) -> Union[int, Any]:
+    def read_bare(b: BytesIO, size: int) -> int | Any:
         if size == 4:
             e = int.from_bytes(b.read(4), "little")
             b.seek(-4, 1)
