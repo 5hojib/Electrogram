@@ -1,3 +1,4 @@
+# ruff: noqa: ARG001
 from __future__ import annotations
 
 import asyncio
@@ -26,6 +27,7 @@ from pyrogram.handlers import (
     PollHandler,
     PreCheckoutQueryHandler,
     RawUpdateHandler,
+    ShippingQueryHandler,
     StoryHandler,
     UserStatusHandler,
 )
@@ -41,6 +43,9 @@ from pyrogram.raw.types import (
     UpdateBotMessageReactions,
     UpdateBotNewBusinessMessage,
     UpdateBotPrecheckoutQuery,
+    UpdateBotShippingQuery,
+    UpdateBotStopped,
+    UpdateBusinessBotCallbackQuery,
     UpdateChannelParticipant,
     UpdateChatParticipant,
     UpdateDeleteChannelMessages,
@@ -66,12 +71,26 @@ class Dispatcher:
         UpdateNewScheduledMessage,
     )
     NEW_BOT_BUSINESS_MESSAGE_UPDATES = (UpdateBotNewBusinessMessage,)
-    EDIT_MESSAGE_UPDATES = (UpdateEditMessage, UpdateEditChannelMessage)
+    EDIT_MESSAGE_UPDATES = (
+        UpdateEditMessage,
+        UpdateEditChannelMessage,
+    )
     EDIT_BOT_BUSINESS_MESSAGE_UPDATES = (UpdateBotEditBusinessMessage,)
-    DELETE_MESSAGES_UPDATES = (UpdateDeleteMessages, UpdateDeleteChannelMessages)
+    DELETE_MESSAGES_UPDATES = (
+        UpdateDeleteMessages,
+        UpdateDeleteChannelMessages,
+    )
     DELETE_BOT_BUSINESS_MESSAGES_UPDATES = (UpdateBotDeleteBusinessMessage,)
-    CALLBACK_QUERY_UPDATES = (UpdateBotCallbackQuery, UpdateInlineBotCallbackQuery)
-    CHAT_MEMBER_UPDATES = (UpdateChatParticipant, UpdateChannelParticipant)
+    CALLBACK_QUERY_UPDATES = (
+        UpdateBotCallbackQuery,
+        UpdateInlineBotCallbackQuery,
+        UpdateBusinessBotCallbackQuery,
+    )
+    CHAT_MEMBER_UPDATES = (
+        UpdateChatParticipant,
+        UpdateChannelParticipant,
+        UpdateBotStopped,
+    )
     USER_STATUS_UPDATES = (UpdateUserStatus,)
     BOT_INLINE_QUERY_UPDATES = (UpdateBotInlineQuery,)
     POLL_UPDATES = (UpdateMessagePoll,)
@@ -80,19 +99,17 @@ class Dispatcher:
     NEW_STORY_UPDATES = (UpdateStory,)
     MESSAGE_BOT_NA_REACTION_UPDATES = (UpdateBotMessageReaction,)
     MESSAGE_BOT_A_REACTION_UPDATES = (UpdateBotMessageReactions,)
-    BOT_BUSINESS_CONNECT_UPDATES = (UpdateBotBusinessConnect,)
+    BOT_BUSSINESS_CONNECT_UPDATES = (UpdateBotBusinessConnect,)
     PRE_CHECKOUT_QUERY_UPDATES = (UpdateBotPrecheckoutQuery,)
+    SHIPPING_QUERY_UPDATES = (UpdateBotShippingQuery,)
 
     def __init__(self, client: pyrogram.Client) -> None:
         self.client = client
         self.loop = asyncio.get_event_loop()
-
         self.handler_worker_tasks = []
         self.locks_list = []
-
         self.updates_queue = asyncio.Queue()
         self.groups = OrderedDict()
-
         self.conversation_handler = ConversationHandler()
         self.groups[0] = [self.conversation_handler]
 
@@ -122,10 +139,12 @@ class Dispatcher:
 
         async def edited_message_parser(update, users, chats):
             parsed, _ = await message_parser(update, users, chats)
+
             return (parsed, EditedMessageHandler)
 
         async def edited_bot_business_message_parser(update, users, chats):
             parsed, _ = await bot_business_message_parser(update, users, chats)
+
             return (parsed, EditedBotBusinessMessageHandler)
 
         async def deleted_messages_parser(update, users, chats):
@@ -137,7 +156,9 @@ class Dispatcher:
         async def deleted_bot_business_messages_parser(update, users, chats):
             return (
                 utils.parse_deleted_messages(
-                    self.client, update, business_connection_id=update.connection_id
+                    self.client,
+                    update,
+                    business_connection_id=update.connection_id,
                 ),
                 DeletedBotBusinessMessagesHandler,
             )
@@ -164,7 +185,7 @@ class Dispatcher:
 
         async def poll_parser(update, users, chats):
             return (
-                pyrogram.types.Poll._parse_update(self.client, update),
+                await pyrogram.types.Poll._parse_update(self.client, update, users),
                 PollHandler,
             )
 
@@ -196,6 +217,14 @@ class Dispatcher:
                     self.client, update.story, update.peer
                 ),
                 StoryHandler,
+            )
+
+        async def shipping_query_parser(update, users, chats):
+            return (
+                await pyrogram.types.ShippingQuery._parse(
+                    self.client, update, users
+                ),
+                ShippingQueryHandler,
             )
 
         async def pre_checkout_query_parser(update, users, chats):
@@ -245,10 +274,11 @@ class Dispatcher:
             Dispatcher.CHAT_MEMBER_UPDATES: chat_member_updated_parser,
             Dispatcher.CHAT_JOIN_REQUEST_UPDATES: chat_join_request_parser,
             Dispatcher.NEW_STORY_UPDATES: story_parser,
+            Dispatcher.SHIPPING_QUERY_UPDATES: shipping_query_parser,
             Dispatcher.PRE_CHECKOUT_QUERY_UPDATES: pre_checkout_query_parser,
             Dispatcher.MESSAGE_BOT_NA_REACTION_UPDATES: message_bot_na_reaction_parser,
             Dispatcher.MESSAGE_BOT_A_REACTION_UPDATES: message_bot_a_reaction_parser,
-            Dispatcher.BOT_BUSINESS_CONNECT_UPDATES: bot_business_connect_parser,
+            Dispatcher.BOT_BUSSINESS_CONNECT_UPDATES: bot_business_connect_parser,
         }
 
         self.update_parsers = {
@@ -294,10 +324,15 @@ class Dispatcher:
                                 )
                                 if id < 0
                                 else raw.functions.updates.GetDifference(
-                                    pts=local_pts, date=local_date, qts=0
+                                    pts=local_pts,
+                                    date=local_date,
+                                    qts=0,
                                 )
                             )
-                        except (errors.ChannelPrivate, errors.ChannelInvalid):
+                        except (
+                            errors.ChannelPrivate,
+                            errors.ChannelInvalid,
+                        ):
                             break
 
                         if isinstance(
@@ -306,7 +341,7 @@ class Dispatcher:
                             | raw.types.updates.DifferenceTooLong,
                         ):
                             break
-                        elif isinstance(diff, raw.types.updates.Difference):
+                        if isinstance(diff, raw.types.updates.Difference):
                             local_pts = diff.state.pts
                         elif isinstance(diff, raw.types.updates.DifferenceSlice):
                             local_pts = diff.intermediate_state.pts
@@ -322,7 +357,7 @@ class Dispatcher:
                             | raw.types.updates.ChannelDifferenceTooLong,
                         ):
                             break
-                        elif isinstance(diff, raw.types.updates.ChannelDifference):
+                        if isinstance(diff, raw.types.updates.ChannelDifference):
                             local_pts = diff.pts
 
                         users = {i.id: i for i in diff.users}
@@ -332,18 +367,16 @@ class Dispatcher:
                             message_updates_counter += 1
                             self.updates_queue.put_nowait(
                                 (
-                                    (
-                                        raw.types.UpdateNewMessage(
-                                            message=message,
-                                            pts=local_pts,
-                                            pts_count=-1,
-                                        )
-                                        if id == self.client.me.id
-                                        else raw.types.UpdateNewChannelMessage(
-                                            message=message,
-                                            pts=local_pts,
-                                            pts_count=-1,
-                                        )
+                                    raw.types.UpdateNewMessage(
+                                        message=message,
+                                        pts=local_pts,
+                                        pts_count=-1,
+                                    )
+                                    if id == self.client.me.id
+                                    else raw.types.UpdateNewChannelMessage(
+                                        message=message,
+                                        pts=local_pts,
+                                        pts_count=-1,
                                     ),
                                     users,
                                     chats,
@@ -469,15 +502,15 @@ class Dispatcher:
                                         self.client,
                                         *args,
                                     )
-                            except pyrogram.StopPropagation:
+                            except pyrogram.StopPropagationError:
                                 raise
-                            except pyrogram.ContinuePropagation:
+                            except pyrogram.ContinuePropagationError:
                                 continue
                             except Exception as e:
                                 log.exception(e)
 
                             break
-            except pyrogram.StopPropagation:
+            except pyrogram.StopPropagationError:
                 pass
             except Exception as e:
                 log.exception(e)

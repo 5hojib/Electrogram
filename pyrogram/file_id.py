@@ -12,14 +12,41 @@ log = logging.getLogger(__name__)
 
 
 def b64_encode(s: bytes) -> str:
+    """Encode bytes into a URL-safe Base64 string without padding
+
+    Parameters:
+        s (``bytes``):
+            Bytes to encode
+
+    Returns:
+        ``str``: The encoded bytes
+    """
     return base64.urlsafe_b64encode(s).decode().strip("=")
 
 
 def b64_decode(s: str) -> bytes:
+    """Decode a URL-safe Base64 string without padding to bytes
+
+    Parameters:
+        s (``str``):
+            String to decode
+
+    Returns:
+        ``bytes``: The decoded string
+    """
     return base64.urlsafe_b64decode(s + "=" * (-len(s) % 4))
 
 
 def rle_encode(s: bytes) -> bytes:
+    """Zero-value RLE encoder
+
+    Parameters:
+        s (``bytes``):
+            Bytes to encode
+
+    Returns:
+        ``bytes``: The encoded bytes
+    """
     r: list[int] = []
     n: int = 0
 
@@ -40,6 +67,15 @@ def rle_encode(s: bytes) -> bytes:
 
 
 def rle_decode(s: bytes) -> bytes:
+    """Zero-value RLE decoder
+
+    Parameters:
+        s (``bytes``):
+            Bytes to decode
+
+    Returns:
+        ``bytes``: The decoded bytes
+    """
     r: list[int] = []
     z: bool = False
 
@@ -58,10 +94,12 @@ def rle_decode(s: bytes) -> bytes:
 
 
 class FileType(IntEnum):
+    """Known file types"""
+
     THUMBNAIL = 0
-    CHAT_PHOTO = 1  # ProfilePhoto
+    CHAT_PHOTO = 1
     PHOTO = 2
-    VOICE = 3  # VoiceNote
+    VOICE = 3
     VIDEO = 4
     DOCUMENT = 5
     ENCRYPTED = 6
@@ -79,6 +117,8 @@ class FileType(IntEnum):
 
 
 class ThumbnailSource(IntEnum):
+    """Known thumbnail sources"""
+
     LEGACY = 0
     THUMBNAIL = 1
     CHAT_PHOTO_SMALL = 2
@@ -146,7 +186,9 @@ class FileId:
     @staticmethod
     def decode(file_id: str):
         decoded = rle_decode(b64_decode(file_id))
+
         major = decoded[-1]
+
         if major < 4:
             minor = 0
             buffer = BytesIO(decoded[:-1])
@@ -155,14 +197,18 @@ class FileId:
             buffer = BytesIO(decoded[:-2])
 
         file_type, dc_id = struct.unpack("<ii", buffer.read(8))
+
         has_web_location = bool(file_type & WEB_LOCATION_FLAG)
         has_file_reference = bool(file_type & FILE_REFERENCE_FLAG)
+
         file_type &= ~WEB_LOCATION_FLAG
         file_type &= ~FILE_REFERENCE_FLAG
+
         try:
             file_type = FileType(file_type)
         except ValueError:
             raise ValueError(f"Unknown file_type {file_type} of file_id {file_id}")
+
         if has_web_location:
             url = String.read(buffer)
             (access_hash,) = struct.unpack("<q", buffer.read(8))
@@ -332,7 +378,10 @@ class FileId:
             ):
                 buffer.write(
                     struct.pack(
-                        "<qqi", self.chat_id, self.chat_access_hash, self.local_id
+                        "<qqi",
+                        self.chat_id,
+                        self.chat_access_hash,
+                        self.local_id,
                     )
                 )
             elif self.thumbnail_source == ThumbnailSource.STICKER_SET_THUMBNAIL:
@@ -356,6 +405,8 @@ class FileId:
 
 
 class FileUniqueType(IntEnum):
+    """Known file unique types"""
+
     WEB = 0
     PHOTO = 1
     DOCUMENT = 2
@@ -411,7 +462,6 @@ class FileUniqueId:
 
             return FileUniqueId(file_unique_type=file_unique_type, media_id=media_id)
 
-        # TODO: Missing decoder for SECURE, ENCRYPTED and TEMP
         raise ValueError(
             f"Unknown decoder for file_unique_type {file_unique_type} of file_unique_id {file_unique_id}"
         )
@@ -421,12 +471,14 @@ class FileUniqueId:
             string = struct.pack("<is", self.file_unique_type, String(self.url))
         elif self.file_unique_type == FileUniqueType.PHOTO:
             string = struct.pack(
-                "<iqi", self.file_unique_type, self.volume_id, self.local_id
+                "<iqi",
+                self.file_unique_type,
+                self.volume_id,
+                self.local_id,
             )
         elif self.file_unique_type == FileUniqueType.DOCUMENT:
             string = struct.pack("<iq", self.file_unique_type, self.media_id)
         else:
-            # TODO: Missing encoder for SECURE, ENCRYPTED and TEMP
             raise ValueError(
                 f"Unknown encoder for file_unique_type {self.file_unique_type}"
             )
