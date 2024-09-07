@@ -22,49 +22,61 @@ log = logging.getLogger(__name__)
 
 class SaveFile:
     async def save_file(
-        self: pyrogram.Client,  # type: ignore
+        self: pyrogram.Client,
         path: str | BinaryIO,
-        file_id: int | None = None,  # type: ignore
+        file_id: int | None = None,
         file_part: int = 0,
-        progress: Callable | None = None,  # type: ignore
+        progress: Callable | None = None,
         progress_args: tuple = (),
     ):
         """Upload a file onto Telegram servers, without actually sending the message to anyone.
         Useful whenever an InputFile type is required.
+        
         .. note::
             This is a utility method intended to be used **only** when working with raw
             :obj:`functions <pyrogram.api.functions>` (i.e: a Telegram API method you wish to use which is not
             available yet in the Client class as an easy-to-use method).
         .. include:: /_includes/usable-by/users-bots.rst
+        
         Parameters:
             path (``str`` | ``BinaryIO``):
                 The path of the file you want to upload that exists on your local machine or a binary file-like object
                 with its attribute ".name" set for in-memory uploads.
+
             file_id (``int``, *optional*):
                 In case a file part expired, pass the file_id and the file_part to retry uploading that specific chunk.
+
             file_part (``int``, *optional*):
                 In case a file part expired, pass the file_id and the file_part to retry uploading that specific chunk.
+
             progress (``Callable``, *optional*):
                 Pass a callback function to view the file transmission progress.
                 The function must take *(current, total)* as positional arguments (look at Other Parameters below for a
                 detailed description) and will be called back each time a new file chunk has been successfully
                 transmitted.
+
             progress_args (``tuple``, *optional*):
                 Extra custom arguments for the progress callback function.
                 You can pass anything you need to be available in the progress callback scope; for example, a Message
                 object or a Client instance in order to edit the message with the updated progress status.
+
         Other Parameters:
             current (``int``):
                 The amount of bytes transmitted so far.
+
             total (``int``):
                 The total size of the file.
+
             *args (``tuple``, *optional*):
                 Extra custom arguments as defined in the ``progress_args`` parameter.
                 You can either keep ``*args`` or add every single extra argument in your function signature.
+
         Returns:
             ``InputFile``: On success, the uploaded file is returned in form of an InputFile object.
+
         Raises:
             RPCError: In case of a Telegram RPC error.
+
         """
         if path is None:
             return None
@@ -114,7 +126,7 @@ class SaveFile:
 
             file_size_limit_mib = (
                 4000
-                if self.me.is_premium  # type: ignore
+                if self.me.is_premium
                 else 2000
             )
 
@@ -134,9 +146,9 @@ class SaveFile:
             pool = [
                 Session(
                     self,
-                    await self.storage.dc_id(),  # type: ignore
-                    await self.storage.auth_key(),  # type: ignore
-                    await self.storage.test_mode(),  # type: ignore
+                    await self.storage.dc_id(),
+                    await self.storage.auth_key(),
+                    await self.storage.test_mode(),
                     is_media=True,
                 )
                 for _ in range(pool_size)
@@ -163,7 +175,7 @@ class SaveFile:
 
                     if not chunk:
                         if not is_big and not is_missing_part:
-                            md5_sum = md5_sum.hexdigest()  # type: ignore
+                            md5_sum = md5_sum.hexdigest()
                         break
 
                     await queue.put(
@@ -176,7 +188,7 @@ class SaveFile:
                         return None
 
                     if not is_big and not is_missing_part:
-                        md5_sum.update(chunk)  # type: ignore
+                        md5_sum.update(chunk)
 
                     file_part += 1
 
@@ -206,12 +218,11 @@ class SaveFile:
                         parts=file_total_parts,
                         name=file_name,
                     )
-                else:
-                    return raw.types.InputFile(
+                return raw.types.InputFile(
                         id=file_id,
                         parts=file_total_parts,
                         name=file_name,
-                        md5_checksum=md5_sum,  # type: ignore
+                        md5_checksum=md5_sum,
                     )
             finally:
                 for _ in workers:
