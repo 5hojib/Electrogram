@@ -228,9 +228,7 @@ class Auth:
                 )
                 log.debug("g_a and g_b validation: OK")
 
-                answer = (
-                    server_dh_inner_data.write()
-                )
+                answer = server_dh_inner_data.write()
                 SecurityCheckMismatch.check(
                     answer_with_hash[:20] == sha1(answer).digest(),
                     "answer_with_hash[:20] == sha1(answer).digest()",
