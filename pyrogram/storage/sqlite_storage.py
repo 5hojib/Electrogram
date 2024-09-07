@@ -3,7 +3,7 @@ from __future__ import annotations
 import contextlib
 import inspect
 import time
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, NoReturn
 
 from pyrogram import raw, utils
 
@@ -102,12 +102,12 @@ class SQLiteStorage(Storage):
     VERSION = 4
     USERNAME_TTL = 8 * 60 * 60
 
-    def __init__(self, name: str):
+    def __init__(self, name: str) -> None:
         super().__init__(name)
 
         self.conn: aiosqlite.Connection = None
 
-    async def create(self):
+    async def create(self) -> None:
         await self.conn.executescript(SCHEMA)
         await self.conn.execute("INSERT INTO version VALUES (?)", (self.VERSION,))
         await self.conn.execute(
@@ -116,20 +116,22 @@ class SQLiteStorage(Storage):
         )
         await self.conn.commit()
 
-    async def open(self):
+    async def open(self) -> NoReturn:
         raise NotImplementedError
 
-    async def save(self):
+    async def save(self) -> None:
         await self.date(int(time.time()))
         await self.conn.commit()
 
-    async def close(self):
+    async def close(self) -> None:
         await self.conn.close()
 
-    async def delete(self):
+    async def delete(self) -> NoReturn:
         raise NotImplementedError
 
-    async def update_peers(self, peers: list[tuple[int, int, str, str, str]]):
+    async def update_peers(
+        self, peers: list[tuple[int, int, str, str, str]]
+    ) -> None:
         with contextlib.suppress(Exception):
             await self.conn.executemany(
                 "REPLACE INTO peers (id, access_hash, type, username, phone_number)"
@@ -137,7 +139,7 @@ class SQLiteStorage(Storage):
                 peers,
             )
 
-    async def update_usernames(self, usernames: list[tuple[int, str]]):
+    async def update_usernames(self, usernames: list[tuple[int, str]]) -> None:
         await self.conn.executescript(UNAME_SCHEMA)
         for user in usernames:
             await self.conn.execute(
@@ -232,7 +234,7 @@ class SQLiteStorage(Storage):
         row = await q.fetchone()
         return row[0] if row else None
 
-    async def _set(self, value: Any):
+    async def _set(self, value: Any) -> None:
         attr = inspect.stack()[2].function
         await self.conn.execute(f"UPDATE sessions SET {attr} = ?", (value,))
         await self.conn.commit()

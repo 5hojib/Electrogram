@@ -83,7 +83,7 @@ class Dispatcher:
     BOT_BUSINESS_CONNECT_UPDATES = (UpdateBotBusinessConnect,)
     PRE_CHECKOUT_QUERY_UPDATES = (UpdateBotPrecheckoutQuery,)
 
-    def __init__(self, client: pyrogram.Client):
+    def __init__(self, client: pyrogram.Client) -> None:
         self.client = client
         self.loop = asyncio.get_event_loop()
 
@@ -257,7 +257,7 @@ class Dispatcher:
             for key in key_tuple
         }
 
-    async def start(self):
+    async def start(self) -> None:
         if not self.client.no_updates:
             for i in range(self.client.workers):
                 self.locks_list.append(asyncio.Lock())
@@ -369,7 +369,7 @@ class Dispatcher:
                     other_updates_counter,
                 )
 
-    async def stop(self):
+    async def stop(self) -> None:
         if not self.client.no_updates:
             for i in range(self.client.workers):
                 self.updates_queue.put_nowait(None)
@@ -382,8 +382,8 @@ class Dispatcher:
 
             log.info("Stopped %s HandlerTasks", self.client.workers)
 
-    def add_handler(self, handler, group: int):
-        async def fn():
+    def add_handler(self, handler, group: int) -> None:
+        async def fn() -> None:
             for lock in self.locks_list:
                 await lock.acquire()
 
@@ -399,8 +399,8 @@ class Dispatcher:
 
         self.loop.create_task(fn())
 
-    def remove_handler(self, handler, group: int):
-        async def fn():
+    def remove_handler(self, handler, group: int) -> None:
+        async def fn() -> None:
             for lock in self.locks_list:
                 await lock.acquire()
 
@@ -417,7 +417,7 @@ class Dispatcher:
 
         self.loop.create_task(fn())
 
-    async def handler_worker(self, lock):
+    async def handler_worker(self, lock) -> None:
         while True:
             packet = await self.updates_queue.get()
 

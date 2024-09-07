@@ -32,7 +32,7 @@ log = getLogger(__name__)
 
 
 class Result:
-    def __init__(self):
+    def __init__(self) -> None:
         self.value = None
         self.event = Event()
 
@@ -63,7 +63,7 @@ class Session:
         test_mode: bool,
         is_media: bool = False,
         is_cdn: bool = False,
-    ):
+    ) -> None:
         self.client = client
         self.dc_id = dc_id
         self.auth_key = auth_key
@@ -90,7 +90,7 @@ class Session:
         self.currently_restarting = False
         self.currently_stopping = False
 
-    async def start(self):
+    async def start(self) -> None:
         while True:
             if self.instant_stop:
                 log.info("Session init force stopped (loop)")
@@ -160,7 +160,7 @@ class Session:
         self.is_started.set()
         log.info("Session started")
 
-    async def stop(self, restart: bool = False):
+    async def stop(self, restart: bool = False) -> None:
         if self.currently_stopping:
             return  # don't stop twice
         if self.instant_stop:
@@ -207,7 +207,7 @@ class Session:
             if restart:
                 self.instant_stop = False  # reset
 
-    async def restart(self):
+    async def restart(self) -> None:
         if self.currently_restarting:
             return  # don't restart twice
         if self.instant_stop:
@@ -260,7 +260,7 @@ class Session:
         finally:
             self.currently_restarting = False
 
-    async def handle_packet(self, packet):
+    async def handle_packet(self, packet) -> None:
         if self.instant_stop:
             log.info("Stopped packet handler")
             return  # stop instantly
@@ -359,7 +359,7 @@ class Session:
             else:
                 self.pending_acks.clear()
 
-    async def ping_worker(self):
+    async def ping_worker(self) -> None:
         log.info("PingTask started")
 
         while True:
@@ -389,7 +389,7 @@ class Session:
 
         log.info("PingTask stopped")
 
-    async def recv_worker(self):
+    async def recv_worker(self) -> None:
         log.info("NetworkTask started")
 
         while True:
@@ -492,7 +492,7 @@ class Session:
             return result
         return None
 
-    def _handle_bad_notification(self):
+    def _handle_bad_notification(self) -> None:
         new_msg_id = MsgId()
         if self.stored_msg_ids[len(self.stored_msg_ids) - 1] >= new_msg_id:
             new_msg_id = self.stored_msg_ids[len(self.stored_msg_ids) - 1] + 4

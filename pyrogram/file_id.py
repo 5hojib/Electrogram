@@ -123,7 +123,7 @@ class FileId:
         chat_access_hash: int | None = None,
         sticker_set_id: int | None = None,
         sticker_set_access_hash: int | None = None,
-    ):
+    ) -> None:
         self.major = major
         self.minor = minor
         self.file_type = file_type
@@ -351,7 +351,7 @@ class FileId:
 
         return b64_encode(rle_encode(buffer.getvalue()))
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str({k: v for k, v in self.__dict__.items() if v is not None})
 
 
@@ -373,7 +373,7 @@ class FileUniqueId:
         media_id: int | None = None,
         volume_id: int | None = None,
         local_id: int | None = None,
-    ):
+    ) -> None:
         self.file_unique_type = file_unique_type
         self.url = url
         self.media_id = media_id
@@ -433,5 +433,5 @@ class FileUniqueId:
 
         return b64_encode(rle_encode(string))
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str({k: v for k, v in self.__dict__.items() if v is not None})

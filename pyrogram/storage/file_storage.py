@@ -24,12 +24,12 @@ CREATE TABLE update_state
 class FileStorage(SQLiteStorage):
     FILE_EXTENSION = ".session"
 
-    def __init__(self, name: str, workdir: Path):
+    def __init__(self, name: str, workdir: Path) -> None:
         super().__init__(name)
 
         self.database = workdir / (self.name + self.FILE_EXTENSION)
 
-    async def update(self):
+    async def update(self) -> None:
         version = await self.version()
 
         if version == 1:
@@ -52,7 +52,7 @@ class FileStorage(SQLiteStorage):
 
         await self.version(version)
 
-    async def open(self):
+    async def open(self) -> None:
         path = self.database
         file_exists = path.is_file()
 
@@ -68,5 +68,5 @@ class FileStorage(SQLiteStorage):
         await self.conn.execute("VACUUM")
         await self.conn.commit()
 
-    async def delete(self):
+    async def delete(self) -> None:
         Path(self.database).unlink()

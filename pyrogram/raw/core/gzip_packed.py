@@ -16,7 +16,7 @@ class GzipPacked(TLObject):
 
     QUALNAME = "GzipPacked"
 
-    def __init__(self, packed_data: TLObject):
+    def __init__(self, packed_data: TLObject) -> None:
         self.packed_data = packed_data
 
     @staticmethod
