@@ -31,13 +31,13 @@ class SaveFile:
     ):
         """Upload a file onto Telegram servers, without actually sending the message to anyone.
         Useful whenever an InputFile type is required.
-        
+
         .. note::
             This is a utility method intended to be used **only** when working with raw
             :obj:`functions <pyrogram.api.functions>` (i.e: a Telegram API method you wish to use which is not
             available yet in the Client class as an easy-to-use method).
         .. include:: /_includes/usable-by/users-bots.rst
-        
+
         Parameters:
             path (``str`` | ``BinaryIO``):
                 The path of the file you want to upload that exists on your local machine or a binary file-like object
@@ -124,11 +124,7 @@ class SaveFile:
             if file_size == 0:
                 raise ValueError("File size equals to 0 B")
 
-            file_size_limit_mib = (
-                4000
-                if self.me.is_premium
-                else 2000
-            )
+            file_size_limit_mib = 4000 if self.me.is_premium else 2000
 
             if file_size > file_size_limit_mib * 1024 * 1024:
                 raise ValueError(
@@ -219,11 +215,11 @@ class SaveFile:
                         name=file_name,
                     )
                 return raw.types.InputFile(
-                        id=file_id,
-                        parts=file_total_parts,
-                        name=file_name,
-                        md5_checksum=md5_sum,
-                    )
+                    id=file_id,
+                    parts=file_total_parts,
+                    name=file_name,
+                    md5_checksum=md5_sum,
+                )
             finally:
                 for _ in workers:
                     await queue.put(None)
