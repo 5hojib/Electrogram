@@ -1,3 +1,4 @@
+# ruff: noqa: RUF006
 from __future__ import annotations
 
 import asyncio
@@ -393,7 +394,7 @@ class Session:
                     False,
                 )
             except OSError:
-                _ = asyncio.create_task(self.restart())
+                asyncio.create_task(self.restart())
                 break
             except RPCError:
                 pass
@@ -428,11 +429,11 @@ class Session:
                     )
 
                 if self.is_started.is_set():
-                    _ = asyncio.create_task(self.restart())
+                    asyncio.create_task(self.restart())
 
                 break
 
-            _ = asyncio.create_task(self.handle_packet(packet))
+            asyncio.create_task(self.handle_packet(packet))
 
         log.info("NetworkTask stopped")
 
@@ -580,7 +581,7 @@ class Session:
                         query_name,
                         str(e) or repr(e),
                     )
-                    _ = asyncio.create_task(self.restart())
+                    asyncio.create_task(self.restart())
                 else:
                     (log.warning if retries < 2 else log.info)(
                         '[%s] [%s] Retrying "%s" due to: %s',
