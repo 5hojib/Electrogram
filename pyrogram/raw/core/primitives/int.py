@@ -20,7 +20,7 @@ class Int(bytes, TLObject):
     ) -> int:
         return int.from_bytes(data.read(cls.SIZE), "little", signed=signed)
 
-    def __new__(cls, value: int, signed: bool = True) -> bytes:  # type: ignore
+    def __new__(cls, value: int, signed: bool = True) -> bytes:
         return value.to_bytes(cls.SIZE, "little", signed=signed)
 
 

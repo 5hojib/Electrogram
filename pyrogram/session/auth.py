@@ -42,7 +42,7 @@ class Auth:
 
     @staticmethod
     def unpack(b: BytesIO):
-        b.seek(20)  # Skip auth_key_id (8), message_id (8) and message_length (4)
+        b.seek(20)
         return TLObject.read(b)
 
     async def invoke(self, data: TLObject):
@@ -59,8 +59,6 @@ class Auth:
         """
         retries_left = self.MAX_RETRIES
 
-        # The server may close the connection at any time, causing the auth key creation to fail.
-        # If that happens, just try again up to MAX_RETRIES times.
         while True:
             self.connection = self.connection_factory(
                 dc_id=self.dc_id,
@@ -73,14 +71,10 @@ class Auth:
             )
 
             try:
-                log.info(
-                    "Start creating a new auth key on DC%s",
-                    self.dc_id,
-                )
+                log.info("Start creating a new auth key on DC%s", self.dc_id)
 
                 await self.connection.connect()
 
-                # Step 1; Step 2
                 nonce = int.from_bytes(urandom(16), "little", signed=True)
                 log.debug("Send req_pq: %s", nonce)
                 res_pq = await self.invoke(raw.functions.ReqPqMulti(nonce=nonce))
@@ -99,12 +93,11 @@ class Auth:
                 else:
                     raise Exception("Public key not found")
 
-                # Step 3
                 pq = int.from_bytes(res_pq.pq, "big")
                 log.debug("Start PQ factorization: %s", pq)
                 start = time.time()
                 g = prime.decompose(pq)
-                p, q = sorted((g, pq // g))  # p < q
+                p, q = sorted((g, pq // g))
                 log.debug(
                     "Done PQ factorization (%ss): %s %s",
                     round(time.time() - start, 3),
@@ -112,7 +105,6 @@ class Auth:
                     q,
                 )
 
-                # Step 4
                 server_nonce = res_pq.server_nonce
                 new_nonce = int.from_bytes(urandom(32), "little", signed=True)
 
@@ -132,7 +124,6 @@ class Auth:
 
                 log.debug("Done encrypt data with RSA")
 
-                # Step 5. TODO: Handle "server_DH_params_fail". Code assumes response is ok
                 log.debug("Send req_DH_params")
                 server_dh_params = await self.invoke(
                     raw.functions.ReqDHParams(
@@ -177,7 +168,6 @@ class Auth:
 
                 log.debug("Delta time: %s", round(delta_time, 3))
 
-                # Step 6
                 g = server_dh_inner_data.g
                 b = int.from_bytes(urandom(256), "big")
                 g_b = pow(g, b, dh_prime).to_bytes(256, "big")
@@ -237,9 +227,7 @@ class Auth:
                 )
                 log.debug("g_a and g_b validation: OK")
 
-                answer = (
-                    server_dh_inner_data.write()
-                )  # Call .write() to remove padding
+                answer = server_dh_inner_data.write()
                 SecurityCheckMismatch.check(
                     answer_with_hash[:20] == sha1(answer).digest(),
                     "answer_with_hash[:20] == sha1(answer).digest()",
@@ -249,7 +237,6 @@ class Auth:
                 SecurityCheckMismatch.check(
                     nonce == res_pq.nonce, "nonce == res_pq.nonce"
                 )
-                # 2nd message
                 server_nonce = int.from_bytes(server_nonce, "little", signed=True)
                 SecurityCheckMismatch.check(
                     nonce == server_dh_params.nonce,
@@ -259,7 +246,6 @@ class Auth:
                     server_nonce == server_dh_params.server_nonce,
                     "server_nonce == server_dh_params.server_nonce",
                 )
-                # 3rd message
                 SecurityCheckMismatch.check(
                     nonce == set_client_dh_params_answer.nonce,
                     "nonce == set_client_dh_params_answer.nonce",
@@ -271,13 +257,9 @@ class Auth:
                 server_nonce = server_nonce.to_bytes(16, "little", signed=True)
                 log.debug("Nonce fields check: OK")
 
-                # Step 9
                 server_salt = aes.xor(new_nonce[:8], server_nonce[:8])
 
-                log.debug(
-                    "Server salt: %s",
-                    int.from_bytes(server_salt, "little"),
-                )
+                log.debug("Server salt: %s", int.from_bytes(server_salt, "little"))
 
                 log.info(
                     "Done auth key exchange: %s",

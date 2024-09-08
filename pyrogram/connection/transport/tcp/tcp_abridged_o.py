@@ -52,10 +52,7 @@ class TCPAbridgedO(TCP):
             else b"\x7f" + length.to_bytes(3, "little")
         ) + data
         payload = await self.loop.run_in_executor(
-            pyrogram.crypto_executor,
-            aes.ctr256_encrypt,
-            data,
-            *self.encrypt,
+            pyrogram.crypto_executor, aes.ctr256_encrypt, data, *self.encrypt
         )
 
         await super().send(payload)
@@ -82,8 +79,5 @@ class TCPAbridgedO(TCP):
             return None
 
         return await self.loop.run_in_executor(
-            pyrogram.crypto_executor,
-            aes.ctr256_decrypt,
-            data,
-            *self.decrypt,
+            pyrogram.crypto_executor, aes.ctr256_decrypt, data, *self.decrypt
         )

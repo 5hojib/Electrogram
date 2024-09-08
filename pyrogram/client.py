@@ -1245,4 +1245,4 @@ class Cache:
         self.store[key] = value
 
         if len(self.store) > self.capacity:
-            self.store.popitem(last=False)  # Remove the oldest item
+            self.store.popitem(last=False)
