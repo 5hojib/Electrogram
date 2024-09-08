@@ -294,8 +294,7 @@ class Session:
             if msg.seq_no % 2 != 0:
                 if msg.msg_id in self.pending_acks:
                     continue
-                else:
-                    self.pending_acks.add(msg.msg_id)
+                self.pending_acks.add(msg.msg_id)
 
             if len(self.stored_msg_ids) > Session.STORED_MSG_IDS_MAX_SIZE:
                 del self.stored_msg_ids[: Session.STORED_MSG_IDS_MAX_SIZE // 2]
@@ -394,7 +393,7 @@ class Session:
                     False,
                 )
             except OSError:
-                asyncio.create_task(self.restart())
+                _ = asyncio.create_task(self.restart())
                 break
             except RPCError:
                 pass
@@ -429,11 +428,11 @@ class Session:
                     )
 
                 if self.is_started.is_set():
-                    asyncio.create_task(self.restart())
+                    _ = asyncio.create_task(self.restart())
 
                 break
 
-            asyncio.create_task(self.handle_packet(packet))
+            _ = asyncio.create_task(self.handle_packet(packet))
 
         log.info("NetworkTask stopped")
 
@@ -581,7 +580,7 @@ class Session:
                         query_name,
                         str(e) or repr(e),
                     )
-                    asyncio.create_task(self.restart())
+                    _ = asyncio.create_task(self.restart())
                 else:
                     (log.warning if retries < 2 else log.info)(
                         '[%s] [%s] Retrying "%s" due to: %s',
