@@ -33,10 +33,11 @@ jobs:
       - name: Get Commit Messages
         id: get_commits
         run: |
-          COMMIT_TITLE=$(git log -1 --pretty=format:"%s")
-          COMMIT_BODY=$(git log -1 --pretty=format:"%b")
-          echo "COMMIT_TITLE=$COMMIT_TITLE" >> $GITHUB_ENV
-          echo "COMMIT_BODY=$COMMIT_BODY" >> $GITHUB_ENV
+          echo "## Release Notes" > release_notes.txt
+          echo "" >> release_notes.txt
+          echo "### $(git log -1 --pretty=format:"%s")" >> release_notes.txt
+          echo "" >> release_notes.txt
+          git log -1 --pretty=format:"%b" >> release_notes.txt
 
       - name: Create New Release
         if: env.RELEASE_EXISTS == 'false'
@@ -46,13 +47,7 @@ jobs:
         with:
           tag_name: ${{ env.VERSION }}
           release_name: Release ${{ env.VERSION }}
-          body: |
-            ## Release Notes
-
-            ### ${{ env.COMMIT_TITLE }}
-
-            ### Commit Description:
-            ${{ env.COMMIT_BODY }}
+          body_path: ./release_notes.txt
 
       - name: Build and Publish Python Package
         if: env.RELEASE_EXISTS == 'false'
