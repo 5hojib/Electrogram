@@ -7,7 +7,7 @@ import io
 import logging
 import math
 from hashlib import md5
-from pathlib import PurePath, Path
+from pathlib import Path, PurePath
 from typing import TYPE_CHECKING, BinaryIO
 
 import pyrogram
@@ -104,8 +104,8 @@ class SaveFile:
                     bytes=chunk,
                 )
             return raw.functions.upload.SaveFilePart(
-                    file_id=file_id, file_part=file_part, bytes=chunk
-                )
+                file_id=file_id, file_part=file_part, bytes=chunk
+            )
 
         part_size = 512 * 1024
         queue = asyncio.Queue(32)
@@ -204,7 +204,8 @@ class SaveFile:
             except Exception as e:
                 log.error(
                     "Error during file upload at part %s: %s",
-                    file_part, e,
+                    file_part,
+                    e,
                 )
             else:
                 if is_big:
