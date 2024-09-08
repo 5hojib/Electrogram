@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-__version__ = "v2.186.4"
+__version__ = "v2.187.0"
 __license__ = "MIT License"
 
 from concurrent.futures.thread import ThreadPoolExecutor
