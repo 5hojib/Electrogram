@@ -7,7 +7,7 @@ import logging
 from collections import OrderedDict
 
 import pyrogram
-from pyrogram import errors, raw, utils
+from pyrogram import utils
 from pyrogram.handlers import (
     BotBusinessConnectHandler,
     BotBusinessMessageHandler,
@@ -289,7 +289,6 @@ class Dispatcher:
 
     async def start(self) -> None:
         if not self.client.no_updates:
-
             for i in range(self.client.workers):
                 self.locks_list.append(asyncio.Lock())
 
