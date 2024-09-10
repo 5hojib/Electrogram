@@ -10,10 +10,8 @@ import platform
 import re
 import shutil
 import sys
-from collections import OrderedDict
 from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime, timedelta
-from hashlib import sha256
 from importlib import import_module
 from io import BytesIO, StringIO
 from mimetypes import MimeTypes
@@ -22,25 +20,19 @@ from typing import TYPE_CHECKING
 
 import pyrogram
 from pyrogram import __license__, __version__, enums, raw, utils
-from pyrogram.crypto import aes
 from pyrogram.errors import (
+    AuthBytesInvalid,
     BadRequest,
-    CDNFileHashMismatch,
     ChannelPrivate,
-    FloodPremiumWait,
-    FloodWait,
     SessionPasswordNeeded,
-    VolumeLocNotFound,
 )
 from pyrogram.handlers.handler import Handler
 from pyrogram.methods import Methods
 from pyrogram.session import Auth, Session
-from pyrogram.storage import FileStorage, MemoryStorage, Storage
+from pyrogram.storage import FileStorage, MemoryStorage
 from pyrogram.types import TermsOfService, User
 from pyrogram.utils import ainput
 
-from .connection import Connection
-from .connection.transport import TCP, TCPAbridged
 from .dispatcher import Dispatcher
 from .file_id import FileId, FileType, ThumbnailSource
 from .mime_types import mime_types
@@ -70,7 +62,7 @@ class Client(Methods):
 
         app_version (``str``, *optional*):
             Application version.
-            Defaults to "Pyrogram x.y.z".
+            Defaults to "pyrogram x.y.z".
 
         device_model (``str``, *optional*):
             Device model.
@@ -84,21 +76,9 @@ class Client(Methods):
             Code of the language used on the client, in ISO 639-1 standard.
             Defaults to "en".
 
-        system_lang_code (``str``, *optional*):
-            Code of the language used on the system.
-            Defaults to "en-US".
-
-        lang_pack (``str``, *optional*):
-            Internal parameter.
-            Defaults to "".
-
         ipv6 (``bool``, *optional*):
             Pass True to connect to Telegram using IPv6.
             Defaults to False (IPv4).
-
-        alt_port (``bool``, *optional*):
-            Pass True to connect to Telegram using alternative port (5222).
-            Defaults to False (443).
 
         proxy (``dict``, *optional*):
             The Proxy settings as dict.
@@ -118,19 +98,12 @@ class Client(Methods):
             Pass a session string to load the session in-memory.
             Implies ``in_memory=True``.
 
-        is_telethon_string (``bool``, *optional*):
-            ``True`` if your provided session_string is in the telethon format.
-            Requires ``session_string`` to be filled.
-
         in_memory (``bool``, *optional*):
             Pass True to start an in-memory session that will be discarded as soon as the client stops.
             In order to reconnect again using an in-memory session without having to login again, you can use
             :meth:`~pyrogram.Client.export_session_string` before stopping the client to get a session string you can
             pass to the ``session_string`` parameter.
             Defaults to False.
-
-        storage (:obj:`~pyrogram.storage.Storage`, *optional*):
-            Custom session storage.
 
         phone_number (``str``, *optional*):
             Pass the phone number as string (with the Country Code prefix included) to avoid entering it manually.
@@ -166,10 +139,6 @@ class Client(Methods):
             Useful for batch programs that don't need to deal with updates.
             Defaults to False (updates enabled and received).
 
-        skip_updates (``bool``, *optional*):
-            Pass True to skip pending updates that arrived while the client was offline.
-            Defaults to True.
-
         takeout (``bool``, *optional*):
             Pass True to let the client use a takeout session instead of a normal one, implies *no_updates=True*.
             Useful for exporting Telegram data. Methods invoked inside a takeout session (such as get_chat_history,
@@ -187,23 +156,6 @@ class Client(Methods):
             Pass True to hide the password when typing it during the login.
             Defaults to False, because ``getpass`` (the library used) is known to be problematic in some
             terminal environments.
-
-        max_concurrent_transmissions (``int``, *optional*):
-            Set the maximum amount of concurrent transmissions (uploads & downloads).
-            A value that is too high may result in network related issues.
-            Defaults to 20.
-
-        init_params (``raw.types.JsonObject``, *optional*):
-            Additional initConnection parameters.
-            Defaults to None.
-
-        max_message_cache_size (``int``, *optional*):
-            Set the maximum size of the message cache.
-            Defaults to 10000.
-
-        client_platform (:obj:`~pyrogram.enums.ClientPlatform`, *optional*):
-            The platform where this client is running.
-            Defaults to 'other'
     """
 
     APP_VERSION = f"Electrogram {__version__}"
@@ -211,19 +163,18 @@ class Client(Methods):
     SYSTEM_VERSION = f"{platform.system()} {platform.release()}"
 
     LANG_CODE = "en"
-    SYSTEM_LANG_CODE = "en-US"
-    LANG_PACK = ""
 
     PARENT_DIR = Path(sys.argv[0]).parent
 
     INVITE_LINK_RE = re.compile(
         r"^(?:https?://)?(?:www\.)?(?:t(?:elegram)?\.(?:org|me|dog)/(?:joinchat/|\+))([\w-]+)$"
     )
-    WORKERS = min(64, (os.cpu_count() or 0) + 4)
+    WORKERS = min(32, (os.cpu_count() or 0) + 4)  # os.cpu_count() can be None
     WORKDIR = PARENT_DIR
-    UPDATES_WATCHDOG_INTERVAL = 10 * 60
-    MAX_CONCURRENT_TRANSMISSIONS = 1000
-    MAX_MESSAGE_CACHE_SIZE = 10000
+
+    # Interval of seconds in which the updates watchdog will kick in
+    UPDATES_WATCHDOG_INTERVAL = 5 * 60
+
     mimetypes = MimeTypes()
     mimetypes.readfp(StringIO(mime_types))
 
@@ -236,17 +187,12 @@ class Client(Methods):
         device_model: str = DEVICE_MODEL,
         system_version: str = SYSTEM_VERSION,
         lang_code: str = LANG_CODE,
-        system_lang_code: str = SYSTEM_LANG_CODE,
-        lang_pack: str = LANG_PACK,
         ipv6: bool = False,
-        alt_port: bool = False,
         proxy: dict | None = None,
         test_mode: bool = False,
         bot_token: str | None = None,
         session_string: str | None = None,
-        is_telethon_string: bool = False,
         in_memory: bool | None = None,
-        storage: Storage = None,
         phone_number: str | None = None,
         phone_code: str | None = None,
         password: str | None = None,
@@ -255,17 +201,10 @@ class Client(Methods):
         plugins: dict | None = None,
         parse_mode: enums.ParseMode = enums.ParseMode.DEFAULT,
         no_updates: bool | None = None,
-        skip_updates: bool = True,
         takeout: bool | None = None,
         sleep_threshold: int = Session.SLEEP_THRESHOLD,
         hide_password: bool = False,
-        max_concurrent_transmissions: int = MAX_CONCURRENT_TRANSMISSIONS,
-        init_params: raw.types.JsonObject = None,
-        max_message_cache_size: int = MAX_MESSAGE_CACHE_SIZE,
-        client_platform: enums.ClientPlatform = enums.ClientPlatform.OTHER,
-        connection_factory: type[Connection] = Connection,
-        protocol_factory: type[TCP] = TCPAbridged,
-    ) -> None:
+    ):
         super().__init__()
 
         self.name = name
@@ -274,16 +213,12 @@ class Client(Methods):
         self.app_version = app_version
         self.device_model = device_model
         self.system_version = system_version
-        self.lang_code = lang_code.lower()
-        self.system_lang_code = system_lang_code
-        self.lang_pack = lang_pack.lower()
+        self.lang_code = lang_code
         self.ipv6 = ipv6
-        self.alt_port = alt_port
         self.proxy = proxy
         self.test_mode = test_mode
         self.bot_token = bot_token
         self.session_string = session_string
-        self.is_telethon_string = is_telethon_string
         self.in_memory = in_memory
         self.phone_number = phone_number
         self.phone_code = phone_code
@@ -293,57 +228,55 @@ class Client(Methods):
         self.plugins = plugins
         self.parse_mode = parse_mode
         self.no_updates = no_updates
-        self.skip_updates = skip_updates
         self.takeout = takeout
         self.sleep_threshold = sleep_threshold
         self.hide_password = hide_password
-        self.max_concurrent_transmissions = max_concurrent_transmissions
-        self.init_params = init_params
-        self.max_message_cache_size = max_message_cache_size
-        self.client_platform = client_platform
-        self.connection_factory = connection_factory
-        self.protocol_factory = protocol_factory
 
         self.executor = ThreadPoolExecutor(
             self.workers, thread_name_prefix="Handler"
         )
 
-        if storage:
-            self.storage = storage
-        elif self.session_string:
-            self.storage = MemoryStorage(
-                self.name, self.session_string, self.is_telethon_string
-            )
+        if self.session_string:
+            self.storage = MemoryStorage(self.name, self.session_string)
         elif self.in_memory:
             self.storage = MemoryStorage(self.name)
         else:
             self.storage = FileStorage(self.name, self.workdir)
+
         self.dispatcher = Dispatcher(self)
+
         self.rnd_id = MsgId
+
         self.parser = Parser(self)
+
         self.session = None
+
         self.media_sessions = {}
         self.media_sessions_lock = asyncio.Lock()
-        self.save_file_semaphore = asyncio.Semaphore(
-            self.max_concurrent_transmissions
-        )
-        self.get_file_semaphore = asyncio.Semaphore(
-            self.max_concurrent_transmissions
-        )
+
         self.is_connected = None
         self.is_initialized = None
+
         self.takeout_id = None
+
         self.disconnect_handler = None
+
         self.me: User | None = None
-        self.message_cache = Cache(self.max_message_cache_size)
+
+        self.message_cache = Cache(10000)
+
+        # Sometimes, for some reason, the server will stop sending updates and will only respond to pings.
+        # This watchdog will invoke updates.GetState in order to wake up the server and enable it sending updates again
+        # after some idle time has been detected.
         self.updates_watchdog_task = None
         self.updates_watchdog_event = asyncio.Event()
-        self.updates_invoke_error = None
         self.last_update_time = datetime.now()
+
+        self.loop = asyncio.get_event_loop()
+
         self.listeners = {
             listener_type: [] for listener_type in pyrogram.enums.ListenerTypes
         }
-        self.loop = asyncio.get_event_loop()
 
     def __enter__(self):
         return self.start()
@@ -421,7 +354,6 @@ class Client(Methods):
             enums.SentCodeType.CALL: "phone call",
             enums.SentCodeType.FLASH_CALL: "phone flash call",
             enums.SentCodeType.FRAGMENT_SMS: "Fragment SMS",
-            enums.SentCodeType.EMAIL_CODE: "email code",
         }
 
         print(
@@ -640,19 +572,8 @@ class Client(Methods):
                 pts = getattr(update, "pts", None)
                 pts_count = getattr(update, "pts_count", None)
 
-                if pts and not self.skip_updates:
-                    await self.storage.update_state(
-                        (
-                            utils.get_channel_id(channel_id) if channel_id else 0,
-                            pts,
-                            None,
-                            updates.date,
-                            updates.seq,
-                        )
-                    )
-
                 if isinstance(update, raw.types.UpdateChannelTooLong):
-                    log.info(update)
+                    log.warning(update)
 
                 if isinstance(update, raw.types.UpdateNewChannelMessage) and is_min:
                     message = update.message
@@ -692,11 +613,6 @@ class Client(Methods):
         elif isinstance(
             updates, raw.types.UpdateShortMessage | raw.types.UpdateShortChatMessage
         ):
-            if not self.skip_updates:
-                await self.storage.update_state(
-                    (0, updates.pts, None, updates.date, None)
-                )
-
             diff = await self.invoke(
                 raw.functions.updates.GetDifference(
                     pts=updates.pts - updates.pts_count, date=updates.date, qts=-1
@@ -966,7 +882,7 @@ class Client(Methods):
 
         try:
             async for chunk in self.get_file(
-                file_id, file_size, 0, 0, progress, progress_args
+                file_id, file_size, 0, progress, progress_args
             ):
                 file.write(chunk)
         except BaseException as e:
@@ -977,272 +893,185 @@ class Client(Methods):
             if isinstance(e, asyncio.CancelledError):
                 raise e
 
-            if isinstance(e, FloodWait | FloodPremiumWait):
-                raise e
-
             return None
         else:
             if in_memory:
                 file.name = file_name
                 return file
             file.close()
-            file_path = Path(temp_file_path).with_suffix("")
-            shutil.move(str(temp_file_path), str(file_path))
-            return str(file_path)
+            file_path = os.path.splitext(temp_file_path)[0]
+            shutil.move(temp_file_path, file_path)
+            return file_path
+
+    async def download_chunk(self, session, location, offset, chunk_size, retries=3):
+        for attempt in range(retries):
+            try:
+                return await session.invoke(
+                    raw.functions.upload.GetFile(
+                        location=location, offset=offset, limit=chunk_size
+                    ),
+                    sleep_threshold=30,
+                )
+            except TimeoutError:
+                if attempt < retries - 1:
+                    await asyncio.sleep(1)
+                    continue
+                raise
+        return None
 
     async def get_file(
         self,
         file_id: FileId,
         file_size: int = 0,
-        limit: int = 0,
         offset: int = 0,
         progress: Callable | None = None,
         progress_args: tuple = (),
     ) -> AsyncGenerator[bytes, None] | None:
-        async with self.get_file_semaphore:
-            file_type = file_id.file_type
+        dc_id = file_id.dc_id
 
-            if file_type == FileType.CHAT_PHOTO:
-                if file_id.chat_id > 0:
-                    peer = raw.types.InputPeerUser(
-                        user_id=file_id.chat_id, access_hash=file_id.chat_access_hash
-                    )
-                elif file_id.chat_access_hash == 0:
-                    peer = raw.types.InputPeerChat(chat_id=-file_id.chat_id)
-                else:
-                    peer = raw.types.InputPeerChannel(
-                        channel_id=utils.get_channel_id(file_id.chat_id),
-                        access_hash=file_id.chat_access_hash,
-                    )
+        async with self.media_sessions_lock:
+            session = self.media_sessions.get(dc_id, None)
 
-                location = raw.types.InputPeerPhotoFileLocation(
-                    peer=peer,
-                    photo_id=file_id.media_id,
-                    big=file_id.thumbnail_source == ThumbnailSource.CHAT_PHOTO_BIG,
-                )
-            elif file_type == FileType.PHOTO:
-                location = raw.types.InputPhotoFileLocation(
-                    id=file_id.media_id,
-                    access_hash=file_id.access_hash,
-                    file_reference=file_id.file_reference,
-                    thumb_size=file_id.thumbnail_size,
-                )
-            else:
-                location = raw.types.InputDocumentFileLocation(
-                    id=file_id.media_id,
-                    access_hash=file_id.access_hash,
-                    file_reference=file_id.file_reference,
-                    thumb_size=file_id.thumbnail_size,
-                )
-
-            current = 0
-            total = abs(limit) or (1 << 31) - 1
-            chunk_size = 1024 * 1024
-            offset_bytes = abs(offset) * chunk_size
-
-            dc_id = file_id.dc_id
-
-            session = Session(
-                self,
-                dc_id,
-                (
-                    await Auth(self, dc_id, await self.storage.test_mode()).create()
-                    if dc_id != await self.storage.dc_id()
-                    else await self.storage.auth_key()
-                ),
-                await self.storage.test_mode(),
-                is_media=True,
-            )
-
-            try:
-                await session.start()
-
+            if session is None:
                 if dc_id != await self.storage.dc_id():
-                    exported_auth = await self.invoke(
-                        raw.functions.auth.ExportAuthorization(dc_id=dc_id)
-                    )
-
-                    await session.invoke(
-                        raw.functions.auth.ImportAuthorization(
-                            id=exported_auth.id, bytes=exported_auth.bytes
-                        )
-                    )
-
-                r = await session.invoke(
-                    raw.functions.upload.GetFile(
-                        location=location, offset=offset_bytes, limit=chunk_size
-                    ),
-                    sleep_threshold=30,
-                )
-
-                if isinstance(r, raw.types.upload.File):
-                    while True:
-                        chunk = r.bytes
-
-                        yield chunk
-
-                        current += 1
-                        offset_bytes += chunk_size
-
-                        if progress:
-                            func = functools.partial(
-                                progress,
-                                (
-                                    min(offset_bytes, file_size)
-                                    if file_size != 0
-                                    else offset_bytes
-                                ),
-                                file_size,
-                                *progress_args,
-                            )
-
-                            if inspect.iscoroutinefunction(progress):
-                                await func()
-                            else:
-                                await self.loop.run_in_executor(self.executor, func)
-
-                        if len(chunk) < chunk_size or current >= total:
-                            break
-
-                        r = await session.invoke(
-                            raw.functions.upload.GetFile(
-                                location=location,
-                                offset=offset_bytes,
-                                limit=chunk_size,
-                            ),
-                            sleep_threshold=30,
-                        )
-
-                elif isinstance(r, raw.types.upload.FileCdnRedirect):
-                    cdn_session = Session(
+                    session = Session(
                         self,
-                        r.dc_id,
+                        dc_id,
                         await Auth(
-                            self, r.dc_id, await self.storage.test_mode()
+                            self, dc_id, await self.storage.test_mode()
                         ).create(),
                         await self.storage.test_mode(),
                         is_media=True,
-                        is_cdn=True,
                     )
+                    await session.start()
 
-                    try:
-                        await cdn_session.start()
+                    for _ in range(4):
+                        exported_auth = await self.invoke(
+                            raw.functions.auth.ExportAuthorization(dc_id=dc_id)
+                        )
 
-                        while True:
-                            r2 = await cdn_session.invoke(
-                                raw.functions.upload.GetCdnFile(
-                                    file_token=r.file_token,
-                                    offset=offset_bytes,
-                                    limit=chunk_size,
+                        try:
+                            await session.invoke(
+                                raw.functions.auth.ImportAuthorization(
+                                    id=exported_auth.id, bytes=exported_auth.bytes
                                 )
                             )
+                        except AuthBytesInvalid:
+                            continue
+                        else:
+                            break
+                    else:
+                        await session.stop()
+                        raise AuthBytesInvalid
+                else:
+                    session = Session(
+                        self,
+                        dc_id,
+                        await self.storage.auth_key(),
+                        await self.storage.test_mode(),
+                        is_media=True,
+                    )
+                    await session.start()
 
-                            if isinstance(
-                                r2, raw.types.upload.CdnFileReuploadNeeded
-                            ):
-                                try:
-                                    await session.invoke(
-                                        raw.functions.upload.ReuploadCdnFile(
-                                            file_token=r.file_token,
-                                            request_token=r2.request_token,
-                                        )
-                                    )
-                                except VolumeLocNotFound:
-                                    break
-                                else:
-                                    continue
+                self.media_sessions[dc_id] = session
 
-                            chunk = r2.bytes
+        file_type = file_id.file_type
 
-                            decrypted_chunk = aes.ctr256_decrypt(
-                                chunk,
-                                r.encryption_key,
-                                bytearray(
-                                    r.encryption_iv[:-4]
-                                    + (offset_bytes // 16).to_bytes(4, "big")
-                                ),
-                            )
+        if file_type == FileType.CHAT_PHOTO:
+            if file_id.chat_id > 0:
+                peer = raw.types.InputPeerUser(
+                    user_id=file_id.chat_id, access_hash=file_id.chat_access_hash
+                )
+            elif file_id.chat_access_hash == 0:
+                peer = raw.types.InputPeerChat(chat_id=-file_id.chat_id)
+            else:
+                peer = raw.types.InputPeerChannel(
+                    channel_id=utils.get_channel_id(file_id.chat_id),
+                    access_hash=file_id.chat_access_hash,
+                )
 
-                            hashes = await session.invoke(
-                                raw.functions.upload.GetCdnFileHashes(
-                                    file_token=r.file_token, offset=offset_bytes
-                                )
-                            )
+            location = raw.types.InputPeerPhotoFileLocation(
+                peer=peer,
+                photo_id=file_id.media_id,
+                big=file_id.thumbnail_source == ThumbnailSource.CHAT_PHOTO_BIG,
+            )
+        elif file_type == FileType.PHOTO:
+            location = raw.types.InputPhotoFileLocation(
+                id=file_id.media_id,
+                access_hash=file_id.access_hash,
+                file_reference=file_id.file_reference,
+                thumb_size=file_id.thumbnail_size,
+            )
+        else:
+            location = raw.types.InputDocumentFileLocation(
+                id=file_id.media_id,
+                access_hash=file_id.access_hash,
+                file_reference=file_id.file_reference,
+                thumb_size=file_id.thumbnail_size,
+            )
 
-                            for i, h in enumerate(hashes):
-                                cdn_chunk = decrypted_chunk[
-                                    h.limit * i : h.limit * (i + 1)
-                                ]
-                                CDNFileHashMismatch.check(
-                                    h.hash == sha256(cdn_chunk).digest(),
-                                    "h.hash == sha256(cdn_chunk).digest()",
-                                )
+        chunk_size = 1024 * 1024
+        offset_bytes = abs(offset) * chunk_size
+        total_chunks = (file_size + chunk_size - 1) // chunk_size
+        max_concurrent_tasks = 10
 
-                            yield decrypted_chunk
+        try:
+            for i in range(0, total_chunks, max_concurrent_tasks):
+                tasks = [
+                    self.download_chunk(
+                        session,
+                        location,
+                        (i + j) * chunk_size + offset_bytes,
+                        chunk_size,
+                    )
+                    for j in range(min(max_concurrent_tasks, total_chunks - i))
+                ]
 
-                            current += 1
-                            offset_bytes += chunk_size
+                for j, r in enumerate(await asyncio.gather(*tasks)):
+                    if isinstance(r, raw.types.upload.File):
+                        yield r.bytes
 
-                            if progress:
-                                func = functools.partial(
-                                    progress,
-                                    (
-                                        min(offset_bytes, file_size)
-                                        if file_size != 0
-                                        else offset_bytes
-                                    ),
-                                    file_size,
-                                    *progress_args,
-                                )
+                    if progress:
+                        func = functools.partial(
+                            progress,
+                            min((i + j + 1) * chunk_size + offset_bytes, file_size),
+                            file_size,
+                            *progress_args,
+                        )
+                        if inspect.iscoroutinefunction(progress):
+                            await func()
+                        else:
+                            await self.loop.run_in_executor(self.executor, func)
 
-                                if inspect.iscoroutinefunction(progress):
-                                    await func()
-                                else:
-                                    await self.loop.run_in_executor(
-                                        self.executor, func
-                                    )
+                    if len(r.bytes) < chunk_size or i + j + 1 >= total_chunks:
+                        break
 
-                            if len(chunk) < chunk_size or current >= total:
-                                break
-                    except Exception as e:
-                        raise e
-                    finally:
-                        await cdn_session.stop()
-            except pyrogram.StopTransmissionError:
-                raise
-            except (FloodWait, FloodPremiumWait):
-                raise
-            except Exception as e:
-                log.exception(e)
-            finally:
-                await session.stop()
+        except pyrogram.StopTransmissionError:
+            raise
+        except Exception as e:
+            log.error(e, exc_info=True)
 
-    @functools.lru_cache(maxsize=128)
     def guess_mime_type(self, filename: str) -> str | None:
         return self.mimetypes.guess_type(filename)[0]
 
-    @functools.lru_cache(maxsize=128)
     def guess_extension(self, mime_type: str) -> str | None:
         return self.mimetypes.guess_extension(mime_type)
 
 
 class Cache:
-    def __init__(self, capacity: int) -> None:
+    def __init__(self, capacity: int):
         self.capacity = capacity
-        self.store = OrderedDict()
+        self.store = {}
 
     def __getitem__(self, key):
-        value = self.store.pop(key, None)
-        if value is not None:
-            # Reinsert the accessed item as the most recent one
-            self.store[key] = value
-        return value
+        return self.store.get(key, None)
 
-    def __setitem__(self, key, value) -> None:
+    def __setitem__(self, key, value):
         if key in self.store:
             del self.store[key]
 
         self.store[key] = value
 
         if len(self.store) > self.capacity:
-            self.store.popitem(last=False)
+            for _ in range(self.capacity // 2 + 1):
+                del self.store[next(iter(self.store))]
