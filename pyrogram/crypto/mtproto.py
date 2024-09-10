@@ -1,13 +1,17 @@
 from __future__ import annotations
 
+import bisect
 from hashlib import sha256
 from io import BytesIO
 from os import urandom
 
 from pyrogram.errors import SecurityCheckMismatch
 from pyrogram.raw.core import Long, Message
+from pyrogram.session.internals import MsgId
 
 from . import aes
+
+STORED_MSG_IDS_MAX_SIZE = 1000 * 2
 
 
 def kdf(auth_key: bytes, msg_key: bytes, outgoing: bool) -> tuple:
@@ -42,18 +46,21 @@ def pack(
 
 
 def unpack(
-    b: BytesIO, session_id: bytes, auth_key: bytes, auth_key_id: bytes
+    b: BytesIO,
+    session_id: bytes,
+    auth_key: bytes,
+    auth_key_id: bytes,
+    stored_msg_ids: list[int],
 ) -> Message:
-    SecurityCheckMismatch.check(b.read(8) == auth_key_id, "b.read(8) == auth_key_id")
+    SecurityCheckMismatch.check(b.read(8) == auth_key_id)
 
     msg_key = b.read(16)
     aes_key, aes_iv = kdf(auth_key, msg_key, False)
     data = BytesIO(aes.ige256_decrypt(b.read(), aes_key, aes_iv))
     data.read(8)
 
-    SecurityCheckMismatch.check(
-        data.read(8) == session_id, "data.read(8) == session_id"
-    )
+    # https://core.telegram.org/mtproto/security_guidelines#checking-session-id
+    SecurityCheckMismatch.check(data.read(8) == session_id)
 
     try:
         message = Message.read(data)
@@ -74,18 +81,43 @@ def unpack(
         )
 
     SecurityCheckMismatch.check(
-        msg_key == sha256(auth_key[96 : 96 + 32] + data.getvalue()).digest()[8:24],
-        "msg_key == sha256(auth_key[96:96 + 32] + data.getvalue()).digest()[8:24]",
+        msg_key == sha256(auth_key[96 : 96 + 32] + data.getvalue()).digest()[8:24]
     )
 
-    data.seek(32)
+    # https://core.telegram.org/mtproto/security_guidelines#checking-message-length
+    data.seek(
+        32
+    )  # Get to the payload, skip salt (8) + session_id (8) + msg_id (8) + seq_no (4) + length (4)
     payload = data.read()
     padding = payload[message.length :]
-    SecurityCheckMismatch.check(
-        12 <= len(padding) <= 1024, "12 <= len(padding) <= 1024"
-    )
-    SecurityCheckMismatch.check(len(payload) % 4 == 0, "len(payload) % 4 == 0")
+    SecurityCheckMismatch.check(12 <= len(padding) <= 1024)
+    SecurityCheckMismatch.check(len(payload) % 4 == 0)
 
-    SecurityCheckMismatch.check(message.msg_id % 2 != 0, "message.msg_id % 2 != 0")
+    # https://core.telegram.org/mtproto/security_guidelines#checking-msg-id
+    SecurityCheckMismatch.check(message.msg_id % 2 != 0)
+
+    if len(stored_msg_ids) > STORED_MSG_IDS_MAX_SIZE:
+        del stored_msg_ids[: STORED_MSG_IDS_MAX_SIZE // 2]
+
+    if stored_msg_ids:
+        # Ignored message: msg_id is lower than all of the stored values
+        if message.msg_id < stored_msg_ids[0]:
+            raise SecurityCheckMismatch
+
+        # Ignored message: msg_id is equal to any of the stored values
+        if message.msg_id in stored_msg_ids:
+            raise SecurityCheckMismatch
+
+        time_diff = (message.msg_id - MsgId()) / 2**32
+
+        # Ignored message: msg_id belongs over 30 seconds in the future
+        if time_diff > 30:
+            raise SecurityCheckMismatch
+
+        # Ignored message: msg_id belongs over 300 seconds in the past
+        if time_diff < -300:
+            raise SecurityCheckMismatch
+
+    bisect.insort(stored_msg_ids, message.msg_id)
 
     return message
