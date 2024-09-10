@@ -1091,6 +1091,12 @@ class Message(Object, Update):
                 elif isinstance(media, raw.types.MessageMediaStory):
                     story = await types.MessageStory._parse(client, media)
                     media_type = enums.MessageMediaType.STORY
+                elif isinstance(media, raw.types.MessageMediaWebPage):
+                    if isinstance(media.webpage, raw.types.WebPage) or isinstance(media.webpage, raw.types.WebPageEmpty):
+                        web_page_preview = types.WebPagePreview._parse(client, media, message.invert_media)
+                        media_type = enums.MessageMediaType.WEB_PAGE_PREVIEW
+                    else:
+                        media = None
                 elif isinstance(media, raw.types.MessageMediaDocument):
                     doc = media.document
 
