@@ -86,9 +86,7 @@ def unpack(
         "msg_key == sha256(auth_key[96:96 + 32] + data.getvalue()).digest()[8:24]",
     )
 
-    data.seek(
-        32
-    )
+    data.seek(32)
     payload = data.read()
     padding = payload[message.length :]
     SecurityCheckMismatch.check(
