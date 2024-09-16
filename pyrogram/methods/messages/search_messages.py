@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+import asyncio
 from typing import TYPE_CHECKING
 
-import asyncio
 import pyrogram
 from pyrogram import enums, raw, types, utils
 
@@ -99,7 +99,6 @@ class SearchMessages:
         current = 0
         total = abs(limit) or (1 << 31) - 1
         chunk_size = min(100, total)
-        tasks = []
 
         while current < total:
             # Launch multiple parallel tasks to get chunks
