@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import asyncio
 from typing import TYPE_CHECKING
 
 import pyrogram
@@ -52,17 +51,26 @@ class SearchMessages:
     ) -> AsyncGenerator[types.Message, None] | None:
         """Search for text and media messages inside a specific chat.
 
-        This function performs parallel searches for faster retrieval.
+        If you want to get the messages count only, see :meth:`~pyrogram.Client.search_messages_count`.
+
+        .. include:: /_includes/usable-by/users.rst
 
         Parameters:
             chat_id (``int`` | ``str``):
                 Unique identifier (int) or username (str) of the target chat.
+                For your personal cloud (Saved Messages) you can simply use "me" or "self".
+                For a contact that exists in your Telegram address book you can use his phone number (str).
+                You can also use chat public link in form of *t.me/<username>* (str).
 
             query (``str``, *optional*):
-                Text query string. Defaults to "".
+                Text query string.
+                Required for text-only messages, optional for media messages (see the ``filter`` argument).
+                When passed while searching for media messages, the query will be applied to captions.
+                Defaults to "" (empty string).
 
             offset (``int``, *optional*):
-                Sequential number of the first message to be returned. Defaults to 0.
+                Sequential number of the first message to be returned.
+                Defaults to 0.
 
             filter (:obj:`~pyrogram.enums.MessagesFilter`, *optional*):
                 Pass a filter in order to search for specific kind of messages only.
@@ -98,38 +106,28 @@ class SearchMessages:
 
         current = 0
         total = abs(limit) or (1 << 31) - 1
-        chunk_size = min(100, total)
+        limit = min(100, total)
 
-        while current < total:
-            # Launch multiple parallel tasks to get chunks
-            parallel_tasks = [
-                get_chunk(
-                    client=self,
-                    chat_id=chat_id,
-                    query=query,
-                    filter=filter,
-                    offset=offset + i * chunk_size,
-                    limit=chunk_size,
-                    from_user=from_user,
-                )
-                for i in range(5)  # Number of parallel requests
-            ]
-
-            # Gather all the results from parallel tasks
-            results = await asyncio.gather(*parallel_tasks)
-
-            # Flatten the list of results
-            messages = [message for result in results for message in result]
+        while True:
+            messages = await get_chunk(
+                client=self,
+                chat_id=chat_id,
+                query=query,
+                filter=filter,
+                offset=offset,
+                limit=limit,
+                from_user=from_user,
+            )
 
             if not messages:
                 return
+
+            offset += len(messages)
 
             for message in messages:
                 yield message
 
                 current += 1
+
                 if current >= total:
                     return
-
-            # Increment the offset by the number of messages retrieved
-            offset += len(messages)
