@@ -19,6 +19,8 @@ async def get_chunk(
     limit: int = 100,
     from_user: int | str | None = None,
 ) -> list[types.Message]:
+    from_user_peer = await client.resolve_peer(from_user) if from_user else None
+
     r = await client.invoke(
         raw.functions.messages.Search(
             peer=await client.resolve_peer(chat_id),
@@ -31,7 +33,7 @@ async def get_chunk(
             limit=limit,
             min_id=0,
             max_id=0,
-            from_id=(await client.resolve_peer(from_user) if from_user else None),
+            from_id=from_user_peer,
             hash=0,
         ),
         sleep_threshold=60,
@@ -111,7 +113,7 @@ class SearchMessages:
                     limit=chunk_size,
                     from_user=from_user,
                 )
-                for i in range(16)
+                for i in range(32)
             ]
 
             results = await asyncio.gather(*parallel_tasks)
