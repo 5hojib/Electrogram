@@ -101,7 +101,6 @@ class SearchMessages:
         chunk_size = min(100, total)
 
         while current < total:
-            # Launch multiple parallel tasks to get chunks
             parallel_tasks = [
                 get_chunk(
                     client=self,
@@ -112,13 +111,10 @@ class SearchMessages:
                     limit=chunk_size,
                     from_user=from_user,
                 )
-                for i in range(5)  # Number of parallel requests
+                for i in range(16)
             ]
 
-            # Gather all the results from parallel tasks
             results = await asyncio.gather(*parallel_tasks)
-
-            # Flatten the list of results
             messages = [message for result in results for message in result]
 
             if not messages:
@@ -131,5 +127,4 @@ class SearchMessages:
                 if current >= total:
                     return
 
-            # Increment the offset by the number of messages retrieved
             offset += len(messages)
