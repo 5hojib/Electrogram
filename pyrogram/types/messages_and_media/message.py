@@ -4857,53 +4857,53 @@ class Message(Object, Update):
                 else reply_markup,
             )
         send_media = partial(
-                self._client.send_cached_media,
-                chat_id=chat_id,
-                disable_notification=disable_notification,
-                message_thread_id=message_thread_id,
-                reply_to_message_id=reply_to_message_id,
-                schedule_date=schedule_date,
-                has_spoiler=has_spoiler,
-                protect_content=protect_content,
-                invert_media=invert_media,
-                reply_markup=self.reply_markup
-                if reply_markup is object
-                else reply_markup,
-            )
+            self._client.send_cached_media,
+            chat_id=chat_id,
+            disable_notification=disable_notification,
+            message_thread_id=message_thread_id,
+            reply_to_message_id=reply_to_message_id,
+            schedule_date=schedule_date,
+            has_spoiler=has_spoiler,
+            protect_content=protect_content,
+            invert_media=invert_media,
+            reply_markup=self.reply_markup
+            if reply_markup is object
+            else reply_markup,
+        )
 
         if self.photo:
-                file_id = self.photo.file_id
+            file_id = self.photo.file_id
         elif self.audio:
-                file_id = self.audio.file_id
+            file_id = self.audio.file_id
         elif self.document:
-                file_id = self.document.file_id
+            file_id = self.document.file_id
         elif self.video:
-                file_id = self.video.file_id
+            file_id = self.video.file_id
         elif self.animation:
-                file_id = self.animation.file_id
+            file_id = self.animation.file_id
         elif self.voice:
-                file_id = self.voice.file_id
+            file_id = self.voice.file_id
         elif self.sticker:
-                file_id = self.sticker.file_id
+            file_id = self.sticker.file_id
         elif self.video_note:
-                file_id = self.video_note.file_id
+            file_id = self.video_note.file_id
 
         if self.sticker or self.video_note:
             return await send_media(
                 file_id=file_id, message_thread_id=message_thread_id
-                )
+            )
         if caption is None:
             caption = self.caption or ""
             caption_entities = self.caption_entities
 
         return await send_media(
-                    file_id=file_id,
-                    caption=caption,
-                    parse_mode=parse_mode,
-                    caption_entities=caption_entities,
-                    has_spoiler=has_spoiler,
-                    message_thread_id=message_thread_id,
-                )
+            file_id=file_id,
+            caption=caption,
+            parse_mode=parse_mode,
+            caption_entities=caption_entities,
+            has_spoiler=has_spoiler,
+            message_thread_id=message_thread_id,
+        )
 
     async def delete(self, revoke: bool = True):
         """Bound method *delete* of :obj:`~pyrogram.types.Message`.
