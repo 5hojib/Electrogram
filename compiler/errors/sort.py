@@ -4,6 +4,7 @@ import csv
 import re
 import sys
 from pathlib import Path
+
 import requests  # requests==2.28.1
 
 
@@ -76,8 +77,7 @@ def format_description(description: str, base_url: str) -> str:
     description = description.replace("%d", "{value}")
     description = description.replace("&raquo;", "»")
     description = description.replace("&laquo;", "«")
-    description = description.replace("](/api/", f"]({base_url}/api/")
-    return description
+    return description.replace("](/api/", f"]({base_url}/api/")
 
 
 def update_tsv_files(error_code: str, dct: dict):
