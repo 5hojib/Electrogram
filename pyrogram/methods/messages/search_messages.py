@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import asyncio
 from typing import TYPE_CHECKING
 
 import pyrogram
@@ -19,8 +18,6 @@ async def get_chunk(
     limit: int = 100,
     from_user: int | str | None = None,
 ) -> list[types.Message]:
-    from_user_peer = await client.resolve_peer(from_user) if from_user else None
-
     r = await client.invoke(
         raw.functions.messages.Search(
             peer=await client.resolve_peer(chat_id),
@@ -33,7 +30,7 @@ async def get_chunk(
             limit=limit,
             min_id=0,
             max_id=0,
-            from_id=from_user_peer,
+            from_id=(await client.resolve_peer(from_user) if from_user else None),
             hash=0,
         ),
         sleep_threshold=60,
@@ -54,17 +51,26 @@ class SearchMessages:
     ) -> AsyncGenerator[types.Message, None] | None:
         """Search for text and media messages inside a specific chat.
 
-        This function performs parallel searches for faster retrieval.
+        If you want to get the messages count only, see :meth:`~pyrogram.Client.search_messages_count`.
+
+        .. include:: /_includes/usable-by/users.rst
 
         Parameters:
             chat_id (``int`` | ``str``):
                 Unique identifier (int) or username (str) of the target chat.
+                For your personal cloud (Saved Messages) you can simply use "me" or "self".
+                For a contact that exists in your Telegram address book you can use his phone number (str).
+                You can also use chat public link in form of *t.me/<username>* (str).
 
             query (``str``, *optional*):
-                Text query string. Defaults to "".
+                Text query string.
+                Required for text-only messages, optional for media messages (see the ``filter`` argument).
+                When passed while searching for media messages, the query will be applied to captions.
+                Defaults to "" (empty string).
 
             offset (``int``, *optional*):
-                Sequential number of the first message to be returned. Defaults to 0.
+                Sequential number of the first message to be returned.
+                Defaults to 0.
 
             filter (:obj:`~pyrogram.enums.MessagesFilter`, *optional*):
                 Pass a filter in order to search for specific kind of messages only.
@@ -100,33 +106,28 @@ class SearchMessages:
 
         current = 0
         total = abs(limit) or (1 << 31) - 1
-        chunk_size = min(100, total)
+        limit = min(100, total)
 
-        while current < total:
-            parallel_tasks = [
-                get_chunk(
-                    client=self,
-                    chat_id=chat_id,
-                    query=query,
-                    filter=filter,
-                    offset=offset + i * chunk_size,
-                    limit=chunk_size,
-                    from_user=from_user,
-                )
-                for i in range(32)
-            ]
-
-            results = await asyncio.gather(*parallel_tasks)
-            messages = [message for result in results for message in result]
+        while True:
+            messages = await get_chunk(
+                client=self,
+                chat_id=chat_id,
+                query=query,
+                filter=filter,
+                offset=offset,
+                limit=limit,
+                from_user=from_user,
+            )
 
             if not messages:
                 return
+
+            offset += len(messages)
 
             for message in messages:
                 yield message
 
                 current += 1
+
                 if current >= total:
                     return
-
-            offset += len(messages)
