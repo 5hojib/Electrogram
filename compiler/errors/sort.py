@@ -27,7 +27,7 @@ if sys.argv[1] == "sort":
                     f.write("\n")
 
 elif sys.argv[1] == "scrape":
-    b = "https://core.telegram.org"
+    b = "https://corefork.telegram.org"
     c = "/api/errors"
     a = requests.get(b + c)
     d = a.text
