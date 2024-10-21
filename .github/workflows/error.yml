@@ -3,7 +3,7 @@ on:
   workflow_dispatch: {} # Allow manually kicking off builds
   push:
     branches:
-      - tesy
+      - test
 
 jobs:
   build:
