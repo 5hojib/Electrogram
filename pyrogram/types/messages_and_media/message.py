@@ -1164,6 +1164,16 @@ class Message(Object, Update):
                         else:
                             document = types.Document._parse(client, doc, file_name)
                             media_type = enums.MessageMediaType.DOCUMENT
+                elif isinstance(media, raw.types.MessageMediaWebPage):
+                    if isinstance(
+                        media.webpage, raw.types.WebPage | raw.types.WebPageEmpty
+                    ):
+                        web_page_preview = types.WebPagePreview._parse(
+                            client, media, message.invert_media
+                        )
+                        media_type = enums.MessageMediaType.WEB_PAGE_PREVIEW
+                    else:
+                        media = None
                 elif isinstance(media, raw.types.MessageMediaPoll):
                     poll = await types.Poll._parse(client, media, users)
                     media_type = enums.MessageMediaType.POLL
@@ -1619,7 +1629,6 @@ class Message(Object, Update):
         caption: str = "",
         parse_mode: enums.ParseMode | None = None,
         caption_entities: list[types.MessageEntity] | None = None,
-        message_effect_id: int | None = None,
         has_spoiler: bool | None = None,
         duration: int = 0,
         width: int = 0,
@@ -1637,6 +1646,7 @@ class Message(Object, Update):
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
+        message_effect_id: int | None = None,
         progress: Callable | None = None,
         progress_args: tuple = (),
     ) -> Message:
@@ -1816,7 +1826,6 @@ class Message(Object, Update):
         caption: str = "",
         parse_mode: enums.ParseMode | None = None,
         caption_entities: list[types.MessageEntity] | None = None,
-        message_effect_id: int | None = None,
         duration: int = 0,
         performer: str | None = None,
         title: str | None = None,
@@ -1828,6 +1837,7 @@ class Message(Object, Update):
         reply_in_chat_id: int | str | None = None,
         quote_text: str | None = None,
         quote_entities: list[types.MessageEntity] | None = None,
+        message_effect_id: int | None = None,
         reply_markup: types.InlineKeyboardMarkup
         | types.ReplyKeyboardMarkup
         | types.ReplyKeyboardRemove
@@ -4653,17 +4663,17 @@ class Message(Object, Update):
                 self.id,
             )
             return None
-        if self.game and not await self._client.storage.is_bot():
+        elif self.game and not await self._client.storage.is_bot():
             log.warning(
                 "Users cannot send messages with Game media type. chat_id: %s, message_id: %s",
                 self.chat.id,
                 self.id,
             )
             return None
-        if self.empty:
+        elif self.empty:
             log.warning("Empty messages cannot be copied.")
             return None
-        if self.text:
+        elif self.text:
             return await self._client.send_message(
                 chat_id,
                 text=self.text,
@@ -4681,7 +4691,7 @@ class Message(Object, Update):
                 if reply_markup is object
                 else reply_markup,
             )
-        if self.media:
+        elif self.media:
             send_media = partial(
                 self._client.send_cached_media,
                 chat_id=chat_id,
@@ -4790,22 +4800,23 @@ class Message(Object, Update):
 
             if self.sticker or self.video_note:
                 return await send_media(
+                    file_id=file_id, message_thread_id=message_thread_id
+                )
+            else:
+                if caption is None:
+                    caption = self.caption or ""
+                    caption_entities = self.caption_entities
+
+                return await send_media(
                     file_id=file_id,
+                    caption=caption,
+                    parse_mode=parse_mode,
+                    caption_entities=caption_entities,
+                    has_spoiler=has_spoiler,
                     message_thread_id=message_thread_id,
                 )
-            if caption is None:
-                caption = self.caption or ""
-                caption_entities = self.caption_entities
-
-            return await send_media(
-                file_id=file_id,
-                caption=caption,
-                parse_mode=parse_mode,
-                caption_entities=caption_entities,
-                has_spoiler=has_spoiler,
-                message_thread_id=message_thread_id,
-            )
-        raise ValueError("Can't copy this message")
+        else:
+            raise ValueError("Can't copy this message")
 
     async def delete(self, revoke: bool = True):
         """Bound method *delete* of :obj:`~pyrogram.types.Message`.
