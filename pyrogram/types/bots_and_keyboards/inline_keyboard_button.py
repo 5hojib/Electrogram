@@ -130,12 +130,9 @@ class InlineKeyboardButton(Object):
             return InlineKeyboardButton(
                 text=b.text, web_app=types.WebAppInfo(url=b.url)
             )
-        
+
         if isinstance(b, raw.types.KeyboardButtonCopy):
-            return types.InlineKeyboardButton(
-                text=b.text,
-                copy_text=b.copy_text
-            )
+            return types.InlineKeyboardButton(text=b.text, copy_text=b.copy_text)
 
         if isinstance(b, raw.types.KeyboardButtonBuy):
             return types.InlineKeyboardButtonBuy.read(b)
@@ -192,7 +189,6 @@ class InlineKeyboardButton(Object):
             )
         if self.copy_text is not None:
             return raw.types.KeyboardButtonCopy(
-                text=self.text,
-                copy_text=self.copy_text
+                text=self.text, copy_text=self.copy_text
             )
         return None
