@@ -1,0 +1,158 @@
+from __future__ import annotations
+
+from pyrogram import raw, types
+from pyrogram.types.object import Object
+
+
+class KeyboardButton(Object):
+    """One button of the reply keyboard.
+    For simple text buttons String can be used instead of this object to specify text of the button.
+    Optional fields are mutually exclusive.
+
+    Parameters:
+        text (``str``):
+            Text of the button. If none of the optional fields are used, it will be sent as a message when
+            the button is pressed.
+
+        request_contact (``bool``, *optional*):
+            If True, the user's phone number will be sent as a contact when the button is pressed.
+            Available in private chats only.
+
+        request_location (``bool``, *optional*):
+            If True, the user's current location will be sent when the button is pressed.
+            Available in private chats only.
+
+        request_chat (:obj:`~pyrogram.types.RequestPeerTypeChannel` | :obj:`~pyrogram.types.RequestPeerTypeChat`, *optional*):
+            If specified, defines the criteria used to request a suitable chats/channels.
+            The identifier of the selected chats will be shared with the bot when the corresponding button is pressed.
+
+        request_user (:obj:`~pyrogram.types.RequestPeerTypeUser`, *optional*):
+            If specified, defines the criteria used to request a suitable users.
+            The identifier of the selected users will be shared with the bot when the corresponding button is pressed.
+
+        web_app (:obj:`~pyrogram.types.WebAppInfo`, *optional*):
+            If specified, the described `Web App <https://core.telegram.org/bots/webapps>`_ will be launched when the
+            button is pressed. The Web App will be able to send a “web_app_data” service message. Available in private
+            chats only.
+
+    """
+
+    def __init__(
+        self,
+        text: str,
+        request_contact: bool | None = None,
+        request_location: bool | None = None,
+        request_chat: types.RequestPeerTypeChat
+        | types.RequestPeerTypeChannel = None,
+        request_user: types.RequestPeerTypeUser = None,
+        web_app: types.WebAppInfo = None,
+    ) -> None:
+        super().__init__()
+
+        self.text = str(text)
+        self.request_contact = request_contact
+        self.request_location = request_location
+        self.request_chat = request_chat
+        self.request_user = request_user
+        self.web_app = web_app
+
+    @staticmethod
+    def read(b):
+        if isinstance(b, raw.types.KeyboardButton):
+            return b.text
+
+        if isinstance(b, raw.types.KeyboardButtonRequestPhone):
+            return KeyboardButton(text=b.text, request_contact=True)
+
+        if isinstance(b, raw.types.KeyboardButtonRequestGeoLocation):
+            return KeyboardButton(text=b.text, request_location=True)
+
+        if isinstance(b, raw.types.KeyboardButtonSimpleWebView):
+            return KeyboardButton(text=b.text, web_app=types.WebAppInfo(url=b.url))
+
+        if isinstance(b, raw.types.KeyboardButtonRequestPeer):
+            if isinstance(b.peer_type, raw.types.RequestPeerTypeBroadcast):
+                return KeyboardButton(
+                    text=b.text,
+                    request_chat=types.RequestPeerTypeChannel(
+                        is_creator=b.peer_type.creator,
+                        is_username=b.peer_type.has_username,
+                        max=b.max_quantity,
+                    ),
+                )
+            if isinstance(b.peer_type, raw.types.RequestPeerTypeChat):
+                return KeyboardButton(
+                    text=b.text,
+                    request_chat=types.RequestPeerTypeChat(
+                        is_creator=b.peer_type.creator,
+                        is_bot_participant=b.peer_type.bot_participant,
+                        is_username=b.peer_type.has_username,
+                        is_forum=b.peer_type.forum,
+                        max=b.max_quantity,
+                    ),
+                )
+
+            if isinstance(b.peer_type, raw.types.RequestPeerTypeUser):
+                return KeyboardButton(
+                    text=b.text,
+                    request_user=types.RequestPeerTypeUser(
+                        is_bot=b.peer_type.bot,
+                        is_premium=b.peer_type.premium,
+                        max=b.max_quantity,
+                    ),
+                )
+            return None
+        return None
+
+    def write(self):
+        if self.request_contact:
+            return raw.types.KeyboardButtonRequestPhone(text=self.text)
+        if self.request_location:
+            return raw.types.KeyboardButtonRequestGeoLocation(text=self.text)
+        if self.request_chat:
+            if isinstance(self.request_chat, types.RequestPeerTypeChannel):
+                return raw.types.InputKeyboardButtonRequestPeer(
+                    text=self.text,
+                    button_id=self.request_chat.button_id,
+                    peer_type=raw.types.RequestPeerTypeBroadcast(
+                        creator=self.request_chat.is_creator,
+                        has_username=self.request_chat.is_username,
+                    ),
+                    max_quantity=self.request_chat.max,
+                    name_requested=self.request_chat.is_name_requested,
+                    username_requested=self.request_chat.is_username_requested,
+                    photo_requested=self.request_chat.is_photo_requested,
+                )
+            return raw.types.InputKeyboardButtonRequestPeer(
+                text=self.text,
+                button_id=self.request_chat.button_id,
+                peer_type=raw.types.RequestPeerTypeChat(
+                    creator=self.request_chat.is_creator,
+                    bot_participant=self.request_chat.is_bot_participant,
+                    has_username=self.request_chat.is_username,
+                    forum=self.request_chat.is_forum,
+                ),
+                max_quantity=self.request_chat.max,
+                name_requested=self.request_chat.is_name_requested,
+                username_requested=self.request_chat.is_username_requested,
+                photo_requested=self.request_chat.is_photo_requested,
+            )
+        if self.request_user:
+            return raw.types.InputKeyboardButtonRequestPeer(
+                text=self.text,
+                button_id=self.request_user.button_id,
+                peer_type=raw.types.RequestPeerTypeUser(
+                    bot=self.request_user.is_bot,
+                    premium=self.request_user.is_premium,
+                ),
+                max_quantity=self.request_user.max,
+                name_requested=self.request_user.is_name_requested,
+                username_requested=self.request_user.is_username_requested,
+                photo_requested=self.request_user.is_photo_requested,
+            )
+        if self.web_app:
+            return raw.types.KeyboardButtonSimpleWebView(
+                text=self.text,
+                url=self.web_app.url,
+            )
+        return raw.types.KeyboardButton(text=self.text)

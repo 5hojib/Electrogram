@@ -5,8 +5,14 @@
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 from .chatlist_invite import ChatlistInvite
+from .chatlist_updates import ChatlistUpdates
+from .exported_chatlist_invite import ExportedChatlistInvite
+from .exported_invites import ExportedInvites
 
 
 __all__ = [
     "ChatlistInvite",
+    "ChatlistUpdates",
+    "ExportedChatlistInvite",
+    "ExportedInvites",
 ]

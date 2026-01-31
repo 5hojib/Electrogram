@@ -21,7 +21,7 @@ class ContinuePropagationError(StopAsyncIteration):
 crypto_executor = ThreadPoolExecutor(1, thread_name_prefix="CryptoWorker")
 
 # ruff: noqa: E402
-from . import errors, filters, handlers, raw
+from . import enums, errors, filters, handlers, raw, types
 from .client import Client
 from .sync import compose, idle
 
@@ -32,9 +32,11 @@ __all__ = [
     "StopTransmissionError",
     "compose",
     "crypto_executor",
+    "enums",
     "errors",
     "filters",
     "handlers",
     "idle",
     "raw",
+    "types",
 ]

@@ -337,7 +337,7 @@ class Session:
 
             if isinstance(
                 msg.body,
-                (raw.types.MsgDetailedInfo, raw.types.MsgNewDetailedInfo),
+                raw.types.MsgDetailedInfo | raw.types.MsgNewDetailedInfo,
             ):
                 self.pending_acks.add(msg.body.answer_msg_id)
                 continue
@@ -349,10 +349,10 @@ class Session:
 
             if isinstance(
                 msg.body,
-                (raw.types.BadMsgNotification, raw.types.BadServerSalt),
+                raw.types.BadMsgNotification | raw.types.BadServerSalt,
             ):
                 msg_id = msg.body.bad_msg_id
-            elif isinstance(msg.body, (FutureSalts, raw.types.RpcResult)):
+            elif isinstance(msg.body, FutureSalts | raw.types.RpcResult):
                 msg_id = msg.body.req_msg_id
             elif isinstance(msg.body, raw.types.Pong):
                 msg_id = msg.body.msg_id
@@ -492,10 +492,8 @@ class Session:
             if isinstance(result, raw.types.RpcError):
                 if isinstance(
                     data,
-                    (
-                        raw.functions.InvokeWithoutUpdates,
-                        raw.functions.InvokeWithTakeout,
-                    ),
+                    raw.functions.InvokeWithoutUpdates
+                    | raw.functions.InvokeWithTakeout,
                 ):
                     data = data.query
 
@@ -535,10 +533,7 @@ class Session:
     ):
         if isinstance(
             query,
-            (
-                raw.functions.InvokeWithoutUpdates,
-                raw.functions.InvokeWithTakeout,
-            ),
+            raw.functions.InvokeWithoutUpdates | raw.functions.InvokeWithTakeout,
         ):
             inner_query = query.query
         else:

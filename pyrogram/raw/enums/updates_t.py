@@ -7,7 +7,7 @@
 from enum import Enum, auto
 
 
-class Updates(Enum):
+class UpdatesT(Enum):
     """Object which is perceived by the client without a call on its part when an event occurs."""
 
     UPDATE_SHORT = auto()

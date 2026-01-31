@@ -1,0 +1,4 @@
+Starting generation...
+Generated 608 base types and enums.
+Generated 2363 combinators (types and functions).
+Done.

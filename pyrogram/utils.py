@@ -1,23 +1,27 @@
 from __future__ import annotations
 
 import asyncio
+import base64
 import functools
 import hashlib
 import os
+import struct
 from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime, timezone
 from getpass import getpass
 from typing import TYPE_CHECKING, Any, TypeVar
 
-from pyrogram import raw
+import pyrogram
+from pyrogram import enums, raw, types
+from pyrogram.file_id import (
+    DOCUMENT_TYPES,
+    PHOTO_TYPES,
+    FileId,
+    FileType,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable
-
-MIN_CHANNEL_ID = -1007852516352
-MAX_CHANNEL_ID = -1000000000000
-MIN_CHAT_ID = -999999999999
-MAX_USER_ID = 999999999999
 
 
 async def ainput(prompt: str = "", *, hide: bool = False):
@@ -27,17 +31,218 @@ async def ainput(prompt: str = "", *, hide: bool = False):
         return await asyncio.get_event_loop().run_in_executor(executor, func)
 
 
+def get_input_media_from_file_id(
+    file_id: str,
+    expected_file_type: FileType = None,
+    ttl_seconds: int | None = None,
+) -> raw.types.InputMediaPhoto | raw.types.InputMediaDocument:
+    try:
+        decoded = FileId.decode(file_id)
+    except Exception:
+        raise ValueError(
+            f'Failed to decode "{file_id}". The value does not represent an existing local file, '
+            f"HTTP URL, or valid file id.",
+        ) from None
+
+    file_type = decoded.file_type
+
+    if expected_file_type is not None and file_type != expected_file_type:
+        raise ValueError(
+            f"Expected {expected_file_type.name}, got {file_type.name} file id instead",
+        )
+
+    if file_type in (FileType.THUMBNAIL, FileType.CHAT_PHOTO):
+        raise ValueError(f"This file id can only be used for download: {file_id}")
+
+    if file_type in PHOTO_TYPES:
+        return raw.types.InputMediaPhoto(
+            id=raw.types.InputPhoto(
+                id=decoded.media_id,
+                access_hash=decoded.access_hash,
+                file_reference=decoded.file_reference,
+            ),
+            ttl_seconds=ttl_seconds,
+        )
+
+    if file_type in DOCUMENT_TYPES:
+        return raw.types.InputMediaDocument(
+            id=raw.types.InputDocument(
+                id=decoded.media_id,
+                access_hash=decoded.access_hash,
+                file_reference=decoded.file_reference,
+            ),
+            ttl_seconds=ttl_seconds,
+        )
+
+    raise ValueError(f"Unknown file id: {file_id}")
+
+
+async def parse_messages(
+    client,
+    messages: raw.types.messages.Messages,
+    is_scheduled: bool = False,
+    business_connection_id: str = "",
+    r: raw.base.Updates = None,
+) -> list[types.Message]:
+    parsed_messages = []
+
+    if not messages and r:
+        users = {i.id: i for i in getattr(r, "users", [])}
+        chats = {i.id: i for i in getattr(r, "chats", [])}
+
+        for u in getattr(r, "updates", []):
+            if isinstance(
+                u,
+                raw.types.UpdateNewMessage
+                | raw.types.UpdateNewChannelMessage
+                | raw.types.UpdateNewScheduledMessage,
+            ):
+                parsed_messages.append(
+                    await types.Message._parse(
+                        client,
+                        u.message,
+                        users,
+                        chats,
+                        is_scheduled=isinstance(
+                            u,
+                            raw.types.UpdateNewScheduledMessage,
+                        ),
+                        replies=1,
+                    ),
+                )
+
+            elif isinstance(u, raw.types.UpdateBotNewBusinessMessage):
+                parsed_messages.append(
+                    await types.Message._parse(
+                        client,
+                        u.message,
+                        users,
+                        chats,
+                        business_connection_id=getattr(
+                            u,
+                            "connection_id",
+                            business_connection_id,
+                        ),
+                        raw_reply_to_message=u.reply_to_message,
+                        replies=0,
+                    ),
+                )
+
+        return types.List(parsed_messages)
+
+    users = {i.id: i for i in messages.users}
+    chats = {i.id: i for i in messages.chats}
+
+    if not messages.messages:
+        return types.List()
+
+    parsed_messages.extend(
+        [
+            await types.Message._parse(
+                client,
+                message,
+                users,
+                chats,
+                is_scheduled=is_scheduled,
+                replies=1,
+            )
+            for message in messages.messages
+        ],
+    )
+
+    return types.List(parsed_messages)
+
+
+def parse_deleted_messages(
+    client,
+    update,
+    business_connection_id: str | None = None,
+) -> list[types.Message]:
+    messages = update.messages
+    channel_id = getattr(update, "channel_id", None)
+
+    parsed_messages = [
+        types.Message(
+            id=message,
+            chat=types.Chat(
+                id=get_channel_id(channel_id),
+                type=enums.ChatType.CHANNEL,
+                client=client,
+            )
+            if channel_id is not None
+            else None,
+            business_connection_id=business_connection_id,
+            client=client,
+        )
+        for message in messages
+    ]
+
+    return types.List(parsed_messages)
+
+
+def pack_inline_message_id(
+    msg_id: raw.base.InputBotInlineMessageID,
+):
+    if isinstance(msg_id, raw.types.InputBotInlineMessageID):
+        inline_message_id_packed = struct.pack(
+            "<iqq",
+            msg_id.dc_id,
+            msg_id.id,
+            msg_id.access_hash,
+        )
+    else:
+        inline_message_id_packed = struct.pack(
+            "<iqiq",
+            msg_id.dc_id,
+            msg_id.owner_id,
+            msg_id.id,
+            msg_id.access_hash,
+        )
+
+    return base64.urlsafe_b64encode(inline_message_id_packed).decode().rstrip("=")
+
+
+def unpack_inline_message_id(
+    inline_message_id: str,
+) -> raw.base.InputBotInlineMessageID:
+    padded = inline_message_id + "=" * (-len(inline_message_id) % 4)
+    decoded = base64.urlsafe_b64decode(padded)
+
+    if len(decoded) == 20:
+        unpacked = struct.unpack("<iqq", decoded)
+
+        return raw.types.InputBotInlineMessageID(
+            dc_id=unpacked[0],
+            id=unpacked[1],
+            access_hash=unpacked[2],
+        )
+    unpacked = struct.unpack("<iqiq", decoded)
+
+    return raw.types.InputBotInlineMessageID64(
+        dc_id=unpacked[0],
+        owner_id=unpacked[1],
+        id=unpacked[2],
+        access_hash=unpacked[3],
+    )
+
+
+MIN_CHANNEL_ID = -1007852516352
+MAX_CHANNEL_ID = -1000000000000
+MIN_CHAT_ID = -999999999999
+MAX_USER_ID = 999999999999
+
+
 def get_raw_peer_id(
     peer: raw.base.Peer | raw.base.RequestedPeer,
 ) -> int | None:
     """Get the raw peer id from a Peer object"""
-    if isinstance(peer, (raw.types.PeerUser, raw.types.RequestedPeerUser)):
+    if isinstance(peer, raw.types.PeerUser | raw.types.RequestedPeerUser):
         return peer.user_id
 
-    if isinstance(peer, (raw.types.PeerChat, raw.types.RequestedPeerChat)):
+    if isinstance(peer, raw.types.PeerChat | raw.types.RequestedPeerChat):
         return peer.chat_id
 
-    if isinstance(peer, (raw.types.PeerChannel, raw.types.RequestedPeerChannel)):
+    if isinstance(peer, raw.types.PeerChannel | raw.types.RequestedPeerChannel):
         return peer.channel_id
 
     return None
@@ -161,6 +366,23 @@ def compute_password_check(
     return raw.types.InputCheckPasswordSRP(srp_id=srp_id, A=A_bytes, M1=M1_bytes)
 
 
+async def parse_text_entities(
+    client: pyrogram.Client,
+    text: str,
+    parse_mode: enums.ParseMode,
+    entities: list[types.MessageEntity],
+) -> dict[str, str | list[raw.base.MessageEntity]]:
+    if entities:
+        for entity in entities:
+            entity._client = client
+
+        entities = [await entity.write() for entity in entities] or None
+    else:
+        text, entities = (await client.parser.parse(text, parse_mode)).values()
+
+    return {"message": text, "entities": entities}
+
+
 def zero_datetime() -> datetime:
     return datetime.fromtimestamp(0, timezone.utc)
 
@@ -180,3 +402,35 @@ async def run_sync(
 ) -> TypeVar("Result"):
     loop = asyncio.get_event_loop()
     return await loop.run_in_executor(None, functools.partial(func, *args, **kwargs))
+
+
+async def get_reply_to(
+    client: pyrogram.Client,
+    chat_id: int | str | None = None,
+    reply_to_message_id: int | None = None,
+    reply_to_story_id: int | None = None,
+    message_thread_id: int | None = None,
+    reply_to_chat_id: int | str | None = None,
+    quote_text: str | None = None,
+    quote_entities: list[types.MessageEntity] | None = None,
+    parse_mode: enums.ParseMode = None,
+):
+    reply_to = None
+    reply_to_chat = None
+    if reply_to_message_id or message_thread_id:
+        text, entities = (
+            await parse_text_entities(client, quote_text, parse_mode, quote_entities)
+        ).values()
+        if reply_to_chat_id is not None:
+            reply_to_chat = await client.resolve_peer(reply_to_chat_id)
+        reply_to = types.InputReplyToMessage(
+            reply_to_message_id=reply_to_message_id,
+            message_thread_id=message_thread_id,
+            reply_to_chat=reply_to_chat,
+            quote_text=text,
+            quote_entities=entities,
+        )
+    if reply_to_story_id:
+        peer = await client.resolve_peer(chat_id)
+        reply_to = types.InputReplyToStory(peer=peer, story_id=reply_to_story_id)
+    return reply_to

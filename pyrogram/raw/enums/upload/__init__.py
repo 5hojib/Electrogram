@@ -6,9 +6,11 @@
 
 from .cdn_file import CdnFile
 from .file import File
+from .web_file import WebFile
 
 
 __all__ = [
     "CdnFile",
     "File",
+    "WebFile",
 ]

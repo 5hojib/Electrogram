@@ -46,33 +46,6 @@ WARNING = """
 
 open = partial(open, encoding="utf-8")
 
-types_to_constructors: dict[str, list[str]] = {}
-types_to_functions: dict[str, list[str]] = {}
-constructors_to_functions: dict[str, list[str]] = {}
-namespaces_to_types: dict[str, list[str]] = {}
-namespaces_to_constructors: dict[str, list[str]] = {}
-namespaces_to_functions: dict[str, list[str]] = {}
-
-try:
-    with open(API_HOME_PATH / "docs.json") as f:
-        docs = json.load(f)
-except FileNotFoundError:
-    docs = {"type": {}, "constructor": {}, "method": {}}
-
-
-class Combinator(NamedTuple):
-    section: str
-    qualname: str
-    namespace: str
-    name: str
-    id: str
-    has_flags: bool
-    args: list[tuple[str, str]]
-    qualtype: str
-    typespace: str
-    type: str
-
-
 def snake(s: str):
     # https://stackoverflow.com/q/1175208
     s = re.sub(r"(.)([A-Z][a-z]+)", r"\1_\2", s)
@@ -172,22 +145,38 @@ def get_docstring_arg_type(t: str):
     return f":obj:`{t} <pyrogram.raw.base.{t}>`"
 
 
-def get_references(t: str, kind: str):
-    if kind == "constructors":
-        items = constructors_to_functions.get(t)
-    elif kind == "types":
-        items = types_to_functions.get(t)
-    else:
-        raise ValueError("Invalid kind")
-
-    return ("\n            ".join(items), len(items)) if items else (None, 0)
+class Combinator(NamedTuple):
+    section: str
+    qualname: str
+    namespace: str
+    name: str
+    id: str
+    has_flags: bool
+    args: list[tuple[str, str]]
+    qualtype: str
+    typespace: str
+    type: str
 
 
 def start() -> None:  # noqa: C901
+    print("Starting generation...")
     shutil.rmtree(DESTINATION_PATH / "types", ignore_errors=True)
     shutil.rmtree(DESTINATION_PATH / "functions", ignore_errors=True)
     shutil.rmtree(DESTINATION_PATH / "base", ignore_errors=True)
     shutil.rmtree(DESTINATION_PATH / "enums", ignore_errors=True)
+
+    types_to_constructors: dict[str, list[str]] = {}
+    types_to_functions: dict[str, list[str]] = {}
+    constructors_to_functions: dict[str, list[str]] = {}
+    namespaces_to_types: dict[str, list[str]] = {}
+    namespaces_to_constructors: dict[str, list[str]] = {}
+    namespaces_to_functions: dict[str, list[str]] = {}
+
+    try:
+        with open(API_HOME_PATH / "docs.json") as f:
+            docs = json.load(f)
+    except FileNotFoundError:
+        docs = {"type": {}, "constructor": {}, "method": {}}
 
     with (
         open(API_HOME_PATH / "source/auth_key.tl") as f1,
@@ -257,6 +246,16 @@ def start() -> None:  # noqa: C901
 
             combinators.append(combinator)
 
+    def get_references(t: str, kind: str):
+        if kind == "constructors":
+            items = constructors_to_functions.get(t)
+        elif kind == "types":
+            items = types_to_functions.get(t)
+        else:
+            raise ValueError("Invalid kind")
+
+        return ("\n            ".join(items), len(items)) if items else (None, 0)
+
     for c in combinators:
         qualtype = c.qualtype
 
@@ -289,9 +288,11 @@ def start() -> None:  # noqa: C901
         dir_path = DESTINATION_PATH / "base" / typespace
 
         module = type
+        class_name = type
 
         if module == "Updates":
             module = "UpdatesT"
+            class_name = "UpdatesT"
 
         dir_path.mkdir(parents=True, exist_ok=True)
 
@@ -324,25 +325,26 @@ def start() -> None:  # noqa: C901
                 type_tmpl.format(
                     warning=WARNING,
                     docstring=docstring,
-                    name=type,
+                    name=class_name,
                     qualname=qualtype,
                     types=", ".join([f'"raw.types.{c}"' for c in constructors]),
                     doc_name=snake(type).replace("_", "-"),
                 ),
             )
 
-        # Generate Enum
-        if len(constructors) > 1:
-            enum_dir_path = DESTINATION_PATH / "enums" / typespace
-            enum_dir_path.mkdir(parents=True, exist_ok=True)
-            with open(enum_dir_path / f"{snake(module)}.py", "w") as f:
-                f.write(f"{WARNING}\n\n")
-                f.write("from enum import Enum, auto\n\n\n")
-                f.write(f"class {type}(Enum):\n")
-                f.write(f"    \"\"\"{type_docs}\"\"\"\n\n")
-                for c in constructors:
-                    enum_name = snake(c.split(".")[-1]).upper()
-                    f.write(f"    {enum_name} = auto()\n")
+        # Generate Enum for ALL base types
+        enum_dir_path = DESTINATION_PATH / "enums" / typespace
+        enum_dir_path.mkdir(parents=True, exist_ok=True)
+        with open(enum_dir_path / f"{snake(module)}.py", "w") as f:
+            f.write(f"{WARNING}\n\n")
+            f.write("from enum import Enum, auto\n\n\n")
+            f.write(f"class {class_name}(Enum):\n")
+            f.write(f"    \"\"\"{type_docs}\"\"\"\n\n")
+            for c in constructors:
+                enum_name = snake(c.split(".")[-1]).upper()
+                f.write(f"    {enum_name} = auto()\n")
+
+    print(f"Generated {len(types_to_constructors)} base types and enums.")
 
     for c in combinators:
         sorted_args = sort_args(c.args)
@@ -512,9 +514,16 @@ def start() -> None:  # noqa: C901
         slots = ", ".join([f'"{i[0]}"' for i in sorted_args])
         return_arguments = ", ".join([f"{i[0]}={i[0]}" for i in sorted_args])
 
+        module = c.name
+        class_name = c.name
+
+        if module == "Updates":
+            module = "UpdatesT"
+            class_name = "UpdatesT"
+
         compiled_combinator = combinator_tmpl.format(
             warning=WARNING,
-            name=c.name,
+            name=class_name,
             docstring=docstring,
             slots=slots,
             id=c.id,
@@ -532,11 +541,6 @@ def start() -> None:  # noqa: C901
 
         dir_path.mkdir(exist_ok=True, parents=True)
 
-        module = c.name
-
-        if module == "Updates":
-            module = "UpdatesT"
-
         with open(dir_path / f"{snake(module)}.py", "w") as f:
             f.write(compiled_combinator)
 
@@ -549,20 +553,18 @@ def start() -> None:  # noqa: C901
         if c.namespace not in d:
             d[c.namespace] = []
 
-        d[c.namespace].append(c.name)
+        d[c.namespace].append(class_name)
+
+    print(f"Generated {len(combinators)} combinators (types and functions).")
 
     # __init__.py files generation
     for kind in ["base", "types", "functions", "enums"]:
         kind_path = DESTINATION_PATH / kind
         if not kind_path.exists():
              continue
+
         for ns_path in [kind_path] + list(kind_path.rglob("*")):
             if ns_path.is_dir():
-                # ns_path is a namespace directory
-                namespace = ns_path.relative_to(kind_path).as_posix().replace("/", ".")
-                if namespace == ".": namespace = ""
-
-                # We need to find what's in this namespace
                 modules = []
                 for f in ns_path.glob("*.py"):
                     if f.name != "__init__.py":
@@ -581,11 +583,10 @@ def start() -> None:  # noqa: C901
 
                     all_exports = []
                     for m in sorted(modules):
-                        # This is a bit tricky because we need to know the class name
-                        # For now, let's assume class name is camel(m)
-                        # Except for special cases like UpdatesT
-                        class_name = camel(m)
-                        if m == "updates_t": class_name = "UpdatesT"
+                        if m == "updates_t":
+                            class_name = "UpdatesT"
+                        else:
+                            class_name = camel(m)
 
                         f.write(f"from .{m} import {class_name}\n")
                         all_exports.append(class_name)
@@ -605,7 +606,9 @@ def start() -> None:  # noqa: C901
         f.write("objects = {")
 
         for c in combinators:
-            f.write(f'\n    {c.id}: "pyrogram.raw.{c.section}.{c.qualname}",')
+            class_name = c.name
+            if class_name == "Updates": class_name = "UpdatesT"
+            f.write(f'\n    {c.id}: "pyrogram.raw.{c.section}.{c.qualname.replace(c.name, class_name)}",')
 
         f.write('\n    0xbc799737: "pyrogram.raw.core.BoolFalse",')
         f.write('\n    0x997275b5: "pyrogram.raw.core.BoolTrue",')
@@ -617,6 +620,7 @@ def start() -> None:  # noqa: C901
         f.write('\n    0x5bb8e511: "pyrogram.raw.core.Message",')
 
         f.write("\n}\n")
+    print("Done.")
 
 
 if __name__ == "__main__":

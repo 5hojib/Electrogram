@@ -1,0 +1,84 @@
+from __future__ import annotations
+
+import pyrogram
+from pyrogram import raw, types
+
+
+class SetGameScore:
+    async def set_game_score(
+        self: pyrogram.Client,
+        user_id: int | str,
+        score: int,
+        force: bool | None = None,
+        disable_edit_message: bool | None = None,
+        chat_id: int | str | None = None,
+        message_id: int | None = None,
+    ) -> types.Message | bool:
+        """Set the score of the specified user in a game.
+
+        .. include:: /_includes/usable-by/bots.rst
+
+        Parameters:
+            user_id (``int`` | ``str``):
+                Unique identifier (int) or username (str) of the target chat.
+                For your personal cloud (Saved Messages) you can simply use "me" or "self".
+                For a contact that exists in your Telegram address book you can use his phone number (str).
+                You can also use user profile link in form of *t.me/<username>* (str).
+
+            score (``int``):
+                New score, must be non-negative.
+
+            force (``bool``, *optional*):
+                Pass True, if the high score is allowed to decrease.
+                This can be useful when fixing mistakes or banning cheaters.
+
+            disable_edit_message (``bool``, *optional*):
+                Pass True, if the game message should not be automatically edited to include the current scoreboard.
+
+            chat_id (``int`` | ``str``, *optional*):
+                Unique identifier (int) or username (str) of the target chat.
+                For your personal cloud (Saved Messages) you can simply use "me" or "self".
+                For a contact that exists in your Telegram address book you can use his phone number (str).
+                Required if inline_message_id is not specified.
+
+            message_id (``int``, *optional*):
+                Identifier of the sent message.
+                Required if inline_message_id is not specified.
+
+        Returns:
+            :obj:`~pyrogram.types.Message` | ``bool``: On success, if the message was sent by the bot, the edited
+            message is returned, True otherwise.
+
+        Example:
+            .. code-block:: python
+
+                # Set new score
+                await app.set_game_score(user_id, 1000)
+
+                # Force set new score
+                await app.set_game_score(user_id, 25, force=True)
+        """
+        r = await self.invoke(
+            raw.functions.messages.SetGameScore(
+                peer=await self.resolve_peer(chat_id),
+                score=score,
+                id=message_id,
+                user_id=await self.resolve_peer(user_id),
+                force=force or None,
+                edit_message=not disable_edit_message or None,
+            ),
+        )
+
+        for i in r.updates:
+            if isinstance(
+                i,
+                raw.types.UpdateEditMessage | raw.types.UpdateEditChannelMessage,
+            ):
+                return await types.Message._parse(
+                    self,
+                    i.message,
+                    {i.id: i for i in r.users},
+                    {i.id: i for i in r.chats},
+                )
+
+        return True
